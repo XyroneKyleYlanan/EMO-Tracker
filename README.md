@@ -40,8 +40,14 @@ A web application for event planning and task management with rule-based event r
 - [Node.js 20+](https://nodejs.org) and npm
 - Composer (bundled with Laragon)
 
-### 1. Clone or copy the project
-Place the project folder in `C:\laragon\www\EMDTracker\`.
+### 1. Clone the project
+
+```bash
+cd C:\laragon\www
+git clone https://github.com/XyroneKyleYlanan/EMD-Tracker.git EMDTracker
+```
+
+The project must live inside Laragon's `www` folder — i.e., `C:\laragon\www\EMDTracker\`.
 
 ### 2. Start Laragon
 Open Laragon → click **"Start All"**. This launches Apache and MySQL.
@@ -81,23 +87,38 @@ npm install
 
 ---
 
-## Running the App (Development)
+## Running the App
 
-You need **two terminals running simultaneously**:
+First make sure **Laragon is running** (open Laragon → "Start All").
 
-### Terminal 1 — Backend
+### Easy way — one-click launcher (recommended)
+
+Double-click **`start.bat`** in the project root (`C:\laragon\www\EMDTracker\start.bat`).
+
+It automatically:
+1. Starts the Laravel backend in its own window
+2. Starts the React frontend in its own window
+3. Opens `http://localhost:5173` in your browser after 5 seconds
+
+To stop the app, close the two CMD windows that opened.
+
+### Manual way — two terminals
+
+If you prefer to run the servers yourself:
+
+**Terminal 1 — Backend**
 ```bash
 cd C:\laragon\www\EMDTracker\backend
 php artisan serve
 ```
-This runs Laravel on `http://127.0.0.1:8000`.
+Runs Laravel on `http://127.0.0.1:8000`.
 
-### Terminal 2 — Frontend
+**Terminal 2 — Frontend**
 ```bash
 cd C:\laragon\www\EMDTracker\frontend
 npm run dev
 ```
-This runs Vite on `http://localhost:5173`.
+Runs Vite on `http://localhost:5173`.
 
 ### Open the app
 - Local: **http://localhost:5173**
@@ -143,9 +164,15 @@ This recreates all tables and reseeds 5 events, 18 tasks, 10 users covering ever
 
 ```
 C:\laragon\www\EMDTracker\
+├── README.md                 This file
+├── ROADMAP.md                Phased build log
+├── OVERVIEW.md               Architectural reference
+├── CAPSTONE_PAPER_REFERENCE.md   Reference doc for paper writing
+├── start.bat                 One-click launcher
 ├── backend/                  Laravel app
 │   ├── app/
 │   │   ├── Http/Controllers/Api/   API endpoints
+│   │   ├── Http/Middleware/         Role + JSON middleware
 │   │   ├── Models/                  Eloquent models
 │   │   └── Services/                EventClassifier service
 │   ├── database/
