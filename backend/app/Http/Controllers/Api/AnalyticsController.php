@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Event;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+class AnalyticsController extends Controller
+{
+    public function index(Request $request): JsonResponse
+    {
+        $period = $request->input('period', 'all');
+
+        $range = match ($period) {
+            'week' => [today(), today()->copy()->addDays(7)],
+            'month' => [today(), today()->copy()->addDays(30)],
+            default => null,
+        };
+
+        Event::where('status', 'upcoming')
+            ->whereDate('event_date', '<', today())
+            ->update(['status' => 'completed']);
+
+        $eventsQuery = Event::with('tasks:id,event_id,status,assigned_to');
+        if ($range) {
+            $eventsQuery->whereBetween('event_date', $range);
+        }
+        $events = $eventsQuery->get();
+
+        $totalTasks = $events->sum(fn ($e) => $e->tasks->count());
+        $tasksDone = $events->sum(fn ($e) => $e->tasks->where('status', 'done')->count());
+
+        $activeStaff = User::where('role', 'staff')
+            ->where('is_active', true)
+            ->whereHas('eventsAssigned', function ($q) use ($range) {
+                $q->where('status', 'upcoming');
+                if ($range) {
+                    $q->whereBetween('event_date', $range);
+                }
+            })
+            ->count();
+
+        $distribution = ['green' => 0, 'yellow' => 0, 'red' => 0, 'completed' => 0];
+        foreach ($events as $event) {
+            $key = $event->readiness;
+            $distribution[$key] = ($distribution[$key] ?? 0) + 1;
+        }
+
+        $topUrgent = $events
+            ->where('status', 'upcoming')
+            ->sortBy('event_date')
+            ->take(5)
+            ->values()
+            ->map(function ($e) {
+                return [
+                    'id' => $e->id,
+                    'name' => $e->name,
+                    'event_date' => $e->event_date,
+                    'event_time' => $e->event_time,
+                    'venue' => $e->venue,
+                    'readiness' => $e->readiness,
+                    'task_summary' => [
+                        'total' => $e->tasks->count(),
+                        'done' => $e->tasks->where('status', 'done')->count(),
+                    ],
+                ];
+            });
+
+        return response()->json([
+            'period' => $period,
+            'stats' => [
+                'totalEvents' => $events->count(),
+                'totalTasks' => $totalTasks,
+                'tasksDone' => $tasksDone,
+                'tasksDonePercent' => $totalTasks > 0 ? round(($tasksDone / $totalTasks) * 100) : 0,
+                'activeStaff' => $activeStaff,
+            ],
+            'distribution' => $distribution,
+            'topUrgent' => $topUrgent,
+        ]);
+    }
+}

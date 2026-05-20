@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neu-green: #0a5c3a;
+  --color-neu-green-dark: #074a2e;
+  --color-neu-gold: #d4af37;
+  --color-status-on-track: #059669;
+  --color-status-at-risk: #d97706;
+  --color-status-critical: #dc2626;
+}
+
+@keyframes slide-in {
+  from { transform: translateX(20px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.18s ease-out;
+}
+
+.fc-emd .fc {
+  font-family: inherit;
+}
+
+.fc-emd .fc-toolbar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.fc-emd .fc-button {
+  background-color: white !important;
+  border-color: #e5e7eb !important;
+  color: #374151 !important;
+  text-transform: capitalize !important;
+  box-shadow: none !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.fc-emd .fc-button:hover {
+  background-color: #f9fafb !important;
+}
+
+.fc-emd .fc-button-primary:not(:disabled).fc-button-active,
+.fc-emd .fc-button-primary:not(:disabled):active {
+  background-color: #0a5c3a !important;
+  border-color: #0a5c3a !important;
+  color: white !important;
+}
+
+.fc-emd .fc-col-header-cell {
+  background-color: #f9fafb;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0;
+}
+
+.fc-emd .fc-event {
+  border-radius: 6px !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 1px 4px !important;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.fc-emd .fc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.fc-emd .fc-daygrid-day-number {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 6px 8px;
+}
+
+.fc-emd .fc-day-today {
+  background-color: #fef3c7 !important;
+}
+
+.fc-emd .fc-day-today .fc-daygrid-day-number {
+  color: #92400e;
+  font-weight: 600;
+}

@@ -1,0 +1,32 @@
+# ============================================================
+# EMD Tracker - root .gitignore
+# (backend/ and frontend/ also have their own .gitignore files)
+# ============================================================
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dependencies (redundant safety - also in sub-gitignores)
+node_modules/
+vendor/
+
+# Build output
+dist/
+build/
+
+# Laravel storage symlink (regenerated per machine via `php artisan storage:link`)
+backend/public/storage
+
+# Uploaded documents (runtime/demo files, not source code)
+backend/storage/app/public/documents/
+
+# Logs
+*.log
