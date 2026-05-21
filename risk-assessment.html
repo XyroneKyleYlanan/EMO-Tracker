@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMD Tracker — Risk Assessment and Analysis</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1150px; margin: 24px auto; padding: 0 20px; color: #111827; }
+  h1 { color: #0a5c3a; }
+  p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #888; padding: 6px 9px; text-align: left; vertical-align: top; font-size: 13px; }
+  th { background: #0a5c3a; color: #ffffff; }
+  td.center { text-align: center; white-space: nowrap; }
+  .high { background: #fee2e2; color: #991b1b; font-weight: bold; }
+  .medium { background: #fef3c7; color: #92400e; font-weight: bold; }
+  .low { background: #d1fae5; color: #065f46; font-weight: bold; }
+  .legend { font-size: 13px; margin-top: 8px; }
+  .legend span { display: inline-block; padding: 2px 10px; border-radius: 4px; margin-right: 8px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>Risk Assessment and Analysis — EMD Tracker</h1>
+<p class="note"><strong>How to use:</strong> Select the table below, copy (Ctrl+C), and paste into Word or Google Docs. It pastes as a native table. Risk Level is derived from a standard Likelihood &times; Impact matrix.</p>
+
+<table>
+<tr>
+  <th>Risk ID</th>
+  <th>Risk Description</th>
+  <th>Category</th>
+  <th>Likelihood</th>
+  <th>Impact</th>
+  <th>Risk Level</th>
+  <th>Mitigation Strategy</th>
+</tr>
+<tr>
+  <td class="center">R1</td>
+  <td>Server laptop failure or downtime, making the system inaccessible to all users</td>
+  <td>Technical</td>
+  <td class="center">Medium</td>
+  <td class="center">High</td>
+  <td class="center high">High</td>
+  <td>Keep the server laptop plugged in and fully charged during operation (the battery serves as a built-in UPS against power interruptions); designate a backup device with the environment pre-installed; maintain documented setup instructions for quick restoration.</td>
+</tr>
+<tr>
+  <td class="center">R2</td>
+  <td>Data loss due to the absence of automated cloud backup (LAN-only deployment)</td>
+  <td>Data</td>
+  <td class="center">Medium</td>
+  <td class="center">High</td>
+  <td class="center high">High</td>
+  <td>Perform regular local database backups using mysqldump; store backup copies on a separate external drive; schedule backups before and after major events.</td>
+</tr>
+<tr>
+  <td class="center">R3</td>
+  <td>Network (WiFi or hotspot) unavailability preventing devices from reaching the server</td>
+  <td>Technical</td>
+  <td class="center">Medium</td>
+  <td class="center">High</td>
+  <td class="center high">High</td>
+  <td>Use a dedicated router or mobile hotspot for the deployment; prepare a backup network connection; the system requires only a local network and no internet access.</td>
+</tr>
+<tr>
+  <td class="center">R4</td>
+  <td>Single point of failure — the database, backend, and frontend all run on one device</td>
+  <td>Technical</td>
+  <td class="center">Low</td>
+  <td class="center">High</td>
+  <td class="center medium">Medium</td>
+  <td>Maintain complete, documented setup instructions (README) so the system can be redeployed on another machine; keep all dependencies and versions recorded.</td>
+</tr>
+<tr>
+  <td class="center">R5</td>
+  <td>Unauthorized access through shared or weak user credentials</td>
+  <td>Security</td>
+  <td class="center">Low</td>
+  <td class="center">High</td>
+  <td class="center medium">Medium</td>
+  <td>Enforce role-based access control; instruct users not to share credentials; the administrator assigns strong initial passwords; deactivate accounts of staff who leave the department.</td>
+</tr>
+<tr>
+  <td class="center">R6</td>
+  <td>Administrator account compromise, granting full control of the system</td>
+  <td>Security</td>
+  <td class="center">Low</td>
+  <td class="center">High</td>
+  <td class="center medium">Medium</td>
+  <td>Limit the number of administrator accounts; use a strong administrator password; do not share the administrator account; all passwords are stored hashed using bcrypt.</td>
+</tr>
+<tr>
+  <td class="center">R7</td>
+  <td>User resistance to adopting the new system over familiar manual methods</td>
+  <td>Operational</td>
+  <td class="center">Medium</td>
+  <td class="center">Medium</td>
+  <td class="center medium">Medium</td>
+  <td>Conduct a hands-on training and orientation session; provide an intuitive, simple interface; demonstrate the time saved compared to manual spreadsheet and paper methods.</td>
+</tr>
+<tr>
+  <td class="center">R8</td>
+  <td>Users forgetting passwords; the system has no self-service password reset</td>
+  <td>Operational</td>
+  <td class="center">Medium</td>
+  <td class="center">Low</td>
+  <td class="center low">Low</td>
+  <td>Administrators can manually reset user passwords; users can change their own password once logged in; self-service password reset is identified as a future enhancement.</td>
+</tr>
+<tr>
+  <td class="center">R9</td>
+  <td>Incorrect or inconsistent data entry by users (e.g., wrong event dates or details)</td>
+  <td>Operational</td>
+  <td class="center">Medium</td>
+  <td class="center">Medium</td>
+  <td class="center medium">Medium</td>
+  <td>Apply input validation on both the frontend and backend; allow authorized users to edit records; require confirmation before destructive actions.</td>
+</tr>
+<tr>
+  <td class="center">R10</td>
+  <td>Accidental deletion of events and their related tasks and documents</td>
+  <td>Data</td>
+  <td class="center">Low</td>
+  <td class="center">Medium</td>
+  <td class="center low">Low</td>
+  <td>Require confirmation dialogs before deletion; restrict event deletion to administrators only; completed events are locked from editing to protect historical records.</td>
+</tr>
+<tr>
+  <td class="center">R11</td>
+  <td>Concurrent editing conflicts when two users modify the same record simultaneously</td>
+  <td>Technical</td>
+  <td class="center">Low</td>
+  <td class="center">Medium</td>
+  <td class="center low">Low</td>
+  <td>The small department size (approximately ten staff) makes simultaneous edits unlikely; record-level locking is identified as a future enhancement.</td>
+</tr>
+<tr>
+  <td class="center">R12</td>
+  <td>Scope changes arising from panel or client feedback during development</td>
+  <td>Project</td>
+  <td class="center">Medium</td>
+  <td class="center">Medium</td>
+  <td class="center medium">Medium</td>
+  <td>Finalize and document requirements early; develop features in defined phases; record all approved changes and their rationale for traceability.</td>
+</tr>
+</table>
+
+<div class="legend">
+  <strong>Risk Level Legend:</strong><br><br>
+  <span class="high">High</span> Requires immediate, priority mitigation.<br><br>
+  <span class="medium">Medium</span> Should be monitored and mitigated during development.<br><br>
+  <span class="low">Low</span> Acceptable; managed with standard practices.
+</div>
+
+<p class="note" style="margin-top:18px;"><strong>Risk Level matrix:</strong> Likelihood (Low / Medium / High) &times; Impact (Low / Medium / High). High likelihood with High impact yields High risk; Low likelihood with Low impact yields Low risk, and so on.</p>
+
+</body>
+</html>

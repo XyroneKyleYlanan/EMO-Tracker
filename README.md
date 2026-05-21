@@ -9,7 +9,7 @@ A web application for event planning and task management with rule-based event r
 ## Tech Stack
 
 - **Frontend:** React + Vite + Tailwind CSS v4
-- **Backend:** Laravel 12 + Sanctum (PHP 8.3)
+- **Backend:** Laravel 13 + Sanctum (PHP 8.3)
 - **Database:** MySQL 8.4
 - **Local server:** Laragon (LAN-only hosting)
 - **Charts:** Recharts

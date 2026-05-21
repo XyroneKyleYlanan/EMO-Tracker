@@ -27,7 +27,7 @@ The frontend never talks to the database directly. All data flows through Larave
 
 ---
 
-## Backend (Laravel 12 / PHP 8.3)
+## Backend (Laravel 13 / PHP 8.3)
 
 **Location:** `C:\laragon\www\EMDTracker\backend\`
 
@@ -54,7 +54,7 @@ The frontend never talks to the database directly. All data flows through Larave
 
 ---
 
-## Frontend (React + Vite + Tailwind v4)
+## Frontend (React 19 / Vite / Tailwind v4)
 
 **Location:** `C:\laragon\www\EMDTracker\frontend\`
 
@@ -213,7 +213,7 @@ This protects the integrity of post-event reports. Key files: `TaskController.ph
 - **8 build phases** completed
 - **~30 lines** of classifier logic (the "AI")
 - **10 demo users** + **5 demo events** + **18 demo tasks** in the seeder
-- **PHP 8.3 / Laravel 12 / React 18 / MySQL 8.4** — all current LTS-ish versions
+- **PHP 8.3 / Laravel 13 / React 19 / MySQL 8.4** — all current versions
 
 ---
 

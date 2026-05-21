@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMD Tracker — User Journey Map</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1150px; margin: 24px auto; padding: 0 20px; color: #111827; }
+  h1 { color: #0a5c3a; }
+  h2 { color: #0a5c3a; margin-top: 34px; font-size: 18px; }
+  p.purpose { color: #555; font-style: italic; margin: 4px 0; }
+  p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 26px; }
+  th, td { border: 1px solid #888; padding: 7px 10px; text-align: left; vertical-align: top; font-size: 13px; }
+  th { background: #0a5c3a; color: #ffffff; }
+  tr:nth-child(even) td { background: #f3f8f5; }
+  td.stage { font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<h1>User Journey Map — EMD Tracker</h1>
+<p class="note"><strong>How to use:</strong> Select a table below, copy (Ctrl+C), and paste into Word or Google Docs — it pastes as a native, editable table. Each map traces one role's experience across the stages of using the system.</p>
+
+<h2>1. Administrator Journey</h2>
+<p class="purpose">Full access — manages user accounts, oversees all events and tasks, and maintains the system.</p>
+<table>
+<tr><th>Stage</th><th>Goal</th><th>Actions</th><th>Touchpoint</th><th>Emotion</th><th>Pain Points / Opportunities</th></tr>
+<tr><td class="stage">Log In</td><td>Access the full system</td><td>Open the app in a browser on the local network and enter administrator credentials</td><td>Login page</td><td>Focused</td><td>A strong administrator password protects full system control</td></tr>
+<tr><td class="stage">Review Dashboard &amp; Analytics</td><td>Oversee all departmental activity</td><td>View the readiness analytics and donut chart covering every event</td><td>Analytics dashboard</td><td>In command</td><td>One screen replaces manually compiled status reports</td></tr>
+<tr><td class="stage">Manage User Accounts</td><td>Control who can access the system</td><td>Create officer and staff accounts, edit roles, reset passwords, and deactivate accounts of departed staff</td><td>User Management page</td><td>In control</td><td>In-system account control removes the need for shared credentials</td></tr>
+<tr><td class="stage">Oversee Events &amp; Tasks</td><td>Keep records accurate</td><td>Create, edit, or correct any event or task — including completed events that are locked for other roles</td><td>Events &amp; Tasks pages</td><td>Assured</td><td>Administrator override allows fixing historical records when genuinely needed</td></tr>
+<tr><td class="stage">Generate Reports &amp; Manage Documents</td><td>Produce official outputs</td><td>Generate PDF event reports and review uploaded documents</td><td>Reports / Documents</td><td>Accomplished</td><td>Reports are produced on demand instead of being compiled manually</td></tr>
+<tr><td class="stage">Delete Events &amp; Configure Settings</td><td>Keep the system clean and correct</td><td>Delete obsolete events (administrator-only) and adjust system settings</td><td>Event detail / Settings page</td><td>Cautious but confident</td><td>Confirmation dialogs guard against accidental deletion</td></tr>
+<tr><td class="stage">Log Out</td><td>Securely end the session</td><td>Click log out from the navigation menu</td><td>Navigation menu</td><td>At ease</td><td>Simple, single-click sign-out</td></tr>
+</table>
+
+<h2>2. Officer Journey</h2>
+<p class="purpose">Manages events end to end — creates events, assigns tasks and staff, uploads documents, and tracks readiness.</p>
+<table>
+<tr><th>Stage</th><th>Goal</th><th>Actions</th><th>Touchpoint</th><th>Emotion</th><th>Pain Points / Opportunities</th></tr>
+<tr><td class="stage">Log In</td><td>Begin managing events</td><td>Enter credentials on the login page</td><td>Login page</td><td>Ready</td><td>The same shared login screen serves every role</td></tr>
+<tr><td class="stage">Review Analytics Dashboard</td><td>Gauge overall event readiness</td><td>View the donut chart and readiness breakdown (Critical, At Risk, On Track, Completed)</td><td>Analytics dashboard</td><td>Aware</td><td>At-a-glance readiness replaces manual spreadsheet tracking</td></tr>
+<tr><td class="stage">Create or Edit an Event</td><td>Schedule a new event</td><td>Fill out the event form (name, venue, date, time, budget) and save</td><td>Event form (create / edit)</td><td>Productive</td><td>Input validation prevents incomplete or invalid entries</td></tr>
+<tr><td class="stage">Add Tasks &amp; Assign Staff</td><td>Break the event into actionable work</td><td>Create tasks, set due dates and priority, and assign staff members</td><td>Event detail / task panel</td><td>Organized</td><td>Assigning staff directly removes back-and-forth messaging</td></tr>
+<tr><td class="stage">Upload Documents</td><td>Keep event files in one place</td><td>Upload proposals, permits, and related files to the event</td><td>Documents section</td><td>Confident</td><td>Centralized files replace scattered email attachments</td></tr>
+<tr><td class="stage">Monitor Readiness &amp; Report</td><td>Track progress and report it</td><td>Watch the RED / YELLOW / GREEN classification and generate a PDF event report</td><td>Event detail / Reports</td><td>Reassured</td><td>Automatic classification flags at-risk events early</td></tr>
+<tr><td class="stage">Log Out</td><td>End the session</td><td>Click log out from the navigation menu</td><td>Navigation menu</td><td>Satisfied</td><td>Quick, single-click sign-out</td></tr>
+</table>
+
+<h2>3. Staff Journey</h2>
+<p class="purpose">Views assigned events and updates the status of their own tasks.</p>
+<table>
+<tr><th>Stage</th><th>Goal</th><th>Actions</th><th>Touchpoint</th><th>Emotion</th><th>Pain Points / Opportunities</th></tr>
+<tr><td class="stage">Log In</td><td>Access assigned work</td><td>Open the app in a browser on the local network and enter email and password</td><td>Login page</td><td>Neutral</td><td>No self-service password reset — a forgotten password must be reset by an administrator</td></tr>
+<tr><td class="stage">View Dashboard</td><td>Get an overview of current work</td><td>Land on the dashboard and see assigned events and upcoming task counts</td><td>Dashboard</td><td>Oriented</td><td>Everything relevant appears on one screen — no searching needed</td></tr>
+<tr><td class="stage">Check Assigned Events</td><td>Know which events they support</td><td>Open the events list or calendar and view event date, venue, and details</td><td>Events page (list &amp; calendar view)</td><td>Informed</td><td>The calendar view makes schedules easy to grasp</td></tr>
+<tr><td class="stage">Review My Tasks</td><td>See exactly what to do</td><td>Open the My Tasks page and read each task's name, description, due date, and priority</td><td>My Tasks page</td><td>Clear-headed</td><td>Priority and due dates remove guesswork about what to do first</td></tr>
+<tr><td class="stage">Update Task Progress</td><td>Record progress made</td><td>Change a task's status (Pending &#8594; In Progress &#8594; Done)</td><td>Task row / status control</td><td>Accomplished</td><td>Updates instantly affect the event's readiness color — a visible contribution</td></tr>
+<tr><td class="stage">Log Out</td><td>Securely end the session</td><td>Click log out from the navigation menu</td><td>Navigation menu</td><td>At ease</td><td>Simple, single-click sign-out</td></tr>
+</table>
+
+</body>
+</html>

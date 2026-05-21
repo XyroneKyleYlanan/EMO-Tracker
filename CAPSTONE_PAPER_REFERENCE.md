@@ -104,7 +104,7 @@ EMD Tracker is a responsive web application that replaces these manual methods w
 
 | Component | Technology | Version | Rationale |
 |---|---|---|---|
-| Framework | React.js | 18 | Component-based architecture suitable for dynamic dashboards; widely taught in BSIT curriculum |
+| Framework | React.js | 19 | Component-based architecture suitable for dynamic dashboards; widely taught in BSIT curriculum |
 | Build tool | Vite | 8 | Fast development server with Hot Module Replacement (HMR); modern replacement for older bundlers |
 | Styling | Tailwind CSS | 4 | Utility-first CSS framework; ensures responsive design without writing custom CSS files |
 | Routing | React Router | 7 | Standard library for client-side routing in single-page applications |
@@ -116,8 +116,8 @@ EMD Tracker is a responsive web application that replaces these manual methods w
 
 | Component | Technology | Version | Rationale |
 |---|---|---|---|
-| Framework | Laravel | 12 | PHP framework; provides ORM, routing, validation, authentication out-of-the-box |
-| Language | PHP | 8.3 | Latest stable PHP supported by Laravel 12 |
+| Framework | Laravel | 13 | PHP framework; provides ORM, routing, validation, authentication out-of-the-box |
+| Language | PHP | 8.3 | Stable PHP version required by Laravel 13 |
 | Authentication | Laravel Sanctum | 4 | Lightweight token-based API authentication suitable for SPAs |
 | PDF Generation | barryvdh/laravel-dompdf | 3.1 | Composer package (NOT a third-party service); generates PDFs locally on the server |
 
@@ -349,7 +349,7 @@ Stores configurable system settings (e.g., school year boundaries).
 
 ### Authentication
 - Token-based authentication using Laravel Sanctum
-- Passwords are hashed using bcrypt (10 rounds by default)
+- Passwords are hashed using bcrypt (cost factor 12, set via the `BCRYPT_ROUNDS` environment variable)
 - Tokens are stored in the browser's `localStorage`
 - Tokens have a 30-day expiration
 
@@ -379,7 +379,7 @@ Stores configurable system settings (e.g., school year boundaries).
 
 ## 13. METHODOLOGY
 
-The system was developed using an **iterative, phase-based approach** spanning eight (8) development phases:
+The system was developed using an **iterative, phase-based approach** beginning with environment setup (Phase 0), followed by eight (8) development phases (Phases 1–8):
 
 1. **Phase 0 — Environment Setup:** Installation of Laragon, PHP 8.3, MySQL 8.4, Node.js, Composer, Vite, Laravel, React, Tailwind, Sanctum, and axios. Verification of full-stack connectivity via a `/api/ping` endpoint.
 2. **Phase 1 — Database Schema and Migrations:** Design and implementation of six tables (users, events, tasks, event_staff, documents, settings) with appropriate foreign keys, indexes, and cascade rules. Creation of Eloquent models with relationships.
@@ -482,8 +482,8 @@ For the paper's results/data section:
 
 - **Lines of code (approximate):** Backend ~2,500 lines PHP; Frontend ~3,500 lines JSX/JS; Templates and configuration ~500 lines.
 - **Number of database tables:** 6
-- **Number of API endpoints:** approximately 25
-- **Number of frontend components:** approximately 25 reusable components + 8 page-level components
+- **Number of API endpoints:** approximately 30 (36 route registrations in `routes/api.php`, since update routes accept both PUT and PATCH)
+- **Number of frontend components:** 17 reusable components + 10 page-level files (8 functional pages + 2 placeholder pages)
 - **Number of build phases:** 8
 - **Number of features (per briefing):** Exactly 4
 - **Number of user roles:** 3

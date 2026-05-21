@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMD Tracker — Data Dictionary</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1000px; margin: 24px auto; padding: 0 20px; color: #111827; }
+  h1 { color: #0a5c3a; }
+  h2 { color: #0a5c3a; margin-top: 34px; }
+  p.purpose { color: #555; font-style: italic; margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0 26px; }
+  th, td { border: 1px solid #888; padding: 6px 10px; text-align: left; vertical-align: top; font-size: 14px; }
+  th { background: #0a5c3a; color: #ffffff; }
+  tr:nth-child(even) td { background: #f3f8f5; }
+  .note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Data Dictionary — EMD Tracker</h1>
+<p class="note"><strong>How to use:</strong> Select a table below, copy it (Ctrl+C), and paste into Word or Google Docs. It pastes as a native, editable table.</p>
+
+<h2>Table: users</h2>
+<p class="purpose">Stores all user accounts, roles, and authentication data.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each user</td></tr>
+<tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Full name of the user</td></tr>
+<tr><td>email</td><td>varchar(255)</td><td>NOT NULL, Unique</td><td>Email address; used as the login credential</td></tr>
+<tr><td>email_verified_at</td><td>timestamp</td><td>Nullable</td><td>Email verification timestamp (Laravel default; unused)</td></tr>
+<tr><td>password</td><td>varchar(255)</td><td>NOT NULL</td><td>Hashed password (bcrypt)</td></tr>
+<tr><td>role</td><td>enum('admin','officer','staff')</td><td>NOT NULL, Default 'staff'</td><td>Determines the user's access level</td></tr>
+<tr><td>is_active</td><td>boolean</td><td>NOT NULL, Default true</td><td>If false, the account cannot log in</td></tr>
+<tr><td>remember_token</td><td>varchar(100)</td><td>Nullable</td><td>Token for persistent login sessions (Laravel default)</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+
+<h2>Table: events</h2>
+<p class="purpose">Stores event records created by administrators and officers.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each event</td></tr>
+<tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Name/title of the event</td></tr>
+<tr><td>description</td><td>text</td><td>Nullable</td><td>Detailed description of the event</td></tr>
+<tr><td>venue</td><td>varchar(255)</td><td>NOT NULL</td><td>Location where the event will be held</td></tr>
+<tr><td>event_date</td><td>date</td><td>NOT NULL</td><td>Scheduled date of the event</td></tr>
+<tr><td>event_time</td><td>time</td><td>NOT NULL</td><td>Scheduled start time of the event</td></tr>
+<tr><td>budget</td><td>decimal(12,2)</td><td>Nullable</td><td>Allocated budget for the event (in PHP)</td></tr>
+<tr><td>status</td><td>enum('upcoming','completed')</td><td>NOT NULL, Default 'upcoming'</td><td>Current state of the event</td></tr>
+<tr><td>created_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The user who created the event</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+
+<h2>Table: tasks</h2>
+<p class="purpose">Stores tasks belonging to events, including assignment and progress.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each task</td></tr>
+<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The event this task belongs to</td></tr>
+<tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Name/title of the task</td></tr>
+<tr><td>description</td><td>text</td><td>Nullable</td><td>Detailed description of the task</td></tr>
+<tr><td>due_date</td><td>date</td><td>NOT NULL</td><td>Date the task is due</td></tr>
+<tr><td>status</td><td>enum('pending','in_progress','done')</td><td>NOT NULL, Default 'pending'</td><td>Current progress status of the task</td></tr>
+<tr><td>priority</td><td>enum('low','medium','high')</td><td>NOT NULL, Default 'medium'</td><td>Priority level of the task</td></tr>
+<tr><td>assigned_to</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), Nullable</td><td>Staff member assigned; null if unassigned</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+
+<h2>Table: event_staff</h2>
+<p class="purpose">Junction table linking events to staff assigned at the event level (many-to-many).</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each assignment record</td></tr>
+<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The assigned event</td></tr>
+<tr><td>user_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The assigned staff member</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+<p class="purpose">Note: event_id + user_id together form a composite UNIQUE constraint to prevent duplicate assignments.</p>
+
+<h2>Table: documents</h2>
+<p class="purpose">Stores metadata for files uploaded and attached to events.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each document</td></tr>
+<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The event the document is attached to</td></tr>
+<tr><td>uploaded_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The user who uploaded the document</td></tr>
+<tr><td>file_name</td><td>varchar(255)</td><td>NOT NULL</td><td>Original name of the uploaded file</td></tr>
+<tr><td>file_path</td><td>varchar(255)</td><td>NOT NULL</td><td>Server storage path of the file</td></tr>
+<tr><td>file_size</td><td>bigint unsigned</td><td>NOT NULL</td><td>Size of the file in bytes</td></tr>
+<tr><td>mime_type</td><td>varchar(255)</td><td>NOT NULL</td><td>MIME type of the file (e.g., application/pdf)</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+
+<h2>Table: settings</h2>
+<p class="purpose">Stores configurable system settings as key-value pairs.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each setting</td></tr>
+<tr><td>key</td><td>varchar(255)</td><td>NOT NULL, Unique</td><td>The setting's unique key/name</td></tr>
+<tr><td>value</td><td>text</td><td>Nullable</td><td>The setting's value</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
+
+</body>
+</html>
