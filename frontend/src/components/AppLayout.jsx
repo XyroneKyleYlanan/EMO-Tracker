@@ -152,7 +152,7 @@ export default function AppLayout() {
 
       <footer className="hidden md:block bg-white border-t border-gray-200 py-3 px-6">
         <div className="text-center text-xs text-gray-500">
-          © 2026 EMD Tracker · A Capstone 1 Project at New Era University
+          © 2026 EMD Tracker · A Capstone Project at New Era University
         </div>
       </footer>
 
