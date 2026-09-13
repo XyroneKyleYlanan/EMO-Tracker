@@ -2,7 +2,7 @@
 
 A web application for event planning and task management with rule-based event readiness classification, built for the Events Management Department of New Era University.
 
-**Capstone 1 · BSIT · NEU**
+**Capstone 2 · BSIT · NEU**
 
 ---
 
