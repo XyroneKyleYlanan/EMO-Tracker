@@ -98,7 +98,7 @@ export default function LoginPage() {
         <div className="text-center mt-6 space-y-1">
           <p className="text-xs text-gray-500">Internal use only</p>
           <p className="text-[11px] text-gray-400">
-            © 2026 EMD Tracker · A Capstone 1 Project at New Era University
+            © 2026 EMD Tracker · A Capstone Project at New Era University
           </p>
         </div>
       </div>
