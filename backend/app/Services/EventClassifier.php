@@ -23,6 +23,11 @@ class EventClassifier
         $doneCount = $tasks->where('status', 'done')->count();
         $unassignedCount = $tasks->whereNull('assigned_to')->count();
 
+        // Nothing left to do: the event is ready no matter how close it is.
+        if ($doneCount === $taskCount) {
+            return 'green';
+        }
+
         $completedPct = ($doneCount / $taskCount) * 100;
         $unassignedPct = ($unassignedCount / $taskCount) * 100;
 

@@ -41,6 +41,11 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
 
   if (!open) return null
 
+  const currentStaffIds = (event?.staff || []).map((s) => s.id)
+  const staffOptions = allStaff.filter(
+    (u) => u.role === 'staff' && (u.is_active || currentStaffIds.includes(u.id))
+  )
+
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -154,7 +159,7 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
 
           <Field label="Assigned staff" error={errors.staff_ids?.[0]} optional>
             <div className="border border-gray-300 rounded-lg p-2 max-h-40 overflow-y-auto space-y-1">
-              {allStaff.filter((u) => u.role === 'staff').map((u) => (
+              {staffOptions.map((u) => (
                 <label key={u.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer">
                   <input
                     type="checkbox"
@@ -162,10 +167,13 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
                     onChange={() => toggleStaff(u.id)}
                     className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
                   />
-                  <span className="text-sm text-gray-700">{u.name}</span>
+                  <span className="text-sm text-gray-700">
+                    {u.name}
+                    {!u.is_active && <span className="text-gray-400"> (deactivated)</span>}
+                  </span>
                 </label>
               ))}
-              {allStaff.filter((u) => u.role === 'staff').length === 0 && (
+              {staffOptions.length === 0 && (
                 <div className="text-xs text-gray-400 px-2 py-1">No staff users available.</div>
               )}
             </div>

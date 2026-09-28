@@ -3,7 +3,6 @@ import api from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import UserFormDialog from '../components/UserFormDialog'
-import { formatDateCompact } from '../lib/format'
 
 const ROLE_LABELS = {
   admin: 'Administrator',

@@ -62,11 +62,25 @@ class UserController extends Controller
             'password' => ['sometimes', 'string', 'min:8'],
         ]);
 
+        // Keeps at least one active admin: the acting admin can't lock themselves out.
+        if ($user->id === $request->user()->id) {
+            if (array_key_exists('is_active', $data) && ! $data['is_active']) {
+                return response()->json(['message' => 'You cannot deactivate yourself.'], 422);
+            }
+            if (array_key_exists('role', $data) && $data['role'] !== 'admin') {
+                return response()->json(['message' => 'You cannot remove your own administrator role.'], 422);
+            }
+        }
+
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 
         $user->update($data);
+
+        if (! $user->is_active) {
+            $user->tokens()->delete();
+        }
 
         return response()->json([
             'user' => $user->fresh()->only(['id', 'name', 'email', 'role', 'is_active']),
@@ -80,6 +94,7 @@ class UserController extends Controller
         }
 
         $user->update(['is_active' => false]);
+        $user->tokens()->delete();
 
         return response()->json(['message' => 'User deactivated.']);
     }

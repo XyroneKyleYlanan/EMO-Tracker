@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
-    public function index(Event $event): JsonResponse
+    public function index(Request $request, Event $event): JsonResponse
     {
+        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
+
         $documents = $event->documents()
             ->with('uploader:id,name')
             ->orderByDesc('created_at')
@@ -35,7 +37,7 @@ class DocumentController extends Controller
 
         $file = $request->file('file');
         $folder = "documents/event_{$event->id}";
-        $path = $file->store($folder, 'public');
+        $path = $file->store($folder, 'local');
 
         $doc = $event->documents()->create([
             'uploaded_by' => $request->user()->id,
@@ -50,17 +52,18 @@ class DocumentController extends Controller
         return response()->json(['document' => $doc], 201);
     }
 
-    public function download(Document $document): StreamedResponse
+    public function download(Request $request, Document $document): StreamedResponse
     {
-        abort_unless(Storage::disk('public')->exists($document->file_path), 404);
+        abort_unless($document->event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
+        abort_unless(Storage::disk('local')->exists($document->file_path), 404);
 
-        return Storage::disk('public')->download($document->file_path, $document->file_name);
+        return Storage::disk('local')->download($document->file_path, $document->file_name);
     }
 
     public function destroy(Document $document): JsonResponse
     {
-        if (Storage::disk('public')->exists($document->file_path)) {
-            Storage::disk('public')->delete($document->file_path);
+        if (Storage::disk('local')->exists($document->file_path)) {
+            Storage::disk('local')->delete($document->file_path);
         }
 
         $document->delete();

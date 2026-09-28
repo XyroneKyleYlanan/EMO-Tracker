@@ -23,7 +23,7 @@ class Task extends Model
     protected function casts(): array
     {
         return [
-            'due_date' => 'date',
+            'due_date' => 'date:Y-m-d',
         ];
     }
 

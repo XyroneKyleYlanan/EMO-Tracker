@@ -7,8 +7,10 @@ use App\Models\Event;
 use App\Models\Setting;
 use App\Models\Task;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -154,12 +156,22 @@ class DatabaseSeeder extends Seeder
         ]);
         $quizBee->staff()->attach([$staff[2]->id]);
 
+        // Uploaded files aren't committed, so generate the sample document's file here.
+        $samplePath = 'documents/sample/foundation-day-program.pdf';
+        Storage::disk('local')->put($samplePath, Pdf::loadHTML(
+            '<h1>University Foundation Day</h1>'
+            .'<p>NEU Main Quadrangle &middot; 8:00 AM</p>'
+            .'<ol><li>Opening prayer and national anthem</li><li>Welcome remarks</li>'
+            .'<li>Founding anniversary address</li><li>Awarding of loyalty service awards</li>'
+            .'<li>Closing remarks</li></ol>'
+        )->output());
+
         Document::create([
             'event_id' => $foundation->id,
             'uploaded_by' => $officer1->id,
             'file_name' => 'foundation-day-program.pdf',
-            'file_path' => 'documents/sample/foundation-day-program.pdf',
-            'file_size' => 245678,
+            'file_path' => $samplePath,
+            'file_size' => Storage::disk('local')->size($samplePath),
             'mime_type' => 'application/pdf',
         ]);
 

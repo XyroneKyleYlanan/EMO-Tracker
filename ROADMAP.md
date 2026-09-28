@@ -1,6 +1,6 @@
 # EMD Tracker — Project Roadmap
 
-> Capstone 1 project. Web app for the Events Management Department of New Era University.
+> Capstone project (Capstone 1 build complete; Capstone 2 in progress). Web app for the Events Management Department of New Era University.
 > Tech stack: React + Vite + Tailwind (frontend) · Laravel + Sanctum (backend) · MySQL · Laragon (LAN).
 > Always pick up from the last unchecked task. Mark `[x]` when complete.
 
@@ -16,14 +16,14 @@
 ## Confirmed Decisions (do not revisit)
 - Stack: React + Tailwind + Laravel + MySQL + Laragon (LAN-only)
 - Auth: Laravel Sanctum, tokens in localStorage
-- Classification priority: RED → YELLOW → GREEN; 0-task event = YELLOW; past event = "Completed"
+- Classification priority: RED → YELLOW → GREEN; 0-task event = YELLOW; all tasks done = GREEN; past event = "Completed"
 - Calendar: FullCalendar or react-big-calendar (UI library, allowed)
 - Charts: Recharts (UI library, allowed)
 - PDF: barryvdh/laravel-dompdf (Composer package, local generation)
 - Brand: Muted NEU dark green primary, gold sparingly as accent, distinct red/amber/emerald hues for status badges
 - Mobile: list view default below 768px; calendar grid default on desktop
 - Account creation: admin-only; staff can change own password
-- Document upload: PDF/DOCX/XLSX/JPG/PNG, max 10 MB, stored in `storage/app/public`
+- Document upload: PDF/DOCX/XLSX/JPG/PNG, max 10 MB, stored privately in `storage/app/private` and downloaded only through the authenticated API (moved from `storage/app/public` in Phase 9)
 - School year: configurable in admin settings, default August–May
 
 ---
@@ -173,6 +173,27 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 
 ---
 
+# Capstone 2
+
+## Phase 9 — Post-review hardening
+- [x] Deactivated accounts rejected on every route (Sanctum token check) + tokens revoked on deactivation
+- [x] Staff limited to events they're assigned to (event staff or task) across events, tasks, documents, reports, staff dashboard
+- [x] Past events marked Completed at the start of every API request (`CompletePastEvents` middleware), not only when /events or /analytics loads
+- [x] Completed events locked for officers at the event level too; event status now follows the date (admin rescheduling reopens)
+- [x] Classifier: all tasks done = GREEN regardless of days remaining
+- [x] Timezone set to Asia/Manila; event/task dates serialized as plain `YYYY-MM-DD`
+- [x] PDF report filename slugged (names containing "/" no longer crash)
+- [x] Admin can't deactivate or demote themselves (backend + disabled form fields)
+- [x] Documents moved to private storage; `file_path` hidden from API responses
+- [x] Seeder generates the sample Foundation Day PDF so its download works on a fresh clone
+- [x] Only active staff can be newly assigned to events and tasks
+- [x] Analytics "Top 5 most urgent" ranked by readiness, then date
+- [x] Login rate limited (10 attempts/minute)
+- [x] Frontend: dates shown correctly in any browser timezone, stay logged in if backend is briefly down, mobile nav spacing
+- [x] Automated test suite: 30 PHPUnit tests (`php artisan test`)
+
+---
+
 ## Notes & Decisions Log
 - 2026-05-16: Project initialized. Briefing locked. Color palette: NEU green + muted gold (gold as accent only).
 - 2026-05-16: Groupmate suggested Audit Trail (activity log). Deferred — briefing's "exactly 4 features" rule makes adding a 5th risky. Worth revisiting post-defense as a future enhancement or asking adviser if it can count as admin tooling.
@@ -180,3 +201,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-05-16: School year settings UI skipped — not in briefing, not visible to panel, settings rows sit unused but harmless.
 - 2026-05-16: Fixed my-tasks endpoint not loading assignee relation (showed "Unassigned" incorrectly on Staff My Tasks page).
 - 2026-05-16: Added historical record protection — completed events lock their tasks for staff/officer; admin-only override with explicit confirmation on status changes. Enforced backend (403) + frontend (disabled UI). Strengthens data integrity story for defense.
+- 2026-09-28: Capstone 2 kickoff review found access-control gaps, a classifier edge case (fully done events within 2 days showed Critical), and UTC timezone drift. Fixed in Phase 9 with tests. Previously uploaded files in `storage/app/public/documents` are no longer read; reset with `php artisan migrate:fresh --seed` or re-upload.

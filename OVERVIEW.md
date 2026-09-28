@@ -119,16 +119,17 @@ This is the centerpiece of the defense. It's clean if/elif logic — no machine 
 ```
 1. If event status = "completed" → return "completed"
 2. If event has 0 tasks → return "yellow" (edge case)
-3. Compute: completion %, days remaining, unassigned %
-4. Check RED conditions first:
+3. If every task is done → return "green" (nothing left to do, however close the date)
+4. Compute: completion %, days remaining, unassigned %
+5. Check RED conditions first:
    - completion < 40%, OR
    - days remaining ≤ 2, OR
    - majority of tasks unassigned
-5. Check YELLOW conditions second:
+6. Check YELLOW conditions second:
    - completion < 70%, OR
    - days remaining ≤ 6, OR
    - any task unassigned
-6. Otherwise → return "green"
+7. Otherwise → return "green"
 ```
 
 The Event model's `readiness` accessor delegates to this service. Called automatically every time an event is fetched — the readiness color updates **live** as tasks change status.
@@ -141,23 +142,23 @@ The Event model's `readiness` accessor delegates to this service. Called automat
 |---|---|---|
 | **Administrator** | Everything: manage users, events, tasks, documents, analytics, reports | (nothing restricted) |
 | **Officer** | Create/edit events, tasks, documents; view analytics; assign staff | Manage user accounts; delete events |
-| **Staff** | View their assigned events/tasks; update their own task status; change own password; download reports | Create events, assign others, view analytics, manage other users |
+| **Staff** | View the events they're assigned to (at event level or through a task) and their tasks; update their own task status; change own password; download reports and documents for their events | See other events, create events, assign others, view analytics, manage other users |
 
 Role enforcement happens in **two places**:
 - **Backend:** middleware on routes (`role:admin,officer`)
 - **Frontend:** `ProtectedRoute` component checks user role before rendering pages
 
-This double-gating means a malicious user can't bypass the UI to hit forbidden endpoints.
+This double-gating means a malicious user can't bypass the UI to hit forbidden endpoints. On top of the role checks, the backend also checks each record: staff get HTTP 403 for events they aren't assigned to (and their tasks, documents, and reports). Deactivating an account signs it out everywhere, and an administrator can't deactivate or demote themselves, so there's always at least one active admin.
 
 ### Historical record protection
 
-Once an event auto-transitions to "Completed" status (its date has passed), its tasks are **locked**:
-- Staff and Officers can no longer change status, edit, delete, or add tasks
-- Only an Administrator can modify completed-event task records (a "break glass" path for genuine corrections)
+At the start of every API request, the backend marks events whose date has passed as "Completed" (`CompletePastEvents` middleware), so the lock never depends on which page someone opened first. Once an event is Completed, the event and its tasks are **locked**:
+- Staff and Officers can no longer edit the event, or change status, edit, delete, or add tasks
+- Only an Administrator can modify completed events and their task records (a "break glass" path for genuine corrections). If an Administrator moves a completed event to a future date, it reopens as Upcoming
 - Any status change an Admin makes to a completed event requires explicit confirmation
 - Enforced on the backend (HTTP 403) — cannot be bypassed via the UI
 
-This protects the integrity of post-event reports. Key files: `TaskController.php` (backend checks), `TaskRow.jsx` (UI lock state).
+This protects the integrity of post-event reports. Key files: `CompletePastEvents.php`, `EventController.php`, `TaskController.php` (backend checks), `TaskRow.jsx` and `EventDetailDrawer.jsx` (UI lock state).
 
 ---
 
@@ -185,6 +186,7 @@ This protects the integrity of post-event reports. Key files: `TaskController.ph
 | "How is the readiness color shown in the calendar?" | `frontend/src/components/EventCalendarView.jsx` |
 | "How are PDF reports generated?" | `backend/app/Http/Controllers/Api/ReportController.php` + `resources/views/pdf/event-report.blade.php` |
 | "Where is the routes file?" | `backend/routes/api.php` |
+| "How do you know it works?" | `backend/tests/` (run `php artisan test`) |
 | "How is data seeded for the demo?" | `backend/database/seeders/DatabaseSeeder.php` |
 
 ---
@@ -207,7 +209,8 @@ This protects the integrity of post-event reports. Key files: `TaskController.ph
 ## Numbers Worth Memorizing for Defense
 
 - **6 database tables**
-- **~25 API endpoints** total
+- **33 API routes** (~30 endpoints, since updates accept both PUT and PATCH)
+- **30 automated tests** (`php artisan test`)
 - **4 main features** (per briefing)
 - **3 user roles**
 - **8 build phases** completed

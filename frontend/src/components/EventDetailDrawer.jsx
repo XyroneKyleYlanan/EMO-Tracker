@@ -334,7 +334,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                     Delete
                   </button>
                 )}
-                {canEdit && (
+                {canEdit && (event.status !== 'completed' || user.role === 'admin') && (
                   <button
                     onClick={() => onEdit(event)}
                     className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition"

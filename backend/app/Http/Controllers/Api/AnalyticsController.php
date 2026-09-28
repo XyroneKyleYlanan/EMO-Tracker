@@ -20,10 +20,6 @@ class AnalyticsController extends Controller
             default => null,
         };
 
-        Event::where('status', 'upcoming')
-            ->whereDate('event_date', '<', today())
-            ->update(['status' => 'completed']);
-
         $eventsQuery = Event::with('tasks:id,event_id,status,assigned_to');
         if ($range) {
             $eventsQuery->whereBetween('event_date', $range);
@@ -49,16 +45,21 @@ class AnalyticsController extends Controller
             $distribution[$key] = ($distribution[$key] ?? 0) + 1;
         }
 
+        $urgencyRank = ['red' => 0, 'yellow' => 1, 'green' => 2];
+
         $topUrgent = $events
             ->where('status', 'upcoming')
-            ->sortBy('event_date')
+            ->sortBy([
+                fn ($a, $b) => $urgencyRank[$a->readiness] <=> $urgencyRank[$b->readiness],
+                fn ($a, $b) => $a->event_date <=> $b->event_date,
+            ])
             ->take(5)
             ->values()
             ->map(function ($e) {
                 return [
                     'id' => $e->id,
                     'name' => $e->name,
-                    'event_date' => $e->event_date,
+                    'event_date' => $e->event_date->toDateString(),
                     'event_time' => $e->event_time,
                     'venue' => $e->venue,
                     'readiness' => $e->readiness,

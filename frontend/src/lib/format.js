@@ -9,9 +9,19 @@ export function formatTime(time24) {
   return `${h}:${m} ${period}`
 }
 
+// Plain dates ("2026-10-01") are calendar days, not instants. Parse them in
+// local time so they never shift by a day depending on the browser's timezone.
+function parseDate(value) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const [y, m, d] = value.split('-').map(Number)
+    return new Date(y, m - 1, d)
+  }
+  return new Date(value)
+}
+
 export function formatDateShort(iso) {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('en-US', {
+  return parseDate(iso).toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -21,7 +31,7 @@ export function formatDateShort(iso) {
 
 export function formatDateLong(iso) {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('en-US', {
+  return parseDate(iso).toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
@@ -31,7 +41,7 @@ export function formatDateLong(iso) {
 
 export function formatDateCompact(iso) {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('en-US', {
+  return parseDate(iso).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

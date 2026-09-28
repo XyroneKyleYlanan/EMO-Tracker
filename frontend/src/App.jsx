@@ -11,7 +11,6 @@ import EventsPage from './pages/EventsPage'
 import StaffTasksPage from './pages/StaffTasksPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import StaffManagementPage from './pages/StaffManagementPage'
-import ComingSoon from './pages/ComingSoon'
 
 function App() {
   return (

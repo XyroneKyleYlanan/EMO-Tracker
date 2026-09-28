@@ -259,7 +259,7 @@ Stores configurable system settings (e.g., school year boundaries).
 - Staff members can update the status of tasks assigned to them (not others)
 - A dedicated "My Tasks" page for Staff lists all tasks assigned to them across all events
 - Tasks have priority levels (Low, Medium, High) displayed with color coding
-- **Historical record protection:** once an event transitions to Completed status, its tasks become locked. Staff and Officers can no longer modify them. Only an Administrator may correct historical task records, and any such change requires explicit on-screen confirmation. This safeguards the integrity of post-event reports.
+- **Historical record protection:** once an event transitions to Completed status, the event and its tasks become locked. Staff and Officers can no longer modify them. Only an Administrator may correct historical task records, and any such change requires explicit on-screen confirmation. This safeguards the integrity of post-event reports.
 
 **Key files:** `TaskController.php`, `TaskRow.jsx`, `TaskFormDialog.jsx`, `StaffTasksPage.jsx`
 
@@ -268,21 +268,22 @@ Stores configurable system settings (e.g., school year boundaries).
 **Description:** The system automatically classifies each event into one of four readiness levels using hardcoded rule-based logic. **This is the "AI" feature required by the curriculum — implemented without machine learning, external APIs, or data training.**
 
 **Classification levels:**
-- **GREEN — On Track:** tasks completed ≥ 70% AND days remaining ≥ 7 AND at least 1 staff assigned per task
+- **GREEN — On Track:** all tasks are done (regardless of days remaining), OR tasks completed ≥ 70% AND days remaining ≥ 7 AND at least 1 staff assigned per task
 - **YELLOW — At Risk:** tasks completed between 40% and 69%, OR days remaining between 3-6 days, OR some tasks have no staff assigned
 - **RED — Critical:** tasks completed < 40%, OR days remaining ≤ 2 days, OR majority of tasks have no assigned staff
 - **COMPLETED:** event date has passed (assigned automatically when an upcoming event's date is in the past)
 
 **Classification priority order (always evaluated in this sequence):**
-1. Check RED conditions first → if any RED condition is true, classify as RED
-2. Check YELLOW conditions second → if any YELLOW condition is true, classify as YELLOW
-3. Only assign GREEN if neither RED nor YELLOW conditions are triggered
-4. **Edge case:** if an event has zero tasks, classify as YELLOW (not enough data to be GREEN, not critical enough to be RED)
+1. If every task is done → classify as GREEN (there is nothing left to do, so time pressure no longer applies)
+2. Check RED conditions → if any RED condition is true, classify as RED
+3. Check YELLOW conditions → if any YELLOW condition is true, classify as YELLOW
+4. Only assign GREEN if neither RED nor YELLOW conditions are triggered
+5. **Edge case:** if an event has zero tasks, classify as YELLOW (not enough data to be GREEN, not critical enough to be RED)
 
 **Analytics Dashboard (accessible to Administrator and Officer):**
 - Overview stat cards: Total Events, Total Tasks, Tasks Done with percentage, Active Staff
 - Readiness Distribution Donut Chart showing the breakdown of all events by readiness category
-- Top 5 Most Urgent Events list (sorted by event date ascending)
+- Top 5 Most Urgent Events list (ranked by readiness — Critical, then At Risk, then On Track — and then by nearest event date)
 - Period filter: This Week / This Month / All Time
 
 **Implementation note:** Classification is computed on the backend in PHP (`App\Services\EventClassifier`). The frontend only renders the value returned by the API — no classification logic exists in React.
@@ -294,7 +295,7 @@ Stores configurable system settings (e.g., school year boundaries).
 **Description:** Allows generation of post-event PDF summary reports and management of attached documents per event.
 
 **PDF Report Capabilities:**
-- Any authenticated user can generate a PDF report for any event
+- Administrators and Officers can generate a PDF report for any event; Staff can generate reports for the events they are assigned to
 - Reports include: event details, readiness badge, task summary statistics, assigned staff list, full task table with status badges, attached documents list, and a generation timestamp
 - Reports are styled with EMD branding (NEU logo, brand colors, formatted typography)
 - Generated locally on the server using `barryvdh/laravel-dompdf` (a Composer package, NOT an external API)
@@ -304,8 +305,8 @@ Stores configurable system settings (e.g., school year boundaries).
 - Supported file types: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG
 - Maximum file size: 10 MB per file
 - Validation occurs on both frontend (file picker) and backend (Laravel validation rules)
-- Files are stored in Laravel's `storage/app/public` directory and accessed via `storage:link` symlink
-- Any authenticated user can download documents
+- Files are stored privately in Laravel's `storage/app/private` directory; they have no public URL and can only be downloaded through the authenticated API
+- Users can download documents of the events they can view
 - Only Officers and Administrators can delete documents
 
 **Key files:** `ReportController.php`, `DocumentController.php`, `event-report.blade.php` (PDF template)
@@ -358,6 +359,9 @@ Stores configurable system settings (e.g., school year boundaries).
   1. **Backend middleware** (`role:admin,officer,staff`) checks the user's role before executing controller methods
   2. **Frontend route guards** (`ProtectedRoute`) prevent unauthorized users from accessing role-restricted pages
 - This double-gating ensures that a malicious user cannot bypass the UI to access forbidden endpoints
+- **Record-level checks** on the backend limit Staff to the events they are assigned to, including those events' tasks, documents, and reports
+- Deactivated accounts are rejected on every request and their sessions are revoked; an Administrator cannot deactivate or demote their own account
+- Login attempts are rate limited (10 per minute) to slow down password guessing
 
 ### Input Validation
 - All input is validated on both frontend (form-level) and backend (Laravel validation rules)
@@ -369,8 +373,8 @@ Stores configurable system settings (e.g., school year boundaries).
 - The storage of authentication tokens in `localStorage` is acceptable for this project because the application runs on a trusted school LAN with approximately ten known staff members. XSS attack risks are not a realistic concern in this controlled environment.
 
 ### Historical Record Protection (Data Integrity)
-- When an event's scheduled date passes, the system automatically transitions it to "Completed" status.
-- Once an event is Completed, all of its tasks become locked: Staff and Officer roles can no longer change task status, edit, delete, or add tasks to that event.
+- When an event's scheduled date passes, the system automatically transitions it to "Completed" status. This check runs at the start of every API request, so the lock applies immediately no matter which page a user opens.
+- Once an event is Completed, the event and all of its tasks become locked: Staff and Officer roles can no longer edit the event, or change task status, edit, delete, or add tasks to that event.
 - Only an Administrator may modify a completed event's task records. This is intended as a "break glass" mechanism for correcting genuine mistakes — not for routine editing.
 - Any status change an Administrator makes to a completed event's task requires explicit on-screen confirmation, preventing accidental or silent alteration of historical data.
 - This protection ensures that once an event has concluded, the record of who did what — used by post-event reports — cannot be casually tampered with. It is enforced on the backend (HTTP 403 responses) so it cannot be bypassed through the user interface.
@@ -400,6 +404,10 @@ Each phase was validated before moving to the next, ensuring stable foundations.
 ### Unit-level Testing
 - Backend API endpoints were tested via `Invoke-RestMethod` (PowerShell) and Laravel's built-in route inspection.
 - Authentication flow, role gating, and validation rules were verified for each of the three roles.
+
+### Automated Testing (added in Capstone 2)
+- A PHPUnit suite of 30 tests runs against a temporary in-memory database with `php artisan test`.
+- It covers every readiness rule (including edge cases), role and record-level access for each role, deactivated accounts, the completed-event lock, private document storage, and PDF report generation.
 
 ### Integration Testing
 - Full-stack flows (login → fetch events → mark task done → observe readiness change) were tested manually in the browser.
@@ -482,7 +490,8 @@ For the paper's results/data section:
 
 - **Lines of code (approximate):** Backend ~2,500 lines PHP; Frontend ~3,500 lines JSX/JS; Templates and configuration ~500 lines.
 - **Number of database tables:** 6
-- **Number of API endpoints:** approximately 30 (36 route registrations in `routes/api.php`, since update routes accept both PUT and PATCH)
+- **Number of API endpoints:** approximately 30 (33 route registrations in `routes/api.php`, since update routes accept both PUT and PATCH)
+- **Automated tests:** 30 PHPUnit tests
 - **Number of frontend components:** 17 reusable components + 10 page-level files (8 functional pages + 2 placeholder pages)
 - **Number of build phases:** 8
 - **Number of features (per briefing):** Exactly 4

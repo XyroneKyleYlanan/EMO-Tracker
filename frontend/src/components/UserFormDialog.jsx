@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
+import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 
 const EMPTY = {
@@ -11,7 +12,9 @@ const EMPTY = {
 }
 
 export default function UserFormDialog({ open, user, onClose, onSaved }) {
+  const { user: currentUser } = useAuth()
   const toast = useToast()
+  const isSelf = !!user && user.id === currentUser.id
   const [form, setForm] = useState(EMPTY)
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
@@ -111,11 +114,16 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
             />
           </Field>
 
-          <Field label="Role" error={errors.role?.[0]}>
+          <Field
+            label="Role"
+            error={errors.role?.[0]}
+            hint={isSelf ? 'You cannot change your own role.' : undefined}
+          >
             <select
               value={form.role}
               onChange={(e) => update('role', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
+              disabled={isSelf}
+              className="disabled:bg-gray-100 disabled:text-gray-500 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
             >
               <option value="staff">Staff</option>
               <option value="officer">Officer</option>
@@ -124,12 +132,17 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
           </Field>
 
           {user && (
-            <Field label="Active" error={errors.is_active?.[0]}>
-              <label className="flex items-center gap-2 cursor-pointer">
+            <Field
+              label="Active"
+              error={errors.is_active?.[0]}
+              hint={isSelf ? 'You cannot deactivate your own account.' : undefined}
+            >
+              <label className={`flex items-center gap-2 ${isSelf ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'}`}>
                 <input
                   type="checkbox"
                   checked={form.is_active}
                   onChange={(e) => update('is_active', e.target.checked)}
+                  disabled={isSelf}
                   className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
                 />
                 <span className="text-sm text-gray-700">

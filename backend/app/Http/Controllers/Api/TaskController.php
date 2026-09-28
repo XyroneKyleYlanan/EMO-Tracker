@@ -5,14 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Task;
+use App\Rules\AssignableStaff;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
-    public function index(Event $event): JsonResponse
+    public function index(Request $request, Event $event): JsonResponse
     {
+        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
+
         $tasks = $event->tasks()
             ->with('assignee:id,name,email,role')
             ->orderBy('due_date')
@@ -56,7 +59,7 @@ class TaskController extends Controller
             'due_date' => ['required', 'date'],
             'status' => ['nullable', Rule::in(['pending', 'in_progress', 'done'])],
             'priority' => ['nullable', Rule::in(['low', 'medium', 'high'])],
-            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
+            'assigned_to' => ['nullable', 'integer', new AssignableStaff],
         ]);
 
         $task = $event->tasks()->create([
@@ -87,7 +90,7 @@ class TaskController extends Controller
             'due_date' => ['sometimes', 'date'],
             'status' => ['sometimes', Rule::in(['pending', 'in_progress', 'done'])],
             'priority' => ['sometimes', Rule::in(['low', 'medium', 'high'])],
-            'assigned_to' => ['nullable', 'integer', 'exists:users,id'],
+            'assigned_to' => ['nullable', 'integer', new AssignableStaff(array_filter([$task->assigned_to]))],
         ]);
 
         $task->update($data);

@@ -4,19 +4,16 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Rules\AssignableStaff;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        Event::where('status', 'upcoming')
-            ->whereDate('event_date', '<', today())
-            ->update(['status' => 'completed']);
-
-        $events = Event::with([
+        $events = Event::visibleTo($request->user())
+            ->with([
                 'tasks:id,event_id,status,assigned_to',
                 'staff:id,name,role',
                 'creator:id,name',
@@ -36,8 +33,10 @@ class EventController extends Controller
         return response()->json(['events' => $events]);
     }
 
-    public function show(Event $event): JsonResponse
+    public function show(Request $request, Event $event): JsonResponse
     {
+        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
+
         $event->load([
             'tasks.assignee:id,name,email,role',
             'staff:id,name,email,role',
@@ -58,7 +57,7 @@ class EventController extends Controller
             'event_time' => ['required', 'date_format:H:i'],
             'budget' => ['nullable', 'numeric', 'min:0'],
             'staff_ids' => ['nullable', 'array'],
-            'staff_ids.*' => ['integer', 'exists:users,id'],
+            'staff_ids.*' => ['integer', new AssignableStaff],
         ]);
 
         $event = Event::create([
@@ -68,7 +67,7 @@ class EventController extends Controller
             'event_date' => $data['event_date'],
             'event_time' => $data['event_time'],
             'budget' => $data['budget'] ?? null,
-            'status' => 'upcoming',
+            'status' => Event::statusForDate($data['event_date']),
             'created_by' => $request->user()->id,
         ]);
 
@@ -84,6 +83,14 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event): JsonResponse
     {
+        if ($event->status === 'completed' && $request->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'This event is completed. Only an administrator can edit it.',
+            ], 403);
+        }
+
+        $currentStaffIds = $event->staff()->pluck('users.id')->all();
+
         $data = $request->validate([
             'name' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -91,12 +98,15 @@ class EventController extends Controller
             'event_date' => ['sometimes', 'date'],
             'event_time' => ['sometimes', 'date_format:H:i'],
             'budget' => ['nullable', 'numeric', 'min:0'],
-            'status' => ['sometimes', Rule::in(['upcoming', 'completed'])],
             'staff_ids' => ['sometimes', 'array'],
-            'staff_ids.*' => ['integer', 'exists:users,id'],
+            'staff_ids.*' => ['integer', new AssignableStaff($currentStaffIds)],
         ]);
 
-        $event->update(collect($data)->except('staff_ids')->all());
+        // Status always follows the date, so rescheduling a past event into
+        // the future (admin only) reopens it, and moving one into the past closes it.
+        $event->fill(collect($data)->except('staff_ids')->all());
+        $event->status = Event::statusForDate($event->event_date);
+        $event->save();
 
         if (array_key_exists('staff_ids', $data)) {
             $event->staff()->sync($data['staff_ids'] ?? []);

@@ -41,6 +41,9 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
 
   if (!open) return null
 
+  // Active staff, plus the current assignee even if they were deactivated since.
+  const staffOptions = staff.filter((u) => u.is_active || u.id === task?.assigned_to)
+
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
@@ -140,8 +143,10 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
             >
               <option value="">— Unassigned —</option>
-              {staff.map((u) => (
-                <option key={u.id} value={u.id}>{u.name}</option>
+              {staffOptions.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}{u.is_active ? '' : ' (deactivated)'}
+                </option>
               ))}
             </select>
           </Field>

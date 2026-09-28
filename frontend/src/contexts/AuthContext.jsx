@@ -22,7 +22,9 @@ export function AuthProvider({ children }) {
         setUser(res.data.user)
         localStorage.setItem('emd_user', JSON.stringify(res.data.user))
       })
-      .catch(() => {
+      .catch((err) => {
+        // Only drop the session if the server rejected it, not when it's unreachable.
+        if (!err.response) return
         localStorage.removeItem('emd_token')
         localStorage.removeItem('emd_user')
         setUser(null)

@@ -19,6 +19,8 @@ class Document extends Model
         'mime_type',
     ];
 
+    protected $hidden = ['file_path'];
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

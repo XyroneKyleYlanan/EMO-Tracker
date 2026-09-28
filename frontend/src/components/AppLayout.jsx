@@ -157,7 +157,10 @@ export default function AppLayout() {
       </footer>
 
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-20">
-        <div className="grid grid-cols-4 px-2 py-1.5">
+        <div
+          className="grid px-2 py-1.5"
+          style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
+        >
           {items.map(({ to, label, Icon, end }) => (
             <NavLink
               key={to}

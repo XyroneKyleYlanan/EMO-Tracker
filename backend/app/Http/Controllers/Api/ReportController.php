@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
-    public function event(Event $event): Response
+    public function event(Request $request, Event $event): Response
     {
+        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
+
         $event->load([
             'tasks.assignee:id,name,email,role',
             'staff:id,name,email,role',
@@ -34,7 +38,7 @@ class ReportController extends Controller
             'generatedAt' => now(),
         ])->setPaper('a4');
 
-        $filename = 'event-report-' . str_replace(' ', '-', strtolower($event->name)) . '.pdf';
+        $filename = 'event-report-' . Str::slug($event->name) . '.pdf';
 
         return $pdf->download($filename);
     }

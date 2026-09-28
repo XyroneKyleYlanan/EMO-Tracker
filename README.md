@@ -29,7 +29,7 @@ A web application for event planning and task management with rule-based event r
 
 - **Administrator** — Full access, manages staff accounts, deletes events
 - **Officer** — Creates/manages events, tasks, and documents
-- **Staff** — Views assigned events and updates own task status
+- **Staff** — Views only the events they're assigned to and updates own task status
 
 ---
 
@@ -156,7 +156,18 @@ cd C:\laragon\www\EMDTracker\backend
 php artisan migrate:fresh --seed
 ```
 
-This recreates all tables and reseeds 5 events, 18 tasks, 10 users covering every readiness category (Completed, On Track, At Risk, Critical).
+This recreates all tables and reseeds 5 events, 18 tasks, 10 users, and the sample Foundation Day document.
+
+---
+
+## Running the Tests
+
+```bash
+cd C:\laragon\www\EMDTracker\backend
+php artisan test
+```
+
+The tests use a temporary in-memory database, so they never touch your demo data. They cover the readiness rules, role and record access, the completed-event lock, document storage, and PDF reports.
 
 ---
 
