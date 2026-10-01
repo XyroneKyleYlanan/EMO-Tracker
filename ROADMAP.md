@@ -192,6 +192,9 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Frontend: dates shown correctly in any browser timezone, stay logged in if backend is briefly down, mobile nav spacing
 - [x] Automated test suite: 30 PHPUnit tests (`php artisan test`)
 
+## Phase 10 — Capstone 2 improvements
+- [x] Task detail view: click a task (event drawer or My Tasks) to see its description, assignee, due date, priority, and event; Edit shortcut for admin/officer
+
 ---
 
 ## Notes & Decisions Log
