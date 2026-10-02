@@ -8,8 +8,8 @@ export default function StaffTasksPage() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [filter, setFilter] = useState('all')
-
+  const [filter, setFilter] = useState('open')
+  
   function fetchTasks() {
     setLoading(true)
     api.get('/my-tasks')
