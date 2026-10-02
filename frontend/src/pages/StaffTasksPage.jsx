@@ -87,7 +87,7 @@ function FilterBtn({ active, onClick, label }) {
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
+      className={`px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition ${
         active ? 'bg-neu-green text-white' : 'text-gray-600 hover:bg-gray-100'
       }`}
     >
