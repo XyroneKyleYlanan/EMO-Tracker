@@ -57,7 +57,7 @@
                 <img src="{{ public_path('images/neu-logo.png') }}" alt="NEU" style="width: 50px; height: 50px;">
             </td>
             <td style="vertical-align: middle; border: none; padding-left: 4px;">
-                <div class="brand">EMD Tracker · Events Management Department</div>
+                <div class="brand">EMO Tracker · Events Management Office</div>
                 <div style="font-size: 9px; color: #6b7280; letter-spacing: 0.5px;">NEW ERA UNIVERSITY</div>
             </td>
         </tr>
@@ -194,7 +194,7 @@
 </div>
 
 <div class="footer">
-    Generated on {{ $generatedAt->format('F j, Y · g:i A') }} · EMD Tracker · For internal use only
+    Generated on {{ $generatedAt->format('F j, Y · g:i A') }} · EMO Tracker · For internal use only
 </div>
 
 </body>

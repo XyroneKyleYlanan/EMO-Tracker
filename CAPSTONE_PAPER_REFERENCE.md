@@ -1,4 +1,4 @@
-# EMD Tracker — Capstone Paper Reference Document
+# EMO Tracker — Capstone Paper Reference Document
 
 > **For groupmates writing the capstone manuscript.**
 > This document contains all the technical facts, design decisions, and project details needed to write the paper. Paste relevant sections into an AI assistant (ChatGPT / Claude / Gemini) to help draft chapters. **Do not paste this entire document at once** — feed your AI only the sections relevant to the chapter you're working on.
@@ -7,9 +7,9 @@
 
 ## 1. PROJECT IDENTIFICATION
 
-- **Project Title:** EMD Tracker: A Web Application for Event Planning and Task Management with Rule-Based Event Readiness Classification for the Events Management Department of New Era University
+- **Project Title:** EMO Tracker: A Web Application for Event Planning and Task Management with Rule-Based Event Readiness Classification for the Events Management Office of New Era University
 - **Project Type:** Web Application (Responsive — works on desktop and mobile browser)
-- **Client / Beneficiary:** Events Management Department (EMD), New Era University
+- **Client / Beneficiary:** Events Management Office (EMO), New Era University
 - **Client Address:** No. 9 Central Avenue, New Era, Quezon City, Philippines
 - **Proponents:**
   - Ylanan, Xyrone Kyle E.
@@ -26,34 +26,34 @@
 
 ## 2. BACKGROUND OF THE STUDY
 
-The Events Management Department (EMD) of New Era University is responsible for organizing and overseeing university events such as Foundation Day, Freshmen Orientation, Sports Fests, Faculty Recognition Nights, and Inter-College competitions. The department currently has approximately ten (10) members.
+The Events Management Office (EMO) of New Era University is responsible for organizing and overseeing university events such as Foundation Day, Freshmen Orientation, Sports Fests, Faculty Recognition Nights, and Inter-College competitions. The office currently has approximately ten (10) members.
 
 **Existing problems with manual event management:**
 1. No centralized tracking of event tasks and assignments — information is scattered across spreadsheets, paper records, and informal tools.
-2. Difficulty monitoring how ready an event is before it happens — the department lacks an objective way to determine which events require urgent attention.
+2. Difficulty monitoring how ready an event is before it happens — the office lacks an objective way to determine which events require urgent attention.
 3. No automated reporting after events — generating post-event summary reports is manual and time-consuming.
 4. Staff assignments are loosely tracked — sometimes leading to overlapping responsibilities or unassigned tasks.
 
 **Proposed solution:**
-EMD Tracker is a responsive web application that replaces these manual methods with a centralized, data-driven system. It runs on the department's local area network (LAN) via a single laptop acting as the server. The system features a Calendly-inspired event calendar with automatic readiness classification, real-time task tracking, role-based access control, and PDF report generation.
+EMO Tracker is a responsive web application that replaces these manual methods with a centralized, data-driven system. It runs on the office's local area network (LAN) via a single laptop acting as the server. The system features a Calendly-inspired event calendar with automatic readiness classification, real-time task tracking, role-based access control, and PDF report generation.
 
 ---
 
 ## 3. STATEMENT OF THE PROBLEM
 
-**General problem:** The Events Management Department of New Era University lacks a centralized, automated system for managing event planning, task assignments, staff coordination, and post-event reporting.
+**General problem:** The Events Management Office of New Era University lacks a centralized, automated system for managing event planning, task assignments, staff coordination, and post-event reporting.
 
 **Specific problems:**
-1. How can the department centralize event planning information that is currently scattered?
+1. How can the office centralize event planning information that is currently scattered?
 2. How can task assignments be tracked clearly with accountability?
-3. How can the department objectively monitor event readiness before each event?
+3. How can the office objectively monitor event readiness before each event?
 4. How can post-event reports be generated efficiently with consistent formatting?
 
 ---
 
 ## 4. OBJECTIVES
 
-**General objective:** To develop EMD Tracker, a responsive web application that centralizes event planning, task tracking, staff assignment, readiness classification, and reporting for the Events Management Department of New Era University.
+**General objective:** To develop EMO Tracker, a responsive web application that centralizes event planning, task tracking, staff assignment, readiness classification, and reporting for the Events Management Office of New Era University.
 
 **Specific objectives:**
 1. To design and implement an event planning module that allows authorized users to create, edit, and view events through both a Calendly-inspired calendar and list view.
@@ -62,7 +62,7 @@ EMD Tracker is a responsive web application that replaces these manual methods w
 4. To provide an analytics dashboard with stat cards, a readiness distribution donut chart, and a list of the most urgent events.
 5. To enable PDF report generation and secure document management (upload/download/delete) for each event.
 6. To enforce role-based access control with three roles (Administrator, Officer, Staff) using token-based authentication.
-7. To ensure the system runs locally on the EMD's network without dependency on external cloud services or paid hosting.
+7. To ensure the system runs locally on the EMO's network without dependency on external cloud services or paid hosting.
 
 ---
 
@@ -70,8 +70,8 @@ EMD Tracker is a responsive web application that replaces these manual methods w
 
 ### Scope
 
-- The system is designed exclusively for **internal use** by the Events Management Department of New Era University.
-- The system supports approximately ten (10) concurrent users (the department's full staff complement).
+- The system is designed exclusively for **internal use** by the Events Management Office of New Era University.
+- The system supports approximately ten (10) concurrent users (the office's full staff complement).
 - The system runs on a local area network (LAN) using Laragon as the local server.
 - The system supports three user roles: Administrator, Officer, and Staff.
 - The system implements exactly four core features: (1) Event Planning and Scheduling, (2) Task and Staff Assignment Tracking, (3) Rule-Based Event Readiness Classification, and (4) Event Progress Reports and Document Management.
@@ -91,8 +91,8 @@ EMD Tracker is a responsive web application that replaces these manual methods w
 
 ## 6. SIGNIFICANCE OF THE STUDY
 
-- **To the Events Management Department:** A centralized tool that replaces error-prone manual workflows, providing real-time visibility into event readiness and task progress.
-- **To the proponents:** Demonstrates the integration of multiple technologies (React, Laravel, MySQL) into a cohesive responsive web application that satisfies real-world departmental needs.
+- **To the Events Management Office:** A centralized tool that replaces error-prone manual workflows, providing real-time visibility into event readiness and task progress.
+- **To the proponents:** Demonstrates the integration of multiple technologies (React, Laravel, MySQL) into a cohesive responsive web application that satisfies real-world office needs.
 - **To future researchers and students:** Provides a reference for building academic capstone projects that comply with strict no-external-API constraints while still delivering modern, polished user experiences.
 - **To New Era University:** Establishes a precedent for student-developed internal tools that can be donated to departments after defense, contributing to institutional capability.
 
@@ -297,7 +297,7 @@ Stores configurable system settings (e.g., school year boundaries).
 **PDF Report Capabilities:**
 - Administrators and Officers can generate a PDF report for any event; Staff can generate reports for the events they are assigned to
 - Reports include: event details, readiness badge, task summary statistics, assigned staff list, full task table with status badges, attached documents list, and a generation timestamp
-- Reports are styled with EMD branding (NEU logo, brand colors, formatted typography)
+- Reports are styled with EMO branding (NEU logo, brand colors, formatted typography)
 - Generated locally on the server using `barryvdh/laravel-dompdf` (a Composer package, NOT an external API)
 
 **Document Management Capabilities:**
@@ -418,7 +418,7 @@ Each phase was validated before moving to the next, ensuring stable foundations.
 - Browser compatibility was verified on Chrome and Edge.
 
 ### Acceptance Testing (planned for Capstone 2)
-- User Acceptance Testing (UAT) sessions are planned at the EMD office with actual department staff.
+- User Acceptance Testing (UAT) sessions are planned at the EMO with actual office staff.
 - Feedback will be collected and used to refine the application before final donation/handover.
 
 ---
@@ -428,13 +428,13 @@ Each phase was validated before moving to the next, ensuring stable foundations.
 The system follows a **single-server LAN deployment model**:
 
 - One designated laptop runs Laragon (Apache + MySQL), the Laravel backend (via `php artisan serve` on port 8000), and the Vite development server (on port 5173).
-- The server laptop connects to the EMD's local network (school WiFi or mobile hotspot).
+- The server laptop connects to the EMO's local network (school WiFi or mobile hotspot).
 - All staff devices (phones, tablets, laptops) connect to the same network.
 - Staff access the application by typing the server laptop's local IP address in their browser.
 - No internet connection is required after initial setup — the system functions entirely offline on the local network.
 - A startup script (`start.bat`) automates the launch of both servers with a single click.
 
-For long-term deployment after Capstone 2, the team plans to either donate a dedicated server laptop to the EMD or install the system on an existing departmental computer.
+For long-term deployment after Capstone 2, the team plans to either donate a dedicated server laptop to the EMO or install the system on an existing office computer.
 
 ---
 
@@ -471,7 +471,7 @@ A: Separation of concerns. React provides a responsive, component-based UI that 
 A: The system requires connection to the server laptop's network. If a user's device disconnects, they cannot access the app until reconnected. The data on the server is preserved. We considered offline-first design but it was outside the scope of Capstone 1 and not required by the briefing.
 
 **Q: Is the system scalable to thousands of users?**
-A: The system was designed for the EMD's actual scale of approximately ten staff. The architecture would scale to perhaps a few hundred concurrent users on the same laptop, but beyond that it would require deployment to a server. Scalability beyond the EMD's needs was not a project goal.
+A: The system was designed for the EMO's actual scale of approximately ten staff. The architecture would scale to perhaps a few hundred concurrent users on the same laptop, but beyond that it would require deployment to a server. Scalability beyond the EMO's needs was not a project goal.
 
 **Q: What about security? Isn't localStorage vulnerable to XSS?**
 A: Yes, in theory localStorage is vulnerable to XSS attacks. We chose this approach because the application runs on a trusted internal LAN with approximately ten known users. XSS risks are minimal in this controlled environment. For production internet deployment, we would use httpOnly cookies instead.
@@ -479,7 +479,7 @@ A: Yes, in theory localStorage is vulnerable to XSS attacks. We chose this appro
 **Q: What stops a staff member from faking task completion or tampering with records after an event?**
 A: Two safeguards. First, staff can only update the status of tasks assigned to them — not other people's tasks. Second, once an event's date passes and it becomes "Completed," all its task records are locked: staff and officers can no longer modify them. Only an Administrator can correct historical records, and the system requires explicit confirmation for any such change. This protection is enforced on the backend, so it cannot be bypassed through the interface. A full Audit Trail (logging every change with timestamp and user) is planned as a future enhancement for complete accountability.
 
-**Q: What if the EMD wants more features after the project is done?**
+**Q: What if the EMO wants more features after the project is done?**
 A: The codebase is organized for maintainability and is documented. Future enhancements mentioned during the project include an Audit Trail / Activity Log, email notifications, and a configurable school year filter. The team will continue to support and improve the system through Capstone 2.
 
 ---

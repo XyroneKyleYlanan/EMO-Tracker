@@ -9,7 +9,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('emd_token')
+  const token = localStorage.getItem('emo_token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
@@ -20,8 +20,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('emd_token')
-      localStorage.removeItem('emd_user')
+      localStorage.removeItem('emo_token')
+      localStorage.removeItem('emo_user')
       if (window.location.pathname !== '/login') {
         window.location.href = '/login'
       }

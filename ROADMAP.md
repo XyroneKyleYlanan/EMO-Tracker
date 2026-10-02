@@ -1,16 +1,16 @@
-# EMD Tracker — Project Roadmap
+# EMO Tracker — Project Roadmap
 
-> Capstone project (Capstone 1 build complete; Capstone 2 in progress). Web app for the Events Management Department of New Era University.
+> Capstone project (Capstone 1 build complete; Capstone 2 in progress). Web app for the Events Management Office of New Era University.
 > Tech stack: React + Vite + Tailwind (frontend) · Laravel + Sanctum (backend) · MySQL · Laragon (LAN).
 > Always pick up from the last unchecked task. Mark `[x]` when complete.
 
 ---
 
 ## Project Locations
-- Project root: `C:\laragon\www\EMDTracker\`
-- Backend: `C:\laragon\www\EMDTracker\backend\` (Laravel)
-- Frontend: `C:\laragon\www\EMDTracker\frontend\` (React + Vite)
-- Backend URL (dev): `http://emdtracker.test/` or `http://localhost/EMDTracker/backend/public/`
+- Project root: `C:\laragon\www\EMOTracker\`
+- Backend: `C:\laragon\www\EMOTracker\backend\` (Laravel)
+- Frontend: `C:\laragon\www\EMOTracker\frontend\` (React + Vite)
+- Backend URL (dev): `http://emotracker.test/` or `http://localhost/EMOTracker/backend/public/`
 - Frontend URL (dev): `http://localhost:5173/`
 
 ## Confirmed Decisions (do not revisit)
@@ -30,12 +30,12 @@
 
 ## Phase 0 — Environment & Project Setup
 - [x] Verify PHP 8.x, Composer, Node.js, npm, Laragon, MySQL
-- [x] Create project folder at `C:\laragon\www\EMDTracker\`
+- [x] Create project folder at `C:\laragon\www\EMOTracker\`
 - [x] Create ROADMAP.md
 - [x] Initialize Laravel backend in `backend/`
 - [x] Install Laravel Sanctum + HasApiTokens trait on User model
 - [x] Configure backend `.env` (DB connection, app URL, app name)
-- [x] Create MySQL database `emd_tracker`
+- [x] Create MySQL database `emo_tracker`
 - [x] Run initial migrations to confirm DB connection
 - [x] Initialize React + Vite frontend in `frontend/`
 - [x] Install Tailwind CSS v4 + @tailwindcss/vite plugin
@@ -135,7 +135,7 @@
 - [x] barryvdh/laravel-dompdf installed (v3.1)
 - [x] storage:link symlink created for public file access
 - [x] DocumentController: index/store/download/destroy
-- [x] ReportController + Blade PDF template with EMD branding, readiness badge, stats, staff, tasks, docs
+- [x] ReportController + Blade PDF template with EMO branding, readiness badge, stats, staff, tasks, docs
 - [x] Routes: upload/delete admin+officer; download/report for all authenticated
 - [x] Validation: PDF/DOC/DOCX/XLS/XLSX/JPG/PNG, max 10MB, on both frontend and backend
 - [x] Frontend: document upload/list/delete UI in EventDetailDrawer (multipart/form-data)
@@ -205,3 +205,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-05-16: Fixed my-tasks endpoint not loading assignee relation (showed "Unassigned" incorrectly on Staff My Tasks page).
 - 2026-05-16: Added historical record protection — completed events lock their tasks for staff/officer; admin-only override with explicit confirmation on status changes. Enforced backend (403) + frontend (disabled UI). Strengthens data integrity story for defense.
 - 2026-09-28: Capstone 2 kickoff review found access-control gaps, a classifier edge case (fully done events within 2 days showed Critical), and UTC timezone drift. Fixed in Phase 9 with tests. Previously uploaded files in `storage/app/public/documents` are no longer read; reset with `php artisan migrate:fresh --seed` or re-upload.
+- 2026-10-02: Client clarified the office is the Events Management Office (EMO), not a department. Renamed everything: app to EMO Tracker, office name, demo accounts to `@emo.test`, database to `emo_tracker`, repo to `EMO-Tracker`. `start.bat` now uses its own folder instead of a hard-coded path.

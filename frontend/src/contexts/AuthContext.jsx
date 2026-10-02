@@ -5,13 +5,13 @@ const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem('emd_user')
+    const stored = localStorage.getItem('emo_user')
     return stored ? JSON.parse(stored) : null
   })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('emd_token')
+    const token = localStorage.getItem('emo_token')
     if (!token) {
       setLoading(false)
       return
@@ -20,13 +20,13 @@ export function AuthProvider({ children }) {
     api.get('/me')
       .then((res) => {
         setUser(res.data.user)
-        localStorage.setItem('emd_user', JSON.stringify(res.data.user))
+        localStorage.setItem('emo_user', JSON.stringify(res.data.user))
       })
       .catch((err) => {
         // Only drop the session if the server rejected it, not when it's unreachable.
         if (!err.response) return
-        localStorage.removeItem('emd_token')
-        localStorage.removeItem('emd_user')
+        localStorage.removeItem('emo_token')
+        localStorage.removeItem('emo_user')
         setUser(null)
       })
       .finally(() => setLoading(false))
@@ -34,8 +34,8 @@ export function AuthProvider({ children }) {
 
   async function login(email, password) {
     const res = await api.post('/login', { email, password })
-    localStorage.setItem('emd_token', res.data.token)
-    localStorage.setItem('emd_user', JSON.stringify(res.data.user))
+    localStorage.setItem('emo_token', res.data.token)
+    localStorage.setItem('emo_user', JSON.stringify(res.data.user))
     setUser(res.data.user)
     return res.data.user
   }
@@ -46,8 +46,8 @@ export function AuthProvider({ children }) {
     } catch {
       // ignore — token may already be invalid
     }
-    localStorage.removeItem('emd_token')
-    localStorage.removeItem('emd_user')
+    localStorage.removeItem('emo_token')
+    localStorage.removeItem('emo_user')
     setUser(null)
   }
 

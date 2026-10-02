@@ -1,6 +1,6 @@
-# EMD Tracker
+# EMO Tracker
 
-A web application for event planning and task management with rule-based event readiness classification, built for the Events Management Department of New Era University.
+A web application for event planning and task management with rule-based event readiness classification, built for the Events Management Office of New Era University.
 
 **Capstone 2 · BSIT · NEU**
 
@@ -44,10 +44,10 @@ A web application for event planning and task management with rule-based event r
 
 ```bash
 cd C:\laragon\www
-git clone https://github.com/XyroneKyleYlanan/EMD-Tracker.git EMDTracker
+git clone https://github.com/XyroneKyleYlanan/EMO-Tracker.git EMOTracker
 ```
 
-The project must live inside Laragon's `www` folder — i.e., `C:\laragon\www\EMDTracker\`.
+The project must live inside Laragon's `www` folder — i.e., `C:\laragon\www\EMOTracker\`.
 
 ### 2. Start Laragon
 Open Laragon → click **"Start All"**. This launches Apache and MySQL.
@@ -56,7 +56,7 @@ Open Laragon → click **"Start All"**. This launches Apache and MySQL.
 Open **Terminal → Laragon Terminal** (this gives you the correct PHP path automatically).
 
 ```bash
-cd C:\laragon\www\EMDTracker\backend
+cd C:\laragon\www\EMOTracker\backend
 
 composer install
 cp .env.example .env  # if .env doesn't exist
@@ -64,11 +64,11 @@ php artisan key:generate
 ```
 
 ### 4. Create the database
-In Laragon, click **Database** → create database `emd_tracker`.
+In Laragon, click **Database** → create database `emo_tracker`.
 
 Or via terminal:
 ```bash
-mysql -u root -e "CREATE DATABASE emd_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+mysql -u root -e "CREATE DATABASE emo_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
 
 ### 5. Run migrations + seed demo data
@@ -81,7 +81,7 @@ php artisan storage:link
 Open a second terminal:
 
 ```bash
-cd C:\laragon\www\EMDTracker\frontend
+cd C:\laragon\www\EMOTracker\frontend
 npm install
 ```
 
@@ -93,7 +93,7 @@ First make sure **Laragon is running** (open Laragon → "Start All").
 
 ### Easy way — one-click launcher (recommended)
 
-Double-click **`start.bat`** in the project root (`C:\laragon\www\EMDTracker\start.bat`).
+Double-click **`start.bat`** in the project root (`C:\laragon\www\EMOTracker\start.bat`).
 
 It automatically:
 1. Starts the Laravel backend in its own window
@@ -108,14 +108,14 @@ If you prefer to run the servers yourself:
 
 **Terminal 1 — Backend**
 ```bash
-cd C:\laragon\www\EMDTracker\backend
+cd C:\laragon\www\EMOTracker\backend
 php artisan serve
 ```
 Runs Laravel on `http://127.0.0.1:8000`.
 
 **Terminal 2 — Frontend**
 ```bash
-cd C:\laragon\www\EMDTracker\frontend
+cd C:\laragon\www\EMOTracker\frontend
 npm run dev
 ```
 Runs Vite on `http://localhost:5173`.
@@ -134,16 +134,16 @@ All demo accounts use password: **`password123`**
 
 | Email | Role |
 |---|---|
-| `admin@emd.test` | Administrator |
-| `maria.officer@emd.test` | Officer |
-| `juan.officer@emd.test` | Officer |
-| `anna.staff@emd.test` | Staff |
-| `mark.staff@emd.test` | Staff |
-| `joy.staff@emd.test` | Staff |
-| `paolo.staff@emd.test` | Staff |
-| `liza.staff@emd.test` | Staff |
-| `ben.staff@emd.test` | Staff |
-| `carla.staff@emd.test` | Staff |
+| `admin@emo.test` | Administrator |
+| `maria.officer@emo.test` | Officer |
+| `juan.officer@emo.test` | Officer |
+| `anna.staff@emo.test` | Staff |
+| `mark.staff@emo.test` | Staff |
+| `joy.staff@emo.test` | Staff |
+| `paolo.staff@emo.test` | Staff |
+| `liza.staff@emo.test` | Staff |
+| `ben.staff@emo.test` | Staff |
+| `carla.staff@emo.test` | Staff |
 
 ---
 
@@ -152,7 +152,7 @@ All demo accounts use password: **`password123`**
 To wipe everything and reload fresh demo data:
 
 ```bash
-cd C:\laragon\www\EMDTracker\backend
+cd C:\laragon\www\EMOTracker\backend
 php artisan migrate:fresh --seed
 ```
 
@@ -163,7 +163,7 @@ This recreates all tables and reseeds 5 events, 18 tasks, 10 users, and the samp
 ## Running the Tests
 
 ```bash
-cd C:\laragon\www\EMDTracker\backend
+cd C:\laragon\www\EMOTracker\backend
 php artisan test
 ```
 
@@ -174,7 +174,7 @@ The tests use a temporary in-memory database, so they never touch your demo data
 ## Project Structure
 
 ```
-C:\laragon\www\EMDTracker\
+C:\laragon\www\EMOTracker\
 ├── README.md                 This file
 ├── ROADMAP.md                Phased build log
 ├── OVERVIEW.md               Architectural reference
@@ -227,4 +227,4 @@ See `ROADMAP.md` for the phased build log. All 4 features and supporting infrast
 
 ---
 
-*For internal use by the Events Management Department, New Era University.*
+*For internal use by the Events Management Office, New Era University.*

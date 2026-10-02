@@ -83,7 +83,7 @@ export default function EventsPage() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Events</h1>
-          <p className="text-sm text-gray-500 mt-1">Plan and track department events.</p>
+          <p className="text-sm text-gray-500 mt-1">Plan and track EMO events.</p>
         </div>
         {canEdit && (
           <button

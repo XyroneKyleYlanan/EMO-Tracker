@@ -18,17 +18,17 @@
   animation: slide-in 0.18s ease-out;
 }
 
-.fc-emd .fc {
+.fc-emo .fc {
   font-family: inherit;
 }
 
-.fc-emd .fc-toolbar-title {
+.fc-emo .fc-toolbar-title {
   font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
 }
 
-.fc-emd .fc-button {
+.fc-emo .fc-button {
   background-color: white !important;
   border-color: #e5e7eb !important;
   color: #374151 !important;
@@ -38,18 +38,18 @@
   font-size: 0.875rem;
 }
 
-.fc-emd .fc-button:hover {
+.fc-emo .fc-button:hover {
   background-color: #f9fafb !important;
 }
 
-.fc-emd .fc-button-primary:not(:disabled).fc-button-active,
-.fc-emd .fc-button-primary:not(:disabled):active {
+.fc-emo .fc-button-primary:not(:disabled).fc-button-active,
+.fc-emo .fc-button-primary:not(:disabled):active {
   background-color: #0a5c3a !important;
   border-color: #0a5c3a !important;
   color: white !important;
 }
 
-.fc-emd .fc-col-header-cell {
+.fc-emo .fc-col-header-cell {
   background-color: #f9fafb;
   font-weight: 600;
   font-size: 0.75rem;
@@ -59,7 +59,7 @@
   padding: 0.5rem 0;
 }
 
-.fc-emd .fc-event {
+.fc-emo .fc-event {
   border-radius: 6px !important;
   border: none !important;
   padding: 0 !important;
@@ -67,23 +67,23 @@
   transition: transform 0.1s, box-shadow 0.1s;
 }
 
-.fc-emd .fc-event:hover {
+.fc-emo .fc-event:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.fc-emd .fc-daygrid-day-number {
+.fc-emo .fc-daygrid-day-number {
   color: #374151;
   font-weight: 500;
   font-size: 0.875rem;
   padding: 6px 8px;
 }
 
-.fc-emd .fc-day-today {
+.fc-emo .fc-day-today {
   background-color: #fef3c7 !important;
 }
 
-.fc-emd .fc-day-today .fc-daygrid-day-number {
+.fc-emo .fc-day-today .fc-daygrid-day-number {
   color: #92400e;
   font-weight: 600;
 }

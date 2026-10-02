@@ -37,15 +37,15 @@ export default function LoginPage() {
         <div className="flex flex-col items-center gap-3 mb-8">
           <img src="/neu-logo.png" alt="New Era University" className="w-20 h-20 object-contain" />
           <div className="text-center">
-            <h1 className="text-2xl font-semibold text-gray-900">EMD Tracker</h1>
-            <p className="text-sm text-gray-500">Events Management Department</p>
+            <h1 className="text-2xl font-semibold text-gray-900">EMO Tracker</h1>
+            <p className="text-sm text-gray-500">Events Management Office</p>
             <p className="text-xs text-gray-400 mt-0.5">New Era University</p>
           </div>
         </div>
 
         <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-1">Sign in</h2>
-          <p className="text-sm text-gray-500 mb-6">Welcome back. Use your EMD credentials.</p>
+          <p className="text-sm text-gray-500 mb-6">Welcome back. Use your EMO credentials.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -60,7 +60,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-                placeholder="you@emd.test"
+                placeholder="you@emo.test"
               />
             </div>
 
@@ -98,7 +98,7 @@ export default function LoginPage() {
         <div className="text-center mt-6 space-y-1">
           <p className="text-xs text-gray-500">Internal use only</p>
           <p className="text-[11px] text-gray-400">
-            © 2026 EMD Tracker · A Capstone Project at New Era University
+            © 2026 EMO Tracker · A Capstone Project at New Era University
           </p>
         </div>
       </div>

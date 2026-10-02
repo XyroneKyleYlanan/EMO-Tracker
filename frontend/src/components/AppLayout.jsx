@@ -72,8 +72,8 @@ export default function AppLayout() {
           <div className="flex items-center gap-3">
             <img src="/neu-logo.png" alt="NEU" className="w-10 h-10 object-contain" />
             <div className="hidden sm:block">
-              <div className="text-sm font-semibold text-gray-900 leading-tight">EMD Tracker</div>
-              <div className="text-xs text-gray-500 leading-tight">Events Management Department · New Era University</div>
+              <div className="text-sm font-semibold text-gray-900 leading-tight">EMO Tracker</div>
+              <div className="text-xs text-gray-500 leading-tight">Events Management Office · New Era University</div>
             </div>
           </div>
 
@@ -152,7 +152,7 @@ export default function AppLayout() {
 
       <footer className="hidden md:block bg-white border-t border-gray-200 py-3 px-6">
         <div className="text-center text-xs text-gray-500">
-          © 2026 EMD Tracker · A Capstone Project at New Era University
+          © 2026 EMO Tracker · A Capstone Project at New Era University
         </div>
       </footer>
 

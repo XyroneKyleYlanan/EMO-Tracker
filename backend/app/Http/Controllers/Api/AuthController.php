@@ -32,7 +32,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('emd-tracker', ['*'], now()->addDays(30))->plainTextToken;
+        $token = $user->createToken('emo-tracker', ['*'], now()->addDays(30))->plainTextToken;
 
         return response()->json([
             'token' => $token,

@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $admin = User::create([
-            'name' => 'EMD Administrator',
-            'email' => 'admin@emd.test',
+            'name' => 'EMO Administrator',
+            'email' => 'admin@emo.test',
             'password' => Hash::make('password123'),
             'role' => 'admin',
             'is_active' => true,
@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $officer1 = User::create([
             'name' => 'Maria Santos',
-            'email' => 'maria.officer@emd.test',
+            'email' => 'maria.officer@emo.test',
             'password' => Hash::make('password123'),
             'role' => 'officer',
             'is_active' => true,
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         $officer2 = User::create([
             'name' => 'Juan Dela Cruz',
-            'email' => 'juan.officer@emd.test',
+            'email' => 'juan.officer@emo.test',
             'password' => Hash::make('password123'),
             'role' => 'officer',
             'is_active' => true,
@@ -44,13 +44,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $staffData = [
-            ['Anna Reyes', 'anna.staff@emd.test'],
-            ['Mark Tan', 'mark.staff@emd.test'],
-            ['Joy Garcia', 'joy.staff@emd.test'],
-            ['Paolo Cruz', 'paolo.staff@emd.test'],
-            ['Liza Ramos', 'liza.staff@emd.test'],
-            ['Ben Aquino', 'ben.staff@emd.test'],
-            ['Carla Lim', 'carla.staff@emd.test'],
+            ['Anna Reyes', 'anna.staff@emo.test'],
+            ['Mark Tan', 'mark.staff@emo.test'],
+            ['Joy Garcia', 'joy.staff@emo.test'],
+            ['Paolo Cruz', 'paolo.staff@emo.test'],
+            ['Liza Ramos', 'liza.staff@emo.test'],
+            ['Ben Aquino', 'ben.staff@emo.test'],
+            ['Carla Lim', 'carla.staff@emo.test'],
         ];
 
         $staff = [];

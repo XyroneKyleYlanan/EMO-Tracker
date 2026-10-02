@@ -1,13 +1,13 @@
 All demo accounts use password: password123
 
 Email				Role
-admin@emd.test			Administrator
-maria.officer@emd.test		Officer
-juan.officer@emd.test		Officer
-anna.staff@emd.test		Staff
-mark.staff@emd.test		Staff
-joy.staff@emd.test		Staff
-paolo.staff@emd.test		Staff
-liza.staff@emd.test		Staff
-ben.staff@emd.test		Staff
-carla.staff@emd.test		Staff
+admin@emo.test			Administrator
+maria.officer@emo.test		Officer
+juan.officer@emo.test		Officer
+anna.staff@emo.test		Staff
+mark.staff@emo.test		Staff
+joy.staff@emo.test		Staff
+paolo.staff@emo.test		Staff
+liza.staff@emo.test		Staff
+ben.staff@emo.test		Staff
+carla.staff@emo.test		Staff

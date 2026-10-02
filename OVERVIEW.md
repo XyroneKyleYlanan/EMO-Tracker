@@ -1,4 +1,4 @@
-# EMD Tracker — Project Overview
+# EMO Tracker — Project Overview
 
 > Architectural reference document. Use this to familiarize yourself or your team with the full app, and as a quick lookup during defense.
 
@@ -6,7 +6,7 @@
 
 ## High-level
 
-A web application that helps the Events Management Department of NEU plan and track events. Replaces their manual spreadsheet/paper workflow with a centralized system accessible from any device on the school WiFi.
+A web application that helps the Events Management Office of NEU plan and track events. Replaces their manual spreadsheet/paper workflow with a centralized system accessible from any device on the school WiFi.
 
 **Stack:** React + Laravel + MySQL. Runs locally via Laragon on a laptop, accessible to other devices over LAN.
 
@@ -29,7 +29,7 @@ The frontend never talks to the database directly. All data flows through Larave
 
 ## Backend (Laravel 13 / PHP 8.3)
 
-**Location:** `C:\laragon\www\EMDTracker\backend\`
+**Location:** `C:\laragon\www\EMOTracker\backend\`
 
 ### Key folders
 
@@ -56,7 +56,7 @@ The frontend never talks to the database directly. All data flows through Larave
 
 ## Frontend (React 19 / Vite / Tailwind v4)
 
-**Location:** `C:\laragon\www\EMDTracker\frontend\`
+**Location:** `C:\laragon\www\EMOTracker\frontend\`
 
 ### Key folders
 
@@ -76,7 +76,7 @@ The frontend never talks to the database directly. All data flows through Larave
 
 ## Database (MySQL)
 
-Database name: `emd_tracker` — 6 tables.
+Database name: `emo_tracker` — 6 tables.
 
 ```
 users (id, name, email, password, role, is_active, ...)
@@ -226,16 +226,16 @@ All accounts use password: **`password123`**
 
 | Role | Email |
 |---|---|
-| Administrator | `admin@emd.test` |
-| Officer | `maria.officer@emd.test` |
-| Officer | `juan.officer@emd.test` |
-| Staff | `anna.staff@emd.test` |
-| Staff | `mark.staff@emd.test` |
-| Staff | `joy.staff@emd.test` |
-| Staff | `paolo.staff@emd.test` |
-| Staff | `liza.staff@emd.test` |
-| Staff | `ben.staff@emd.test` |
-| Staff | `carla.staff@emd.test` |
+| Administrator | `admin@emo.test` |
+| Officer | `maria.officer@emo.test` |
+| Officer | `juan.officer@emo.test` |
+| Staff | `anna.staff@emo.test` |
+| Staff | `mark.staff@emo.test` |
+| Staff | `joy.staff@emo.test` |
+| Staff | `paolo.staff@emo.test` |
+| Staff | `liza.staff@emo.test` |
+| Staff | `ben.staff@emo.test` |
+| Staff | `carla.staff@emo.test` |
 
 ---
 
