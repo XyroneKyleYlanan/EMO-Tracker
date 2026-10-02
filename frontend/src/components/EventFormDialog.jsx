@@ -3,6 +3,12 @@ import api from '../lib/api'
 
 const NEW_VENUE = '__new'
 
+function dayAfter(isoDate) {
+  const [y, m, d] = isoDate.split('-').map(Number)
+  const next = new Date(y, m - 1, d + 1)
+  return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`
+}
+
 function initialForm(event) {
   return {
     name: event?.name || '',
@@ -26,6 +32,9 @@ function initialForm(event) {
 // opening starts from the event it was given.
 export default function EventFormDialog({ event, onClose, onSaved }) {
   const [form, setForm] = useState(() => initialForm(event))
+  // Most events are one day, so "Until" only shows when it's needed, and
+  // unticking it really clears the end date (date inputs have no clear button).
+  const [multiDay, setMultiDay] = useState(() => !!event?.end_date && event.end_date !== event.event_date)
   const [venues, setVenues] = useState([])
   const [buildings, setBuildings] = useState([])
   const [departments, setDepartments] = useState([])
@@ -44,6 +53,11 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
+  }
+
+  function toggleMultiDay(checked) {
+    setMultiDay(checked)
+    update('end_date', checked ? form.end_date || (form.event_date ? dayAfter(form.event_date) : '') : '')
   }
 
   async function addVenue() {
@@ -72,7 +86,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         description: form.description || null,
         department: form.department.trim() || null,
         event_date: form.event_date,
-        end_date: form.end_date || null,
+        end_date: multiDay && form.end_date ? form.end_date : null,
         event_time: form.event_time || null,
         end_time: form.end_time || null,
         venue_id: form.venue_id && form.venue_id !== NEW_VENUE ? Number(form.venue_id) : null,
@@ -100,6 +114,9 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
     .filter((g) => g.venues.length > 0)
   const unassigned = venues.filter((v) => !v.building_id)
   const input = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent'
+  // Safari fills empty date/time boxes with today's date and the current time,
+  // which look like real values. Gray marks them as "not set yet".
+  const dateTime = (value) => `${input} ${value ? 'text-gray-900' : 'text-gray-400'}`
 
   return (
     <div className="fixed inset-0 z-40 flex items-start md:items-center justify-center p-4 md:p-6">
@@ -131,21 +148,44 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             </datalist>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Date" error={errors.event_date?.[0]}>
-              <input type="date" required value={form.event_date} onChange={(e) => update('event_date', e.target.value)} className={input} />
-            </Field>
-            <Field label="Until" error={errors.end_date?.[0]} optional>
-              <input type="date" value={form.end_date} min={form.event_date || undefined} onChange={(e) => update('end_date', e.target.value)} className={input} />
-            </Field>
+          <div>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Date" error={errors.event_date?.[0]}>
+                <input type="date" required value={form.event_date} onChange={(e) => update('event_date', e.target.value)} className={dateTime(form.event_date)} />
+              </Field>
+              {multiDay && (
+                <Field label="Until" error={errors.end_date?.[0]}>
+                  <input type="date" required value={form.end_date} min={form.event_date || undefined} onChange={(e) => update('end_date', e.target.value)} className={dateTime(form.end_date)} />
+                </Field>
+              )}
+            </div>
+            <label className="mt-2 inline-flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={multiDay}
+                onChange={(e) => toggleMultiDay(e.target.checked)}
+                className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
+              />
+              Runs for several days
+            </label>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Start time" error={errors.event_time?.[0]} optional>
-              <input type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={input} />
+            <Field
+              label="Start time"
+              error={errors.event_time?.[0]}
+              optional
+              action={form.event_time && <ClearButton onClick={() => update('event_time', '')} />}
+            >
+              <input type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={dateTime(form.event_time)} />
             </Field>
-            <Field label="End time" error={errors.end_time?.[0]} optional>
-              <input type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={input} />
+            <Field
+              label="End time"
+              error={errors.end_time?.[0]}
+              optional
+              action={form.end_time && <ClearButton onClick={() => update('end_time', '')} />}
+            >
+              <input type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={dateTime(form.end_time)} />
             </Field>
           </div>
 
@@ -283,12 +323,23 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
   )
 }
 
-function Field({ label, error, optional, children }) {
+function ClearButton({ onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="text-xs font-medium text-gray-500 hover:text-rose-600">
+      Clear
+    </button>
+  )
+}
+
+function Field({ label, error, optional, action, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {optional && <span className="text-gray-400 font-normal">(optional)</span>}
-      </label>
+      <div className="flex items-baseline justify-between gap-2 mb-1">
+        <label className="block text-sm font-medium text-gray-700">
+          {label} {optional && <span className="text-gray-400 font-normal">(optional)</span>}
+        </label>
+        {action}
+      </div>
       {children}
       {error && <div className="text-xs text-rose-600 mt-1">{error}</div>}
     </div>
