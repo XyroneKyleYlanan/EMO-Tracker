@@ -3,10 +3,9 @@ import api from '../lib/api'
 import { downloadFile } from '../lib/download'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
-import ReadinessBadge from './ReadinessBadge'
+import ReadinessBadge, { ReadinessReason } from './ReadinessBadge'
 import TaskRow from './TaskRow'
 import TaskFormDialog from './TaskFormDialog'
-import StaffPickerDialog from './StaffPickerDialog'
 import { CalendarIcon, ClockIcon, MapPinIcon } from './icons'
 import { formatDateCompact, formatDateLong, formatDateRange, formatTimeRange } from '../lib/format'
 
@@ -33,7 +32,6 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState(null)
   const [generatingReport, setGeneratingReport] = useState(false)
-  const [staffPickerOpen, setStaffPickerOpen] = useState(false)
 
   function fetchEvent() {
     if (!eventId) return
@@ -136,6 +134,11 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
 
   if (!eventId) return null
 
+  // Everyone with a task on this event, in name order.
+  const people = Object.values(
+    Object.fromEntries((event?.tasks || []).filter((t) => t.assignee).map((t) => [t.assignee.id, t.assignee]))
+  ).sort((a, b) => a.name.localeCompare(b.name))
+
   return (
     <>
       <div className="fixed inset-0 z-30 flex">
@@ -162,6 +165,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   <h2 className="text-xl font-semibold text-gray-900">{event.name}</h2>
                   <ReadinessBadge readiness={event.readiness} />
                 </div>
+                <ReadinessReason readiness={event.readiness} reason={event.readiness_reason} className="-mt-2 mb-4 text-sm" />
 
                 {event.description && (
                   <p className="text-sm text-gray-600 mb-5 whitespace-pre-wrap">{event.description}</p>
@@ -197,30 +201,17 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   )}
                 </dl>
 
-                <Section
-                  title={`Assigned Staff (${event.staff?.length || 0})`}
-                  action={
-                    canManageTasks &&
-                    (event.status !== 'completed' || user.role === 'admin') && (
-                      <button
-                        onClick={() => setStaffPickerOpen(true)}
-                        className="text-xs font-medium text-neu-green hover:underline"
-                      >
-                        Edit
-                      </button>
-                    )
-                  }
-                >
-                  {event.staff?.length > 0 ? (
+                <Section title={`People (${people.length})`}>
+                  {people.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      {event.staff.map((s) => (
-                        <span key={s.id} className="text-xs px-2.5 py-1 bg-gray-100 rounded-md text-gray-700">
-                          {s.name}
+                      {people.map((p) => (
+                        <span key={p.id} className="text-xs px-2.5 py-1 bg-gray-100 rounded-md text-gray-700">
+                          {p.name}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <Empty text="No staff assigned at event level." />
+                    <Empty text="No one has a task on this event yet." />
                   )}
                 </Section>
 
@@ -387,21 +378,10 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
         </div>
       </div>
 
-      {staffPickerOpen && event && (
-        <StaffPickerDialog
-          event={event}
-          onClose={() => setStaffPickerOpen(false)}
-          onSaved={() => {
-            setStaffPickerOpen(false)
-            toast.success('Staff updated.')
-            handleTaskChanged()
-          }}
-        />
-      )}
-
       <TaskFormDialog
         open={taskFormOpen}
         eventId={eventId}
+        eventLastDay={event?.end_date || event?.event_date}
         task={editingTask}
         onClose={() => { setTaskFormOpen(false); setEditingTask(null); }}
         onSaved={handleTaskSaved}

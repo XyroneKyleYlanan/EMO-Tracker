@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
-use App\Rules\AssignableStaff;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,43 +12,32 @@ class EventController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $events = Event::visibleTo($request->user())
-            ->with([
-                'tasks:id,event_id,status,assigned_to',
-                'staff:id,name,role',
-                'creator:id,name',
-                'venue:id,name',
-            ])
+        $events = Event::with([
+            Event::READINESS_TASKS,
+            'creator:id,name',
+            'venue:id,name',
+        ])
+            ->when($request->boolean('mine'), fn ($q) => $q->involving($request->user()))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
             ->when($request->boolean('prepared'), fn ($q) => $q->where('needs_preparation', true))
             ->orderBy('event_date')
             ->get();
 
-        $events->transform(function ($event) {
-            $event->task_summary = [
-                'total' => $event->tasks->count(),
-                'done' => $event->tasks->where('status', 'done')->count(),
-            ];
-
-            return $event;
-        });
+        $events->transform(fn ($event) => $this->summarize($event));
 
         return response()->json(['events' => $events]);
     }
 
-    public function show(Request $request, Event $event): JsonResponse
+    public function show(Event $event): JsonResponse
     {
-        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
-
         $event->load([
             'tasks.assignee:id,name,email,role',
-            'staff:id,name,email,role',
             'creator:id,name',
             'documents.uploader:id,name',
             'venue.building',
         ]);
 
-        return response()->json(['event' => $event]);
+        return response()->json(['event' => $event->append('readiness_reason')]);
     }
 
     public function store(Request $request): JsonResponse
@@ -80,26 +68,6 @@ class EventController extends Controller
         $event->save();
 
         return response()->json(['event' => $this->withSummary($event)]);
-    }
-
-    public function updateStaff(Request $request, Event $event): JsonResponse
-    {
-        if ($event->status === 'completed' && $request->user()->role !== 'admin') {
-            return response()->json([
-                'message' => 'This event is completed. Only an administrator can change its staff.',
-            ], 403);
-        }
-
-        $currentStaffIds = $event->staff()->pluck('users.id')->all();
-
-        $data = $request->validate([
-            'staff_ids' => ['present', 'array'],
-            'staff_ids.*' => ['integer', new AssignableStaff($currentStaffIds)],
-        ]);
-
-        $event->staff()->sync($data['staff_ids']);
-
-        return response()->json(['staff' => $event->staff()->get(['users.id', 'name', 'email', 'role'])]);
     }
 
     public function destroy(Event $event): JsonResponse
@@ -157,10 +125,18 @@ class EventController extends Controller
 
     private function withSummary(Event $event): Event
     {
-        $event->load(['tasks:id,event_id,status,assigned_to', 'staff:id,name,role', 'creator:id,name', 'venue.building']);
+        $event->load([Event::READINESS_TASKS, 'creator:id,name', 'venue.building']);
+
+        return $this->summarize($event);
+    }
+
+    // Tasks done so far, and how many people have a task on the event.
+    private function summarize(Event $event): Event
+    {
         $event->task_summary = [
             'total' => $event->tasks->count(),
             'done' => $event->tasks->where('status', 'done')->count(),
+            'people' => $event->tasks->whereNotNull('assigned_to')->pluck('assigned_to')->unique()->count(),
         ];
 
         return $event;

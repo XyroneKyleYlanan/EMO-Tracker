@@ -264,9 +264,9 @@ function MonthRows({ month, onOpen }) {
       {month.rows.map((row) => (
         <tr
           key={row.id}
-          onClick={row.can_open ? () => onOpen(row.id) : undefined}
-          title={row.can_open ? 'Open event details' : undefined}
-          className={`text-gray-900 ${row.can_open ? 'cursor-pointer hover:brightness-95' : ''}`}
+          onClick={() => onOpen(row.id)}
+          title="Open event details"
+          className="text-gray-900 cursor-pointer hover:brightness-95"
           style={{ backgroundColor: row.building?.color || OTHER_COLOR }}
         >
           <Td className="font-semibold">{formatDateRange(row.event_date, row.end_date, formatDayMonth)}</Td>
@@ -305,12 +305,11 @@ function MonthCards({ month, onOpen }) {
       </h2>
       <div className="space-y-2">
         {month.rows.map((row) => {
-          const Tag = row.can_open ? 'button' : 'div'
           return (
-            <Tag
+            <button
               key={row.id}
-              type={row.can_open ? 'button' : undefined}
-              onClick={row.can_open ? () => onOpen(row.id) : undefined}
+              type="button"
+              onClick={() => onOpen(row.id)}
               className="block w-full text-left rounded-lg border border-black/10 px-3 py-2.5 text-sm text-gray-900"
               style={{ backgroundColor: row.building?.color || OTHER_COLOR }}
             >
@@ -324,7 +323,7 @@ function MonthCards({ month, onOpen }) {
                 {row.location || 'Venue TBA'}{row.department ? ` · ${row.department}` : ''}
               </div>
               {row.remarks && <div className="text-xs mt-1 italic">{row.remarks}</div>}
-            </Tag>
+            </button>
           )
         })}
       </div>

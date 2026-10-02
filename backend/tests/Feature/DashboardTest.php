@@ -20,8 +20,8 @@ class DashboardTest extends TestCase
         // Prepared and Critical (no work done, 2 days away), with one overdue task.
         $critical = Event::factory()->inDays(2)->create(['name' => 'Faculty Night']);
         Task::factory()->create(['event_id' => $critical->id, 'assigned_to' => $staff->id, 'due_date' => today()->subDay()->toDateString()]);
-        // Prepared and At Risk (half done, 20 days away).
-        $atRisk = Event::factory()->inDays(20)->create(['name' => 'Quiz Bee']);
+        // Prepared and At Risk (half done, 10 days away).
+        $atRisk = Event::factory()->inDays(10)->create(['name' => 'Quiz Bee']);
         Task::factory()->done()->create(['event_id' => $atRisk->id, 'assigned_to' => $staff->id]);
         Task::factory()->create(['event_id' => $atRisk->id, 'assigned_to' => $staff->id]);
         // Prepared and On Track: doesn't need attention.
@@ -38,6 +38,7 @@ class DashboardTest extends TestCase
         $home = $this->getJson('/api/dashboard/officer')->assertOk();
 
         $this->assertSame(['Faculty Night', 'Quiz Bee'], collect($home->json('needsAttention'))->pluck('name')->all());
+        $this->assertSame(['1 task is overdue', '50% done, 10 days to go'], collect($home->json('needsAttention'))->pluck('readiness_reason')->all());
         $this->assertSame(['Nurses Week', 'Faculty Night', 'CAS Seminar'], collect($home->json('thisWeek'))->pluck('name')->all());
         $this->assertSame([
             'thisWeek' => 3, 'preparedUpcoming' => 3, 'needAttention' => 2,
@@ -49,7 +50,6 @@ class DashboardTest extends TestCase
     {
         $staff = User::factory()->staff()->create();
         $event = Event::factory()->inDays(10)->create();
-        $event->staff()->attach($staff);
         Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $staff->id, 'name' => 'Open one', 'description' => 'Details']);
         Task::factory()->done()->create(['event_id' => $event->id, 'assigned_to' => $staff->id, 'name' => 'Done one']);
 
@@ -60,5 +60,29 @@ class DashboardTest extends TestCase
         $this->assertSame('Details', $home->json('openTasks.0.description'));
         $this->assertSame(1, $home->json('summary.doneTasks'));
         $this->assertSame(1, $home->json('summary.upcomingEvents'));
+    }
+
+    public function test_admins_and_officers_see_their_own_open_tasks_on_home(): void
+    {
+        $officer = User::factory()->officer()->create();
+        $event = Event::factory()->inDays(5)->create();
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $officer->id, 'name' => 'Call caterer']);
+        Task::factory()->done()->create(['event_id' => $event->id, 'assigned_to' => $officer->id, 'name' => 'Book hall']);
+
+        Sanctum::actingAs($officer);
+
+        $this->assertSame(['Call caterer'], collect($this->getJson('/api/dashboard/officer')->json('myOpenTasks'))->pluck('name')->all());
+    }
+
+    public function test_analytics_counts_members_with_tasks(): void
+    {
+        $event = Event::factory()->inDays(5)->create();
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => User::factory()->officer()->create()->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => User::factory()->staff()->create()->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => User::factory()->staff()->create(['is_active' => false])->id]);
+
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $this->assertSame(2, $this->getJson('/api/analytics')->json('stats.activeMembers'));
     }
 }

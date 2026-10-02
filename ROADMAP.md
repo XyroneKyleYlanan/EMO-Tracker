@@ -199,7 +199,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] New event fields: department (with suggestions), end date (multi-day), end time, control #, remarks; times optional
 - [x] "The EMO prepares this event" switch: off = "Scheduled" (left out of readiness charts); adding a task switches it on; existing readiness rules unchanged for prepared events
 - [x] Cancelled status: cancelled events stay on the schedule, struck through, and are left out of readiness
-- [x] Event details are admin-only; officers handle preparation (tasks, staff via new staff picker, documents, reports)
+- [x] Event details are admin-only; officers handle preparation (tasks, documents, reports)
 - [x] Events page defaults to EMO-prepared events, with an "All events" toggle
 - [x] Sheet-style Schedule table: gridlines, full building colors matching the legend, centered year title, consistent readiness/cancelled badges
 - [x] Year tabs show the current and upcoming years (the EMO's focus); past years move into a "Past years" dropdown; past events are never deleted
@@ -211,7 +211,12 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Security updates: Composer 44 advisories → 0 (Laravel 13.7 → 13.34), npm 11 vulnerabilities → 0 (incl. a Vite file-access bypass)
 - [x] Home pages rebuilt around "what needs my attention?": admin/officer get meaningful stats, a Needs attention list (Critical/At Risk prepared events) and This week from the Schedule, every row opens the event; staff Home shows only open tasks (clickable) and clickable events; quick-action cards removed (they duplicated the sidebar; "Reports" led nowhere)
 - [x] Text cleanup for the schedule (`php artisan schedule:tidy --dry-run`): consistent title capitalization that keeps acronyms, brand names and Filipino particles; known typos; spacing; rooms ("rm201" → "Room 201"); remarks. Also applied automatically by the importer
-- [x] 36 new tests (67 total)
+- [x] Everyone in the office can be assigned tasks, whatever their role (active accounts only), and everyone can see and open every event; roles still decide who edits (admin: event details, officers: preparation, staff: their own tasks)
+- [x] My Tasks for admins and officers too (menu item, plus "My open tasks" on Home)
+- [x] An event's People list is automatic (everyone with a task on it), replacing the manual Assigned Staff picker; a staff member's "My Events" are the events where they have a task
+- [x] Readiness rules refined: progress is judged only as the event gets close (At Risk within 14 days if under 70% done; Critical within 7 days if under 40% done or most open tasks have no owner, or within 2 days with work left), and an overdue task makes an event Critical at any time. A new event planned weeks ahead no longer shows Critical just because work hasn't started. Each label now says why ("1 task is overdue", "60% done, 14 days to go") in the event panel, on Home and in the PDF report
+- [x] Task form notes when a due date falls after the event (tasks lock once the event is over)
+- [x] 44 new tests (75 total)
 
 ---
 
@@ -228,3 +233,5 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-10-02: Decided not to support admin-defined columns for now: the client's sheet used the same 7 columns for all 330 rows. Revisit only if user testing shows a need. Old years are kept (moved into a dropdown), never cleared; a year-end Excel export is the planned way to "close" a year.
 - 2026-10-02: Imported the client's real 2026 schedule (329 events) into the local database for the client demo, replacing the fake demo events (demo accounts kept). Snapshots: `demo-data-before-import` and `real-data-fresh-import` (restore with `php artisan backup:restore <name>`). Real data stays out of the repo.
 - 2026-10-02: Cleaned the imported schedule text (221 values: capitalization, typos like "Assestment" → "Assessment", room numbers, remarks; "HINDI NA PO TULOY ITO" → cancelled). Department synonyms (e.g. "CON" vs "College of Nursing") left as-is pending the client. New reset point: `php artisan backup:restore real-data-clean`.
+- 2026-10-02: The EMO has about 5–10 members and all of them handle events, so the staff-only assignment rules were dropped: anyone can own a task, everyone sees every event, and an event's People are its task owners. Kept one owner per task (clear accountability); multi-person tasks wait for user testing. The old `event_staff` table is no longer read; drop it once the demo seeder stops filling it.
+- 2026-10-02: Refined the readiness rules after an event 14 days away with one task in progress showed Critical (0% done is under 40%). Old rules: Critical if under 40% done, 2 days or less away, or most tasks unassigned; At Risk if under 70% done, 6 days or less away, or any task unassigned, however far away the event was. New rules: Critical if a task is overdue, or 2 days or less away with work left, or 7 days or less away and under 40% done or most open tasks without an owner; At Risk if 14 days or less away and under 70% done, or an open task without an owner; done tasks no longer need an owner. The "do not revisit" decisions (priority order, 0 tasks = At Risk, all done = On Track, past = Completed) are unchanged. Docs update handed to Jean (`4-Jean-docs.md`); the paper needs the same wording.

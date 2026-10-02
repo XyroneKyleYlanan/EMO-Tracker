@@ -21,7 +21,7 @@ class AnalyticsController extends Controller
         };
 
         // Readiness only covers events the EMO prepares; schedule-only and cancelled events are left out.
-        $eventsQuery = Event::with(['tasks:id,event_id,status,assigned_to', 'venue:id,name'])
+        $eventsQuery = Event::with([Event::READINESS_TASKS, 'venue:id,name'])
             ->where('needs_preparation', true)
             ->where('status', '!=', 'cancelled');
         if ($range) {
@@ -32,14 +32,9 @@ class AnalyticsController extends Controller
         $totalTasks = $events->sum(fn ($e) => $e->tasks->count());
         $tasksDone = $events->sum(fn ($e) => $e->tasks->where('status', 'done')->count());
 
-        $activeStaff = User::where('role', 'staff')
-            ->where('is_active', true)
-            ->whereHas('eventsAssigned', function ($q) use ($range) {
-                $q->where('status', 'upcoming');
-                if ($range) {
-                    $q->whereBetween('event_date', $range);
-                }
-            })
+        // Members with at least one task on these events.
+        $activeMembers = User::where('is_active', true)
+            ->whereIn('id', $events->flatMap->tasks->pluck('assigned_to')->filter()->unique())
             ->count();
 
         $distribution = ['green' => 0, 'yellow' => 0, 'red' => 0, 'completed' => 0];
@@ -80,7 +75,7 @@ class AnalyticsController extends Controller
                 'totalTasks' => $totalTasks,
                 'tasksDone' => $tasksDone,
                 'tasksDonePercent' => $totalTasks > 0 ? round(($tasksDone / $totalTasks) * 100) : 0,
-                'activeStaff' => $activeStaff,
+                'activeMembers' => $activeMembers,
             ],
             'distribution' => $distribution,
             'topUrgent' => $topUrgent,

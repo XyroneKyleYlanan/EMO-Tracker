@@ -30,6 +30,7 @@ function App() {
             }
           >
             <Route index element={<ManagerDashboard />} />
+            <Route path="tasks" element={<StaffTasksPage />} />
             <Route path="staff" element={<StaffManagementPage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="schedule" element={<SchedulePage />} />
@@ -46,6 +47,7 @@ function App() {
             }
           >
             <Route index element={<ManagerDashboard />} />
+            <Route path="tasks" element={<StaffTasksPage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="schedule" element={<SchedulePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />

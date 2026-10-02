@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Document;
 use App\Models\Event;
 use App\Models\Task;
 use App\Models\User;
@@ -44,44 +43,39 @@ class AccessControlTest extends TestCase
         $this->assertSame(0, $staff->tokens()->count());
     }
 
-    public function test_staff_only_see_events_they_are_assigned_to(): void
+    // In a small office everyone handles events, so everyone can see and open
+    // every event; "my events" is just the ones where you have a task.
+    public function test_everyone_sees_every_event_and_my_events_are_the_ones_with_my_tasks(): void
     {
         $staff = User::factory()->staff()->create();
-        $viaEventStaff = Event::factory()->create();
-        $viaEventStaff->staff()->attach($staff);
-        $viaTask = Event::factory()->create();
-        Task::factory()->create(['event_id' => $viaTask->id, 'assigned_to' => $staff->id]);
+        $mine = Event::factory()->create();
+        Task::factory()->create(['event_id' => $mine->id, 'assigned_to' => $staff->id]);
         $other = Event::factory()->create();
 
         Sanctum::actingAs($staff);
 
-        $ids = collect($this->getJson('/api/events')->assertOk()->json('events'))->pluck('id')->sort()->values()->all();
-        $this->assertSame([$viaEventStaff->id, $viaTask->id], $ids);
+        $this->assertCount(2, $this->getJson('/api/events')->assertOk()->json('events'));
+        $this->assertSame([$mine->id], collect($this->getJson('/api/events?mine=1')->json('events'))->pluck('id')->all());
+        $this->getJson("/api/events/{$other->id}")->assertOk();
+        $this->getJson("/api/events/{$other->id}/tasks")->assertOk();
+        $this->getJson("/api/events/{$other->id}/documents")->assertOk();
+        $this->get("/api/events/{$other->id}/report")->assertOk();
 
-        $this->getJson("/api/events/{$viaTask->id}")->assertOk();
-        $this->getJson("/api/events/{$other->id}")->assertForbidden();
-        $this->getJson("/api/events/{$other->id}/tasks")->assertForbidden();
-        $this->getJson("/api/events/{$other->id}/documents")->assertForbidden();
-        $this->get("/api/events/{$other->id}/report")->assertForbidden();
-
-        $dashboardIds = collect($this->getJson('/api/dashboard/staff')->json('myEvents'))->pluck('id')->sort()->values()->all();
-        $this->assertSame([$viaEventStaff->id, $viaTask->id], $dashboardIds);
+        $this->assertSame([$mine->id], collect($this->getJson('/api/dashboard/staff')->json('myEvents'))->pluck('id')->all());
     }
 
-    public function test_staff_cannot_download_documents_of_other_events(): void
+    public function test_people_on_an_event_are_the_ones_with_tasks(): void
     {
-        $document = Document::create([
-            'event_id' => Event::factory()->create()->id,
-            'uploaded_by' => User::factory()->officer()->create()->id,
-            'file_name' => 'budget.pdf',
-            'file_path' => 'documents/budget.pdf',
-            'file_size' => 10,
-            'mime_type' => 'application/pdf',
-        ]);
+        $event = Event::factory()->create();
+        [$a, $b] = User::factory()->staff()->count(2)->create();
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $a->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $a->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $b->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => null]);
 
-        Sanctum::actingAs(User::factory()->staff()->create());
+        Sanctum::actingAs(User::factory()->officer()->create());
 
-        $this->get("/api/documents/{$document->id}/download")->assertForbidden();
+        $this->assertSame(2, $this->getJson('/api/events')->json('events.0.task_summary.people'));
     }
 
     public function test_admins_and_officers_see_all_events(): void
@@ -107,36 +101,35 @@ class AccessControlTest extends TestCase
         $this->assertSame('admin', $admin->role);
     }
 
-    public function test_only_active_staff_can_be_newly_assigned(): void
+    public function test_any_active_member_can_be_assigned_whatever_their_role(): void
     {
         $event = Event::factory()->create();
         $inactive = User::factory()->staff()->create(['is_active' => false]);
         $officer = User::factory()->officer()->create();
-        $active = User::factory()->staff()->create();
+        $admin = User::factory()->admin()->create();
 
         Sanctum::actingAs($officer);
         $task = ['name' => 'Book venue', 'due_date' => today()->addDay()->toDateString()];
 
         $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $inactive->id])->assertStatus(422);
-        $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $officer->id])->assertStatus(422);
-        $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $active->id])->assertCreated();
+        $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $officer->id])->assertCreated();
+        $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $admin->id])->assertCreated();
 
-        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$inactive->id]])->assertStatus(422);
-        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$active->id]])->assertOk();
+        // The officer can update the status of their own task, and sees it in My Tasks.
+        $own = $event->tasks()->where('assigned_to', $officer->id)->first();
+        $this->patchJson("/api/tasks/{$own->id}/status", ['status' => 'done'])->assertOk();
+        $this->assertSame([$own->id], collect($this->getJson('/api/my-tasks')->json('tasks'))->pluck('id')->all());
     }
 
     public function test_deactivated_existing_assignees_do_not_block_edits(): void
     {
         $staff = User::factory()->staff()->create();
-        $event = Event::factory()->create();
-        $event->staff()->attach($staff);
-        $task = Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $staff->id]);
+        $task = Task::factory()->create(['assigned_to' => $staff->id]);
         $staff->update(['is_active' => false]);
 
         Sanctum::actingAs(User::factory()->officer()->create());
 
         $this->putJson("/api/tasks/{$task->id}", ['name' => 'Renamed', 'assigned_to' => $staff->id])->assertOk();
-        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$staff->id]])->assertOk();
     }
 
     public function test_login_is_rate_limited(): void

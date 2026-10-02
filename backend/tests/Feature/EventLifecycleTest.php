@@ -92,12 +92,33 @@ class EventLifecycleTest extends TestCase
         Task::factory()->done()->create(['event_id' => $yellow->id, 'assigned_to' => $staff->id]);
         Task::factory()->create(['event_id' => $yellow->id, 'assigned_to' => $staff->id]);
 
+        // Critical though furthest away: a task is overdue.
         $red = Event::factory()->inDays(20)->create();
-        Task::factory()->create(['event_id' => $red->id, 'assigned_to' => $staff->id]);
+        Task::factory()->create(['event_id' => $red->id, 'assigned_to' => $staff->id, 'due_date' => today()->subDay()->toDateString()]);
 
         Sanctum::actingAs(User::factory()->officer()->create());
 
         $ranked = collect($this->getJson('/api/analytics')->assertOk()->json('topUrgent'))->pluck('id')->all();
         $this->assertSame([$red->id, $yellow->id, $green->id], $ranked);
+    }
+
+    public function test_every_page_sees_an_overdue_task_and_says_why(): void
+    {
+        $staff = User::factory()->staff()->create();
+        $event = Event::factory()->inDays(30)->create();
+        Task::factory()->done()->create(['event_id' => $event->id, 'assigned_to' => $staff->id]);
+        Task::factory()->create(['event_id' => $event->id, 'assigned_to' => $staff->id, 'due_date' => today()->subDay()->toDateString()]);
+
+        Sanctum::actingAs(User::factory()->admin()->create());
+
+        $find = fn (string $url, string $key) => collect($this->getJson($url)->assertOk()->json($key))->firstWhere('id', $event->id);
+        $this->assertSame('red', $find('/api/events', 'events')['readiness']);
+        $this->assertSame('red', $find('/api/schedule?year='.$event->event_date->year, 'events')['readiness']);
+        $this->assertSame('red', $find('/api/analytics', 'topUrgent')['readiness']);
+        $this->assertSame('red', $find('/api/dashboard/admin', 'needsAttention')['readiness']);
+
+        $this->getJson("/api/events/{$event->id}")
+            ->assertJsonPath('event.readiness', 'red')
+            ->assertJsonPath('event.readiness_reason', '1 task is overdue');
     }
 }

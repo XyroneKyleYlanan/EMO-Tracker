@@ -15,20 +15,16 @@ class ScheduleTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_every_role_sees_the_whole_schedule_but_staff_only_open_their_events(): void
+    public function test_every_role_sees_and_can_open_the_whole_schedule(): void
     {
         $staff = User::factory()->staff()->create();
-        $mine = Event::factory()->scheduleOnly()->create(['event_date' => today()->addDays(3)->toDateString()]);
-        $mine->staff()->attach($staff);
         $other = Event::factory()->scheduleOnly()->create(['event_date' => today()->addDays(4)->toDateString()]);
+        Event::factory()->scheduleOnly()->create(['event_date' => today()->addDays(3)->toDateString()]);
 
         Sanctum::actingAs($staff);
 
-        $rows = collect($this->getJson('/api/schedule?year='.today()->year)->assertOk()->json('events'))->keyBy('id');
-        $this->assertCount(2, $rows);
-        $this->assertTrue($rows[$mine->id]['can_open']);
-        $this->assertFalse($rows[$other->id]['can_open']);
-        $this->getJson("/api/events/{$other->id}")->assertForbidden();
+        $this->assertCount(2, $this->getJson('/api/schedule?year='.today()->year)->assertOk()->json('events'));
+        $this->getJson("/api/events/{$other->id}")->assertOk();
     }
 
     public function test_schedule_is_split_by_year(): void
@@ -44,19 +40,16 @@ class ScheduleTest extends TestCase
         $this->assertContains(2027, $response->json('years'));
     }
 
-    public function test_only_the_admin_edits_event_details_while_officers_handle_staff(): void
+    public function test_only_the_admin_edits_event_details(): void
     {
         $event = Event::factory()->create();
-        $staff = User::factory()->staff()->create();
         $details = ['name' => 'Seminar', 'venue_details' => 'Room 1', 'event_date' => today()->addDay()->toDateString()];
 
-        Sanctum::actingAs(User::factory()->officer()->create());
-        $this->postJson('/api/events', $details)->assertForbidden();
-        $this->patchJson("/api/events/{$event->id}", ['name' => 'Renamed'])->assertForbidden();
-        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$staff->id]])->assertOk();
-
-        Sanctum::actingAs($staff);
-        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => []])->assertForbidden();
+        foreach ([User::factory()->officer()->create(), User::factory()->staff()->create()] as $user) {
+            Sanctum::actingAs($user);
+            $this->postJson('/api/events', $details)->assertForbidden();
+            $this->patchJson("/api/events/{$event->id}", ['name' => 'Renamed'])->assertForbidden();
+        }
 
         Sanctum::actingAs(User::factory()->admin()->create());
         $this->postJson('/api/events', $details)->assertCreated();

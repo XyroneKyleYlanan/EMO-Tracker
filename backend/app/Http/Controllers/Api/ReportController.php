@@ -5,19 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
-    public function event(Request $request, Event $event): Response
+    public function event(Event $event): Response
     {
-        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
-
         $event->load([
             'tasks.assignee:id,name,email,role',
-            'staff:id,name,email,role',
             'creator:id,name',
             'documents.uploader:id,name',
             'venue',
@@ -36,6 +32,8 @@ class ReportController extends Controller
         $pdf = Pdf::loadView('pdf.event-report', [
             'event' => $event,
             'taskSummary' => $taskSummary,
+            // The people on an event are everyone with a task on it.
+            'people' => $event->tasks->pluck('assignee')->filter()->unique('id')->sortBy('name')->values(),
             'generatedAt' => now(),
         ])->setPaper('a4');
 

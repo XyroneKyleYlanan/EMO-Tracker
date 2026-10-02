@@ -5,9 +5,10 @@ import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
-import ReadinessBadge from '../components/ReadinessBadge'
+import ReadinessBadge, { ReadinessReason } from '../components/ReadinessBadge'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
+import TaskRow from '../components/TaskRow'
 import { formatDateRange, formatDayMonth, formatTimeRange } from '../lib/format'
 
 const WEEK_ROWS = 10
@@ -106,6 +107,7 @@ export default function ManagerDashboard() {
                             {e.event_time ? ` · ${formatTimeRange(e.event_time, e.end_time)}` : ''}
                             {e.location ? ` · ${e.location}` : ''}
                           </div>
+                          <ReadinessReason readiness={e.readiness} reason={e.readiness_reason} className="text-xs mt-0.5 truncate" />
                         </div>
                         <div className="flex flex-col items-end gap-1 flex-shrink-0">
                           <ReadinessBadge readiness={e.readiness} size="sm" />
@@ -128,6 +130,21 @@ export default function ManagerDashboard() {
               )}
             </Panel>
           </div>
+
+          {/* In a small office the head and officers take tasks too. */}
+          {data.myOpenTasks.length > 0 && (
+            <section className="mt-8">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">My open tasks</h2>
+                <Link to={`/${user.role}/tasks`} className="text-xs font-medium text-neu-green hover:underline">View all</Link>
+              </div>
+              <div className="space-y-2">
+                {data.myOpenTasks.map((task) => (
+                  <TaskRow key={task.id} task={task} currentUser={user} showEvent onChanged={fetchHome} />
+                ))}
+              </div>
+            </section>
+          )}
         </>
       )}
 

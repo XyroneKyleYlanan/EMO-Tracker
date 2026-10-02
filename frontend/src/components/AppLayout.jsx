@@ -15,13 +15,15 @@ import {
 const NAV_BY_ROLE = {
   admin: [
     { to: '/admin', label: 'Home', Icon: HomeIcon, end: true },
-    { to: '/admin/staff', label: 'Staff', Icon: UsersIcon },
+    { to: '/admin/tasks', label: 'My Tasks', Icon: ChecklistIcon },
     { to: '/admin/events', label: 'Events', Icon: CalendarIcon },
     { to: '/admin/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/admin/analytics', label: 'Analytics', Icon: ChartIcon },
+    { to: '/admin/staff', label: 'Staff', Icon: UsersIcon },
   ],
   officer: [
     { to: '/officer', label: 'Home', Icon: HomeIcon, end: true },
+    { to: '/officer/tasks', label: 'My Tasks', Icon: ChecklistIcon },
     { to: '/officer/events', label: 'Events', Icon: CalendarIcon },
     { to: '/officer/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/officer/analytics', label: 'Analytics', Icon: ChartIcon },

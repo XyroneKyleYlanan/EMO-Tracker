@@ -12,10 +12,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
-    public function index(Request $request, Event $event): JsonResponse
+    public function index(Event $event): JsonResponse
     {
-        abort_unless($event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
-
         $documents = $event->documents()
             ->with('uploader:id,name')
             ->orderByDesc('created_at')
@@ -52,9 +50,8 @@ class DocumentController extends Controller
         return response()->json(['document' => $doc], 201);
     }
 
-    public function download(Request $request, Document $document): StreamedResponse
+    public function download(Document $document): StreamedResponse
     {
-        abort_unless($document->event->isVisibleTo($request->user()), 403, 'You are not assigned to this event.');
         abort_unless(Storage::disk('local')->exists($document->file_path), 404);
 
         return Storage::disk('local')->download($document->file_path, $document->file_name);

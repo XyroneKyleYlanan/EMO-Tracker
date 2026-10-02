@@ -36,7 +36,9 @@ export default function EventCard({ event, onClick }) {
         </div>
         <div className="flex items-center gap-1.5 col-span-2">
           <UsersIcon width={14} height={14} />
-          <span>{event.staff?.length || 0} staff · {done}/{total} tasks done ({pct}%)</span>
+          <span>
+            {event.task_summary?.people || 0} {event.task_summary?.people === 1 ? 'person' : 'people'} · {done}/{total} tasks done ({pct}%)
+          </span>
         </div>
       </div>
     </button>

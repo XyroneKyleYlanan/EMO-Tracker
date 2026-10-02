@@ -15,6 +15,9 @@ class Event extends Model
 {
     use HasFactory;
 
+    // The task columns readiness needs, for eager loading: with([Event::READINESS_TASKS]).
+    public const READINESS_TASKS = 'tasks:id,event_id,status,assigned_to,due_date';
+
     protected $fillable = [
         'name',
         'description',
@@ -60,6 +63,10 @@ class Event extends Model
         return $this->hasMany(Task::class);
     }
 
+    /**
+     * No longer used: the people on an event are now whoever has a task on it.
+     * The event_staff table is dropped once the demo seeder stops filling it.
+     */
     public function staff(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'event_staff')->withTimestamps();
@@ -75,6 +82,13 @@ class Event extends Model
         return EventClassifier::classify($this);
     }
 
+    // Why the event has its readiness, e.g. "1 task is overdue". Not appended
+    // by default; call append('readiness_reason') where it is shown.
+    public function getReadinessReasonAttribute(): ?string
+    {
+        return EventClassifier::reason($this);
+    }
+
     /**
      * Where the event is held, e.g. "SOM 504–507": the venue from the managed
      * list plus the free-text room/details, or just the details for "Other".
@@ -87,23 +101,12 @@ class Event extends Model
     }
 
     /**
-     * Staff only see events they are assigned to, either at event level
-     * or through a task. Admins and officers see everything.
+     * Events the user is working on: the ones where they have a task. (In a
+     * small office everyone can see every event; this is just "my events".)
      */
-    public function scopeVisibleTo(Builder $query, User $user): void
+    public function scopeInvolving(Builder $query, User $user): void
     {
-        if (! $user->isStaff()) {
-            return;
-        }
-
-        $query->where(fn ($q) => $q
-            ->whereHas('staff', fn ($staff) => $staff->where('users.id', $user->id))
-            ->orWhereHas('tasks', fn ($tasks) => $tasks->where('assigned_to', $user->id)));
-    }
-
-    public function isVisibleTo(User $user): bool
-    {
-        return ! $user->isStaff() || static::visibleTo($user)->whereKey($this->id)->exists();
+        $query->whereHas('tasks', fn ($tasks) => $tasks->where('assigned_to', $user->id));
     }
 
     /**

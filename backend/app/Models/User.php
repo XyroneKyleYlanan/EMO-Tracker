@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -55,11 +54,6 @@ class User extends Authenticatable
     public function eventsCreated(): HasMany
     {
         return $this->hasMany(Event::class, 'created_by');
-    }
-
-    public function eventsAssigned(): BelongsToMany
-    {
-        return $this->belongsToMany(Event::class, 'event_staff')->withTimestamps();
     }
 
     public function assignedTasks(): HasMany

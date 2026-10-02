@@ -7,6 +7,14 @@ const CONFIG = {
   cancelled: { label: 'Cancelled', classes: 'bg-gray-100 text-gray-500 border-gray-200' },
 }
 
+const REASON_COLORS = { green: 'text-emerald-700', yellow: 'text-amber-700', red: 'text-rose-700' }
+
+// Why an event has its readiness, e.g. "1 task is overdue".
+export function ReadinessReason({ readiness, reason, className = '' }) {
+  if (!reason || !REASON_COLORS[readiness]) return null
+  return <span className={`block ${REASON_COLORS[readiness]} ${className}`}>{reason}</span>
+}
+
 export default function ReadinessBadge({ readiness, size = 'md' }) {
   const cfg = CONFIG[readiness] || CONFIG.yellow
   const sizeClasses = size === 'sm'

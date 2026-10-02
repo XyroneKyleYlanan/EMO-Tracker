@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
               sublabel={`${data.stats.tasksDonePercent}%`}
               accent="green"
             />
-            <StatCard label="Active Staff" value={data.stats.activeStaff} accent="amber" />
+            <StatCard label="People with tasks" value={data.stats.activeMembers} accent="amber" />
           </section>
 
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">

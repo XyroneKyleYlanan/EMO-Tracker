@@ -39,7 +39,8 @@ export default function EventsPage() {
 
   function fetchEvents() {
     setLoading(true)
-    api.get('/events', { params: canFilter && preparedOnly ? { prepared: 1 } : {} })
+    const params = !canFilter ? { mine: 1 } : preparedOnly ? { prepared: 1 } : {}
+    api.get('/events', { params })
       .then((res) => setEvents(res.data.events || []))
       .finally(() => setLoading(false))
   }
@@ -90,7 +91,9 @@ export default function EventsPage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Events</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {canFilter && preparedOnly ? 'Events the EMO prepares, with their readiness.' : 'Plan and track EMO events.'}
+            {!canFilter
+              ? 'Events where you have tasks. The Schedule shows every event.'
+              : preparedOnly ? 'Events the EMO prepares, with their readiness.' : 'Plan and track EMO events.'}
           </p>
         </div>
         {canEdit && (

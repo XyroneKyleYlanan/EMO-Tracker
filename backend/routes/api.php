@@ -47,7 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('role:admin,officer')->group(function () {
         Route::get('/analytics', [AnalyticsController::class, 'index']);
-        Route::put('/events/{event}/staff', [EventController::class, 'updateStaff']);
         Route::get('/schedule/export', [ScheduleController::class, 'export']);
         Route::post('/events/{event}/tasks', [TaskController::class, 'store']);
         Route::put('/tasks/{task}', [TaskController::class, 'update']);
@@ -59,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // The admin owns the schedule: event details (date, time, venue, ...) are admin-only.
-    // Officers handle preparation: tasks, staff, documents and reports.
+    // Officers handle preparation: tasks, documents and reports.
     Route::middleware('role:admin')->group(function () {
         Route::post('/events', [EventController::class, 'store']);
         Route::put('/events/{event}', [EventController::class, 'update']);

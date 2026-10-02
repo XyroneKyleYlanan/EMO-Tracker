@@ -15,32 +15,23 @@ class DashboardController extends Controller
 {
     private const URGENCY = ['red' => 0, 'yellow' => 1];
 
-    public function admin(): JsonResponse
+    public function admin(Request $request): JsonResponse
     {
-        return response()->json($this->overview());
+        return response()->json($this->overview($request));
     }
 
-    public function officer(): JsonResponse
+    public function officer(Request $request): JsonResponse
     {
-        return response()->json($this->overview());
+        return response()->json($this->overview($request));
     }
 
     public function staff(Request $request): JsonResponse
     {
         $user = $request->user();
 
-        $myTasks = Task::query()
-            ->where('assigned_to', $user->id)
-            ->whereHas('event', fn ($q) => $q->where('status', 'upcoming'))
-            ->with([
-                'event:id,name,event_date,end_date,event_time,end_time,venue_id,venue_details,needs_preparation,status',
-                'event.venue:id,name',
-                'assignee:id,name,email,role',
-            ])
-            ->orderBy('due_date')
-            ->get();
+        $myTasks = $this->tasksOf($user->id);
 
-        $myEvents = Event::visibleTo($user)
+        $myEvents = Event::involving($user)
             ->with('venue:id,name')
             ->where('status', 'upcoming')
             ->orderBy('event_date')
@@ -59,13 +50,13 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function overview(): array
+    private function overview(Request $request): array
     {
         $today = today();
         $weekEnd = today()->addDays(6);
 
         // Upcoming events the EMO prepares, and how their preparation is going.
-        $prepared = Event::with(['tasks:id,event_id,status,assigned_to,due_date', 'venue:id,name'])
+        $prepared = Event::with([Event::READINESS_TASKS, 'venue:id,name'])
             ->where('needs_preparation', true)
             ->where('status', 'upcoming')
             ->orderBy('event_date')
@@ -84,7 +75,7 @@ class DashboardController extends Controller
 
         // Everything on the schedule in the next 7 days, including multi-day
         // events that started earlier and are still running.
-        $thisWeek = Event::with(['venue.building', 'tasks:id,event_id,status,assigned_to'])
+        $thisWeek = Event::with(['venue.building', Event::READINESS_TASKS])
             ->where('status', '!=', 'cancelled')
             ->whereDate('event_date', '<=', $weekEnd)
             ->where(fn ($q) => $q->whereDate('event_date', '>=', $today)->orWhereDate('end_date', '>=', $today))
@@ -94,6 +85,8 @@ class DashboardController extends Controller
 
         return [
             'today' => $today->toDateString(),
+            // Admins and officers get tasks too in a small office.
+            'myOpenTasks' => $this->tasksOf($request->user()->id)->where('status', '!=', 'done')->values(),
             'stats' => [
                 'thisWeek' => $thisWeek->count(),
                 'preparedUpcoming' => $prepared->count(),
@@ -105,6 +98,7 @@ class DashboardController extends Controller
             ],
             'needsAttention' => $attention->map(fn (Event $e) => [
                 ...$this->row($e),
+                'readiness_reason' => $e->readiness_reason,
                 'task_summary' => ['total' => $e->tasks->count(), 'done' => $e->tasks->where('status', 'done')->count()],
             ]),
             'thisWeek' => $thisWeek->map(fn (Event $e) => [
@@ -113,6 +107,21 @@ class DashboardController extends Controller
                 'building' => $e->venue?->building?->only(['name', 'color']),
             ]),
         ];
+    }
+
+    // Tasks assigned to someone on upcoming events, with what a task row shows.
+    private function tasksOf(int $userId)
+    {
+        return Task::query()
+            ->where('assigned_to', $userId)
+            ->whereHas('event', fn ($q) => $q->where('status', 'upcoming'))
+            ->with([
+                'event:id,name,event_date,end_date,event_time,end_time,venue_id,venue_details,needs_preparation,status',
+                'event.venue:id,name',
+                'assignee:id,name,email,role',
+            ])
+            ->orderBy('due_date')
+            ->get();
     }
 
     private function row(Event $e): array

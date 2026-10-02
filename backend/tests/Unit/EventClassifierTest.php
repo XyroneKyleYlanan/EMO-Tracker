@@ -11,30 +11,41 @@ use Tests\TestCase;
 class EventClassifierTest extends TestCase
 {
     /**
-     * Each task is [status, assigned_to].
+     * Each task is [status, assigned_to, due in days (default: the event day)].
      */
     public static function cases(): array
     {
-        $assigned = 1;
+        $a = 1;
 
         return [
-            'no tasks is at risk' => [30, [], 'yellow'],
-            'all done tomorrow is on track' => [1, [['done', $assigned], ['done', $assigned]], 'green'],
-            'all done today is on track' => [0, [['done', $assigned]], 'green'],
-            'under 40% done is critical' => [20, [['done', $assigned], ['pending', $assigned], ['pending', $assigned], ['pending', $assigned]], 'red'],
-            'open work within 2 days is critical' => [1, [['done', $assigned], ['done', $assigned], ['done', $assigned], ['pending', $assigned]], 'red'],
-            'majority unassigned is critical' => [20, [['done', null], ['done', null], ['done', null], ['done', $assigned], ['pending', $assigned]], 'red'],
-            'under 70% done is at risk' => [20, [['done', $assigned], ['pending', $assigned]], 'yellow'],
-            'open work within 6 days is at risk' => [5, [['done', $assigned], ['done', $assigned], ['done', $assigned], ['pending', $assigned]], 'yellow'],
-            'any unassigned task is at risk' => [20, [['done', $assigned], ['done', $assigned], ['done', $assigned], ['pending', null]], 'yellow'],
-            'mostly done, staffed, and far off is on track' => [20, [['done', $assigned], ['done', $assigned], ['done', $assigned], ['pending', $assigned]], 'green'],
+            'no tasks is at risk' => [30, [], 'yellow', 'No tasks yet'],
+            'all done tomorrow is on track' => [1, [['done', $a], ['done', $a]], 'green', 'All tasks done'],
+            'all done today is on track' => [0, [['done', $a]], 'green', 'All tasks done'],
+
+            'an overdue task is critical, however far off' => [30, [['done', $a], ['done', $a], ['done', $a], ['pending', $a, -1]], 'red', '1 task is overdue'],
+            'open work within 2 days is critical' => [1, [['done', $a], ['done', $a], ['done', $a], ['pending', $a]], 'red', '1 task still open, event is tomorrow'],
+            'open work on a multi-day event under way is critical' => [-1, [['in_progress', $a, 1], ['pending', $a, 1]], 'red', '2 tasks still open, event has started'],
+            'under 40% done within a week is critical' => [5, [['done', $a], ['pending', $a], ['pending', $a], ['pending', $a]], 'red', 'Only 25% done, 5 days to go'],
+            'most open tasks without an owner within a week is critical' => [5, [['done', $a], ['done', $a], ['done', $a], ['pending', null], ['pending', null], ['pending', $a]], 'red', '2 of 3 open tasks have no owner, 5 days to go'],
+
+            'one task in progress two weeks out is at risk' => [14, [['in_progress', $a]], 'yellow', '0% done, 14 days to go'],
+            'past 40% but under 70% within a week is at risk' => [5, [['done', $a], ['done', $a], ['pending', $a], ['pending', $a]], 'yellow', '50% done, 5 days to go'],
+            'an open task without an owner is at risk' => [20, [['done', $a], ['done', $a], ['done', $a], ['pending', null]], 'yellow', '1 open task has no owner'],
+
+            'work not started more than two weeks out is on track' => [15, [['pending', $a], ['pending', $a]], 'green', '0% done, nothing overdue'],
+            'mostly done within a week is on track' => [5, [['done', $a], ['done', $a], ['done', $a], ['done', $a], ['pending', $a]], 'green', '80% done, nothing overdue'],
+            'a done task needs no owner' => [20, [['done', null], ['pending', $a]], 'green', '50% done, nothing overdue'],
+            'due today is not overdue yet' => [10, [['done', $a], ['done', $a], ['done', $a], ['pending', $a, 0]], 'green', '75% done, nothing overdue'],
         ];
     }
 
     #[DataProvider('cases')]
-    public function test_classifies_upcoming_events(int $daysAway, array $tasks, string $expected): void
+    public function test_classifies_upcoming_events(int $daysAway, array $tasks, string $expected, string $reason): void
     {
-        $this->assertSame($expected, EventClassifier::classify($this->event($daysAway, $tasks)));
+        $event = $this->event($daysAway, $tasks);
+
+        $this->assertSame($expected, EventClassifier::classify($event));
+        $this->assertSame($reason, EventClassifier::reason($event));
     }
 
     public function test_events_the_emo_does_not_prepare_are_scheduled(): void
@@ -69,9 +80,11 @@ class EventClassifierTest extends TestCase
             'needs_preparation' => true,
         ]);
 
-        $event->setRelation('tasks', collect($tasks)->map(
-            fn ($task) => new Task(['status' => $task[0], 'assigned_to' => $task[1]])
-        ));
+        $event->setRelation('tasks', collect($tasks)->map(fn ($task) => new Task([
+            'status' => $task[0],
+            'assigned_to' => $task[1],
+            'due_date' => today()->addDays($task[2] ?? $daysAway)->toDateString(),
+        ])));
 
         return $event;
     }

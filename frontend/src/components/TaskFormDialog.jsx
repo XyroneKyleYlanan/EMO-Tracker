@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
+import { formatDateCompact } from '../lib/format'
+
+const ROLE_LABELS = { admin: 'Administrator', officer: 'Officer', staff: 'Staff' }
 
 const EMPTY = {
   name: '',
@@ -10,7 +13,7 @@ const EMPTY = {
   assigned_to: '',
 }
 
-export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }) {
+export default function TaskFormDialog({ open, eventId, eventLastDay, task, onClose, onSaved }) {
   const [form, setForm] = useState(EMPTY)
   const [staff, setStaff] = useState([])
   const [errors, setErrors] = useState({})
@@ -19,7 +22,8 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
   useEffect(() => {
     if (!open) return
     api.get('/users').then((res) => {
-      setStaff((res.data.users || []).filter((u) => u.role === 'staff'))
+      // Anyone in the office can take a task, whatever their role.
+      setStaff(res.data.users || [])
     })
   }, [open])
 
@@ -109,6 +113,12 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
               onChange={(e) => update('due_date', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
             />
+            {/* Allowed (some work comes after an event), but often a typo. */}
+            {eventLastDay && form.due_date > eventLastDay && (
+              <div className="text-xs text-amber-700 mt-1">
+                This is after the event ends ({formatDateCompact(eventLastDay)}). Tasks lock once the event is over, so only the administrator could update this one.
+              </div>
+            )}
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
@@ -136,7 +146,7 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
             </Field>
           </div>
 
-          <Field label="Assigned staff" optional error={errors.assigned_to?.[0]}>
+          <Field label="Assigned to" optional error={errors.assigned_to?.[0]}>
             <select
               value={form.assigned_to}
               onChange={(e) => update('assigned_to', e.target.value)}
@@ -145,7 +155,7 @@ export default function TaskFormDialog({ open, eventId, task, onClose, onSaved }
               <option value="">— Unassigned —</option>
               {staffOptions.map((u) => (
                 <option key={u.id} value={u.id}>
-                  {u.name}{u.is_active ? '' : ' (deactivated)'}
+                  {u.name}{u.role === 'staff' ? '' : ` (${ROLE_LABELS[u.role]})`}{u.is_active ? '' : ' (deactivated)'}
                 </option>
               ))}
             </select>

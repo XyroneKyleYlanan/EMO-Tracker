@@ -21,6 +21,7 @@
         .badge-scheduled { background: #cffafe; color: #155e75; }
         .badge-cancelled { background: #f3f4f6; color: #6b7280; }
         .badge-status { background: #f3f4f6; color: #4b5563; }
+        .reason { font-size: 10px; color: #4b5563; margin-left: 6px; }
 
         .section { margin-bottom: 18px; }
         .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin: 0 0 8px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
@@ -76,6 +77,9 @@
             @else Completed
             @endif
         </span>
+        @if($event->readiness_reason)
+            <span class="reason">{{ $event->readiness_reason }}</span>
+        @endif
     </div>
 </div>
 
@@ -149,15 +153,15 @@
 </div>
 
 <div class="section">
-    <h2>Assigned Staff ({{ $event->staff->count() }})</h2>
-    @if($event->staff->count() > 0)
+    <h2>People ({{ $people->count() }})</h2>
+    @if($people->count() > 0)
         <div class="staff-list">
-            @foreach($event->staff as $s)
+            @foreach($people as $s)
                 <span class="pill">{{ $s->name }}</span>
             @endforeach
         </div>
     @else
-        <div class="empty">No staff assigned at event level.</div>
+        <div class="empty">No one has a task on this event yet.</div>
     @endif
 </div>
 
