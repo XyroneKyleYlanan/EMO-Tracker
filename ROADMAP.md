@@ -209,7 +209,8 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Automatic daily backups (database + uploaded documents, first use each day, kept 14 per database; `BACKUP_PATH` can point to a USB drive); `php artisan backup:run`, `backup:list`, `backup:restore`; named snapshots (`backup:run --name=...`) are never deleted automatically
 - [x] One-time import of the EMO's schedule spreadsheet: `php artisan schedule:import <file> --dry-run` reads the hand-typed sheet and lists rows to review; safe to re-run
 - [x] Security updates: Composer 44 advisories → 0 (Laravel 13.7 → 13.34), npm 11 vulnerabilities → 0 (incl. a Vite file-access bypass)
-- [x] 31 new tests (61 total)
+- [x] Home pages rebuilt around "what needs my attention?": admin/officer get meaningful stats, a Needs attention list (Critical/At Risk prepared events) and This week from the Schedule, every row opens the event; staff Home shows only open tasks (clickable) and clickable events; quick-action cards removed (they duplicated the sidebar; "Reports" led nowhere)
+- [x] 33 new tests (64 total)
 
 ---
 

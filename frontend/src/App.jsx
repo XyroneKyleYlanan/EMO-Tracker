@@ -4,8 +4,7 @@ import { ToastProvider } from './contexts/ToastContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import AppLayout from './components/AppLayout'
 import LoginPage from './pages/LoginPage'
-import AdminDashboard from './pages/AdminDashboard'
-import OfficerDashboard from './pages/OfficerDashboard'
+import ManagerDashboard from './pages/ManagerDashboard'
 import StaffDashboard from './pages/StaffDashboard'
 import EventsPage from './pages/EventsPage'
 import StaffTasksPage from './pages/StaffTasksPage'
@@ -30,7 +29,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<AdminDashboard />} />
+            <Route index element={<ManagerDashboard />} />
             <Route path="staff" element={<StaffManagementPage />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="schedule" element={<SchedulePage />} />
@@ -46,7 +45,7 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<OfficerDashboard />} />
+            <Route index element={<ManagerDashboard />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="schedule" element={<SchedulePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
