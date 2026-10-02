@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Setting;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Venue;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(VenueSeeder::class);
+        $venue = fn (string $name) => Venue::where('name', $name)->value('id');
+
         $admin = User::create([
             'name' => 'EMO Administrator',
             'email' => 'admin@emo.test',
@@ -69,9 +73,12 @@ class DatabaseSeeder extends Seeder
         $foundation = Event::create([
             'name' => 'University Foundation Day',
             'description' => 'Annual celebration of NEU\'s founding anniversary.',
-            'venue' => 'NEU Main Quadrangle',
+            'department' => 'Office of the President',
+            'venue_id' => $venue('NEU Open Field'),
             'event_date' => now()->subDays(20)->toDateString(),
             'event_time' => '08:00:00',
+            'end_time' => '12:00:00',
+            'needs_preparation' => true,
             'budget' => 75000,
             'status' => 'completed',
             'created_by' => $admin->id,
@@ -88,9 +95,12 @@ class DatabaseSeeder extends Seeder
         $orientation = Event::create([
             'name' => 'Freshmen Orientation 2026',
             'description' => 'Welcome orientation for incoming first-year students.',
-            'venue' => 'NEU Auditorium',
+            'department' => 'Office of Student Affairs',
+            'venue_id' => $venue('University Hall'),
             'event_date' => now()->addDays(14)->toDateString(),
             'event_time' => '09:00:00',
+            'end_time' => '12:00:00',
+            'needs_preparation' => true,
             'budget' => 50000,
             'status' => 'upcoming',
             'created_by' => $officer1->id,
@@ -108,9 +118,12 @@ class DatabaseSeeder extends Seeder
         $sportsFest = Event::create([
             'name' => 'Sports Fest Opening Ceremony',
             'description' => 'Annual inter-college sports festival kickoff.',
-            'venue' => 'NEU Gymnasium',
+            'department' => 'Physical Education Department',
+            'venue_id' => $venue('NEU Covered Court'),
             'event_date' => now()->addDays(5)->toDateString(),
             'event_time' => '14:00:00',
+            'end_time' => '18:00:00',
+            'needs_preparation' => true,
             'budget' => 120000,
             'status' => 'upcoming',
             'created_by' => $officer2->id,
@@ -128,9 +141,12 @@ class DatabaseSeeder extends Seeder
         $facultyNight = Event::create([
             'name' => 'Faculty Recognition Night',
             'description' => 'Annual awards ceremony honoring outstanding faculty members.',
-            'venue' => 'NEU Function Hall',
+            'department' => 'Human Resources',
+            'venue_id' => $venue('PSB MPH'),
             'event_date' => now()->addDays(1)->toDateString(),
             'event_time' => '18:00:00',
+            'end_time' => '21:00:00',
+            'needs_preparation' => true,
             'budget' => 90000,
             'status' => 'upcoming',
             'created_by' => $officer1->id,
@@ -147,9 +163,12 @@ class DatabaseSeeder extends Seeder
         $quizBee = Event::create([
             'name' => 'Inter-College Quiz Bee',
             'description' => 'Annual academic competition between colleges.',
-            'venue' => 'NEU Lecture Hall A',
+            'department' => 'Academic Affairs',
+            'venue_id' => $venue('SOM MPH'),
             'event_date' => now()->addDays(30)->toDateString(),
             'event_time' => '13:00:00',
+            'end_time' => '17:00:00',
+            'needs_preparation' => true,
             'budget' => 25000,
             'status' => 'upcoming',
             'created_by' => $officer2->id,
@@ -160,7 +179,7 @@ class DatabaseSeeder extends Seeder
         $samplePath = 'documents/sample/foundation-day-program.pdf';
         Storage::disk('local')->put($samplePath, Pdf::loadHTML(
             '<h1>University Foundation Day</h1>'
-            .'<p>NEU Main Quadrangle &middot; 8:00 AM</p>'
+            .'<p>NEU Open Field &middot; 8:00 AM</p>'
             .'<ol><li>Opening prayer and national anthem</li><li>Welcome remarks</li>'
             .'<li>Founding anniversary address</li><li>Awarding of loyalty service awards</li>'
             .'<li>Closing remarks</li></ol>'
@@ -174,6 +193,8 @@ class DatabaseSeeder extends Seeder
             'file_size' => Storage::disk('local')->size($samplePath),
             'mime_type' => 'application/pdf',
         ]);
+
+        $this->call(ScheduleSeeder::class);
 
         Setting::set('school_year_start_month', '8');
         Setting::set('school_year_end_month', '5');

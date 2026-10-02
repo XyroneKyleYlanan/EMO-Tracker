@@ -6,8 +6,10 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\VenueController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/ping', function () {
@@ -36,14 +38,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/events/{event}/report', [ReportController::class, 'event']);
     Route::get('/documents/{document}/download', [DocumentController::class, 'download']);
 
+    Route::get('/schedule', [ScheduleController::class, 'index']);
+    Route::get('/venues', [VenueController::class, 'index']);
+
     Route::get('/my-tasks', [TaskController::class, 'myTasks']);
     Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
 
     Route::middleware('role:admin,officer')->group(function () {
         Route::get('/analytics', [AnalyticsController::class, 'index']);
-        Route::post('/events', [EventController::class, 'store']);
-        Route::put('/events/{event}', [EventController::class, 'update']);
-        Route::patch('/events/{event}', [EventController::class, 'update']);
+        Route::put('/events/{event}/staff', [EventController::class, 'updateStaff']);
         Route::post('/events/{event}/tasks', [TaskController::class, 'store']);
         Route::put('/tasks/{task}', [TaskController::class, 'update']);
         Route::patch('/tasks/{task}', [TaskController::class, 'update']);
@@ -53,8 +56,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users', [UserController::class, 'index']);
     });
 
+    // The admin owns the schedule: event details (date, time, venue, ...) are admin-only.
+    // Officers handle preparation: tasks, staff, documents and reports.
     Route::middleware('role:admin')->group(function () {
+        Route::post('/events', [EventController::class, 'store']);
+        Route::put('/events/{event}', [EventController::class, 'update']);
+        Route::patch('/events/{event}', [EventController::class, 'update']);
         Route::delete('/events/{event}', [EventController::class, 'destroy']);
+        Route::get('/departments', [EventController::class, 'departments']);
+        Route::post('/venues', [VenueController::class, 'store']);
         Route::post('/users', [UserController::class, 'store']);
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/{user}', [UserController::class, 'update']);

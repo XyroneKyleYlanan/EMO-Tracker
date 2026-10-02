@@ -11,8 +11,10 @@ import { CalendarIcon, ChecklistIcon } from '../components/icons'
 export default function EventsPage() {
   const { user } = useAuth()
   const toast = useToast()
-  const canEdit = user.role === 'admin' || user.role === 'officer'
+  // The admin owns event details; officers prepare events from the drawer.
+  const canEdit = user.role === 'admin'
   const canDelete = user.role === 'admin'
+  const canFilter = user.role === 'admin' || user.role === 'officer'
 
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
@@ -24,6 +26,9 @@ export default function EventsPage() {
   const [selectedId, setSelectedId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
+  // Most schedule entries are routine bookings, so the Events page starts on
+  // the events the EMO prepares. The Schedule page lists everything.
+  const [preparedOnly, setPreparedOnly] = useState(true)
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 768px)')
@@ -34,14 +39,15 @@ export default function EventsPage() {
 
   function fetchEvents() {
     setLoading(true)
-    api.get('/events')
+    api.get('/events', { params: canFilter && preparedOnly ? { prepared: 1 } : {} })
       .then((res) => setEvents(res.data.events || []))
       .finally(() => setLoading(false))
   }
 
   useEffect(() => {
     fetchEvents()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preparedOnly])
 
   function handleSelect(event) {
     setSelectedId(event.id)
@@ -83,7 +89,9 @@ export default function EventsPage() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Events</h1>
-          <p className="text-sm text-gray-500 mt-1">Plan and track EMO events.</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {canFilter && preparedOnly ? 'Events the EMO prepares, with their readiness.' : 'Plan and track EMO events.'}
+          </p>
         </div>
         {canEdit && (
           <button
@@ -95,9 +103,17 @@ export default function EventsPage() {
         )}
       </div>
 
-      <div className="hidden md:flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-6 w-fit">
-        <ViewToggle active={view === 'calendar'} onClick={() => setView('calendar')} Icon={CalendarIcon} label="Calendar" />
-        <ViewToggle active={view === 'list'} onClick={() => setView('list')} Icon={ChecklistIcon} label="List" />
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <div className="hidden md:flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 w-fit">
+          <ViewToggle active={view === 'calendar'} onClick={() => setView('calendar')} Icon={CalendarIcon} label="Calendar" />
+          <ViewToggle active={view === 'list'} onClick={() => setView('list')} Icon={ChecklistIcon} label="List" />
+        </div>
+        {canFilter && (
+          <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 w-fit">
+            <FilterToggle active={preparedOnly} onClick={() => setPreparedOnly(true)} label="EMO-prepared" />
+            <FilterToggle active={!preparedOnly} onClick={() => setPreparedOnly(false)} label="All events" />
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -123,13 +139,27 @@ export default function EventsPage() {
         canDelete={canDelete}
       />
 
-      <EventFormDialog
-        open={formOpen}
-        event={editingEvent}
-        onClose={() => { setFormOpen(false); setEditingEvent(null); }}
-        onSaved={handleSaved}
-      />
+      {formOpen && (
+        <EventFormDialog
+          event={editingEvent}
+          onClose={() => { setFormOpen(false); setEditingEvent(null); }}
+          onSaved={handleSaved}
+        />
+      )}
     </div>
+  )
+}
+
+function FilterToggle({ active, onClick, label }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
+        active ? 'bg-neu-green text-white' : 'text-gray-600 hover:bg-gray-100'
+      }`}
+    >
+      {label}
+    </button>
   )
 }
 

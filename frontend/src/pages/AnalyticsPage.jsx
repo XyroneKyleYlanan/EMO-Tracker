@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import StatCard from '../components/StatCard'
 import ReadinessBadge from '../components/ReadinessBadge'
 import ReadinessDonut from '../components/ReadinessDonut'
-import { formatDateCompact, formatTime } from '../lib/format'
+import { formatDateCompact, formatTimeRange } from '../lib/format'
 
 const PERIODS = [
   { value: 'week', label: 'This Week' },
@@ -20,10 +20,13 @@ export default function AnalyticsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Ignore answers for a period the user has already switched away from.
+    let current = true
     setLoading(true)
     api.get(`/analytics?period=${period}`)
-      .then((res) => setData(res.data))
-      .finally(() => setLoading(false))
+      .then((res) => { if (current) setData(res.data) })
+      .finally(() => { if (current) setLoading(false) })
+    return () => { current = false }
   }, [period])
 
   return (
@@ -100,7 +103,7 @@ export default function AnalyticsPage() {
                         <div className="min-w-0 flex-1">
                           <div className="text-sm font-medium text-gray-900 truncate">{event.name}</div>
                           <div className="text-xs text-gray-500 mt-0.5">
-                            {formatDateCompact(event.event_date)} · {formatTime(event.event_time)} · {event.task_summary.done}/{event.task_summary.total} tasks ({pct}%)
+                            {formatDateCompact(event.event_date)}{event.event_time ? ` · ${formatTimeRange(event.event_time)}` : ''} · {event.task_summary.done}/{event.task_summary.total} tasks ({pct}%)
                           </div>
                         </div>
                         <ReadinessBadge readiness={event.readiness} size="sm" />

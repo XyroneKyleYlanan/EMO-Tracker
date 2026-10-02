@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
 import { CalendarIcon, ClockIcon, MapPinIcon } from '../components/icons'
-import { formatDateCompact, formatTime } from '../lib/format'
+import { formatDateCompact, formatDateRange, formatTimeRange } from '../lib/format'
 
 const STATUS_LABELS = { pending: 'Pending', in_progress: 'In Progress', done: 'Done' }
 const STATUS_COLORS = {
@@ -106,15 +106,15 @@ export default function StaffDashboard() {
                 <div className="mt-2 space-y-1 text-xs text-gray-500">
                   <div className="flex items-center gap-1.5">
                     <CalendarIcon width={14} height={14} />
-                    {formatDateCompact(event.event_date)}
+                    {formatDateRange(event.event_date, event.end_date)}
                   </div>
                   <div className="flex items-center gap-1.5">
                     <ClockIcon width={14} height={14} />
-                    {formatTime(event.event_time)}
+                    {formatTimeRange(event.event_time, event.end_time) || 'Time TBA'}
                   </div>
                   <div className="flex items-center gap-1.5">
                     <MapPinIcon width={14} height={14} />
-                    {event.venue}
+                    {event.location || 'Venue TBA'}
                   </div>
                 </div>
               </div>

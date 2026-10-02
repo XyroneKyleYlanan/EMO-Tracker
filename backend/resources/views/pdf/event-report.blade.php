@@ -18,6 +18,8 @@
         .badge-yellow { background: #fef3c7; color: #92400e; }
         .badge-red { background: #fee2e2; color: #991b1b; }
         .badge-completed { background: #e2e8f0; color: #475569; }
+        .badge-scheduled { background: #cffafe; color: #155e75; }
+        .badge-cancelled { background: #f3f4f6; color: #6b7280; }
         .badge-status { background: #f3f4f6; color: #4b5563; }
 
         .section { margin-bottom: 18px; }
@@ -69,6 +71,8 @@
             @if($event->readiness === 'green') On Track
             @elseif($event->readiness === 'yellow') At Risk
             @elseif($event->readiness === 'red') Critical
+            @elseif($event->readiness === 'scheduled') Scheduled
+            @elseif($event->readiness === 'cancelled') Cancelled
             @else Completed
             @endif
         </span>
@@ -80,16 +84,33 @@
     <table class="meta-grid">
         <tr>
             <td class="label">Date</td>
-            <td>{{ \Carbon\Carbon::parse($event->event_date)->format('l, F j, Y') }}</td>
+            <td>
+                {{ $event->event_date->format('l, F j, Y') }}
+                @if($event->end_date && ! $event->end_date->equalTo($event->event_date))
+                    – {{ $event->end_date->format('l, F j, Y') }}
+                @endif
+            </td>
         </tr>
         <tr>
             <td class="label">Time</td>
-            <td>{{ \Carbon\Carbon::parse($event->event_time)->format('g:i A') }}</td>
+            <td>
+                @if($event->event_time)
+                    {{ \Carbon\Carbon::parse($event->event_time)->format('g:i A') }}@if($event->end_time) – {{ \Carbon\Carbon::parse($event->end_time)->format('g:i A') }}@endif
+                @else
+                    To be announced
+                @endif
+            </td>
         </tr>
         <tr>
             <td class="label">Venue</td>
-            <td>{{ $event->venue }}</td>
+            <td>{{ $event->location ?? 'To be announced' }}</td>
         </tr>
+        @if($event->department)
+        <tr>
+            <td class="label">Department</td>
+            <td>{{ $event->department }}</td>
+        </tr>
+        @endif
         @if($event->budget)
         <tr>
             <td class="label">Budget</td>

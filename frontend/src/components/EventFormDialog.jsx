@@ -1,62 +1,65 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
 
-const EMPTY = {
-  name: '',
-  description: '',
-  venue: '',
-  event_date: '',
-  event_time: '09:00',
-  budget: '',
-  staff_ids: [],
+const NEW_VENUE = '__new'
+
+function initialForm(event) {
+  return {
+    name: event?.name || '',
+    description: event?.description || '',
+    department: event?.department || '',
+    event_date: event?.event_date || '',
+    end_date: event?.end_date || '',
+    event_time: event?.event_time?.slice(0, 5) || '',
+    end_time: event?.end_time?.slice(0, 5) || '',
+    venue_id: event?.venue_id ? String(event.venue_id) : '',
+    venue_details: event?.venue_details || '',
+    budget: event?.budget || '',
+    control_number: event?.control_number || '',
+    remarks: event?.remarks || '',
+    needs_preparation: event?.needs_preparation ?? false,
+    cancelled: event?.status === 'cancelled',
+  }
 }
 
-export default function EventFormDialog({ open, event, onClose, onSaved }) {
-  const [form, setForm] = useState(EMPTY)
-  const [allStaff, setAllStaff] = useState([])
+// Mount this only while it's open (parents render it conditionally), so every
+// opening starts from the event it was given.
+export default function EventFormDialog({ event, onClose, onSaved }) {
+  const [form, setForm] = useState(() => initialForm(event))
+  const [venues, setVenues] = useState([])
+  const [buildings, setBuildings] = useState([])
+  const [departments, setDepartments] = useState([])
+  const [newVenue, setNewVenue] = useState({ name: '', building_id: '' })
+  const [venueError, setVenueError] = useState(null)
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    if (!open) return
-    api.get('/users').then((res) => setAllStaff(res.data.users || []))
-  }, [open])
-
-  useEffect(() => {
-    if (event) {
-      setForm({
-        name: event.name || '',
-        description: event.description || '',
-        venue: event.venue || '',
-        event_date: event.event_date ? event.event_date.slice(0, 10) : '',
-        event_time: event.event_time?.slice(0, 5) || '09:00',
-        budget: event.budget || '',
-        staff_ids: (event.staff || []).map((s) => s.id),
-      })
-    } else {
-      setForm(EMPTY)
-    }
-    setErrors({})
-  }, [event, open])
-
-  if (!open) return null
-
-  const currentStaffIds = (event?.staff || []).map((s) => s.id)
-  const staffOptions = allStaff.filter(
-    (u) => u.role === 'staff' && (u.is_active || currentStaffIds.includes(u.id))
-  )
+    api.get('/venues').then((res) => {
+      setVenues(res.data.venues || [])
+      setBuildings(res.data.buildings || [])
+    })
+    api.get('/departments').then((res) => setDepartments(res.data.departments || []))
+  }, [])
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  function toggleStaff(id) {
-    setForm((prev) => ({
-      ...prev,
-      staff_ids: prev.staff_ids.includes(id)
-        ? prev.staff_ids.filter((x) => x !== id)
-        : [...prev.staff_ids, id],
-    }))
+  async function addVenue() {
+    setVenueError(null)
+    try {
+      const res = await api.post('/venues', {
+        name: newVenue.name.trim(),
+        building_id: newVenue.building_id ? Number(newVenue.building_id) : null,
+      })
+      const venue = res.data.venue
+      setVenues((prev) => [...prev, venue].sort((a, b) => a.name.localeCompare(b.name)))
+      update('venue_id', String(venue.id))
+      setNewVenue({ name: '', building_id: '' })
+    } catch (err) {
+      setVenueError(err.response?.data?.errors?.name?.[0] || 'Could not add the venue.')
+    }
   }
 
   async function handleSubmit(e) {
@@ -67,12 +70,19 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
       const payload = {
         name: form.name,
         description: form.description || null,
-        venue: form.venue,
+        department: form.department.trim() || null,
         event_date: form.event_date,
-        event_time: form.event_time,
+        end_date: form.end_date || null,
+        event_time: form.event_time || null,
+        end_time: form.end_time || null,
+        venue_id: form.venue_id && form.venue_id !== NEW_VENUE ? Number(form.venue_id) : null,
+        venue_details: form.venue_details.trim() || null,
         budget: form.budget === '' ? null : Number(form.budget),
-        staff_ids: form.staff_ids,
+        control_number: form.control_number.trim() || null,
+        remarks: form.remarks.trim() || null,
+        needs_preparation: form.needs_preparation,
       }
+      if (event) payload.cancelled = form.cancelled
       const res = event
         ? await api.put(`/events/${event.id}`, payload)
         : await api.post('/events', payload)
@@ -83,6 +93,13 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
       setSubmitting(false)
     }
   }
+
+  // Venues grouped under their building, like the colors in the schedule.
+  const grouped = buildings
+    .map((b) => ({ label: b.name, venues: venues.filter((v) => v.building_id === b.id) }))
+    .filter((g) => g.venues.length > 0)
+  const unassigned = venues.filter((v) => !v.building_id)
+  const input = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent'
 
   return (
     <div className="fixed inset-0 z-40 flex items-start md:items-center justify-center p-4 md:p-6">
@@ -95,89 +112,147 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
           </h2>
         </header>
 
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <Field label="Name" error={errors.name?.[0]}>
-            <input
-              type="text"
-              required
-              value={form.name}
-              onChange={(e) => update('name', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-            />
+        <form id="event-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+          <Field label="Event" error={errors.name?.[0]}>
+            <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} className={input} />
           </Field>
 
-          <Field label="Description" error={errors.description?.[0]}>
-            <textarea
-              rows={3}
-              value={form.description}
-              onChange={(e) => update('description', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-            />
-          </Field>
-
-          <Field label="Venue" error={errors.venue?.[0]}>
+          <Field label="Department" error={errors.department?.[0]} optional>
             <input
               type="text"
-              required
-              value={form.venue}
-              onChange={(e) => update('venue', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
+              list="department-suggestions"
+              value={form.department}
+              onChange={(e) => update('department', e.target.value)}
+              placeholder="e.g. CAS, College of Nursing"
+              className={input}
             />
+            <datalist id="department-suggestions">
+              {departments.map((d) => <option key={d} value={d} />)}
+            </datalist>
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field label="Date" error={errors.event_date?.[0]}>
-              <input
-                type="date"
-                required
-                value={form.event_date}
-                onChange={(e) => update('event_date', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-              />
+              <input type="date" required value={form.event_date} onChange={(e) => update('event_date', e.target.value)} className={input} />
             </Field>
-            <Field label="Time" error={errors.event_time?.[0]}>
-              <input
-                type="time"
-                required
-                value={form.event_time}
-                onChange={(e) => update('event_time', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-              />
+            <Field label="Until" error={errors.end_date?.[0]} optional>
+              <input type="date" value={form.end_date} min={form.event_date || undefined} onChange={(e) => update('end_date', e.target.value)} className={input} />
             </Field>
           </div>
 
-          <Field label="Budget (₱)" error={errors.budget?.[0]} optional>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Start time" error={errors.event_time?.[0]} optional>
+              <input type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={input} />
+            </Field>
+            <Field label="End time" error={errors.end_time?.[0]} optional>
+              <input type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={input} />
+            </Field>
+          </div>
+
+          <Field label="Venue" error={errors.venue_id?.[0]}>
+            <select value={form.venue_id} onChange={(e) => update('venue_id', e.target.value)} className={input}>
+              <option value="">Other / not listed (type it below)</option>
+              {grouped.map((g) => (
+                <optgroup key={g.label} label={g.label}>
+                  {g.venues.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
+                </optgroup>
+              ))}
+              {unassigned.length > 0 && (
+                <optgroup label="Other venues">
+                  {unassigned.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
+                </optgroup>
+              )}
+              <option value={NEW_VENUE}>+ Add a new venue…</option>
+            </select>
+          </Field>
+
+          {form.venue_id === NEW_VENUE && (
+            <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+              <div className="text-xs font-medium text-gray-600">New venue</div>
+              <input
+                type="text"
+                value={newVenue.name}
+                onChange={(e) => setNewVenue((v) => ({ ...v, name: e.target.value }))}
+                placeholder="Venue name, e.g. CEA Building"
+                className={input}
+              />
+              <select
+                value={newVenue.building_id}
+                onChange={(e) => setNewVenue((v) => ({ ...v, building_id: e.target.value }))}
+                className={input}
+              >
+                <option value="">No building (shows in gray)</option>
+                {buildings.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+              </select>
+              {venueError && <div className="text-xs text-rose-600">{venueError}</div>}
+              <button
+                type="button"
+                onClick={addVenue}
+                disabled={!newVenue.name.trim()}
+                className="text-sm bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-lg font-medium disabled:opacity-50"
+              >
+                Add venue
+              </button>
+            </div>
+          )}
+
+          <Field
+            label={form.venue_id ? 'Room / details' : 'Where'}
+            error={errors.venue_details?.[0]}
+            optional={!!form.venue_id && form.venue_id !== NEW_VENUE}
+          >
             <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={form.budget}
-              onChange={(e) => update('budget', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
+              type="text"
+              value={form.venue_details}
+              onChange={(e) => update('venue_details', e.target.value)}
+              placeholder={form.venue_id ? 'e.g. 504–507, 2nd floor lobby' : 'e.g. School corridors'}
+              className={input}
             />
           </Field>
 
-          <Field label="Assigned staff" error={errors.staff_ids?.[0]} optional>
-            <div className="border border-gray-300 rounded-lg p-2 max-h-40 overflow-y-auto space-y-1">
-              {staffOptions.map((u) => (
-                <label key={u.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={form.staff_ids.includes(u.id)}
-                    onChange={() => toggleStaff(u.id)}
-                    className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
-                  />
-                  <span className="text-sm text-gray-700">
-                    {u.name}
-                    {!u.is_active && <span className="text-gray-400"> (deactivated)</span>}
-                  </span>
-                </label>
-              ))}
-              {staffOptions.length === 0 && (
-                <div className="text-xs text-gray-400 px-2 py-1">No staff users available.</div>
-              )}
-            </div>
+          <label className="flex items-start gap-2.5 p-3 bg-emerald-50/60 border border-emerald-100 rounded-lg cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.needs_preparation}
+              onChange={(e) => update('needs_preparation', e.target.checked)}
+              className="mt-0.5 rounded border-gray-300 text-neu-green focus:ring-neu-green"
+            />
+            <span className="text-sm">
+              <span className="font-medium text-gray-900">The EMO prepares this event</span>
+              <span className="block text-xs text-gray-500 mt-0.5">
+                Tracks its readiness (On Track / At Risk / Critical). Leave off for bookings the EMO only schedules.
+              </span>
+            </span>
+          </label>
+
+          <Field label="Description" error={errors.description?.[0]} optional>
+            <textarea rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} className={input} />
           </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Control #" error={errors.control_number?.[0]} optional>
+              <input type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
+            </Field>
+            <Field label="Budget (₱)" error={errors.budget?.[0]} optional>
+              <input type="number" min="0" step="0.01" value={form.budget} onChange={(e) => update('budget', e.target.value)} className={input} />
+            </Field>
+          </div>
+
+          <Field label="Remarks" error={errors.remarks?.[0]} optional>
+            <textarea rows={2} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
+          </Field>
+
+          {event && (
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.cancelled}
+                onChange={(e) => update('cancelled', e.target.checked)}
+                className="rounded border-gray-300 text-rose-600 focus:ring-rose-500"
+              />
+              <span className="text-sm text-gray-700">This event is cancelled (it stays on the schedule, marked cancelled)</span>
+            </label>
+          )}
 
           {errors._ && (
             <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-800">
@@ -196,8 +271,8 @@ export default function EventFormDialog({ open, event, onClose, onSaved }) {
           </button>
           <button
             type="submit"
-            onClick={handleSubmit}
-            disabled={submitting}
+            form="event-form"
+            disabled={submitting || form.venue_id === NEW_VENUE}
             className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-60"
           >
             {submitting ? 'Saving...' : event ? 'Save changes' : 'Create event'}

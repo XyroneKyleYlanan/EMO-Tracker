@@ -11,6 +11,7 @@ import EventsPage from './pages/EventsPage'
 import StaffTasksPage from './pages/StaffTasksPage'
 import AnalyticsPage from './pages/AnalyticsPage'
 import StaffManagementPage from './pages/StaffManagementPage'
+import SchedulePage from './pages/SchedulePage'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="staff" element={<StaffManagementPage />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="schedule" element={<SchedulePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
           </Route>
 
@@ -44,6 +46,7 @@ function App() {
           >
             <Route index element={<OfficerDashboard />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="schedule" element={<SchedulePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
           </Route>
 
@@ -58,6 +61,7 @@ function App() {
             <Route index element={<StaffDashboard />} />
             <Route path="tasks" element={<StaffTasksPage />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="schedule" element={<SchedulePage />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/login" replace />} />

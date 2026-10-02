@@ -18,22 +18,36 @@ class Event extends Model
     protected $fillable = [
         'name',
         'description',
-        'venue',
+        'department',
+        'venue_id',
+        'venue_details',
         'event_date',
+        'end_date',
         'event_time',
+        'end_time',
         'budget',
+        'control_number',
+        'remarks',
+        'needs_preparation',
         'status',
         'created_by',
     ];
 
-    protected $appends = ['readiness'];
+    protected $appends = ['readiness', 'location'];
 
     protected function casts(): array
     {
         return [
             'event_date' => 'date:Y-m-d',
+            'end_date' => 'date:Y-m-d',
             'budget' => 'decimal:2',
+            'needs_preparation' => 'boolean',
         ];
+    }
+
+    public function venue(): BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
     }
 
     public function creator(): BelongsTo
@@ -62,6 +76,17 @@ class Event extends Model
     }
 
     /**
+     * Where the event is held, e.g. "SOM 504–507": the venue from the managed
+     * list plus the free-text room/details, or just the details for "Other".
+     */
+    public function getLocationAttribute(): ?string
+    {
+        $parts = array_filter([$this->venue?->name, $this->venue_details]);
+
+        return $parts ? implode(' ', $parts) : null;
+    }
+
+    /**
      * Staff only see events they are assigned to, either at event level
      * or through a task. Admins and officers see everything.
      */
@@ -81,15 +106,21 @@ class Event extends Model
         return ! $user->isStaff() || static::visibleTo($user)->whereKey($this->id)->exists();
     }
 
-    public static function statusForDate($date): string
+    /**
+     * An event is over once its last day has passed (its end date for
+     * multi-day events, otherwise its date).
+     */
+    public static function statusForDate($date, $endDate = null): string
     {
-        return Carbon::parse($date)->lt(today()) ? 'completed' : 'upcoming';
+        return Carbon::parse($endDate ?? $date)->lt(today()) ? 'completed' : 'upcoming';
     }
 
     public static function completePastEvents(): void
     {
         static::where('status', 'upcoming')
-            ->whereDate('event_date', '<', today())
+            ->where(fn ($q) => $q
+                ->where(fn ($single) => $single->whereNull('end_date')->whereDate('event_date', '<', today()))
+                ->orWhereDate('end_date', '<', today()))
             ->update(['status' => 'completed']);
     }
 }

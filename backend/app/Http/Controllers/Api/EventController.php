@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Rules\AssignableStaff;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
@@ -17,8 +18,10 @@ class EventController extends Controller
                 'tasks:id,event_id,status,assigned_to',
                 'staff:id,name,role',
                 'creator:id,name',
+                'venue:id,name',
             ])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
+            ->when($request->boolean('prepared'), fn ($q) => $q->where('needs_preparation', true))
             ->orderBy('event_date')
             ->get();
 
@@ -27,6 +30,7 @@ class EventController extends Controller
                 'total' => $event->tasks->count(),
                 'done' => $event->tasks->where('status', 'done')->count(),
             ];
+
             return $event;
         });
 
@@ -42,6 +46,7 @@ class EventController extends Controller
             'staff:id,name,email,role',
             'creator:id,name',
             'documents.uploader:id,name',
+            'venue.building',
         ]);
 
         return response()->json(['event' => $event]);
@@ -49,76 +54,52 @@ class EventController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'venue' => ['required', 'string', 'max:255'],
-            'event_date' => ['required', 'date'],
-            'event_time' => ['required', 'date_format:H:i'],
-            'budget' => ['nullable', 'numeric', 'min:0'],
-            'staff_ids' => ['nullable', 'array'],
-            'staff_ids.*' => ['integer', new AssignableStaff],
-        ]);
+        $data = $this->validateDetails($request);
 
         $event = Event::create([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'venue' => $data['venue'],
-            'event_date' => $data['event_date'],
-            'event_time' => $data['event_time'],
-            'budget' => $data['budget'] ?? null,
-            'status' => Event::statusForDate($data['event_date']),
+            ...$data,
+            'needs_preparation' => $data['needs_preparation'] ?? false,
+            'status' => Event::statusForDate($data['event_date'], $data['end_date'] ?? null),
             'created_by' => $request->user()->id,
         ]);
 
-        if (! empty($data['staff_ids'])) {
-            $event->staff()->sync($data['staff_ids']);
-        }
-
-        $event->load(['tasks', 'staff:id,name,role', 'creator:id,name']);
-        $event->task_summary = ['total' => 0, 'done' => 0];
-
-        return response()->json(['event' => $event], 201);
+        return response()->json(['event' => $this->withSummary($event)], 201);
     }
 
     public function update(Request $request, Event $event): JsonResponse
     {
+        $data = $this->validateDetails($request, $event);
+
+        $event->fill(collect($data)->except('cancelled')->all());
+
+        // Status follows the date, so rescheduling a past event into the future
+        // reopens it and moving one into the past closes it. A cancelled event
+        // stays cancelled until it's explicitly restored.
+        $cancelled = $data['cancelled'] ?? $event->status === 'cancelled';
+        $event->status = $cancelled ? 'cancelled' : Event::statusForDate($event->event_date, $event->end_date);
+        $event->save();
+
+        return response()->json(['event' => $this->withSummary($event)]);
+    }
+
+    public function updateStaff(Request $request, Event $event): JsonResponse
+    {
         if ($event->status === 'completed' && $request->user()->role !== 'admin') {
             return response()->json([
-                'message' => 'This event is completed. Only an administrator can edit it.',
+                'message' => 'This event is completed. Only an administrator can change its staff.',
             ], 403);
         }
 
         $currentStaffIds = $event->staff()->pluck('users.id')->all();
 
         $data = $request->validate([
-            'name' => ['sometimes', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'venue' => ['sometimes', 'string', 'max:255'],
-            'event_date' => ['sometimes', 'date'],
-            'event_time' => ['sometimes', 'date_format:H:i'],
-            'budget' => ['nullable', 'numeric', 'min:0'],
-            'staff_ids' => ['sometimes', 'array'],
+            'staff_ids' => ['present', 'array'],
             'staff_ids.*' => ['integer', new AssignableStaff($currentStaffIds)],
         ]);
 
-        // Status always follows the date, so rescheduling a past event into
-        // the future (admin only) reopens it, and moving one into the past closes it.
-        $event->fill(collect($data)->except('staff_ids')->all());
-        $event->status = Event::statusForDate($event->event_date);
-        $event->save();
+        $event->staff()->sync($data['staff_ids']);
 
-        if (array_key_exists('staff_ids', $data)) {
-            $event->staff()->sync($data['staff_ids'] ?? []);
-        }
-
-        $event->load(['tasks:id,event_id,status,assigned_to', 'staff:id,name,role', 'creator:id,name']);
-        $event->task_summary = [
-            'total' => $event->tasks->count(),
-            'done' => $event->tasks->where('status', 'done')->count(),
-        ];
-
-        return response()->json(['event' => $event]);
+        return response()->json(['staff' => $event->staff()->get(['users.id', 'name', 'email', 'role'])]);
     }
 
     public function destroy(Event $event): JsonResponse
@@ -126,5 +107,62 @@ class EventController extends Controller
         $event->delete();
 
         return response()->json(['message' => 'Event deleted.']);
+    }
+
+    /**
+     * Department names used so far, for suggestions in the event form.
+     */
+    public function departments(): JsonResponse
+    {
+        $departments = Event::whereNotNull('department')
+            ->where('department', '!=', '')
+            ->distinct()
+            ->orderBy('department')
+            ->pluck('department');
+
+        return response()->json(['departments' => $departments]);
+    }
+
+    private function validateDetails(Request $request, ?Event $event = null): array
+    {
+        $creating = $event === null;
+        $required = $creating ? 'required' : 'sometimes';
+
+        // End time must come after the start time, unless the event runs over several days.
+        $startDate = $request->input('event_date', $event?->event_date?->toDateString());
+        $endDate = $request->exists('end_date') ? $request->input('end_date') : $event?->end_date?->toDateString();
+        $singleDay = ! $endDate || $endDate === $startDate;
+
+        return $request->validate([
+            'name' => [$required, 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'department' => ['nullable', 'string', 'max:255'],
+            'venue_id' => ['nullable', 'integer', 'exists:venues,id'],
+            'venue_details' => ['nullable', 'string', 'max:255', Rule::requiredIf($creating && ! $request->filled('venue_id'))],
+            'event_date' => [$required, 'date'],
+            'end_date' => array_filter(['nullable', 'date', $startDate ? "after_or_equal:{$startDate}" : null]),
+            'event_time' => ['nullable', 'date_format:H:i'],
+            'end_time' => ['nullable', 'date_format:H:i', Rule::when($singleDay && $request->filled('event_time'), 'after:event_time')],
+            'budget' => ['nullable', 'numeric', 'min:0'],
+            'control_number' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['nullable', 'string', 'max:2000'],
+            'needs_preparation' => ['sometimes', 'boolean'],
+            'cancelled' => [$creating ? 'prohibited' : 'sometimes', 'boolean'],
+        ], [
+            'venue_details.required' => 'Choose a venue, or type where the event is held.',
+            'end_date.after_or_equal' => 'The end date can\'t be before the start date.',
+            'end_time.after' => 'The end time must be after the start time.',
+        ]);
+    }
+
+    private function withSummary(Event $event): Event
+    {
+        $event->load(['tasks:id,event_id,status,assigned_to', 'staff:id,name,role', 'creator:id,name', 'venue.building']);
+        $event->task_summary = [
+            'total' => $event->tasks->count(),
+            'done' => $event->tasks->where('status', 'done')->count(),
+        ];
+
+        return $event;
     }
 }

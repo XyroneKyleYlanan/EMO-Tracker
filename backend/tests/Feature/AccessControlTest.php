@@ -121,8 +121,8 @@ class AccessControlTest extends TestCase
         $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $officer->id])->assertStatus(422);
         $this->postJson("/api/events/{$event->id}/tasks", [...$task, 'assigned_to' => $active->id])->assertCreated();
 
-        $this->putJson("/api/events/{$event->id}", ['staff_ids' => [$inactive->id]])->assertStatus(422);
-        $this->putJson("/api/events/{$event->id}", ['staff_ids' => [$active->id]])->assertOk();
+        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$inactive->id]])->assertStatus(422);
+        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$active->id]])->assertOk();
     }
 
     public function test_deactivated_existing_assignees_do_not_block_edits(): void
@@ -136,7 +136,7 @@ class AccessControlTest extends TestCase
         Sanctum::actingAs(User::factory()->officer()->create());
 
         $this->putJson("/api/tasks/{$task->id}", ['name' => 'Renamed', 'assigned_to' => $staff->id])->assertOk();
-        $this->putJson("/api/events/{$event->id}", ['name' => 'Renamed', 'staff_ids' => [$staff->id]])->assertOk();
+        $this->putJson("/api/events/{$event->id}/staff", ['staff_ids' => [$staff->id]])->assertOk();
     }
 
     public function test_login_is_rate_limited(): void

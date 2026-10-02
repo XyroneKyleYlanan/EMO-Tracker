@@ -8,6 +8,7 @@ import {
   ChecklistIcon,
   HomeIcon,
   LogOutIcon,
+  TableIcon,
   UsersIcon,
 } from './icons'
 
@@ -16,17 +17,20 @@ const NAV_BY_ROLE = {
     { to: '/admin', label: 'Home', Icon: HomeIcon, end: true },
     { to: '/admin/staff', label: 'Staff', Icon: UsersIcon },
     { to: '/admin/events', label: 'Events', Icon: CalendarIcon },
+    { to: '/admin/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/admin/analytics', label: 'Analytics', Icon: ChartIcon },
   ],
   officer: [
     { to: '/officer', label: 'Home', Icon: HomeIcon, end: true },
     { to: '/officer/events', label: 'Events', Icon: CalendarIcon },
+    { to: '/officer/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/officer/analytics', label: 'Analytics', Icon: ChartIcon },
   ],
   staff: [
     { to: '/staff', label: 'Home', Icon: HomeIcon, end: true },
     { to: '/staff/tasks', label: 'My Tasks', Icon: ChecklistIcon },
     { to: '/staff/events', label: 'My Events', Icon: CalendarIcon },
+    { to: '/staff/schedule', label: 'Schedule', Icon: TableIcon },
   ],
 }
 

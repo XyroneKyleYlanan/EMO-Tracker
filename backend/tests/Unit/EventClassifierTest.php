@@ -37,6 +37,22 @@ class EventClassifierTest extends TestCase
         $this->assertSame($expected, EventClassifier::classify($this->event($daysAway, $tasks)));
     }
 
+    public function test_events_the_emo_does_not_prepare_are_scheduled(): void
+    {
+        $event = $this->event(1, []);
+        $event->needs_preparation = false;
+
+        $this->assertSame('scheduled', EventClassifier::classify($event));
+    }
+
+    public function test_cancelled_events_are_cancelled(): void
+    {
+        $event = $this->event(5, [['pending', null]]);
+        $event->status = 'cancelled';
+
+        $this->assertSame('cancelled', EventClassifier::classify($event));
+    }
+
     public function test_completed_events_stay_completed(): void
     {
         $event = $this->event(-3, [['pending', null]]);
@@ -50,6 +66,7 @@ class EventClassifierTest extends TestCase
         $event = new Event([
             'event_date' => today()->addDays($daysAway)->toDateString(),
             'status' => 'upcoming',
+            'needs_preparation' => true,
         ]);
 
         $event->setRelation('tasks', collect($tasks)->map(

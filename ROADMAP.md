@@ -194,6 +194,17 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 
 ## Phase 10 — Capstone 2 improvements
 - [x] Task detail view: click a task (event drawer or My Tasks) to see its description, assignee, due date, priority, and event; Edit shortcut for admin/officer
+- [x] Schedule page (client request): sheet-style view of every NEU event, one tab per year, grouped by month, colored by building, searchable; phone card layout; everyone views, admin edits
+- [x] Managed venue list linked to buildings (with the client's sheet colors); admins add new venues straight from the event form; free-text room/details
+- [x] New event fields: department (with suggestions), end date (multi-day), end time, control #, remarks; times optional
+- [x] "The EMO prepares this event" switch: off = "Scheduled" (left out of readiness charts); adding a task switches it on; existing readiness rules unchanged for prepared events
+- [x] Cancelled status: cancelled events stay on the schedule, struck through, and are left out of readiness
+- [x] Event details are admin-only; officers handle preparation (tasks, staff via new staff picker, documents, reports)
+- [x] Events page defaults to EMO-prepared events, with an "All events" toggle
+- [x] Sheet-style Schedule table: gridlines, full building colors matching the legend, centered year title, consistent readiness/cancelled badges
+- [x] Older years move into an "Older years" dropdown (latest 4 years stay as tabs); past events are never deleted
+- [x] Schedule and Analytics ignore out-of-order responses when switching year/period quickly
+- [x] 12 new tests (42 total)
 
 ---
 
@@ -206,3 +217,5 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-05-16: Added historical record protection — completed events lock their tasks for staff/officer; admin-only override with explicit confirmation on status changes. Enforced backend (403) + frontend (disabled UI). Strengthens data integrity story for defense.
 - 2026-09-28: Capstone 2 kickoff review found access-control gaps, a classifier edge case (fully done events within 2 days showed Critical), and UTC timezone drift. Fixed in Phase 9 with tests. Previously uploaded files in `storage/app/public/documents` are no longer read; reset with `php artisan migrate:fresh --seed` or re-upload.
 - 2026-10-02: Client clarified the office is the Events Management Office (EMO), not a department. Renamed everything: app to EMO Tracker, office name, demo accounts to `@emo.test`, database to `emo_tracker`, repo to `EMO-Tracker`. `start.bat` now uses its own folder instead of a hard-coded path.
+- 2026-10-02: Client showed their schedule sheet (Google Sheets, one tab per year, colored by building). Built the Schedule page around it. Team decisions: event details are admin-only (officers prepare); a per-event "EMO prepares this event" switch decides readiness tracking, since most of the ~50 monthly bookings need no preparation. Venues are a managed list the EMO can grow, not free text (the sheet had 80 spellings for ~25 places). Real sheet data stays off the repo.
+- 2026-10-02: Decided not to support admin-defined columns for now: the client's sheet used the same 7 columns for all 330 rows. Revisit only if user testing shows a need. Old years are kept (moved into a dropdown), never cleared; a year-end Excel export is the planned way to "close" a year.

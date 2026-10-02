@@ -1,6 +1,6 @@
 import ReadinessBadge from './ReadinessBadge'
 import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon } from './icons'
-import { formatDateShort, formatTime } from '../lib/format'
+import { formatDateRange, formatDateShort, formatTimeRange } from '../lib/format'
 
 export default function EventCard({ event, onClick }) {
   const { total, done } = event.task_summary || { total: 0, done: 0 }
@@ -24,15 +24,15 @@ export default function EventCard({ event, onClick }) {
       <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
         <div className="flex items-center gap-1.5">
           <CalendarIcon width={14} height={14} />
-          {formatDateShort(event.event_date)}
+          {formatDateRange(event.event_date, event.end_date, formatDateShort)}
         </div>
         <div className="flex items-center gap-1.5">
           <ClockIcon width={14} height={14} />
-          {formatTime(event.event_time)}
+          {formatTimeRange(event.event_time, event.end_time) || 'Time TBA'}
         </div>
         <div className="flex items-center gap-1.5 col-span-2 truncate">
           <MapPinIcon width={14} height={14} />
-          <span className="truncate">{event.venue}</span>
+          <span className="truncate">{event.location || 'Venue TBA'}</span>
         </div>
         <div className="flex items-center gap-1.5 col-span-2">
           <UsersIcon width={14} height={14} />

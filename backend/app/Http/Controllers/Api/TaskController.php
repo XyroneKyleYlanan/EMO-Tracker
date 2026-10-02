@@ -28,7 +28,8 @@ class TaskController extends Controller
     {
         $tasks = Task::where('assigned_to', $request->user()->id)
             ->with([
-                'event:id,name,event_date,event_time,venue,status',
+                'event:id,name,event_date,end_date,event_time,end_time,venue_id,venue_details,needs_preparation,status',
+                'event.venue:id,name',
                 'assignee:id,name,email,role',
             ])
             ->orderBy('due_date')
@@ -70,6 +71,11 @@ class TaskController extends Controller
             'priority' => $data['priority'] ?? 'medium',
             'assigned_to' => $data['assigned_to'] ?? null,
         ]);
+
+        // Planning tasks for an event means the EMO is preparing it.
+        if (! $event->needs_preparation) {
+            $event->update(['needs_preparation' => true]);
+        }
 
         $task->load('assignee:id,name,email,role');
 

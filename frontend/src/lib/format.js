@@ -47,3 +47,25 @@ export function formatDateCompact(iso) {
     year: 'numeric',
   })
 }
+
+// "8:00 AM – 5:00 PM", just the start time, or '' when no time is set.
+export function formatTimeRange(start, end) {
+  if (!start) return ''
+  return end ? `${formatTime(start)} – ${formatTime(end)}` : formatTime(start)
+}
+
+// "Oct 26 – 28, 2026" for multi-day events, otherwise the single date.
+export function formatDateRange(start, end, format = formatDateCompact) {
+  if (!end || end === start) return format(start)
+  return `${format(start)} – ${format(end)}`
+}
+
+// "Mon, Oct 5": compact date for table rows.
+export function formatDayMonth(iso) {
+  if (!iso) return ''
+  return parseDate(iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+}
+
+export function formatMonthYear(iso) {
+  return parseDate(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+}

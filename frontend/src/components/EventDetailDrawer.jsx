@@ -6,8 +6,9 @@ import { useToast } from '../contexts/ToastContext'
 import ReadinessBadge from './ReadinessBadge'
 import TaskRow from './TaskRow'
 import TaskFormDialog from './TaskFormDialog'
+import StaffPickerDialog from './StaffPickerDialog'
 import { CalendarIcon, ClockIcon, MapPinIcon } from './icons'
-import { formatDateCompact, formatDateLong, formatTime } from '../lib/format'
+import { formatDateCompact, formatDateLong, formatDateRange, formatTimeRange } from '../lib/format'
 
 const ACCEPTED_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png'
 
@@ -32,6 +33,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState(null)
   const [generatingReport, setGeneratingReport] = useState(false)
+  const [staffPickerOpen, setStaffPickerOpen] = useState(false)
 
   function fetchEvent() {
     if (!eventId) return
@@ -166,9 +168,27 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                 )}
 
                 <dl className="space-y-2.5 text-sm mb-6">
-                  <Row icon={CalendarIcon} label={formatDateLong(event.event_date)} />
-                  <Row icon={ClockIcon} label={formatTime(event.event_time)} />
-                  <Row icon={MapPinIcon} label={event.venue} />
+                  <Row icon={CalendarIcon} label={formatDateRange(event.event_date, event.end_date, formatDateLong)} />
+                  <Row icon={ClockIcon} label={formatTimeRange(event.event_time, event.end_time) || 'Time to be announced'} />
+                  <Row
+                    icon={MapPinIcon}
+                    label={
+                      <span className="inline-flex items-center gap-2">
+                        {event.location || 'Venue to be announced'}
+                        {event.venue?.building && (
+                          <span
+                            className="text-[10px] font-semibold px-1.5 py-0.5 rounded text-gray-800"
+                            style={{ backgroundColor: event.venue.building.color }}
+                          >
+                            {event.venue.building.name}
+                          </span>
+                        )}
+                      </span>
+                    }
+                  />
+                  {event.department && <Row icon={null} label={`Department: ${event.department}`} />}
+                  {event.control_number && <Row icon={null} label={`Control #: ${event.control_number}`} />}
+                  {event.remarks && <Row icon={null} label={`Remarks: ${event.remarks}`} />}
                   {event.budget && (
                     <Row icon={null} label={`Budget: ₱${Number(event.budget).toLocaleString()}`} />
                   )}
@@ -177,7 +197,20 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   )}
                 </dl>
 
-                <Section title={`Assigned Staff (${event.staff?.length || 0})`}>
+                <Section
+                  title={`Assigned Staff (${event.staff?.length || 0})`}
+                  action={
+                    canManageTasks &&
+                    (event.status !== 'completed' || user.role === 'admin') && (
+                      <button
+                        onClick={() => setStaffPickerOpen(true)}
+                        className="text-xs font-medium text-neu-green hover:underline"
+                      >
+                        Edit
+                      </button>
+                    )
+                  }
+                >
                   {event.staff?.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
                       {event.staff.map((s) => (
@@ -205,6 +238,12 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                     )
                   }
                 >
+                  {!event.needs_preparation && event.status === 'upcoming' && (
+                    <div className="mb-3 p-2.5 bg-cyan-50 border border-cyan-100 rounded-lg text-xs text-cyan-900">
+                      <span className="font-semibold">Schedule only.</span>{' '}
+                      The EMO isn't tracking this event's readiness. Adding a task starts tracking it.
+                    </div>
+                  )}
                   {event.status === 'completed' && (
                     <div className="mb-3 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-700">
                       <span className="font-semibold">This event is completed.</span>{' '}
@@ -347,6 +386,18 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
           )}
         </div>
       </div>
+
+      {staffPickerOpen && event && (
+        <StaffPickerDialog
+          event={event}
+          onClose={() => setStaffPickerOpen(false)}
+          onSaved={() => {
+            setStaffPickerOpen(false)
+            toast.success('Staff updated.')
+            handleTaskChanged()
+          }}
+        />
+      )}
 
       <TaskFormDialog
         open={taskFormOpen}

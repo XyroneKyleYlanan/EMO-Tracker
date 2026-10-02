@@ -33,9 +33,10 @@ class DashboardController extends Controller
             ->get(['id', 'name', 'status', 'priority', 'due_date', 'event_id']);
 
         $myEvents = Event::visibleTo($user)
+            ->with('venue:id,name')
             ->where('status', 'upcoming')
             ->orderBy('event_date')
-            ->get(['id', 'name', 'venue', 'event_date', 'event_time', 'status']);
+            ->get(['id', 'name', 'venue_id', 'venue_details', 'event_date', 'end_date', 'event_time', 'end_time', 'needs_preparation', 'status']);
 
         return response()->json([
             'myTasks' => $myTasks,

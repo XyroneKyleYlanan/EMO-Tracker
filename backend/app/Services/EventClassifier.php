@@ -9,8 +9,17 @@ class EventClassifier
 {
     public static function classify(Event $event): string
     {
+        if ($event->status === 'cancelled') {
+            return 'cancelled';
+        }
+
         if ($event->status === 'completed') {
             return 'completed';
+        }
+
+        // Events the EMO only schedules (not prepares) aren't classified.
+        if (! $event->needs_preparation) {
+            return 'scheduled';
         }
 
         $tasks = $event->relationLoaded('tasks') ? $event->tasks : $event->tasks()->get();

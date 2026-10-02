@@ -3,6 +3,8 @@ const CONFIG = {
   yellow: { label: 'At Risk', classes: 'bg-amber-100 text-amber-800 border-amber-200' },
   red: { label: 'Critical', classes: 'bg-rose-100 text-rose-800 border-rose-200' },
   completed: { label: 'Completed', classes: 'bg-slate-100 text-slate-700 border-slate-200' },
+  scheduled: { label: 'Scheduled', classes: 'bg-cyan-50 text-cyan-800 border-cyan-200' },
+  cancelled: { label: 'Cancelled', classes: 'bg-gray-100 text-gray-500 border-gray-200' },
 }
 
 export default function ReadinessBadge({ readiness, size = 'md' }) {
@@ -23,4 +25,6 @@ export const READINESS_HEX = {
   yellow: '#d97706',
   red: '#dc2626',
   completed: '#64748b',
+  scheduled: '#0891b2',
+  cancelled: '#9ca3af',
 }

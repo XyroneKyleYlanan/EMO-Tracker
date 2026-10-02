@@ -20,6 +20,7 @@ class ReportController extends Controller
             'staff:id,name,email,role',
             'creator:id,name',
             'documents.uploader:id,name',
+            'venue',
         ]);
 
         $taskSummary = [

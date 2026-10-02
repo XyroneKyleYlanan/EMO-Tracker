@@ -20,7 +20,10 @@ class AnalyticsController extends Controller
             default => null,
         };
 
-        $eventsQuery = Event::with('tasks:id,event_id,status,assigned_to');
+        // Readiness only covers events the EMO prepares; schedule-only and cancelled events are left out.
+        $eventsQuery = Event::with(['tasks:id,event_id,status,assigned_to', 'venue:id,name'])
+            ->where('needs_preparation', true)
+            ->where('status', '!=', 'cancelled');
         if ($range) {
             $eventsQuery->whereBetween('event_date', $range);
         }
@@ -61,7 +64,7 @@ class AnalyticsController extends Controller
                     'name' => $e->name,
                     'event_date' => $e->event_date->toDateString(),
                     'event_time' => $e->event_time,
-                    'venue' => $e->venue,
+                    'location' => $e->location,
                     'readiness' => $e->readiness,
                     'task_summary' => [
                         'total' => $e->tasks->count(),

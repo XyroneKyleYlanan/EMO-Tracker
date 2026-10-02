@@ -2,13 +2,23 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { READINESS_HEX } from './ReadinessBadge'
-import { formatTime } from '../lib/format'
+import { formatTimeRange } from '../lib/format'
 
 const READINESS_LABEL = {
   green: 'On Track',
   yellow: 'At Risk',
   red: 'Critical',
   completed: 'Completed',
+  scheduled: 'Scheduled',
+  cancelled: 'Cancelled',
+}
+
+// FullCalendar treats an all-day event's end as exclusive, so a multi-day
+// event ending Oct 28 needs end = Oct 29 to cover the 28th.
+function dayAfter(isoDate) {
+  const [y, m, d] = isoDate.split('-').map(Number)
+  const next = new Date(y, m - 1, d + 1)
+  return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`
 }
 
 export default function EventCalendarView({ events, onSelect }) {
@@ -16,6 +26,7 @@ export default function EventCalendarView({ events, onSelect }) {
     id: String(event.id),
     title: event.name,
     start: event.event_date,
+    end: event.end_date && event.end_date !== event.event_date ? dayAfter(event.end_date) : undefined,
     allDay: true,
     backgroundColor: READINESS_HEX[event.readiness] || READINESS_HEX.yellow,
     borderColor: READINESS_HEX[event.readiness] || READINESS_HEX.yellow,
@@ -40,7 +51,7 @@ export default function EventCalendarView({ events, onSelect }) {
         contentHeight={620}
         eventContent={(arg) => {
           const ev = arg.event.extendedProps.event
-          const tooltip = `${ev.name}\n${formatTime(ev.event_time)} · ${ev.venue}\n${READINESS_LABEL[ev.readiness] || ''}`
+          const tooltip = `${ev.name}\n${formatTimeRange(ev.event_time, ev.end_time) || 'Time TBA'} · ${ev.location || 'Venue TBA'}\n${READINESS_LABEL[ev.readiness] || ''}`
           return (
             <div
               title={tooltip}

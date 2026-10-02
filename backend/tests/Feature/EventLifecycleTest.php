@@ -53,12 +53,11 @@ class EventLifecycleTest extends TestCase
 
     public function test_status_follows_the_event_date(): void
     {
-        $officer = User::factory()->officer()->create();
-        Sanctum::actingAs($officer);
+        Sanctum::actingAs(User::factory()->admin()->create());
 
         $created = $this->postJson('/api/events', [
             'name' => 'Backfilled Seminar',
-            'venue' => 'Room 101',
+            'venue_details' => 'Room 101',
             'event_date' => today()->subDay()->toDateString(),
             'event_time' => '09:00',
         ])->assertCreated();
