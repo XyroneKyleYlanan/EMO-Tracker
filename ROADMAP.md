@@ -210,7 +210,8 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] One-time import of the EMO's schedule spreadsheet: `php artisan schedule:import <file> --dry-run` reads the hand-typed sheet and lists rows to review; safe to re-run
 - [x] Security updates: Composer 44 advisories → 0 (Laravel 13.7 → 13.34), npm 11 vulnerabilities → 0 (incl. a Vite file-access bypass)
 - [x] Home pages rebuilt around "what needs my attention?": admin/officer get meaningful stats, a Needs attention list (Critical/At Risk prepared events) and This week from the Schedule, every row opens the event; staff Home shows only open tasks (clickable) and clickable events; quick-action cards removed (they duplicated the sidebar; "Reports" led nowhere)
-- [x] 33 new tests (64 total)
+- [x] Text cleanup for the schedule (`php artisan schedule:tidy --dry-run`): consistent title capitalization that keeps acronyms, brand names and Filipino particles; known typos; spacing; rooms ("rm201" → "Room 201"); remarks. Also applied automatically by the importer
+- [x] 36 new tests (67 total)
 
 ---
 
@@ -226,3 +227,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-10-02: Client showed their schedule sheet (Google Sheets, one tab per year, colored by building). Built the Schedule page around it. Team decisions: event details are admin-only (officers prepare); a per-event "EMO prepares this event" switch decides readiness tracking, since most of the ~50 monthly bookings need no preparation. Venues are a managed list the EMO can grow, not free text (the sheet had 80 spellings for ~25 places). Real sheet data stays off the repo.
 - 2026-10-02: Decided not to support admin-defined columns for now: the client's sheet used the same 7 columns for all 330 rows. Revisit only if user testing shows a need. Old years are kept (moved into a dropdown), never cleared; a year-end Excel export is the planned way to "close" a year.
 - 2026-10-02: Imported the client's real 2026 schedule (329 events) into the local database for the client demo, replacing the fake demo events (demo accounts kept). Snapshots: `demo-data-before-import` and `real-data-fresh-import` (restore with `php artisan backup:restore <name>`). Real data stays out of the repo.
+- 2026-10-02: Cleaned the imported schedule text (221 values: capitalization, typos like "Assestment" → "Assessment", room numbers, remarks; "HINDI NA PO TULOY ITO" → cancelled). Department synonyms (e.g. "CON" vs "College of Nursing") left as-is pending the client. New reset point: `php artisan backup:restore real-data-clean`.

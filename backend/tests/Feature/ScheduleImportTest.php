@@ -62,7 +62,7 @@ class ScheduleImportTest extends TestCase
 
         // A date range, a room inside a building, and "Cancelled" in the remarks.
         $nurses = $event('Nurses Week');
-        $this->assertSame(['2026-10-26', '2026-10-28', '08:00:00', '17:00:00', 'SOM Building 505 - 507', 'cancelled'],
+        $this->assertSame(['2026-10-26', '2026-10-28', '08:00:00', '17:00:00', 'SOM Building Rooms 505-507', 'cancelled'],
             [$nurses->event_date->toDateString(), $nurses->end_date->toDateString(), $nurses->event_time, $nurses->end_time, $nurses->location, $nurses->status]);
 
         // The tab's year wins over a mistyped year, an Excel time, and a place that isn't on the list yet.
@@ -72,10 +72,10 @@ class ScheduleImportTest extends TestCase
 
         // A name typed into the Time column moves to the remarks; ".." is not a place.
         $flag = $event('Flag Ceremony');
-        $this->assertSame([null, 'ate beth', null], [$flag->event_time, $flag->remarks, $flag->location]);
+        $this->assertSame([null, 'Ate Beth', null], [$flag->event_time, $flag->remarks, $flag->location]);
 
         $this->assertSame('2027-03-09', $event('Guidance Seminar')->event_date->toDateString());
-        $this->assertSame('16:00:00', $event('(Untitled booking)')->end_time);
+        $this->assertSame('16:00:00', $event('(Untitled Booking)')->end_time);
         $this->assertTrue(Event::all()->every(fn ($e) => ! $e->needs_preparation));
 
         $issues = collect($result['review'])->pluck('issue')->implode(' | ');

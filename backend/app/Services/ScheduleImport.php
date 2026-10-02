@@ -142,15 +142,19 @@ class ScheduleImport
                 $issues[] = $venueIssue;
             }
 
-            $name = trim((string) $name);
-            if ($name === '') {
-                $name = '(Untitled booking)';
+            // Consistent capitalization and spelling (see TextTidy), and a
+            // "won't push through" note in the name means the event is cancelled.
+            [$name, $cancelNote] = TextTidy::cancellation(trim((string) $name));
+            $name = TextTidy::title($name);
+            if ($name === null) {
+                $name = '(Untitled Booking)';
                 $issues[] = 'No event name';
             }
             $remarks = $this->text($remarks);
-            if ($timeText) {
-                $remarks = trim(($remarks ? "{$remarks} · " : '').$timeText);
+            foreach (array_filter([$timeText, $cancelNote]) as $note) {
+                $remarks = trim(($remarks ? "{$remarks} · " : '').$note);
             }
+            $remarks = TextTidy::remark($remarks);
 
             $attributes = [
                 'name' => mb_substr($name, 0, 255),
@@ -170,13 +174,13 @@ class ScheduleImport
 
             Event::create([
                 ...$attributes,
-                'department' => $this->text($department),
+                'department' => TextTidy::title($this->text($department)),
                 'end_date' => $end?->toDateString(),
                 'end_time' => $to,
                 'control_number' => $this->text($control),
                 'remarks' => $remarks,
                 'needs_preparation' => false,
-                'status' => $remarks && str_contains(strtolower($remarks), 'cancel')
+                'status' => $cancelNote || ($remarks && str_contains(strtolower($remarks), 'cancel'))
                     ? 'cancelled'
                     : Event::statusForDate($start, $end),
                 'created_by' => $this->adminId,
@@ -318,13 +322,13 @@ class ScheduleImport
                 $rest = trim(substr($normalized, strlen($alias)));
                 $issue = isset($entry[2]) ? "Venue \"{$original}\" read as {$venueName}, please confirm" : null;
 
-                return [$venue->id, $rest !== '' ? $this->restOf($original, $rest) : null, $issue];
+                return [$venue->id, $rest !== '' ? TextTidy::room($this->restOf($original, $rest)) : null, $issue];
             }
         }
 
         // A real place that isn't on the list yet: add it, so the admin can give it
         // a building or merge it into an existing venue on the Venues page.
-        $name = mb_substr($original, 0, 255);
+        $name = mb_substr(TextTidy::title($original), 0, 255);
         $venue = Venue::whereRaw('LOWER(name) = ?', [mb_strtolower($name)])->first();
         if (! $venue) {
             $venue = Venue::create(['name' => $name]);

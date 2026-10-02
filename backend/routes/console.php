@@ -2,6 +2,7 @@
 
 use App\Services\Backup;
 use App\Services\ScheduleImport;
+use App\Services\ScheduleTidy;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -92,3 +93,37 @@ Artisan::command('schedule:import {file : The schedule spreadsheet (.xlsx)} {--d
         $this->comment('  Nothing was saved. Run again without --dry-run to import.');
     }
 })->purpose("Import the EMO's schedule spreadsheet");
+
+Artisan::command('schedule:tidy {--dry-run : Show the changes without saving them}', function () {
+    $dryRun = (bool) $this->option('dry-run');
+    $changes = ScheduleTidy::run($dryRun);
+
+    if (! $changes) {
+        return $this->info('Everything is already tidy. Nothing to change.');
+    }
+
+    $out = fopen('php://temp', 'w+');
+    fputcsv($out, ['What', 'ID', 'Event date / venue', 'Field', 'Before', 'After']);
+    foreach ($changes as $change) {
+        fputcsv($out, $change);
+    }
+    rewind($out);
+    $csv = 'imports/tidy-changes-'.now()->format('Y-m-d_His').'.csv';
+    Storage::disk('local')->put($csv, stream_get_contents($out));
+    fclose($out);
+
+    $byField = collect($changes)->countBy(fn ($c) => strtolower($c[0]).' '.$c[3]);
+    $this->info(($dryRun ? 'Would change' : 'Changed').' '.count($changes).' values:');
+    foreach ($byField as $field => $count) {
+        $this->line("  {$field}: {$count}");
+    }
+    $this->newLine();
+    foreach (collect($changes)->where(3, 'name')->take(12) as $c) {
+        $this->line("  {$c[4]}  →  {$c[5]}");
+    }
+    $this->newLine();
+    $this->line('  Every change, before and after: '.Storage::disk('local')->path($csv));
+    if ($dryRun) {
+        $this->comment('  Nothing was saved. Run again without --dry-run to apply.');
+    }
+})->purpose('Make schedule text consistent: capitalization, typos, rooms and remarks');
