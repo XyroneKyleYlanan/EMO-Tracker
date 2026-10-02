@@ -78,3 +78,10 @@ export const TableIcon = (props) => (
     <path d="M3 10h18M3 15h18M9 4v16" />
   </svg>
 )
+
+export const SearchIcon = (props) => (
+  <svg {...baseProps} {...props}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="M20 20l-3.5-3.5" />
+  </svg>
+)

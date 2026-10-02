@@ -45,6 +45,6 @@ class ScheduleController extends Controller
             'can_open' => $openable === null || $openable->has($e->id),
         ]);
 
-        return response()->json(['year' => $year, 'years' => $years, 'events' => $rows]);
+        return response()->json(['year' => $year, 'current_year' => today()->year, 'years' => $years, 'events' => $rows]);
     }
 }

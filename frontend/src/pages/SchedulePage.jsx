@@ -5,12 +5,10 @@ import { useToast } from '../contexts/ToastContext'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import ReadinessBadge from '../components/ReadinessBadge'
+import { SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
 
 const OTHER_COLOR = '#E5E7EB'
-// The most recent years get tabs; older ones move into a dropdown so the
-// tabs don't pile up as the years pass. Nothing is ever deleted.
-const RECENT_YEAR_TABS = 4
 
 // The EMO's schedule sheet: every NEU event, one tab per year, colored by
 // building. Everyone can view it; only the admin adds and edits events.
@@ -22,7 +20,6 @@ export default function SchedulePage() {
   const [year, setYear] = useState(new Date().getFullYear())
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [buildings, setBuildings] = useState([])
   const [search, setSearch] = useState('')
   const [selectedId, setSelectedId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
@@ -43,10 +40,6 @@ export default function SchedulePage() {
     fetchSchedule()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
-
-  useEffect(() => {
-    api.get('/venues').then((res) => setBuildings(res.data.buildings || []))
-  }, [])
 
   function handleEdit(event) {
     setSelectedId(null)
@@ -74,9 +67,12 @@ export default function SchedulePage() {
     toast.success(wasEditing ? 'Event updated.' : `Event "${saved?.name || ''}" added to the schedule.`)
   }
 
+  // The current year and upcoming years get tabs, since upcoming events are the
+  // EMO's focus. Past years move into a dropdown; nothing is ever deleted.
   const allYears = data?.years || [year]
-  const recentYears = allYears.slice(-RECENT_YEAR_TABS)
-  const olderYears = allYears.slice(0, -RECENT_YEAR_TABS).reverse()
+  const currentYear = data?.current_year ?? new Date().getFullYear()
+  const recentYears = allYears.filter((y) => y >= currentYear)
+  const olderYears = allYears.filter((y) => y < currentYear).reverse()
 
   const query = search.trim().toLowerCase()
   const rows = (data?.events || []).filter((e) =>
@@ -96,7 +92,7 @@ export default function SchedulePage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Schedule</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Every NEU event and venue booking.{!isAdmin && ' View only. The EMO administrator keeps it up to date.'}
+            Every NEU event and venue booking{!isAdmin && ' · View only'}
           </p>
         </div>
         {isAdmin && (
@@ -109,8 +105,22 @@ export default function SchedulePage() {
         )}
       </div>
 
+      {/* Years in time order (past, this year, upcoming) on the left; search on the right. */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+          {olderYears.length > 0 && (
+            <select
+              value={olderYears.includes(year) ? year : ''}
+              onChange={(e) => e.target.value && setYear(Number(e.target.value))}
+              aria-label="Past years"
+              className={`pl-3 pr-2 py-1.5 rounded-md text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-neu-green ${
+                olderYears.includes(year) ? 'bg-neu-green text-white' : 'bg-transparent text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <option value="">Past years</option>
+              {olderYears.map((y) => <option key={y} value={y}>{y}</option>)}
+            </select>
+          )}
           {recentYears.map((y) => (
             <button
               key={y}
@@ -123,35 +133,18 @@ export default function SchedulePage() {
             </button>
           ))}
         </div>
-        {olderYears.length > 0 && (
-          <select
-            value={olderYears.includes(year) ? year : ''}
-            onChange={(e) => e.target.value && setYear(Number(e.target.value))}
-            aria-label="Older years"
-            className={`px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green ${
-              olderYears.includes(year) ? 'border-neu-green bg-neu-green text-white' : 'border-gray-200 bg-white text-gray-600'
-            }`}
-          >
-            <option value="">Older years</option>
-            {olderYears.map((y) => <option key={y} value={y}>{y}</option>)}
-          </select>
-        )}
-        <input
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search event, department, venue, remarks…"
-          className="flex-1 min-w-[200px] max-w-sm px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-        />
-      </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 mb-4 text-[11px] text-gray-700">
-        {buildings.map((b) => (
-          <span key={b.id} className="px-2 py-0.5 rounded font-medium" style={{ backgroundColor: b.color }}>
-            {b.name}
-          </span>
-        ))}
-        <span className="px-2 py-0.5 rounded font-medium" style={{ backgroundColor: OTHER_COLOR }}>Other</span>
+        <div className="relative w-full sm:w-72 sm:ml-auto">
+          <SearchIcon width={16} height={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search schedule"
+            aria-label="Search schedule"
+            className="w-full pl-9 pr-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
+          />
+        </div>
       </div>
 
       {loading && !data ? (

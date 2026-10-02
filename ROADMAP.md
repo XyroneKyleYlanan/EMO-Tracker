@@ -202,7 +202,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Event details are admin-only; officers handle preparation (tasks, staff via new staff picker, documents, reports)
 - [x] Events page defaults to EMO-prepared events, with an "All events" toggle
 - [x] Sheet-style Schedule table: gridlines, full building colors matching the legend, centered year title, consistent readiness/cancelled badges
-- [x] Older years move into an "Older years" dropdown (latest 4 years stay as tabs); past events are never deleted
+- [x] Year tabs show the current and upcoming years (the EMO's focus); past years move into a "Past years" dropdown; past events are never deleted
 - [x] Schedule and Analytics ignore out-of-order responses when switching year/period quickly
 - [x] 12 new tests (42 total)
 
