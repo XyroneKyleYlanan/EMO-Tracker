@@ -111,7 +111,9 @@ export default function EventsPage() {
         <EventListView events={events} onSelect={handleSelect} />
       )}
 
+      {/* key gives each event a fresh drawer, so the previous event never flashes */}
       <EventDetailDrawer
+        key={selectedId}
         eventId={selectedId}
         onClose={() => setSelectedId(null)}
         onEdit={handleEdit}
