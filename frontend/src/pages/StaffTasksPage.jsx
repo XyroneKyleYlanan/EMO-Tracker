@@ -54,7 +54,8 @@ export default function StaffTasksPage() {
         <StatCard label="Done" value={data.summary.done} accent="green" />
       </section>
 
-      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-4 w-fit">
+      <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 mb-4 w-fit max-w-full overflow-x-auto">
+        <FilterBtn active={filter === 'open'} onClick={() => setFilter('open')} label="Open" />
         <FilterBtn active={filter === 'all'} onClick={() => setFilter('all')} label="All" />
         <FilterBtn active={filter === 'pending'} onClick={() => setFilter('pending')} label="Pending" />
         <FilterBtn active={filter === 'in_progress'} onClick={() => setFilter('in_progress')} label="In Progress" />
