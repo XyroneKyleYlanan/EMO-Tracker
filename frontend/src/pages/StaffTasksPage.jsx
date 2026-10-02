@@ -36,7 +36,9 @@ export default function StaffTasksPage() {
 
   const filtered = filter === 'all'
     ? data.tasks
-    : data.tasks.filter((t) => t.status === filter)
+    : filter === 'open'
+      ? data.tasks.filter((t) => t.status !== 'done')
+      : data.tasks.filter((t) => t.status === filter)
 
   return (
     <div className="max-w-4xl mx-auto">
