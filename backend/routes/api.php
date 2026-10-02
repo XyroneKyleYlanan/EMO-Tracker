@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AnalyticsController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BuildingController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EventController;
@@ -47,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('role:admin,officer')->group(function () {
         Route::get('/analytics', [AnalyticsController::class, 'index']);
         Route::put('/events/{event}/staff', [EventController::class, 'updateStaff']);
+        Route::get('/schedule/export', [ScheduleController::class, 'export']);
         Route::post('/events/{event}/tasks', [TaskController::class, 'store']);
         Route::put('/tasks/{task}', [TaskController::class, 'update']);
         Route::patch('/tasks/{task}', [TaskController::class, 'update']);
@@ -65,6 +67,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/events/{event}', [EventController::class, 'destroy']);
         Route::get('/departments', [EventController::class, 'departments']);
         Route::post('/venues', [VenueController::class, 'store']);
+        Route::put('/venues/{venue}', [VenueController::class, 'update']);
+        Route::delete('/venues/{venue}', [VenueController::class, 'destroy']);
+        Route::post('/venues/{venue}/merge', [VenueController::class, 'merge']);
+        Route::post('/buildings', [BuildingController::class, 'store']);
+        Route::put('/buildings/{building}', [BuildingController::class, 'update']);
+        Route::delete('/buildings/{building}', [BuildingController::class, 'destroy']);
         Route::post('/users', [UserController::class, 'store']);
         Route::get('/users/{user}', [UserController::class, 'show']);
         Route::put('/users/{user}', [UserController::class, 'update']);

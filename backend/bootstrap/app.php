@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CompletePastEvents::class,
         ]);
 
+        $middleware->api(append: [
+            \App\Http\Middleware\DailyBackup::class,
+        ]);
+
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
         ]);

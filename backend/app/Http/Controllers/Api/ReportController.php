@@ -39,7 +39,7 @@ class ReportController extends Controller
             'generatedAt' => now(),
         ])->setPaper('a4');
 
-        $filename = 'event-report-' . Str::slug($event->name) . '.pdf';
+        $filename = 'event-report-'.Str::slug($event->name).'.pdf';
 
         return $pdf->download($filename);
     }

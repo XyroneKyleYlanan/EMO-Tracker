@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import api from '../lib/api'
+import { downloadFile } from '../lib/download'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import EventDetailDrawer from '../components/EventDetailDrawer'
@@ -16,6 +18,7 @@ export default function SchedulePage() {
   const { user } = useAuth()
   const toast = useToast()
   const isAdmin = user.role === 'admin'
+  const canExport = isAdmin || user.role === 'officer'
 
   const [year, setYear] = useState(new Date().getFullYear())
   const [data, setData] = useState(null)
@@ -40,6 +43,14 @@ export default function SchedulePage() {
     fetchSchedule()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
+
+  async function handleExport() {
+    try {
+      await downloadFile(`/schedule/export?year=${year}`, `emo-schedule-${year}.xlsx`)
+    } catch {
+      toast.error('Failed to export the schedule.')
+    }
+  }
 
   function handleEdit(event) {
     setSelectedId(null)
@@ -95,13 +106,31 @@ export default function SchedulePage() {
             Every NEU event and venue booking{!isAdmin && ' · View only'}
           </p>
         </div>
-        {isAdmin && (
-          <button
-            onClick={() => { setEditingEvent(null); setFormOpen(true) }}
-            className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition flex-shrink-0"
-          >
-            + Add event
-          </button>
+        {canExport && (
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
+            >
+              Export to Excel
+            </button>
+            {isAdmin && (
+              <Link
+                to="/admin/venues"
+                className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
+              >
+                Manage venues
+              </Link>
+            )}
+            {isAdmin && (
+              <button
+                onClick={() => { setEditingEvent(null); setFormOpen(true) }}
+                className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+              >
+                + Add event
+              </button>
+            )}
+          </div>
         )}
       </div>
 

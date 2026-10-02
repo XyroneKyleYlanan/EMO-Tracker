@@ -204,7 +204,12 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Sheet-style Schedule table: gridlines, full building colors matching the legend, centered year title, consistent readiness/cancelled badges
 - [x] Year tabs show the current and upcoming years (the EMO's focus); past years move into a "Past years" dropdown; past events are never deleted
 - [x] Schedule and Analytics ignore out-of-order responses when switching year/period quickly
-- [x] 12 new tests (42 total)
+- [x] Venues page (admin, from the Schedule): add/rename/recolor buildings (12-color light palette), rename/move venues, merge duplicates; venues used by events can't be deleted
+- [x] Export to Excel (admin, officer): one year of the Schedule laid out like the EMO's sheet (building colors, gridlines, cancelled struck through)
+- [x] Automatic daily backups (database + uploaded documents, first use each day, kept 14 per database; `BACKUP_PATH` can point to a USB drive); `php artisan backup:run`, `backup:list`, `backup:restore`; named snapshots (`backup:run --name=...`) are never deleted automatically
+- [x] One-time import of the EMO's schedule spreadsheet: `php artisan schedule:import <file> --dry-run` reads the hand-typed sheet and lists rows to review; safe to re-run
+- [x] Security updates: Composer 44 advisories → 0 (Laravel 13.7 → 13.34), npm 11 vulnerabilities → 0 (incl. a Vite file-access bypass)
+- [x] 31 new tests (61 total)
 
 ---
 
@@ -219,3 +224,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-10-02: Client clarified the office is the Events Management Office (EMO), not a department. Renamed everything: app to EMO Tracker, office name, demo accounts to `@emo.test`, database to `emo_tracker`, repo to `EMO-Tracker`. `start.bat` now uses its own folder instead of a hard-coded path.
 - 2026-10-02: Client showed their schedule sheet (Google Sheets, one tab per year, colored by building). Built the Schedule page around it. Team decisions: event details are admin-only (officers prepare); a per-event "EMO prepares this event" switch decides readiness tracking, since most of the ~50 monthly bookings need no preparation. Venues are a managed list the EMO can grow, not free text (the sheet had 80 spellings for ~25 places). Real sheet data stays off the repo.
 - 2026-10-02: Decided not to support admin-defined columns for now: the client's sheet used the same 7 columns for all 330 rows. Revisit only if user testing shows a need. Old years are kept (moved into a dropdown), never cleared; a year-end Excel export is the planned way to "close" a year.
+- 2026-10-02: Imported the client's real 2026 schedule (329 events) into the local database for the client demo, replacing the fake demo events (demo accounts kept). Snapshots: `demo-data-before-import` and `real-data-fresh-import` (restore with `php artisan backup:restore <name>`). Real data stays out of the repo.
