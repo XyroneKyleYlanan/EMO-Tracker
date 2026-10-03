@@ -339,13 +339,13 @@ Each classification comes with a short reason shown next to the badge (for examp
 - **Cannot** edit event details or delete events (Administrator-only)
 
 ### Role 3: Staff
-- Can view their own assigned tasks and events
+- Can view every event and the Schedule; "My Tasks" and "My Events" show their own work
 - Can update the status of tasks assigned to them (Pending → In Progress → Done)
 - Has read-only access to event details
 - Can download documents
 - Can download PDF reports
 - Can change their own password
-- **Cannot** create events or assign other staff
+- **Cannot** create events or tasks, or assign tasks
 - **Cannot** access the user management or analytics pages
 
 ---
@@ -466,7 +466,7 @@ For the paper's glossary or terminology section:
 These are likely questions and the talking points to prepare for them.
 
 **Q: How does the "AI" feature work? Where is it?**
-A: It is a rule-based classifier implemented in `App\Services\EventClassifier.php`, approximately 30 lines of PHP. It evaluates three metrics (completion percentage, days remaining, task assignment status) against priority-ordered rules to assign one of four readiness categories. No machine learning, no external APIs, no training data — strictly hardcoded if/elif logic, as required by the curriculum.
+A: It is a rule-based classifier implemented in `App\Services\EventClassifier.php`. It evaluates four things (completion percentage, days remaining, overdue tasks, and whether open tasks have an owner) against priority-ordered rules to assign one of four readiness categories, and gives a short reason for each result (for example "1 task is overdue"). No machine learning, no external APIs, no training data — strictly hardcoded if/elif logic, as required by the curriculum.
 
 **Q: Why React and Laravel? Why not just one framework?**
 A: Separation of concerns. React provides a responsive, component-based UI that runs in the browser. Laravel handles business logic, database access, validation, and security. The frontend never touches the database directly — all data flows through the API, which provides a single point for enforcing security and validation.
