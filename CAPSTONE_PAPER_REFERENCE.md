@@ -268,17 +268,21 @@ Stores configurable system settings (e.g., school year boundaries).
 **Description:** The system automatically classifies each event into one of four readiness levels using hardcoded rule-based logic. **This is the "AI" feature required by the curriculum — implemented without machine learning, external APIs, or data training.**
 
 **Classification levels:**
-- **GREEN — On Track:** all tasks are done (regardless of days remaining), OR tasks completed ≥ 70% AND days remaining ≥ 7 AND at least 1 staff assigned per task
-- **YELLOW — At Risk:** tasks completed between 40% and 69%, OR days remaining between 3-6 days, OR some tasks have no staff assigned
-- **RED — Critical:** tasks completed < 40%, OR days remaining ≤ 2 days, OR majority of tasks have no assigned staff
+- **RED — Critical:** a task is past its due date and not done, OR 2 days or less remain and work is still open, OR 7 days or less remain and either less than 40% of tasks are done or most open tasks have no owner
+- **YELLOW — At Risk:** 14 days or less remain and less than 70% of tasks are done, OR an open task has no owner
+- **GREEN — On Track:** all tasks are done (regardless of days remaining), OR none of the RED or YELLOW conditions apply
 - **COMPLETED:** event date has passed (assigned automatically when an upcoming event's date is in the past)
 
 **Classification priority order (always evaluated in this sequence):**
-1. If every task is done → classify as GREEN (there is nothing left to do, so time pressure no longer applies)
-2. Check RED conditions → if any RED condition is true, classify as RED
-3. Check YELLOW conditions → if any YELLOW condition is true, classify as YELLOW
-4. Only assign GREEN if neither RED nor YELLOW conditions are triggered
-5. **Edge case:** if an event has zero tasks, classify as YELLOW (not enough data to be GREEN, not critical enough to be RED)
+1. **Edge case:** if an event has zero tasks, classify as YELLOW (not enough data to be GREEN, not critical enough to be RED)
+2. If every task is done → classify as GREEN (there is nothing left to do, so time pressure no longer applies)
+3. Check RED conditions → if any RED condition is true, classify as RED
+4. Check YELLOW conditions → if any YELLOW condition is true, classify as YELLOW
+5. Only assign GREEN if neither RED nor YELLOW conditions are triggered
+
+Each classification comes with a short reason shown next to the badge (for example "1 task is overdue" or "60% done, 14 days to go"), so users can see why an event has its color.
+
+**Refinement in Capstone 2:** testing with the EMO's real schedule showed that the original rules marked an event Critical as soon as tasks were added (0% done is under 40%), even when the event was weeks away, and ignored overdue tasks. Progress is now judged only as the event gets close (within 14 days for At Risk, within 7 days for Critical), and an overdue task makes an event Critical at any time.
 
 **Analytics Dashboard (accessible to Administrator and Officer):**
 - Overview stat cards: Total Events, Total Tasks, Tasks Done with percentage, Active Staff
