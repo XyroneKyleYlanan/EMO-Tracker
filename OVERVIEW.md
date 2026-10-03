@@ -96,7 +96,7 @@ users (id, name, email, password, role, is_active, ...)
   │            ├──── documents (id, file_name, file_path,
   │            │       file_size, mime_type, uploaded_by)
   │            │
-  │            └──── event_staff (event_id, user_id) ◀── pivot for event-level staff
+  │            └──── event_staff (event_id, user_id) ◀── no longer used (see below)
   │
 settings (id, key, value) ◀── seeded with school year config (unused but harmless)
 ```
