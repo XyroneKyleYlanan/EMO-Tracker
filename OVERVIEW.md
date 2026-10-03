@@ -105,7 +105,6 @@ settings (id, key, value) ◀── seeded with school year config (unused but h
 - `users` has 3 roles (admin/officer/staff) via an enum column — simple and clear
 - An event's People is everyone with a task on it, so the old `event_staff` pivot table is no longer used (it will be removed)
 - `tasks` has `assigned_to` directly (one owner per task — clear accountability in a small office); anyone can own a task, whatever their role
-- `tasks` has `assigned_to` directly (single staff per task — simpler for a 10-person team)
 - `documents` are linked to events with `cascadeOnDelete` so deleting an event cleans up its docs
 - All foreign keys use `cascadeOnDelete` or `nullOnDelete` to maintain referential integrity
 
@@ -117,7 +116,7 @@ settings (id, key, value) ◀── seeded with school year config (unused but h
 
 This is the centerpiece of the defense. It's clean if/elif logic — no machine learning, no external APIs, no data training:
 
-````text
+```
 1. If event is cancelled → "cancelled"; if completed → "completed"
 2. If the EMO only schedules it (doesn't prepare it) → "scheduled"
 3. If event has 0 tasks → return "yellow" (nothing planned yet)
@@ -131,12 +130,13 @@ This is the centerpiece of the defense. It's clean if/elif logic — no machine 
    - days to go ≤ 14 and % done < 70, OR
    - any open task has no owner
 8. Otherwise → return "green"
+```
 
-````text
 Progress is only judged as the event gets close, so an event planned weeks ahead isn't flagged just because work hasn't started; an overdue task is flagged at any time. Each result comes with a short reason ("1 task is overdue", "60% done, 14 days to go") shown in the event panel, on Home and in the PDF report.
 
 The Event model's `readiness` accessor delegates to this service. Called automatically every time an event is fetched — the readiness color updates **live** as tasks change status.
-````
+
+---
 
 ## User Roles & Permissions
 
