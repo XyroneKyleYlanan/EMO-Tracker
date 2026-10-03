@@ -253,11 +253,11 @@ Stores configurable system settings (e.g., school year boundaries).
 **Description:** Provides full lifecycle management of tasks within an event, including assignment to specific staff members and real-time status tracking.
 
 **Capabilities:**
-- Add tasks under each event with name, description, due date, priority, and assigned staff
+- Add tasks under each event with name, description, due date, priority, and an owner (anyone in the office, whatever their role)
 - Track task completion status across three states: Pending, In Progress, Done
 - Administrators and Officers can create, edit, and delete tasks
 - Staff members can update the status of tasks assigned to them (not others)
-- A dedicated "My Tasks" page for Staff lists all tasks assigned to them across all events
+- Everyone has a "My Tasks" page listing their tasks across all events; the Administrator's and Officers' Home pages also show their open tasks
 - Tasks have priority levels (Low, Medium, High) displayed with color coding
 - **Historical record protection:** once an event transitions to Completed status, the event and its tasks become locked. Staff and Officers can no longer modify them. Only an Administrator may correct historical task records, and any such change requires explicit on-screen confirmation. This safeguards the integrity of post-event reports.
 
