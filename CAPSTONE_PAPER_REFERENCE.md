@@ -285,7 +285,7 @@ Each classification comes with a short reason shown next to the badge (for examp
 **Refinement in Capstone 2:** testing with the EMO's real schedule showed that the original rules marked an event Critical as soon as tasks were added (0% done is under 40%), even when the event was weeks away, and ignored overdue tasks. Progress is now judged only as the event gets close (within 14 days for At Risk, within 7 days for Critical), and an overdue task makes an event Critical at any time.
 
 **Analytics Dashboard (accessible to Administrator and Officer):**
-- Overview stat cards: Total Events, Total Tasks, Tasks Done with percentage, Active Staff
+- Overview stat cards: Total Events, Total Tasks, Tasks Done with percentage, People with tasks
 - Readiness Distribution Donut Chart showing the breakdown of all events by readiness category
 - Top 5 Most Urgent Events list (ranked by readiness — Critical, then At Risk, then On Track — and then by nearest event date)
 - Period filter: This Week / This Month / All Time
@@ -299,8 +299,8 @@ Each classification comes with a short reason shown next to the badge (for examp
 **Description:** Allows generation of post-event PDF summary reports and management of attached documents per event.
 
 **PDF Report Capabilities:**
-- Administrators and Officers can generate a PDF report for any event; Staff can generate reports for the events they are assigned to
-- Reports include: event details, readiness badge, task summary statistics, assigned staff list, full task table with status badges, attached documents list, and a generation timestamp
+- Everyone can generate a PDF report for any event
+- Reports include: event details, readiness badge with its reason, task summary statistics, the people working on the event (everyone with a task on it), full task table with status badges, attached documents list, and a generation timestamp
 - Reports are styled with EMO branding (NEU logo, brand colors, formatted typography)
 - Generated locally on the server using `barryvdh/laravel-dompdf` (a Composer package, NOT an external API)
 
