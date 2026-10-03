@@ -7,7 +7,7 @@ import { useToast } from '../contexts/ToastContext'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import ReadinessBadge from '../components/ReadinessBadge'
-import { SearchIcon } from '../components/icons'
+import { ChevronDownIcon, SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
 
 const OTHER_COLOR = '#E5E7EB'
@@ -138,17 +138,25 @@ export default function SchedulePage() {
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {olderYears.length > 0 && (
-            <select
-              value={olderYears.includes(year) ? year : ''}
-              onChange={(e) => e.target.value && setYear(Number(e.target.value))}
-              aria-label="Past years"
-              className={`pl-3 pr-2 py-1.5 rounded-md text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-neu-green ${
-                olderYears.includes(year) ? 'bg-neu-green text-white' : 'bg-transparent text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <option value="">Past years</option>
-              {olderYears.map((y) => <option key={y} value={y}>{y}</option>)}
-            </select>
+            // Our own arrow instead of the browser's, so the spacing is even in every browser.
+            <div className="relative">
+              <select
+                value={olderYears.includes(year) ? year : ''}
+                onChange={(e) => e.target.value && setYear(Number(e.target.value))}
+                aria-label="Past years"
+                className={`appearance-none pl-3 pr-8 py-1.5 rounded-md text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-neu-green ${
+                  olderYears.includes(year) ? 'bg-neu-green text-white' : 'bg-transparent text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <option value="">Past years</option>
+                {olderYears.map((y) => <option key={y} value={y}>{y}</option>)}
+              </select>
+              <ChevronDownIcon
+                width={14}
+                height={14}
+                className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${olderYears.includes(year) ? 'text-white' : 'text-gray-500'}`}
+              />
+            </div>
           )}
           {recentYears.map((y) => (
             <button

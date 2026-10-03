@@ -58,6 +58,12 @@ export const ChevronRightIcon = (props) => (
   </svg>
 )
 
+export const ChevronDownIcon = (props) => (
+  <svg {...baseProps} {...props}>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+)
+
 export const ClockIcon = (props) => (
   <svg {...baseProps} {...props}>
     <circle cx="12" cy="12" r="10" />
