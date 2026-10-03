@@ -243,8 +243,8 @@ Stores configurable system settings (e.g., school year boundaries).
 - View events in either calendar or list format (toggle button)
 - On mobile devices (screen width < 768px), the list view is the default
 - Each event displayed as a colored pill on the calendar — the color matches the event's readiness classification
-- Clicking an event opens a detail drawer showing tasks, assigned staff, documents, and metadata
-- Staff members can be assigned to events at the event level (independent of task-level assignment)
+- Clicking an event opens a detail drawer showing its readiness (with the reason), the people working on it, tasks, documents, and metadata
+- Everyone in the office can see and open every event; an event's People list is everyone who has a task on it
 
 **Key files:** `EventController.php`, `EventsPage.jsx`, `EventCalendarView.jsx`, `EventListView.jsx`
 
