@@ -113,7 +113,7 @@ settings (id, key, value) ◀── seeded with school year config (unused but h
 
 ## The "AI" Feature (Rule-Based Classifier)
 
-**File:** `app/Services/EventClassifier.php` (~30 lines)
+**File:** `app/Services/EventClassifier.php`
 
 This is the centerpiece of the defense. It's clean if/elif logic — no machine learning, no external APIs, no data training:
 
