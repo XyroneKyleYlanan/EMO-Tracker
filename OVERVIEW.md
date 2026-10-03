@@ -103,7 +103,8 @@ settings (id, key, value) ◀── seeded with school year config (unused but h
 
 **Design rationale:**
 - `users` has 3 roles (admin/officer/staff) via an enum column — simple and clear
-- `event_staff` pivot table lets multiple staff be assigned to an event independently of task assignments
+- An event's People is everyone with a task on it, so the old `event_staff` pivot table is no longer used (it will be removed)
+- `tasks` has `assigned_to` directly (one owner per task — clear accountability in a small office); anyone can own a task, whatever their role
 - `tasks` has `assigned_to` directly (single staff per task — simpler for a 10-person team)
 - `documents` are linked to events with `cascadeOnDelete` so deleting an event cleans up its docs
 - All foreign keys use `cascadeOnDelete` or `nullOnDelete` to maintain referential integrity
