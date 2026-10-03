@@ -323,20 +323,20 @@ Each classification comes with a short reason shown next to the badge (for examp
 - Full system access
 - Can manage user accounts (create, edit, deactivate, reactivate)
 - Can create, edit, and delete events
-- Can assign tasks and event-level staff
+- Can assign tasks to anyone in the office, including themselves
 - Can view all analytics and generate reports
 - Can upload and delete documents
 - Can change their own password
 
 ### Role 2: Officer
-- Can create and manage events (but not delete them)
-- Can assign tasks to staff members
+- Handles event preparation: adds, edits, and deletes tasks (event details such as date, time, and venue are edited by the Administrator)
+- Can assign tasks to anyone in the office, including themselves
 - Can monitor event readiness classification
 - Can view analytics and the readiness distribution chart
 - Can upload and delete documents
 - Can change their own password
 - **Cannot** manage user accounts (Administrator-only)
-- **Cannot** delete events (Administrator-only)
+- **Cannot** edit event details or delete events (Administrator-only)
 
 ### Role 3: Staff
 - Can view their own assigned tasks and events
