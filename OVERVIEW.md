@@ -117,21 +117,21 @@ settings (id, key, value) ◀── seeded with school year config (unused but h
 
 This is the centerpiece of the defense. It's clean if/elif logic — no machine learning, no external APIs, no data training:
 
-```
-1. If event status = "completed" → return "completed"
-2. If event has 0 tasks → return "yellow" (edge case)
-3. If every task is done → return "green" (nothing left to do, however close the date)
-4. Compute: completion %, days remaining, unassigned %
-5. Check RED conditions first:
-   - completion < 40%, OR
-   - days remaining ≤ 2, OR
-   - majority of tasks unassigned
-6. Check YELLOW conditions second:
-   - completion < 70%, OR
-   - days remaining ≤ 6, OR
-   - any task unassigned
-7. Otherwise → return "green"
-```
+````text
+1. If event is cancelled → "cancelled"; if completed → "completed"
+2. If the EMO only schedules it (doesn't prepare it) → "scheduled"
+3. If event has 0 tasks → return "yellow" (nothing planned yet)
+4. If every task is done → return "green" (nothing left to do, however close the date)
+5. Compute: days to go, % done, overdue tasks, open tasks with no owner
+6. Check RED conditions first:
+   - any task is overdue (past its due date, not done), OR
+   - days to go ≤ 2 and work is still open, OR
+   - days to go ≤ 7 and (% done < 40 OR most open tasks have no owner)
+7. Check YELLOW conditions second:
+   - days to go ≤ 14 and % done < 70, OR
+   - any open task has no owner
+8. Otherwise → return "green"
+````
 
 The Event model's `readiness` accessor delegates to this service. Called automatically every time an event is fetched — the readiness color updates **live** as tasks change status.
 
