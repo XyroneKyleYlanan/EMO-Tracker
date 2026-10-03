@@ -218,7 +218,7 @@ This protects the integrity of post-event reports. Key files: `CompletePastEvent
 - **4 main features** (per briefing)
 - **3 user roles**
 - **8 build phases** completed
-- **~30 lines** of classifier logic (the "AI")
+- **About 100 lines** of classifier logic (the "AI"), including the reason shown with each result
 - **10 demo users** + **5 demo events** + **18 demo tasks** in the seeder
 - **PHP 8.3 / Laravel 13 / React 19 / MySQL 8.4** — all current versions
 
