@@ -138,7 +138,7 @@ EMO Tracker is a responsive web application that replaces these manual methods w
 ### Important Compliance Notes
 
 - **No external service APIs are used.** All data and logic are handled by the self-built Laravel REST API.
-- **No machine learning models or AI APIs are integrated.** The classification logic is implemented as plain PHP if/elif statements (about 30 lines of code).
+- **No machine learning models or AI APIs are integrated.** The classification logic is implemented as plain PHP if/elif statements (about 100 lines of code, including the short reason shown with each result).
 - **UI component libraries** (FullCalendar, Recharts, Tailwind) are NOT APIs — they are visual rendering tools with no external server calls. The professor's "no third-party APIs" rule applies to service APIs (e.g., OpenAI, Google Maps, Firebase), not to UI libraries.
 - All hosting is local; no Vercel, Render, Railway, or Netlify deployments.
 
@@ -206,7 +206,7 @@ Stores tasks belonging to events.
 - `timestamps`
 
 ### `event_staff` table (pivot)
-Pivot table for event-level staff assignment (separate from task-level assignment).
+No longer used: an event's People are now everyone with a task on it. This table will be removed in a later update.
 - `id` (primary key)
 - `event_id` (foreign key to events.id, cascade on delete)
 - `user_id` (foreign key to users.id, cascade on delete)
