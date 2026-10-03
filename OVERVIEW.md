@@ -131,11 +131,12 @@ This is the centerpiece of the defense. It's clean if/elif logic — no machine 
    - days to go ≤ 14 and % done < 70, OR
    - any open task has no owner
 8. Otherwise → return "green"
-````
+
+````text
+Progress is only judged as the event gets close, so an event planned weeks ahead isn't flagged just because work hasn't started; an overdue task is flagged at any time. Each result comes with a short reason ("1 task is overdue", "60% done, 14 days to go") shown in the event panel, on Home and in the PDF report.
 
 The Event model's `readiness` accessor delegates to this service. Called automatically every time an event is fetched — the readiness color updates **live** as tasks change status.
-
----
+````
 
 ## User Roles & Permissions
 
