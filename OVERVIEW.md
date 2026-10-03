@@ -142,9 +142,11 @@ The Event model's `readiness` accessor delegates to this service. Called automat
 
 | Role | Can do | Cannot do |
 |---|---|---|
-| **Administrator** | Everything: manage users, events, tasks, documents, analytics, reports | (nothing restricted) |
-| **Officer** | Create/edit events, tasks, documents; view analytics; assign staff | Manage user accounts; delete events |
-| **Staff** | View the events they're assigned to (at event level or through a task) and their tasks; update their own task status; change own password; download reports and documents for their events | See other events, create events, assign others, view analytics, manage other users |
+| **Administrator** | Everything: manage user accounts, event details (date, time, venue), venues, tasks, documents, analytics, reports, Excel export | (nothing restricted) |
+| **Officer** | Event preparation: add, edit and assign tasks; upload and delete documents; view analytics; export the Schedule to Excel | Edit event details or delete events; manage user accounts or venues |
+| **Staff** | See every event and the Schedule; update the status of their own tasks; download reports and documents; change own password | Create or edit events or tasks, assign tasks, view analytics, manage users |
+
+Everyone, whatever their role, can be given tasks and has a **My Tasks** page: the EMO is a small office where everyone handles events.
 
 Role enforcement happens in **two places**:
 - **Backend:** middleware on routes (`role:admin,officer`)
