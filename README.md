@@ -188,6 +188,7 @@ If MySQL isn't running (for example after a restart), start it with `brew servic
 
 The other commands in this README (resetting demo data, running tests) are the same on Mac. Just use your Mac path, e.g. `cd ~/Projects/EMOTracker/backend`.
 ````
+
 ---
 
 ## Demo Login Credentials
