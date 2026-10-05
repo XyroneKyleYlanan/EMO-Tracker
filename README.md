@@ -126,6 +126,69 @@ Runs Vite on `http://localhost:5173`.
 
 Find your laptop's IP with `ipconfig` (look for IPv4 Address under your WiFi adapter).
 
+````markdown
+---
+
+## Running on Mac
+
+The steps above are for Windows with Laragon. On a Mac, use [Homebrew](https://brew.sh) instead.
+
+### First-time setup (Mac)
+
+**1. Install the tools** (one time):
+
+```bash
+brew install php@8.3 composer mysql@8.4 node
+brew services start mysql@8.4
+echo 'export PATH="/opt/homebrew/opt/php@8.3/bin:/opt/homebrew/opt/mysql@8.4/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+The `export PATH` line is needed because Homebrew doesn't link versioned PHP and MySQL automatically.
+
+**2. Clone the project** (any folder works on Mac, e.g. `~/Projects`):
+
+```bash
+cd ~/Projects
+git clone https://github.com/XyroneKyleYlanan/EMO-Tracker.git EMOTracker
+```
+
+**3. Backend setup:**
+
+```bash
+cd ~/Projects/EMOTracker/backend
+composer install
+cp .env.example .env
+php artisan key:generate
+mysql -u root -e "CREATE DATABASE emo_tracker CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate:fresh --seed
+```
+
+**4. Frontend setup:**
+
+```bash
+cd ~/Projects/EMOTracker/frontend
+npm install
+```
+
+### Running the app (Mac)
+
+From the project folder, run:
+
+```bash
+cd ~/Projects/EMOTracker
+bash start.sh
+```
+
+It checks that MySQL is running, starts both servers, opens `http://localhost:5173`, and prints the address other devices on the same WiFi can use. Press **Control + C** to stop both servers.
+
+The first time, macOS may ask whether to allow incoming connections for `node`. Click **Allow**, or phones on the WiFi won't be able to connect.
+
+If MySQL isn't running (for example after a restart), start it with `brew services start mysql@8.4`.
+
+The other commands in this README (resetting demo data, running tests) are the same on Mac. Just use your Mac path, e.g. `cd ~/Projects/EMOTracker/backend`.
+````
+
 ---
 
 ## Demo Login Credentials
