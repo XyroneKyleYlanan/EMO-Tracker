@@ -188,7 +188,6 @@ If MySQL isn't running (for example after a restart), start it with `brew servic
 
 The other commands in this README (resetting demo data, running tests) are the same on Mac. Just use your Mac path, e.g. `cd ~/Projects/EMOTracker/backend`.
 ````
-
 ---
 
 ## Demo Login Credentials
@@ -242,7 +241,8 @@ C:\laragon\www\EMOTracker\
 ├── ROADMAP.md                Phased build log
 ├── OVERVIEW.md               Architectural reference
 ├── CAPSTONE_PAPER_REFERENCE.md   Reference doc for paper writing
-├── start.bat                 One-click launcher
+├── start.bat                 One-click launcher (Windows)
+├── start.sh                  One-command launcher (Mac)
 ├── backend/                  Laravel app
 │   ├── app/
 │   │   ├── Http/Controllers/Api/   API endpoints
