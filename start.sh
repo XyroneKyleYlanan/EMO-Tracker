@@ -1,5 +1,3 @@
-```
-bash
 #!/usr/bin/env bash
 # EMO Tracker - Mac launcher
 # Starts the Laravel backend and the React frontend, then opens the browser.
@@ -37,4 +35,3 @@ echo "  Press Control + C to stop the app."
 echo ""
 
 wait
-```

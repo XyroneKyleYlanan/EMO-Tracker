@@ -126,7 +126,6 @@ Runs Vite on `http://localhost:5173`.
 
 Find your laptop's IP with `ipconfig` (look for IPv4 Address under your WiFi adapter).
 
-````
 ---
 
 ## Running on Mac
@@ -187,7 +186,6 @@ The first time, macOS may ask whether to allow incoming connections for `node`. 
 If MySQL isn't running (for example after a restart), start it with `brew services start mysql@8.4`.
 
 The other commands in this README (resetting demo data, running tests) are the same on Mac. Just use your Mac path, e.g. `cd ~/Projects/EMOTracker/backend`.
-````
 
 ---
 
