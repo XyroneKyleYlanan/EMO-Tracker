@@ -126,7 +126,7 @@ Runs Vite on `http://localhost:5173`.
 
 Find your laptop's IP with `ipconfig` (look for IPv4 Address under your WiFi adapter).
 
-````markdown
+````
 ---
 
 ## Running on Mac
