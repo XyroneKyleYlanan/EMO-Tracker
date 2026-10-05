@@ -218,6 +218,30 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Task form notes when a due date falls after the event (tasks lock once the event is over)
 - [x] 44 new tests (75 total)
 
+### Next up
+
+**Waiting on group mates**
+- [ ] Bacena: remove unused files and fix a seeder comment (`1-Bacena-cleanup.md`)
+- [ ] Sy: Mac launcher, Mac setup steps, and the `.env.example` database fix (`2-Sy-mac-setup.md`)
+- [ ] After Bacena's commit: drop the unused `event_staff` table, the `Event::staff()` relation, and the seeder lines that fill it
+
+**Accounts, before the EMO uses it for real**
+- [ ] Create the real members' accounts (names and roles from the client), with at least two administrators (the office head and a backup), since only an admin can reset passwords
+- [ ] Log in as the real admin and deactivate the 10 demo accounts (all use `password123`, including `admin@emo.test`)
+- [ ] Optional: a terminal command to reset a password, in case every admin is locked out
+
+**Client demo**
+- [ ] Mark 3–4 real upcoming events "EMO prepares" and add their real tasks, with owners and due dates
+- [ ] Ask the client: are the 13 same-venue overlaps in the 2026 sheet real conflicts? Should "CON" and "College of Nursing" (and similar) be one department? Are odd imported times typos (e.g. "Recognition/Dry Run" at 1:30 AM)?
+
+**Features (check with the adviser first)**
+- [ ] Venue double-booking warning: warn (not block) when an event overlaps another booking in the same venue and room, and mark clashes on the Schedule
+- [ ] Ask the adviser: the user-testing survey format (ISO 25010 or SUS?); whether the double-booking warning counts under the Events feature; whether notifications, comments/tagging and an audit trail belong in Capstone 2 or future work
+
+**Pilot and user testing**
+- [ ] Install on an EMO office PC, restore the real data, and point `BACKUP_PATH` at a USB drive
+- [ ] Let the EMO use it for 1–2 weeks, then run the survey (test scenarios and questionnaire once the format is confirmed)
+
 ---
 
 ## Notes & Decisions Log
