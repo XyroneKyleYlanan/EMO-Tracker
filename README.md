@@ -172,14 +172,16 @@ npm install
 
 ### Running the app (Mac)
 
-From the project folder, run:
+In Finder, open the `EMOTracker` folder and double-click **`start.command`**. A Terminal window opens, checks that MySQL is running, starts both servers, opens `http://localhost:5173`, and prints the address other devices on the same WiFi can use. To stop the app, press **Control + C** in that window, or just close it.
+
+If macOS says the file can't be opened, right-click it, choose **Open**, then click **Open** again. You only need to do this once.
+
+You can also start it from Terminal:
 
 ```bash
 cd ~/Projects/EMOTracker
-bash start.sh
+bash start.command
 ```
-
-It checks that MySQL is running, starts both servers, opens `http://localhost:5173`, and prints the address other devices on the same WiFi can use. Press **Control + C** to stop both servers.
 
 The first time, macOS may ask whether to allow incoming connections for `node`. Click **Allow**, or phones on the WiFi won't be able to connect.
 
@@ -241,7 +243,7 @@ C:\laragon\www\EMOTracker\
 ├── OVERVIEW.md               Architectural reference
 ├── CAPSTONE_PAPER_REFERENCE.md   Reference doc for paper writing
 ├── start.bat                 One-click launcher (Windows)
-├── start.sh                  One-command launcher (Mac)
+├── start.command             Double-click launcher (Mac)
 ├── backend/                  Laravel app
 │   ├── app/
 │   │   ├── Http/Controllers/Api/   API endpoints
