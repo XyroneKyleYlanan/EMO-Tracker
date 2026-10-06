@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Services\ScheduleExport;
+use App\Services\VenueClashes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,9 @@ class ScheduleController extends Controller
             ->orderBy('event_time')
             ->get();
 
+        // Double bookings matter for events still to come; past ones can't be fixed.
+        $clashes = VenueClashes::within($events);
+
         $rows = $events->map(fn (Event $e) => [
             'id' => $e->id,
             'name' => $e->name,
@@ -42,6 +46,7 @@ class ScheduleController extends Controller
             'remarks' => $e->remarks,
             'status' => $e->status,
             'ongoing' => $e->ongoing,
+            'clashes' => $e->status === 'upcoming' ? collect($clashes[$e->id] ?? [])->pluck('name')->values() : [],
             'readiness' => $e->readiness,
             'needs_preparation' => $e->needs_preparation,
         ]);

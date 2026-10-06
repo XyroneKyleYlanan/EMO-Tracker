@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Services\VenueClashes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -37,7 +38,36 @@ class EventController extends Controller
             'venue.building',
         ]);
 
+        // Other bookings at the same venue and time, while it's still to come.
+        $event->clashes = $event->status === 'upcoming'
+            ? VenueClashes::for($event)->map(fn (Event $other) => VenueClashes::summary($other))
+            : [];
+
         return response()->json(['event' => $event->append('readiness_reason')]);
+    }
+
+    /**
+     * Bookings that would clash with an event before it's saved, so the form
+     * can warn while the date, time and venue are being chosen.
+     */
+    public function clashes(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'venue_id' => ['nullable', 'integer'],
+            'venue_details' => ['nullable', 'string', 'max:255'],
+            'event_date' => ['required', 'date'],
+            'end_date' => ['nullable', 'date'],
+            'event_time' => ['nullable', 'date_format:H:i'],
+            'end_time' => ['nullable', 'date_format:H:i'],
+            'ignore' => ['nullable', 'integer'],
+        ]);
+
+        $event = new Event(collect($data)->except('ignore')->all());
+        $event->status = 'upcoming';
+
+        return response()->json([
+            'clashes' => VenueClashes::for($event, $data['ignore'] ?? null)->map(fn (Event $other) => VenueClashes::summary($other)),
+        ]);
     }
 
     public function store(Request $request): JsonResponse

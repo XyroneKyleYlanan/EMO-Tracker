@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
 import { ReadinessReason } from './ReadinessBadge'
 import EventBadges from './EventBadges'
+import ClashWarning from './ClashWarning'
 import TaskRow from './TaskRow'
 import TaskFormDialog from './TaskFormDialog'
 import { CalendarIcon, ClockIcon, MapPinIcon } from './icons'
@@ -211,6 +212,12 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                     <Row icon={null} label={`Created by ${event.creator.name}`} muted />
                   )}
                 </dl>
+
+                <ClashWarning
+                  clashes={event.clashes}
+                  intro={(n) => `Overlaps with ${n === 1 ? 'another booking' : `${n} other bookings`} at the same venue:`}
+                  className="-mt-2 mb-6"
+                />
 
                 <Section title={`People (${people.length})`}>
                   {people.length > 0 ? (

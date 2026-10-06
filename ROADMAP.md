@@ -226,7 +226,8 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Code checker (ESLint) clean, 13 → 0 problems: dialogs mount fresh on each opening (no flash of the previous values), pages load without an extra render, context hooks and the readiness colors moved into plain `.js` files
 - [x] Building colors: 12 → 24 (Google Sheets' two lightest rows, the colors the EMO's sheet uses), each checked by a test to keep the Schedule's text and notes readable (4.5:1 contrast or better); the picker marks colors other buildings already use and starts new buildings on a free one. Small notes on colored Schedule rows are now darker so they stay readable on every color
 - [x] Manage venues page made consistent with the rest of the app: wider layout with two building cards per row, "+ Add building" / "+ Add venue" and "Save changes" labels, Staff-page text buttons, a plain gray Delete (instead of faded red) for venues in use with the reason on the page, visible errors when saving fails, and an empty state
-- [x] 59 new tests (90 total)
+- [x] Double-booking warning (`VenueClashes`): same venue and room (or the whole venue), overlapping days and times (no time = all day; cancelled and free-text places don't count). The event form warns live while the venue, date and time are chosen (plus a note by the Save button), the event panel shows the clash to everyone, and the Schedule marks upcoming clashes "Overlap" (with the names on hover, and searchable). A warning, not a block: some overlaps are on purpose. The EMO's real 2026 data has 13 clashing pairs, 9 of them upcoming
+- [x] 70 new tests (101 total)
 
 ### Next up
 
@@ -245,8 +246,9 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [ ] Ask the client: are the 13 same-venue overlaps in the 2026 sheet real conflicts? Should "CON" and "College of Nursing" (and similar) be one department? Are odd imported times typos (e.g. "Recognition/Dry Run" at 1:30 AM)?
 
 **Features (check with the adviser first)**
-- [ ] Venue double-booking warning: warn (not block) when an event overlaps another booking in the same venue and room, and mark clashes on the Schedule
-- [ ] Ask the adviser: the user-testing survey format (ISO 25010 or SUS?); whether the double-booking warning counts under the Events feature; whether notifications, comments/tagging and an audit trail belong in Capstone 2 or future work
+- [x] Venue double-booking warning: warn (not block) when an event overlaps another booking in the same venue and room, and mark clashes on the Schedule
+- [x] Professor: more than 4 features are allowed if they fit the system and the client's needs
+- [ ] Still open: the user-testing survey format (ISO 25010 or SUS?); email notifications (the client asked; needs internet access and a sending account); whether comments/tagging and an audit trail belong in Capstone 2 or future work
 
 **Pilot and user testing**
 - [ ] Install on an EMO office PC, restore the real data, and point `BACKUP_PATH` at a USB drive

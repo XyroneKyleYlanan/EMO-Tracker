@@ -91,3 +91,10 @@ export const SearchIcon = (props) => (
     <path d="M20 20l-3.5-3.5" />
   </svg>
 )
+
+export const AlertIcon = (props) => (
+  <svg {...baseProps} {...props}>
+    <path d="M10.3 3.9L2.4 17.5A2 2 0 004.1 20.5h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z" />
+    <path d="M12 9v4M12 17h.01" />
+  </svg>
+)

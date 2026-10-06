@@ -169,6 +169,8 @@ Every event moves through one lifecycle, shown with the same badges on every pag
 - **Cancelled** is set by an administrator in the edit form and can be undone. A cancelled event stays on the schedule, struck through; its tasks are put on hold.
 - **Rescheduled** is a mark, not a status: when the start date or time changes, the form asks whether the event was moved or the date was entered wrong. A moved event remembers where it was first scheduled ("Rescheduled from Fri, Oct 3") and still becomes ongoing and completed like any other event.
 
+**Double-booking warning:** two bookings clash when they're at the same venue and room (or one takes the whole venue), on overlapping days, at overlapping times (no time means all day). The event form warns while the date, time and venue are being chosen, the event panel shows it, and the Schedule marks upcoming clashes "Overlap" (searchable). It's a warning, never a block, because some overlaps are on purpose, like a rehearsal right before its event. Cancelled events don't count. Key file: `VenueClashes.php`.
+
 Only upcoming, completed and cancelled are stored; "ongoing" is worked out from the date and time, so it can never be out of date. Every event is also **Internal** (an NEU event) or **External** (an outside organizer), shown in its own column on the Schedule. Key files: `Event.php`, `EventController.php`, `EventBadges.jsx`, `EventFormDialog.jsx`.
 
 ---

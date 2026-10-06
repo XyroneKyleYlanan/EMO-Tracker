@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
+import ClashWarning from './ClashWarning'
+import { AlertIcon } from './icons'
 import { formatDayMonth, formatTime } from '../lib/format'
 
 const NEW_VENUE = '__new'
@@ -57,6 +59,33 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
     })
     api.get('/departments').then((res) => setDepartments(res.data.departments || []))
   }, [])
+
+  // Double-booking check while the venue, date and time are being chosen.
+  // Only answers for the current inputs count, so an old reply can't show up late.
+  const venueChosen = form.venue_id && form.venue_id !== NEW_VENUE
+  const clashQuery = venueChosen && form.event_date && !form.cancelled
+    ? new URLSearchParams(Object.entries({
+        venue_id: form.venue_id,
+        venue_details: form.venue_details.trim(),
+        event_date: form.event_date,
+        end_date: multiDay ? form.end_date : '',
+        event_time: form.event_time,
+        end_time: form.end_time,
+        ignore: event?.id ?? '',
+      }).filter(([, value]) => value !== '')).toString()
+    : null
+  const [clashResult, setClashResult] = useState({ query: null, clashes: [] })
+  useEffect(() => {
+    if (!clashQuery) return
+    let current = true
+    const timer = setTimeout(() => {
+      api.get(`/event-clashes?${clashQuery}`)
+        .then((res) => { if (current) setClashResult({ query: clashQuery, clashes: res.data.clashes || [] }) })
+        .catch(() => {})
+    }, 400)
+    return () => { current = false; clearTimeout(timer) }
+  }, [clashQuery])
+  const clashes = clashResult.query === clashQuery ? clashResult.clashes : []
 
   function update(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -308,6 +337,11 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             />
           </Field>
 
+          <ClashWarning
+            clashes={clashes}
+            intro={(n) => `This overlaps with ${n === 1 ? 'another booking' : `${n} other bookings`} at this venue. You can still save it.`}
+          />
+
           <label className="flex items-start gap-2.5 p-3 bg-emerald-50/60 border border-emerald-100 rounded-lg cursor-pointer">
             <input
               type="checkbox"
@@ -355,6 +389,13 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         </form>
 
         <footer className="px-6 py-3 border-t border-gray-200 flex items-center justify-end gap-2">
+          {/* Always in view, even when the full warning is scrolled out of sight. */}
+          {clashes.length > 0 && (
+            <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-orange-700">
+              <AlertIcon width={14} height={14} />
+              Overlaps with {clashes.length} booking{clashes.length === 1 ? '' : 's'}
+            </span>
+          )}
           <button
             type="button"
             onClick={onClose}

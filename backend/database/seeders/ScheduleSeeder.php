@@ -34,6 +34,8 @@ class ScheduleSeeder extends Seeder
             [6, null, '08:00', '17:00', 'Regional Science Fair', 'DepEd Division Office', 'University Hall', null, '2026-0448', null, false],
             [7, null, '07:00', '08:00', 'Weekly Flag Ceremony', 'Integrated School', 'IS Covered Court', null, null, null, false],
             [7, null, '08:00', '17:00', 'National Journalism Workshop', 'College of Communication', 'University Hall', null, '2026-0450', 'Pencil booking', false],
+            // Overlaps the workshop on purpose, so the double-booking warning shows in the demo.
+            [7, null, '15:00', '18:00', 'Choir Rehearsal', 'Center for Culture and the Arts', 'University Hall', null, null, 'Rehearsal before the concert', false],
             [8, null, '09:00', '12:00', 'Mental Health Program', 'Integrated School', 'IS MPH', null, '2026-0452', null, false],
             [9, 11, '08:00', '17:00', 'Nurses Week', 'College of Nursing', 'PSB MPH', null, '2026-0455', null, false],
             [10, null, '13:00', '15:00', 'PTCA Appreciation and Election of Officers', 'IS PTCA', 'IS MPH', null, '2026-0457', null, false],

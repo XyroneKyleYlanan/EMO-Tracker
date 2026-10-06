@@ -242,6 +242,7 @@ Stores configurable system settings (e.g., school year boundaries).
 - Create events with name, type (Internal: an NEU event, or External: an outside organizer), department or organizer, venue, date(s), time, control number, and remarks
 - Every event has a status: Upcoming, Ongoing (while it runs), and Completed (once it ends) are automatic; Cancelled is set by an administrator and can be undone
 - When an event's start date or time changes, the system asks whether it was rescheduled or corrected; a rescheduled event shows where it was first scheduled
+- Double-booking warning: when two bookings are at the same venue and room at overlapping times, the event form warns before saving (without blocking, since some overlaps are intended), the event's details show the clash, and the Schedule marks upcoming clashes "Overlap"
 - View events in either calendar or list format (toggle button)
 - On mobile devices (screen width < 768px), the list view is the default
 - Each event displayed as a colored pill on the calendar — the color matches the event's readiness classification

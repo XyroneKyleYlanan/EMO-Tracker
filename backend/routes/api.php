@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/events/{event}', [EventController::class, 'update']);
         Route::delete('/events/{event}', [EventController::class, 'destroy']);
         Route::get('/departments', [EventController::class, 'departments']);
+        Route::get('/event-clashes', [EventController::class, 'clashes']);
         Route::post('/venues', [VenueController::class, 'store']);
         Route::put('/venues/{venue}', [VenueController::class, 'update']);
         Route::delete('/venues/{venue}', [VenueController::class, 'destroy']);
