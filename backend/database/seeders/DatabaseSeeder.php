@@ -91,7 +91,8 @@ class DatabaseSeeder extends Seeder
             ['Sound system setup', 'done', 'medium', $staff[0]->id, -21],
         ]);
 
-        // Event 2: ON TRACK (GREEN) — Freshmen Orientation, 14 days away, mostly done, all assigned
+        // Event 2: AT RISK (YELLOW) — Freshmen Orientation, 14 days away, 3 of 5 tasks done (60%), all assigned.
+        // Marking one more task done pushes it to 80% and it turns GREEN live (used in the demo).
         $orientation = Event::create([
             'name' => 'Freshmen Orientation 2026',
             'description' => 'Welcome orientation for incoming first-year students.',
