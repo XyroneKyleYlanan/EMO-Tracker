@@ -3,11 +3,12 @@ import api from '../lib/api'
 import { downloadFile } from '../lib/download'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
-import ReadinessBadge, { ReadinessReason } from './ReadinessBadge'
+import { ReadinessReason } from './ReadinessBadge'
+import EventBadges from './EventBadges'
 import TaskRow from './TaskRow'
 import TaskFormDialog from './TaskFormDialog'
 import { CalendarIcon, ClockIcon, MapPinIcon } from './icons'
-import { formatDateCompact, formatDateLong, formatDateRange, formatTimeRange } from '../lib/format'
+import { formatDateCompact, formatDateLong, formatDateRange, formatRescheduledFrom, formatTime, formatTimeRange } from '../lib/format'
 
 const ACCEPTED_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png'
 
@@ -163,7 +164,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
               <>
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <h2 className="text-xl font-semibold text-gray-900">{event.name}</h2>
-                  <ReadinessBadge readiness={event.readiness} />
+                  <EventBadges event={event} />
                 </div>
                 <ReadinessReason readiness={event.readiness} reason={event.readiness_reason} className="-mt-2 mb-4 text-sm" />
 
@@ -174,6 +175,13 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                 <dl className="space-y-2.5 text-sm mb-6">
                   <Row icon={CalendarIcon} label={formatDateRange(event.event_date, event.end_date, formatDateLong)} />
                   <Row icon={ClockIcon} label={formatTimeRange(event.event_time, event.end_time) || 'Time to be announced'} />
+                  {event.original_date && (
+                    <Row
+                      icon={null}
+                      label={`${formatRescheduledFrom(event)}${event.original_time && event.original_date !== event.event_date ? `, ${formatTime(event.original_time)}` : ''}`}
+                      muted
+                    />
+                  )}
                   <Row
                     icon={MapPinIcon}
                     label={
@@ -190,12 +198,10 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                       </span>
                     }
                   />
-                  {event.department && <Row icon={null} label={`Department: ${event.department}`} />}
+                  <Row icon={null} label={event.event_type === 'external' ? 'External event (outside organizer)' : 'Internal event (NEU)'} />
+                  {event.department && <Row icon={null} label={`${event.event_type === 'external' ? 'Organizer' : 'Department'}: ${event.department}`} />}
                   {event.control_number && <Row icon={null} label={`Control #: ${event.control_number}`} />}
                   {event.remarks && <Row icon={null} label={`Remarks: ${event.remarks}`} />}
-                  {event.budget && (
-                    <Row icon={null} label={`Budget: ₱${Number(event.budget).toLocaleString()}`} />
-                  )}
                   {event.creator && (
                     <Row icon={null} label={`Created by ${event.creator.name}`} muted />
                   )}
@@ -219,6 +225,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   title={`Tasks (${event.tasks?.length || 0})`}
                   action={
                     canManageTasks &&
+                    event.status !== 'cancelled' &&
                     (event.status !== 'completed' || user.role === 'admin') && (
                       <button
                         onClick={handleAddTask}
@@ -233,6 +240,13 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                     <div className="mb-3 p-2.5 bg-cyan-50 border border-cyan-100 rounded-lg text-xs text-cyan-900">
                       <span className="font-semibold">Schedule only.</span>{' '}
                       The EMO isn't tracking this event's readiness. Adding a task starts tracking it.
+                    </div>
+                  )}
+                  {event.status === 'cancelled' && (
+                    <div className="mb-3 p-2.5 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700">
+                      <span className="font-semibold">This event is cancelled.</span>{' '}
+                      It stays on the schedule, and its tasks are on hold.{' '}
+                      {user.role === 'admin' ? 'To restore it, edit the event and untick "cancelled".' : 'Only an administrator can restore it.'}
                     </div>
                   )}
                   {event.status === 'completed' && (

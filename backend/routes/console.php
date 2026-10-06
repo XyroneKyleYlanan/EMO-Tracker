@@ -71,6 +71,9 @@ Artisan::command('schedule:import {file : The schedule spreadsheet (.xlsx)} {--d
     $this->line("  Rows read:            {$summary['read']}");
     $this->line('  '.($dryRun ? 'Would be imported:    ' : 'Imported:             ').$summary['imported']);
     $this->line("  Already in system:    {$summary['duplicates']}");
+    if ($summary['rescheduled']) {
+        $this->line("  Rescheduled events:   {$summary['rescheduled']} (each old-date row merged into its new date)");
+    }
     $this->line("  Not imported:         {$summary['skipped']}");
     $this->line('  New venues to sort:   '.count($summary['new_venues']).($summary['new_venues'] ? ' ('.implode(', ', $summary['new_venues']).')' : ''));
 

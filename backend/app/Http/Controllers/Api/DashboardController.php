@@ -35,7 +35,7 @@ class DashboardController extends Controller
             ->with('venue:id,name')
             ->where('status', 'upcoming')
             ->orderBy('event_date')
-            ->get(['id', 'name', 'venue_id', 'venue_details', 'event_date', 'end_date', 'event_time', 'end_time', 'needs_preparation', 'status']);
+            ->get(['id', 'name', 'venue_id', 'venue_details', 'event_date', 'end_date', 'event_time', 'end_time', 'original_date', 'original_time', 'needs_preparation', 'status']);
 
         return response()->json([
             // Only what's left to do, matching the My Tasks page's default view.
@@ -74,9 +74,9 @@ class DashboardController extends Controller
         $open = $tasks->where('status', '!=', 'done');
 
         // Everything on the schedule in the next 7 days, including multi-day
-        // events that started earlier and are still running.
+        // events that started earlier and are still running. Cancelled ones
+        // stay in the list (struck through) so they don't silently vanish.
         $thisWeek = Event::with(['venue.building', Event::READINESS_TASKS])
-            ->where('status', '!=', 'cancelled')
             ->whereDate('event_date', '<=', $weekEnd)
             ->where(fn ($q) => $q->whereDate('event_date', '>=', $today)->orWhereDate('end_date', '>=', $today))
             ->orderBy('event_date')
@@ -88,7 +88,7 @@ class DashboardController extends Controller
             // Admins and officers get tasks too in a small office.
             'myOpenTasks' => $this->tasksOf($request->user()->id)->where('status', '!=', 'done')->values(),
             'stats' => [
-                'thisWeek' => $thisWeek->count(),
+                'thisWeek' => $thisWeek->where('status', '!=', 'cancelled')->count(),
                 'preparedUpcoming' => $prepared->count(),
                 'needAttention' => $attention->count(),
                 'openTasks' => $open->count(),
@@ -135,6 +135,10 @@ class DashboardController extends Controller
             'end_time' => $e->end_time,
             'location' => $e->location,
             'needs_preparation' => $e->needs_preparation,
+            'status' => $e->status,
+            'ongoing' => $e->ongoing,
+            'original_date' => $e->original_date?->toDateString(),
+            'original_time' => $e->original_time,
             'readiness' => $e->readiness,
         ];
     }

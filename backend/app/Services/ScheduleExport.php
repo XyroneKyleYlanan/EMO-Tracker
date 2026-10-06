@@ -17,7 +17,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 class ScheduleExport
 {
-    public const HEADERS = ['DATE', 'TIME', 'EVENT', 'DEPARTMENT', 'VENUE', 'CONTROL #', 'REMARKS'];
+    public const HEADERS = ['DATE', 'TIME', 'EVENT', 'TYPE', 'DEPARTMENT', 'VENUE', 'CONTROL #', 'REMARKS'];
 
     public static function build(int $year): string
     {
@@ -31,14 +31,14 @@ class ScheduleExport
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle((string) $year);
 
-        $sheet->mergeCells('A1:G1');
+        $sheet->mergeCells('A1:H1');
         $sheet->setCellValue('A1', (string) $year);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $sheet->fromArray(self::HEADERS, null, 'A2');
-        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
-        $sheet->getStyle('A2:G2')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F3F4F6');
+        $sheet->getStyle('A2:H2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:H2')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('F3F4F6');
 
         $row = 3;
         foreach ($events as $event) {
@@ -47,15 +47,16 @@ class ScheduleExport
                 self::dateLabel($event->event_date, $event->end_date),
                 self::timeLabel($event->event_time, $event->end_time),
                 $cancelled ? "{$event->name} (Cancelled)" : $event->name,
+                ucfirst($event->event_type),
                 $event->department,
                 $event->location,
                 $event->control_number,
-                $event->remarks,
+                implode(' · ', array_filter([self::rescheduledLabel($event), $event->remarks])),
             ], null, "A{$row}");
 
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
             if ($color = $event->venue?->building?->color) {
-                $sheet->getStyle("A{$row}:G{$row}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB(ltrim($color, '#'));
+                $sheet->getStyle("A{$row}:H{$row}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB(ltrim($color, '#'));
             }
             if ($cancelled) {
                 $sheet->getStyle("C{$row}")->getFont()->setStrikethrough(true);
@@ -64,9 +65,9 @@ class ScheduleExport
         }
 
         $last = max(2, $row - 1);
-        $sheet->getStyle("A1:G{$last}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setRGB('BFBFBF');
-        $sheet->getStyle("A3:G{$last}")->getAlignment()->setVertical(Alignment::VERTICAL_TOP)->setWrapText(true);
-        foreach (['A' => 22, 'B' => 20, 'C' => 42, 'D' => 26, 'E' => 26, 'F' => 14, 'G' => 30] as $column => $width) {
+        $sheet->getStyle("A1:H{$last}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setRGB('BFBFBF');
+        $sheet->getStyle("A3:H{$last}")->getAlignment()->setVertical(Alignment::VERTICAL_TOP)->setWrapText(true);
+        foreach (['A' => 22, 'B' => 20, 'C' => 42, 'D' => 11, 'E' => 26, 'F' => 26, 'G' => 14, 'H' => 30] as $column => $width) {
             $sheet->getColumnDimension($column)->setWidth($width);
         }
         $sheet->freezePane('A3');
@@ -87,6 +88,18 @@ class ScheduleExport
         return $start->month === $end->month
             ? $start->format('F j').'–'.$end->format('j')
             : $start->format('F j').' – '.$end->format('F j');
+    }
+
+    // "Rescheduled from May 15", or "Rescheduled from 9:00 AM" when only the time moved.
+    private static function rescheduledLabel(Event $event): ?string
+    {
+        if (! $event->original_date) {
+            return null;
+        }
+
+        return 'Rescheduled from '.($event->original_date->equalTo($event->event_date)
+            ? self::timeLabel($event->original_time, null)
+            : $event->original_date->format('F j'));
     }
 
     private static function timeLabel(?string $start, ?string $end): string

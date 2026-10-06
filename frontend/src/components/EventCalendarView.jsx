@@ -51,7 +51,7 @@ export default function EventCalendarView({ events, onSelect }) {
         contentHeight={620}
         eventContent={(arg) => {
           const ev = arg.event.extendedProps.event
-          const tooltip = `${ev.name}\n${formatTimeRange(ev.event_time, ev.end_time) || 'Time TBA'} · ${ev.location || 'Venue TBA'}\n${READINESS_LABEL[ev.readiness] || ''}`
+          const tooltip = `${ev.name}\n${formatTimeRange(ev.event_time, ev.end_time) || 'Time TBA'} · ${ev.location || 'Venue TBA'}\n${[ev.ongoing && 'Ongoing', READINESS_LABEL[ev.readiness]].filter(Boolean).join(' · ')}`
           return (
             <div
               title={tooltip}

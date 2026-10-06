@@ -9,15 +9,17 @@ use App\Models\Venue;
 use DateTimeInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 /**
  * One-time import of the EMO's schedule spreadsheet (one tab per year, columns
- * DATE, TIME, EVENT, DEPARTMENT, VENUE, CONTROL #, REMARKS). The sheet was typed
- * by hand, so anything that can't be read with confidence is imported as far as
- * possible and listed for a person to review, rather than guessed silently.
+ * DATE, TIME, EVENT, DEPARTMENT, VENUE, CONTROL #, REMARKS, and optionally TYPE).
+ * The sheet was typed by hand, so anything that can't be read with confidence is
+ * imported as far as possible and listed for a person to review, rather than
+ * guessed silently.
  */
 class ScheduleImport
 {
@@ -40,7 +42,19 @@ class ScheduleImport
         ['neu is bldg', 'IS Building'], ['is bldg', 'IS Building'], ['multimedia learning center is', 'IS Building'],
     ];
 
-    private array $report = ['tabs' => [], 'read' => 0, 'imported' => 0, 'duplicates' => 0, 'skipped' => 0, 'new_venues' => []];
+    // Column headers, matched by how they start ("CONTROLL #" is a control number).
+    private const COLUMNS = ['DATE' => 'date', 'TIME' => 'time', 'EVENT' => 'event', 'TYPE' => 'type', 'DEPT' => 'department',
+        'DEPARTMENT' => 'department', 'VENUE' => 'venue', 'CONTROL' => 'control', 'REMARK' => 'remarks'];
+
+    // How the sheet records a reschedule: "Resched to June 9" on the old row, "Resched from May 15" on the new one.
+    private const MOVED_FROM = '/^\s*(?:resched(?:uled)?|moved)?\s*from\s+(.+?)\s*$/i';
+
+    private const MOVED_TO = '/^\s*(?:resched(?:uled)?|moved)\b(?!\s*from)\s*(?:to\s+)?(.*?)\s*$/i';
+
+    private array $report = ['tabs' => [], 'read' => 0, 'imported' => 0, 'duplicates' => 0, 'skipped' => 0, 'rescheduled' => 0, 'new_venues' => []];
+
+    // Where each imported event came from: id => [tab, row].
+    private array $rows = [];
 
     private array $review = [];
 
@@ -63,6 +77,7 @@ class ScheduleImport
             foreach ($book->getWorksheetIterator() as $sheet) {
                 $this->importSheet($sheet);
             }
+            $this->linkReschedules();
             $dryRun ? DB::rollBack() : DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -75,10 +90,10 @@ class ScheduleImport
     private function importSheet(Worksheet $sheet): void
     {
         $title = $sheet->getCell('A1')->getValue();
-        $headers = array_map(fn ($h) => strtoupper(trim((string) $h)), $sheet->rangeToArray('A2:G2', null, false, false)[0]);
+        $columns = $this->columns($sheet);
 
         // Only year tabs with the schedule's columns (e.g. not the request-letter log).
-        if (! is_numeric($title) || $headers[0] !== 'DATE' || $headers[2] !== 'EVENT') {
+        if (! is_numeric($title) || ($columns['date'] ?? null) !== 'A' || ! isset($columns['event'])) {
             $this->report['tabs'][] = "\"{$sheet->getTitle()}\": skipped (not a schedule tab)";
 
             return;
@@ -90,16 +105,17 @@ class ScheduleImport
 
         foreach ($sheet->getRowIterator(3) as $row) {
             $n = $row->getRowIndex();
-            [$date, $time, $name, $department, $venue, $control, $remarks] = array_map(
-                fn ($col) => $sheet->getCell("{$col}{$n}")->getValue(),
-                ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+            $cell = fn (string $key) => isset($columns[$key]) ? $sheet->getCell($columns[$key].$n) : null;
+            [$date, $time, $name, $type, $department, $venue, $control, $remarks] = array_map(
+                fn ($key) => $cell($key)?->getValue(),
+                ['date', 'time', 'event', 'type', 'department', 'venue', 'control', 'remarks'],
             );
-            $isTimeCell = ExcelDate::isDateTime($sheet->getCell("B{$n}"));
-            $isDateCell = ExcelDate::isDateTime($sheet->getCell("A{$n}"));
-            if (ExcelDate::isDateTime($sheet->getCell("F{$n}")) && is_numeric($control)) {
+            $isTimeCell = $cell('time') && ExcelDate::isDateTime($cell('time'));
+            $isDateCell = ExcelDate::isDateTime($cell('date'));
+            if ($cell('control') && ExcelDate::isDateTime($cell('control')) && is_numeric($control)) {
                 $control = ExcelDate::excelToDateTimeObject($control);
             }
-            if (ExcelDate::isDateTime($sheet->getCell("G{$n}")) && is_numeric($remarks)) {
+            if ($cell('remarks') && ExcelDate::isDateTime($cell('remarks')) && is_numeric($remarks)) {
                 $remarks = ExcelDate::excelToDateTimeObject($remarks);
             }
 
@@ -156,6 +172,13 @@ class ScheduleImport
             }
             $remarks = TextTidy::remark($remarks);
 
+            // TYPE (optional column): anything starting with "ext" or "out" is an outside organizer.
+            $typeText = strtolower(trim((string) $this->text($type)));
+            $eventType = preg_match('/^(ext|out)/', $typeText) ? 'external' : 'internal';
+            if ($typeText !== '' && $eventType === 'internal' && ! preg_match('/^(int|neu)/', $typeText)) {
+                $issues[] = "Unknown type \"{$typeText}\", used Internal";
+            }
+
             $attributes = [
                 'name' => mb_substr($name, 0, 255),
                 'event_date' => $start->toDateString(),
@@ -165,15 +188,18 @@ class ScheduleImport
             ];
             $exists = Event::whereDate('event_date', $attributes['event_date'])
                 ->where(collect($attributes)->except('event_date')->all())
-                ->exists();
+                ->exists()
+                // The old row of a reschedule that an earlier import already linked.
+                || Event::where('name', $attributes['name'])->whereDate('original_date', $attributes['event_date'])->exists();
             if ($exists) {
                 $this->report['duplicates']++;
 
                 continue;
             }
 
-            Event::create([
+            $event = Event::create([
                 ...$attributes,
+                'event_type' => $eventType,
                 'department' => TextTidy::title($this->text($department)),
                 'end_date' => $end?->toDateString(),
                 'end_time' => $to,
@@ -182,9 +208,10 @@ class ScheduleImport
                 'needs_preparation' => false,
                 'status' => $cancelNote || ($remarks && str_contains(strtolower($remarks), 'cancel'))
                     ? 'cancelled'
-                    : Event::statusForDate($start, $end),
+                    : Event::statusForDate($start, $end, $to),
                 'created_by' => $this->adminId,
             ]);
+            $this->rows[$event->id] = [$sheet->getTitle(), $n];
             $this->report['imported']++;
 
             if ($issues) {
@@ -193,6 +220,119 @@ class ScheduleImport
         }
 
         $this->report['tabs'][] = "\"{$sheet->getTitle()}\" ({$year}): {$count} rows";
+    }
+
+    /**
+     * Which column holds what, from the header row. Missing columns are left out.
+     *
+     * @return array<string, string> e.g. ['date' => 'A', 'event' => 'C', ...]
+     */
+    private function columns(Worksheet $sheet): array
+    {
+        $columns = [];
+        $last = Coordinate::columnIndexFromString($sheet->getHighestColumn());
+        for ($i = 1; $i <= $last; $i++) {
+            $letter = Coordinate::stringFromColumnIndex($i);
+            $header = strtoupper(trim((string) $sheet->getCell("{$letter}2")->getValue()));
+            foreach (self::COLUMNS as $start => $key) {
+                if ($header !== '' && str_starts_with($header, $start) && ! isset($columns[$key])) {
+                    $columns[$key] = $letter;
+                    break;
+                }
+            }
+        }
+
+        return $columns;
+    }
+
+    /**
+     * The sheet records a reschedule as two rows. Each clear pair becomes one
+     * event at the new date that remembers its original date; anything
+     * ambiguous is kept as it is and listed for review.
+     */
+    private function linkReschedules(): void
+    {
+        $events = Event::whereIn('id', array_keys($this->rows))->get()->keyBy('id');
+        $pairs = [];      // old id => [new ids]
+        $pointsTo = [];   // old id => new id, from the old row's own note
+        $unresolved = []; // old id => why it couldn't be paired
+
+        foreach ($events as $event) {
+            if (preg_match(self::MOVED_FROM, (string) $event->remarks, $m)) {
+                $from = $this->dateNear($m[1], $event->event_date);
+                if ($from && ($old = $this->sameEventOn($events, $event, $from))) {
+                    $pairs[$old->id][] = $event->id;
+                }
+            } elseif (preg_match(self::MOVED_TO, (string) $event->remarks, $m)) {
+                $to = $this->dateNear($m[1], $event->event_date);
+                $new = $to ? $this->sameEventOn($events, $event, $to) : null;
+                if ($new) {
+                    $pairs[$event->id][] = $new->id;
+                    $pointsTo[$event->id] = $new->id;
+                } else {
+                    $unresolved[$event->id] = $to ? 'no matching row on the new date' : 'the new date is unclear';
+                }
+            }
+        }
+
+        // An old row can still be paired by the new row's "from" note.
+        foreach (array_diff_key($unresolved, $pairs) as $id => $why) {
+            $this->flagEvent($events[$id], "Says rescheduled, but {$why}: kept as is");
+        }
+
+        foreach ($pairs as $oldId => $newIds) {
+            $newIds = array_values(array_unique($newIds));
+            $old = $events[$oldId];
+            $new = $events[$newIds[0]];
+            $mutual = isset($pointsTo[$new->id]) && $pointsTo[$new->id] === $old->id;
+            $claimed = count(array_filter($pairs, fn ($ids) => in_array($new->id, $ids, true))) > 1;
+            if (count($newIds) > 1 || $mutual || $claimed) {
+                $this->flagEvent($old, 'Looks rescheduled, but it matches more than one row (or the rows point at each other): kept as is');
+
+                continue;
+            }
+
+            // Moved more than once: keep the very first date.
+            if (! $new->original_date) {
+                $new->original_date = $old->original_date ?? $old->event_date;
+                $new->original_time = $old->original_date ? $old->original_time : $old->event_time;
+            }
+            // The system now shows "Rescheduled from …", so the sheet's own note isn't needed.
+            if (preg_match(self::MOVED_FROM, (string) $new->remarks)) {
+                $new->remarks = null;
+            }
+            $new->save();
+            $old->tasks()->update(['event_id' => $new->id]);
+            $old->documents()->update(['event_id' => $new->id]);
+            $old->delete();
+            $this->report['rescheduled']++;
+        }
+    }
+
+    // "June 9" or "Oct 22" near another date (the next year if it would fall long before it).
+    private function dateNear(string $text, Carbon $near): ?Carbon
+    {
+        if (! preg_match('/^([a-z]{3,9})\.?\s*(\d{1,2})$/i', trim($text), $m) || ! isset(self::MONTHS[strtolower(substr($m[1], 0, 3))])) {
+            return null;
+        }
+        $date = Carbon::create($near->year, self::MONTHS[strtolower(substr($m[1], 0, 3))], (int) $m[2]);
+
+        return $date->lt($near->copy()->subMonths(6)) ? $date->addYear() : $date;
+    }
+
+    private function sameEventOn($events, Event $event, Carbon $date): ?Event
+    {
+        $matches = $events->filter(fn (Event $other) => $other->id !== $event->id
+            && strcasecmp($other->name, $event->name) === 0
+            && $other->event_date->isSameDay($date));
+
+        return $matches->count() === 1 ? $matches->first() : null;
+    }
+
+    private function flagEvent(Event $event, string $issue): void
+    {
+        [$tab, $row] = $this->rows[$event->id];
+        $this->review[] = ['tab' => $tab, 'row' => $row, 'date' => $event->event_date->format('M j'), 'event' => $event->name, 'issue' => $issue];
     }
 
     /** @return array{0: ?Carbon, 1: ?Carbon, 2: ?string} */

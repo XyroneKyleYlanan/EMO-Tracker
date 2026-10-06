@@ -17,10 +17,10 @@ class EventFactory extends Factory
             'name' => fake()->sentence(3),
             'description' => fake()->sentence(),
             'department' => 'CAS',
+            'event_type' => 'internal',
             'venue_details' => 'NEU Auditorium',
             'event_date' => today()->addDays(14)->toDateString(),
             'event_time' => '09:00:00',
-            'budget' => 10000,
             'needs_preparation' => true,
             'status' => 'upcoming',
             'created_by' => User::factory()->admin(),
@@ -33,6 +33,12 @@ class EventFactory extends Factory
     public function scheduleOnly(): static
     {
         return $this->state(fn () => ['needs_preparation' => false]);
+    }
+
+    // Organized by an outside person or group, not NEU.
+    public function external(): static
+    {
+        return $this->state(fn () => ['event_type' => 'external']);
     }
 
     public function inDays(int $days): static

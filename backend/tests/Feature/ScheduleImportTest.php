@@ -107,6 +107,57 @@ class ScheduleImportTest extends TestCase
         $this->assertCount(1, Storage::disk('local')->files('imports'));
     }
 
+    public function test_reschedules_in_the_sheet_become_one_event_that_remembers_its_first_date(): void
+    {
+        $book = new Spreadsheet;
+        $date = fn (string $d) => ExcelDate::PHPToExcel(new \DateTime($d));
+        $tab = $book->getActiveSheet()->setTitle('2026');
+        $tab->setCellValue('A1', 2026);
+        // This sheet also has a TYPE column, which can sit anywhere.
+        $tab->fromArray(['DATE', 'TIME', 'EVENT', 'TYPE', 'DEPARTMENT', 'VENUE', 'CONTROL #', 'REMARKS'], null, 'A2');
+        $tab->fromArray([
+            [$date('2026-05-15'), '8:00am-5:00pm', 'Golden Hour', null, 'CAS', 'University Hall', null, 'Resched to June 9'],
+            [$date('2026-05-29'), '9:00am-12:00pm', 'Deliberation', null, 'COL', 'University Hall', null, 'Moved to June 2'],
+            [$date('2026-06-02'), '9:00am-12:00pm', 'Deliberation', null, 'COL', 'University Hall', null, null],
+            [$date('2026-06-09'), '8:00am-5:00pm', 'Golden Hour', 'External', 'CAS', 'University Hall', null, null],
+            [$date('2026-06-28'), '1:00pm-5:00pm', 'Anniversary', null, 'CFO', 'SOM MPH', null, 'Resched July 5'],
+            [$date('2026-07-05'), '1:00pm-5:00pm', 'Anniversary', null, 'CFO', 'SOM MPH', null, 'Resched June 28'],
+            [$date('2026-08-13'), '6:00pm-9:00pm', 'Choir Concert', null, 'STF', 'University Hall', null, 'Resched'],
+            [$date('2026-08-17'), '8:00am-12:00pm', 'General Assembly', null, 'Admin', 'PSB MPH', null, 'Resched to August 17'],
+            [$date('2026-08-24'), '8:00am-12:00pm', 'General Assembly', null, 'Admin', 'PSB MPH', null, 'Resched from August 17'],
+        ], null, 'A3', true);
+        foreach (range(3, 11) as $row) {
+            $tab->getStyle("A{$row}")->getNumberFormat()->setFormatCode('mmmm d');
+        }
+        $file = tempnam(sys_get_temp_dir(), 'resched').'.xlsx';
+        (new Xlsx($book))->save($file);
+
+        $result = ScheduleImport::run($file);
+        $find = fn (string $name) => Event::where('name', $name)->orderBy('event_date')->get();
+
+        // Paired by the old row's note, by "Moved to", and by the new row's "from" note.
+        $golden = $find('Golden Hour')->sole();
+        $this->assertSame(['2026-06-09', '2026-05-15', '08:00:00', 'external'],
+            [$golden->event_date->toDateString(), $golden->original_date->toDateString(), $golden->original_time, $golden->event_type]);
+        $this->assertSame('2026-05-29', $find('Deliberation')->sole()->original_date->toDateString());
+        $assembly = $find('General Assembly')->sole();
+        $this->assertSame(['2026-08-24', '2026-08-17', null], [$assembly->event_date->toDateString(), $assembly->original_date->toDateString(), $assembly->remarks]);
+        $this->assertSame(3, $result['summary']['rescheduled']);
+
+        // Unclear cases are kept as they are and listed for review.
+        $this->assertCount(2, $find('Anniversary'));
+        $this->assertNull($find('Choir Concert')->sole()->original_date);
+        $issues = collect($result['review'])->pluck('issue', 'event');
+        $this->assertStringContainsString('point at each other', $issues['Anniversary']);
+        $this->assertStringContainsString('new date is unclear', $issues['Choir Concert']);
+
+        // Importing the same sheet again changes nothing.
+        $again = ScheduleImport::run($file);
+        $this->assertSame(0, $again['summary']['imported']);
+        $this->assertSame(6, Event::count());
+        @unlink($file);
+    }
+
     private function workbook(): string
     {
         $book = new Spreadsheet;

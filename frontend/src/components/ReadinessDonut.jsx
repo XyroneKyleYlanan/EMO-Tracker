@@ -79,7 +79,7 @@ export default function ReadinessDonut({ distribution }) {
           style={{ paddingBottom: 38 }}
         >
           <div className="text-3xl font-semibold text-gray-900">{total}</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">Total events</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wide">Prepared events</div>
         </div>
       </div>
     </div>

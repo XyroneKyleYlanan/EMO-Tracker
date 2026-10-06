@@ -21,13 +21,15 @@ class Event extends Model
         'name',
         'description',
         'department',
+        'event_type',
         'venue_id',
         'venue_details',
         'event_date',
         'end_date',
         'event_time',
         'end_time',
-        'budget',
+        'original_date',
+        'original_time',
         'control_number',
         'remarks',
         'needs_preparation',
@@ -35,14 +37,14 @@ class Event extends Model
         'created_by',
     ];
 
-    protected $appends = ['readiness', 'location'];
+    protected $appends = ['readiness', 'location', 'ongoing'];
 
     protected function casts(): array
     {
         return [
             'event_date' => 'date:Y-m-d',
             'end_date' => 'date:Y-m-d',
-            'budget' => 'decimal:2',
+            'original_date' => 'date:Y-m-d',
             'needs_preparation' => 'boolean',
         ];
     }
@@ -99,21 +101,65 @@ class Event extends Model
         $query->whereHas('tasks', fn ($tasks) => $tasks->where('assigned_to', $user->id));
     }
 
-    /**
-     * An event is over once its last day has passed (its end date for
-     * multi-day events, otherwise its date).
+    /*
+     * Lifecycle: an event is upcoming until it starts, ongoing while it runs,
+     * and completed once it ends. Cancelled is set by hand and overrides all
+     * three. Only upcoming, completed and cancelled are stored: "ongoing" is an
+     * upcoming event that has started, so everything that lists events that
+     * aren't over yet (Home, readiness, task lists) keeps including it.
      */
-    public static function statusForDate($date, $endDate = null): string
+
+    // The start time on the first day, or the start of that day.
+    public static function startsAt($date, $time = null): Carbon
     {
-        return Carbon::parse($endDate ?? $date)->lt(today()) ? 'completed' : 'upcoming';
+        $day = Carbon::parse($date)->startOfDay();
+
+        return $time ? $day->setTimeFromTimeString($time) : $day;
+    }
+
+    // The end time on the last day, or the end of that day.
+    public static function endsAt($date, $endDate = null, $endTime = null): Carbon
+    {
+        $day = Carbon::parse($endDate ?? $date);
+
+        return $endTime ? $day->startOfDay()->setTimeFromTimeString($endTime) : $day->endOfDay();
+    }
+
+    public static function statusForDate($date, $endDate = null, $endTime = null): string
+    {
+        return self::endsAt($date, $endDate, $endTime)->isFuture() ? 'upcoming' : 'completed';
+    }
+
+    public function getOngoingAttribute(): bool
+    {
+        return $this->status === 'upcoming'
+            && $this->event_date !== null
+            && ! self::startsAt($this->event_date, $this->event_time)->isFuture()
+            && self::endsAt($this->event_date, $this->end_date, $this->end_time)->isFuture();
+    }
+
+    // Upcoming, ongoing, completed or cancelled: the status people see.
+    public function getLifecycleAttribute(): string
+    {
+        return $this->ongoing ? 'ongoing' : $this->status;
     }
 
     public static function completePastEvents(): void
     {
+        $today = today()->toDateString();
+        $lastDay = fn ($q) => $q
+            ->where(fn ($single) => $single->whereNull('end_date')->whereDate('event_date', $today))
+            ->orWhereDate('end_date', $today);
+
         static::where('status', 'upcoming')
             ->where(fn ($q) => $q
-                ->where(fn ($single) => $single->whereNull('end_date')->whereDate('event_date', '<', today()))
-                ->orWhereDate('end_date', '<', today()))
+                ->where(fn ($single) => $single->whereNull('end_date')->whereDate('event_date', '<', $today))
+                ->orWhereDate('end_date', '<', $today)
+                // Ended earlier today.
+                ->orWhere(fn ($endedToday) => $endedToday
+                    ->whereNotNull('end_time')
+                    ->whereTime('end_time', '<=', now()->format('H:i:s'))
+                    ->where($lastDay)))
             ->update(['status' => 'completed']);
     }
 }

@@ -79,7 +79,6 @@ class DatabaseSeeder extends Seeder
             'event_time' => '08:00:00',
             'end_time' => '12:00:00',
             'needs_preparation' => true,
-            'budget' => 75000,
             'status' => 'completed',
             'created_by' => $admin->id,
         ]);
@@ -101,7 +100,6 @@ class DatabaseSeeder extends Seeder
             'event_time' => '09:00:00',
             'end_time' => '12:00:00',
             'needs_preparation' => true,
-            'budget' => 50000,
             'status' => 'upcoming',
             'created_by' => $officer1->id,
         ]);
@@ -123,7 +121,6 @@ class DatabaseSeeder extends Seeder
             'event_time' => '14:00:00',
             'end_time' => '18:00:00',
             'needs_preparation' => true,
-            'budget' => 120000,
             'status' => 'upcoming',
             'created_by' => $officer2->id,
         ]);
@@ -145,7 +142,6 @@ class DatabaseSeeder extends Seeder
             'event_time' => '18:00:00',
             'end_time' => '21:00:00',
             'needs_preparation' => true,
-            'budget' => 90000,
             'status' => 'upcoming',
             'created_by' => $officer1->id,
         ]);
@@ -166,7 +162,6 @@ class DatabaseSeeder extends Seeder
             'event_time' => '13:00:00',
             'end_time' => '17:00:00',
             'needs_preparation' => true,
-            'budget' => 25000,
             'status' => 'upcoming',
             'created_by' => $officer2->id,
         ]);

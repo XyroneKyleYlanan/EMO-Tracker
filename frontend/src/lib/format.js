@@ -69,3 +69,9 @@ export function formatDayMonth(iso) {
 export function formatMonthYear(iso) {
   return parseDate(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 }
+
+// "Rescheduled from Fri, Oct 3", or "Rescheduled from 9:00 AM" when only the time moved.
+export function formatRescheduledFrom(event) {
+  if (!event?.original_date) return null
+  return `Rescheduled from ${event.original_date === event.event_date ? formatTime(event.original_time) || 'another time' : formatDayMonth(event.original_date)}`
+}

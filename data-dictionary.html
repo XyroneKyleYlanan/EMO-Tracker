@@ -37,17 +37,26 @@
 </table>
 
 <h2>Table: events</h2>
-<p class="purpose">Stores event records created by administrators and officers.</p>
+<p class="purpose">Stores every event and venue booking on the schedule, whether or not the EMO prepares it.</p>
 <table>
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each event</td></tr>
 <tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Name/title of the event</td></tr>
 <tr><td>description</td><td>text</td><td>Nullable</td><td>Detailed description of the event</td></tr>
-<tr><td>venue</td><td>varchar(255)</td><td>NOT NULL</td><td>Location where the event will be held</td></tr>
-<tr><td>event_date</td><td>date</td><td>NOT NULL</td><td>Scheduled date of the event</td></tr>
-<tr><td>event_time</td><td>time</td><td>NOT NULL</td><td>Scheduled start time of the event</td></tr>
-<tr><td>budget</td><td>decimal(12,2)</td><td>Nullable</td><td>Allocated budget for the event (in PHP)</td></tr>
-<tr><td>status</td><td>enum('upcoming','completed')</td><td>NOT NULL, Default 'upcoming'</td><td>Current state of the event</td></tr>
+<tr><td>department</td><td>varchar(255)</td><td>Nullable</td><td>Requesting department, or the organizer for external events</td></tr>
+<tr><td>event_type</td><td>enum('internal','external')</td><td>NOT NULL, Default 'internal'</td><td>Internal: an NEU event. External: organized by an outside person or group</td></tr>
+<tr><td>venue_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; venues(id), Nullable, set null on delete</td><td>The venue from the managed venue list</td></tr>
+<tr><td>venue_details</td><td>varchar(255)</td><td>Nullable</td><td>Room or details within the venue, or the location for unlisted places</td></tr>
+<tr><td>event_date</td><td>date</td><td>NOT NULL</td><td>Start date of the event</td></tr>
+<tr><td>end_date</td><td>date</td><td>Nullable</td><td>Last day of a multi-day event</td></tr>
+<tr><td>event_time</td><td>time</td><td>Nullable</td><td>Start time (empty if not yet announced)</td></tr>
+<tr><td>end_time</td><td>time</td><td>Nullable</td><td>End time</td></tr>
+<tr><td>original_date</td><td>date</td><td>Nullable</td><td>First scheduled date of a rescheduled event; empty if it was never moved</td></tr>
+<tr><td>original_time</td><td>time</td><td>Nullable</td><td>First scheduled start time of a rescheduled event</td></tr>
+<tr><td>control_number</td><td>varchar(255)</td><td>Nullable</td><td>The EMO's control number for the booking</td></tr>
+<tr><td>remarks</td><td>text</td><td>Nullable</td><td>Free-text notes</td></tr>
+<tr><td>needs_preparation</td><td>tinyint(1)</td><td>NOT NULL, Default 0</td><td>Whether the EMO prepares the event (turns on readiness tracking)</td></tr>
+<tr><td>status</td><td>enum('upcoming','completed','cancelled')</td><td>NOT NULL, Default 'upcoming'</td><td>Upcoming until the event ends, then completed (automatic); cancelled is set by an administrator. "Ongoing" is an upcoming event that has started</td></tr>
 <tr><td>created_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The user who created the event</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
@@ -69,17 +78,27 @@
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
 
-<h2>Table: event_staff</h2>
-<p class="purpose">Junction table linking events to staff assigned at the event level (many-to-many).</p>
+<h2>Table: buildings</h2>
+<p class="purpose">Campus buildings, each with the color used for its rows on the Schedule.</p>
 <table>
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
-<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each assignment record</td></tr>
-<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The assigned event</td></tr>
-<tr><td>user_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The assigned staff member</td></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each building</td></tr>
+<tr><td>name</td><td>varchar(255)</td><td>NOT NULL, UNIQUE</td><td>Building name</td></tr>
+<tr><td>color</td><td>varchar(7)</td><td>NOT NULL</td><td>Hex color for the Schedule, e.g. #A4C2F4</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
-<p class="purpose">Note: event_id + user_id together form a composite UNIQUE constraint to prevent duplicate assignments.</p>
+
+<h2>Table: venues</h2>
+<p class="purpose">The managed list of places events can be booked in.</p>
+<table>
+<tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
+<tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each venue</td></tr>
+<tr><td>name</td><td>varchar(255)</td><td>NOT NULL, UNIQUE</td><td>Venue name</td></tr>
+<tr><td>building_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; buildings(id), Nullable, set null on delete</td><td>The building the venue is in</td></tr>
+<tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
+<tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
+</table>
 
 <h2>Table: documents</h2>
 <p class="purpose">Stores metadata for files uploaded and attached to events.</p>

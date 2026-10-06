@@ -39,7 +39,9 @@ class DashboardTest extends TestCase
 
         $this->assertSame(['Faculty Night', 'Quiz Bee'], collect($home->json('needsAttention'))->pluck('name')->all());
         $this->assertSame(['1 task is overdue', '50% done, 10 days to go'], collect($home->json('needsAttention'))->pluck('readiness_reason')->all());
-        $this->assertSame(['Nurses Week', 'Faculty Night', 'CAS Seminar'], collect($home->json('thisWeek'))->pluck('name')->all());
+        // Cancelled bookings stay in the list (struck through) but aren't counted as on the schedule.
+        $this->assertSame(['Nurses Week', 'Faculty Night', 'CAS Seminar', 'Cancelled Talk'], collect($home->json('thisWeek'))->pluck('name')->all());
+        $this->assertSame('cancelled', collect($home->json('thisWeek'))->last()['status']);
         $this->assertSame([
             'thisWeek' => 3, 'preparedUpcoming' => 3, 'needAttention' => 2,
             'openTasks' => 2, 'overdueTasks' => 1, 'tasksDone' => 2, 'tasksTotal' => 4,

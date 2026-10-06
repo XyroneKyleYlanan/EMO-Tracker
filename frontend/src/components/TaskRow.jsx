@@ -24,6 +24,7 @@ export default function TaskRow({ task, currentUser, onChanged, onEdit, onDelete
   const isAdmin = currentUser.role === 'admin'
   const canManageRole = ['admin', 'officer'].includes(currentUser.role)
   const isEventCompleted = (eventStatus ?? task.event?.status) === 'completed'
+  const isEventCancelled = (eventStatus ?? task.event?.status) === 'cancelled'
   const lockedByCompletion = isEventCompleted && !isAdmin
   const canChangeStatus = (isOwner || canManageRole) && !lockedByCompletion
   const canManageTask = canManageRole && !lockedByCompletion
@@ -58,7 +59,7 @@ export default function TaskRow({ task, currentUser, onChanged, onEdit, onDelete
 
   return (
     <>
-      <div className={`flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition ${isEventCompleted ? 'opacity-90' : ''}`}>
+      <div className={`flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200 hover:border-gray-300 transition ${isEventCompleted ? 'opacity-90' : isEventCancelled ? 'opacity-70' : ''}`}>
         <button
           type="button"
           onClick={() => setDetailOpen(true)}
@@ -81,6 +82,11 @@ export default function TaskRow({ task, currentUser, onChanged, onEdit, onDelete
             {isEventCompleted && (
               <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
                 · Locked
+              </span>
+            )}
+            {isEventCancelled && (
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+                · Event cancelled
               </span>
             )}
           </div>

@@ -83,9 +83,9 @@ users (id, name, email, password, role, is_active, ...)
   │
   │ created_by ┐                   ┌─ assigned_to ──┐
   │            ▼                   ▼                │
-  │         events (id, name, description, venue,   │
-  │            ▲    event_date, event_time, budget, │
-  │            │    status, created_by)             │
+  │         events (id, name, event_type, venue_id, │
+  │            ▲    event_date, event_time, status, │
+  │            │    original_date, created_by, ...) │
   │            │                                    │
   │            │ event_id                           │
   │            │                                    │
@@ -154,13 +154,22 @@ This double-gating means a malicious user can't bypass the UI to hit forbidden e
 
 ### Historical record protection
 
-At the start of every API request, the backend marks events whose date has passed as "Completed" (`CompletePastEvents` middleware), so the lock never depends on which page someone opened first. Once an event is Completed, the event and its tasks are **locked**:
+At the start of every API request, the backend marks events that have ended as "Completed" (`CompletePastEvents` middleware), so the lock never depends on which page someone opened first. Once an event is Completed, the event and its tasks are **locked**:
 - Staff and Officers can no longer edit the event, or change status, edit, delete, or add tasks
 - Only an Administrator can modify completed events and their task records (a "break glass" path for genuine corrections). If an Administrator moves a completed event to a future date, it reopens as Upcoming
 - Any status change an Admin makes to a completed event requires explicit confirmation
 - Enforced on the backend (HTTP 403) — cannot be bypassed via the UI
 
 This protects the integrity of post-event reports. Key files: `CompletePastEvents.php`, `EventController.php`, `TaskController.php` (backend checks), `TaskRow.jsx` and `EventDetailDrawer.jsx` (UI lock state).
+
+### Event status
+
+Every event moves through one lifecycle, shown with the same badges on every page:
+- **Upcoming → Ongoing → Completed** happens automatically. An event is ongoing from its start time on the first day to its end time on the last day (the whole day if no times are set), and completed once it ends.
+- **Cancelled** is set by an administrator in the edit form and can be undone. A cancelled event stays on the schedule, struck through; its tasks are put on hold.
+- **Rescheduled** is a mark, not a status: when the start date or time changes, the form asks whether the event was moved or the date was entered wrong. A moved event remembers where it was first scheduled ("Rescheduled from Fri, Oct 3") and still becomes ongoing and completed like any other event.
+
+Only upcoming, completed and cancelled are stored; "ongoing" is worked out from the date and time, so it can never be out of date. Every event is also **Internal** (an NEU event) or **External** (an outside organizer), shown in its own column on the Schedule. Key files: `Event.php`, `EventController.php`, `EventBadges.jsx`, `EventFormDialog.jsx`.
 
 ---
 

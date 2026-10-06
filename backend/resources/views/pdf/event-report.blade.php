@@ -111,19 +111,27 @@
         </tr>
         @if($event->department)
         <tr>
-            <td class="label">Department</td>
+            <td class="label">{{ $event->event_type === 'external' ? 'Organizer' : 'Department' }}</td>
             <td>{{ $event->department }}</td>
         </tr>
         @endif
-        @if($event->budget)
         <tr>
-            <td class="label">Budget</td>
-            <td>PHP {{ number_format($event->budget, 2) }}</td>
+            <td class="label">Type</td>
+            <td>{{ $event->event_type === 'external' ? 'External (outside organizer)' : 'Internal (NEU event)' }}</td>
         </tr>
-        @endif
         <tr>
             <td class="label">Status</td>
-            <td>{{ ucfirst($event->status) }}</td>
+            <td>
+                {{ ucfirst($event->lifecycle) }}
+                @if($event->original_date)
+                    · Rescheduled from
+                    @if($event->original_date->equalTo($event->event_date))
+                        {{ $event->original_time ? \Carbon\Carbon::parse($event->original_time)->format('g:i A') : 'another time' }}
+                    @else
+                        {{ $event->original_date->format('F j, Y') }}@if($event->original_time), {{ \Carbon\Carbon::parse($event->original_time)->format('g:i A') }}@endif
+                    @endif
+                @endif
+            </td>
         </tr>
         @if($event->creator)
         <tr>

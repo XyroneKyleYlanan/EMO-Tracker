@@ -181,15 +181,19 @@ Stores account information for all three roles.
 - `email_verified_at`, `remember_token`, `timestamps`
 
 ### `events` table
-Stores all events created in the system.
+Stores every event and venue booking on the schedule, whether or not the EMO prepares it.
 - `id` (primary key)
 - `name` (string)
 - `description` (text, nullable)
-- `venue` (string)
-- `event_date` (date)
-- `event_time` (time)
-- `budget` (decimal, nullable)
-- `status` (enum: 'upcoming', 'completed', default 'upcoming')
+- `department` (string, nullable): the requesting department, or the organizer for external events
+- `event_type` (enum: 'internal', 'external', default 'internal')
+- `venue_id` (foreign key to venues.id, nullable) and `venue_details` (string, nullable: room or details)
+- `event_date` and `end_date` (date; end date only for multi-day events)
+- `event_time` and `end_time` (time, nullable)
+- `original_date` and `original_time` (nullable): where a rescheduled event was first scheduled
+- `control_number` and `remarks` (nullable)
+- `needs_preparation` (boolean): whether the EMO prepares the event and tracks its readiness
+- `status` (enum: 'upcoming', 'completed', 'cancelled', default 'upcoming')
 - `created_by` (foreign key to users.id)
 - `timestamps`
 
@@ -235,7 +239,9 @@ Stores configurable system settings (e.g., school year boundaries).
 **Description:** Allows authorized users (Administrator and Officer) to create, edit, and delete events. Events are displayed in a Calendly-inspired monthly calendar grid OR an alternative list view (user toggleable).
 
 **Capabilities:**
-- Create events with name, description, venue, date, time, and budget
+- Create events with name, type (Internal: an NEU event, or External: an outside organizer), department or organizer, venue, date(s), time, control number, and remarks
+- Every event has a status: Upcoming, Ongoing (while it runs), and Completed (once it ends) are automatic; Cancelled is set by an administrator and can be undone
+- When an event's start date or time changes, the system asks whether it was rescheduled or corrected; a rescheduled event shows where it was first scheduled
 - View events in either calendar or list format (toggle button)
 - On mobile devices (screen width < 768px), the list view is the default
 - Each event displayed as a colored pill on the calendar — the color matches the event's readiness classification
@@ -281,10 +287,11 @@ Each classification comes with a short reason shown next to the badge (for examp
 **Refinement in Capstone 2:** testing with the EMO's real schedule showed that the original rules marked an event Critical as soon as tasks were added (0% done is under 40%), even when the event was weeks away, and ignored overdue tasks. Progress is now judged only as the event gets close (within 14 days for At Risk, within 7 days for Critical), and an overdue task makes an event Critical at any time.
 
 **Analytics Dashboard (accessible to Administrator and Officer):**
-- Overview stat cards: Total Events, Total Tasks, Tasks Done with percentage, People with tasks
-- Readiness Distribution Donut Chart showing the breakdown of all events by readiness category
-- Top 5 Most Urgent Events list (ranked by readiness — Critical, then At Risk, then On Track — and then by nearest event date)
-- Period filter: This Week / This Month / All Time
+- Period filter (calendar periods, like a report): This Week / This Month / This Year / All Time
+- Events (every event on the schedule): how many are Upcoming, Ongoing, Completed, and Cancelled (these add up to the total), how many were Rescheduled, the Internal vs External split, and the five busiest venues
+- EMO preparation (events the EMO prepares): stat cards for prepared events, total tasks, tasks done with percentage, and people with tasks
+- Readiness Distribution Donut Chart showing the breakdown of prepared events by readiness category
+- Top 5 Most Urgent Events list (ranked by readiness — Critical, then At Risk, then On Track — and then by nearest event date); each one opens the event
 
 **Implementation note:** Classification is computed on the backend in PHP (`App\Services\EventClassifier`). The frontend only renders the value returned by the API — no classification logic exists in React.
 

@@ -33,19 +33,28 @@ class TaskController extends Controller
             ->orderBy('due_date')
             ->get();
 
+        // Tasks on a cancelled event are on hold, not work to do: they're listed but not counted.
+        $active = $tasks->filter(fn (Task $task) => $task->event->status !== 'cancelled');
+
         return response()->json([
             'tasks' => $tasks,
             'summary' => [
-                'pending' => $tasks->where('status', 'pending')->count(),
-                'in_progress' => $tasks->where('status', 'in_progress')->count(),
-                'done' => $tasks->where('status', 'done')->count(),
-                'total' => $tasks->count(),
+                'pending' => $active->where('status', 'pending')->count(),
+                'in_progress' => $active->where('status', 'in_progress')->count(),
+                'done' => $active->where('status', 'done')->count(),
+                'total' => $active->count(),
             ],
         ]);
     }
 
     public function store(Request $request, Event $event): JsonResponse
     {
+        if ($event->status === 'cancelled') {
+            return response()->json([
+                'message' => 'This event is cancelled. Restore it before adding tasks.',
+            ], 422);
+        }
+
         if ($event->status === 'completed' && $request->user()->role !== 'admin') {
             return response()->json([
                 'message' => 'This event is completed. Only an administrator can add tasks to it.',

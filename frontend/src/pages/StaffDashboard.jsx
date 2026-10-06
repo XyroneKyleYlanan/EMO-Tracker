@@ -7,6 +7,7 @@ import DateTimeDisplay from '../components/DateTimeDisplay'
 import TaskRow from '../components/TaskRow'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import { CalendarIcon, ClockIcon, MapPinIcon } from '../components/icons'
+import EventBadges, { RescheduledNote } from '../components/EventBadges'
 import { formatDateRange, formatTimeRange } from '../lib/format'
 
 export default function StaffDashboard() {
@@ -77,7 +78,13 @@ export default function StaffDashboard() {
                 onClick={() => setSelectedId(event.id)}
                 className="text-left bg-white rounded-xl border border-gray-200 p-4 hover:border-neu-green hover:shadow-md transition"
               >
-                <div className="font-medium text-gray-900">{event.name}</div>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="font-medium text-gray-900">{event.name}</div>
+                    <RescheduledNote event={event} className="text-gray-500" />
+                  </div>
+                  <EventBadges event={event} size="sm" showScheduled={false} />
+                </div>
                 <div className="mt-2 space-y-1 text-xs text-gray-500">
                   <div className="flex items-center gap-1.5">
                     <CalendarIcon width={14} height={14} />

@@ -46,8 +46,9 @@ class EventController extends Controller
 
         $event = Event::create([
             ...$data,
+            'event_type' => $data['event_type'] ?? 'internal',
             'needs_preparation' => $data['needs_preparation'] ?? false,
-            'status' => Event::statusForDate($data['event_date'], $data['end_date'] ?? null),
+            'status' => Event::statusForDate($data['event_date'], $data['end_date'] ?? null, $data['end_time'] ?? null),
             'created_by' => $request->user()->id,
         ]);
 
@@ -58,13 +59,26 @@ class EventController extends Controller
     {
         $data = $this->validateDetails($request, $event);
 
-        $event->fill(collect($data)->except('cancelled')->all());
+        $from = [$event->event_date->toDateString(), self::time($event->event_time)];
+        $event->fill(collect($data)->except(['cancelled', 'rescheduled'])->all());
+        $to = [$event->event_date->toDateString(), self::time($event->event_time)];
 
-        // Status follows the date, so rescheduling a past event into the future
-        // reopens it and moving one into the past closes it. A cancelled event
-        // stays cancelled until it's explicitly restored.
+        // A reschedule (rather than a correction) keeps where the event was
+        // first scheduled. Moving it back there means it's no longer rescheduled.
+        if ($to !== $from && $request->boolean('rescheduled') && ! $event->original_date) {
+            $event->original_date = $from[0];
+            $event->original_time = $from[1] ? "{$from[1]}:00" : null;
+        }
+        if ($event->original_date && $to === [$event->original_date->toDateString(), self::time($event->original_time)]) {
+            $event->original_date = null;
+            $event->original_time = null;
+        }
+
+        // Status follows the date and time, so moving a past event into the
+        // future reopens it and moving one into the past closes it. A cancelled
+        // event stays cancelled until it's explicitly restored.
         $cancelled = $data['cancelled'] ?? $event->status === 'cancelled';
-        $event->status = $cancelled ? 'cancelled' : Event::statusForDate($event->event_date, $event->end_date);
+        $event->status = $cancelled ? 'cancelled' : Event::statusForDate($event->event_date, $event->end_date, $event->end_time);
         $event->save();
 
         return response()->json(['event' => $this->withSummary($event)]);
@@ -105,22 +119,30 @@ class EventController extends Controller
             'name' => [$required, 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'department' => ['nullable', 'string', 'max:255'],
+            'event_type' => ['sometimes', Rule::in(['internal', 'external'])],
             'venue_id' => ['nullable', 'integer', 'exists:venues,id'],
             'venue_details' => ['nullable', 'string', 'max:255', Rule::requiredIf($creating && ! $request->filled('venue_id'))],
             'event_date' => [$required, 'date'],
             'end_date' => array_filter(['nullable', 'date', $startDate ? "after_or_equal:{$startDate}" : null]),
             'event_time' => ['nullable', 'date_format:H:i'],
             'end_time' => ['nullable', 'date_format:H:i', Rule::when($singleDay && $request->filled('event_time'), 'after:event_time')],
-            'budget' => ['nullable', 'numeric', 'min:0'],
             'control_number' => ['nullable', 'string', 'max:255'],
             'remarks' => ['nullable', 'string', 'max:2000'],
             'needs_preparation' => ['sometimes', 'boolean'],
             'cancelled' => [$creating ? 'prohibited' : 'sometimes', 'boolean'],
+            // When the date or time changes: true for a reschedule, false for a correction.
+            'rescheduled' => [$creating ? 'prohibited' : 'sometimes', 'boolean'],
         ], [
             'venue_details.required' => 'Choose a venue, or type where the event is held.',
             'end_date.after_or_equal' => 'The end date can\'t be before the start date.',
             'end_time.after' => 'The end time must be after the start time.',
         ]);
+    }
+
+    // "09:00" and "09:00:00" are the same time.
+    private static function time(?string $time): ?string
+    {
+        return $time ? substr($time, 0, 5) : null;
     }
 
     private function withSummary(Event $event): Event

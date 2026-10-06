@@ -1,4 +1,4 @@
-import ReadinessBadge from './ReadinessBadge'
+import EventBadges, { RescheduledNote } from './EventBadges'
 import { CalendarIcon, ClockIcon, MapPinIcon, UsersIcon } from './icons'
 import { formatDateRange, formatDateShort, formatTimeRange } from '../lib/format'
 
@@ -14,11 +14,12 @@ export default function EventCard({ event, onClick }) {
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0 flex-1">
           <div className="font-semibold text-gray-900 truncate">{event.name}</div>
+          <RescheduledNote event={event} className="text-gray-500" />
           <div className="text-xs text-gray-500 mt-0.5">
             {event.description?.slice(0, 80) || 'No description.'}
           </div>
         </div>
-        <ReadinessBadge readiness={event.readiness} />
+        <EventBadges event={event} />
       </div>
 
       <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">

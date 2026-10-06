@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
+import { formatDayMonth, formatTime } from '../lib/format'
 
 const NEW_VENUE = '__new'
+
+const EVENT_TYPES = [
+  { value: 'internal', label: 'Internal', hint: 'An NEU event' },
+  { value: 'external', label: 'External', hint: 'Organized by an outside group' },
+]
 
 function dayAfter(isoDate) {
   const [y, m, d] = isoDate.split('-').map(Number)
@@ -13,6 +19,7 @@ function initialForm(event) {
   return {
     name: event?.name || '',
     description: event?.description || '',
+    event_type: event?.event_type || 'internal',
     department: event?.department || '',
     event_date: event?.event_date || '',
     end_date: event?.end_date || '',
@@ -20,11 +27,11 @@ function initialForm(event) {
     end_time: event?.end_time?.slice(0, 5) || '',
     venue_id: event?.venue_id ? String(event.venue_id) : '',
     venue_details: event?.venue_details || '',
-    budget: event?.budget || '',
     control_number: event?.control_number || '',
     remarks: event?.remarks || '',
     needs_preparation: event?.needs_preparation ?? false,
     cancelled: event?.status === 'cancelled',
+    rescheduled: null,
   }
 }
 
@@ -76,14 +83,24 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
     }
   }
 
+  // Changing when an existing event starts is either a reschedule or a fix.
+  // Already-rescheduled events keep their original date either way.
+  const moved = !!event && (form.event_date !== event.event_date || form.event_time !== (event.event_time?.slice(0, 5) || ''))
+  const askReschedule = moved && !event.original_date
+
   async function handleSubmit(e) {
     e.preventDefault()
+    if (askReschedule && form.rescheduled === null) {
+      setErrors({ rescheduled: ['Choose whether the event was moved or the date was entered wrong.'] })
+      return
+    }
     setErrors({})
     setSubmitting(true)
     try {
       const payload = {
         name: form.name,
         description: form.description || null,
+        event_type: form.event_type,
         department: form.department.trim() || null,
         event_date: form.event_date,
         end_date: multiDay && form.end_date ? form.end_date : null,
@@ -91,12 +108,12 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         end_time: form.end_time || null,
         venue_id: form.venue_id && form.venue_id !== NEW_VENUE ? Number(form.venue_id) : null,
         venue_details: form.venue_details.trim() || null,
-        budget: form.budget === '' ? null : Number(form.budget),
         control_number: form.control_number.trim() || null,
         remarks: form.remarks.trim() || null,
         needs_preparation: form.needs_preparation,
       }
       if (event) payload.cancelled = form.cancelled
+      if (moved) payload.rescheduled = askReschedule ? form.rescheduled : true
       const res = event
         ? await api.put(`/events/${event.id}`, payload)
         : await api.post('/events', payload)
@@ -134,13 +151,33 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} className={input} />
           </Field>
 
-          <Field label="Department" error={errors.department?.[0]} optional>
+          <Field label="Type" error={errors.event_type?.[0]}>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Event type">
+              {EVENT_TYPES.map((t) => (
+                <button
+                  key={t.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={form.event_type === t.value}
+                  onClick={() => update('event_type', t.value)}
+                  className={`text-left px-3 py-2 rounded-lg border transition ${
+                    form.event_type === t.value ? 'border-neu-green bg-emerald-50/60 ring-1 ring-neu-green' : 'border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="block text-sm font-medium text-gray-900">{t.label}</span>
+                  <span className="block text-xs text-gray-500">{t.hint}</span>
+                </button>
+              ))}
+            </div>
+          </Field>
+
+          <Field label={form.event_type === 'external' ? 'Organizer' : 'Department'} error={errors.department?.[0]} optional>
             <input
               type="text"
               list="department-suggestions"
               value={form.department}
               onChange={(e) => update('department', e.target.value)}
-              placeholder="e.g. CAS, College of Nursing"
+              placeholder={form.event_type === 'external' ? "e.g. the organization's name" : 'e.g. CAS, College of Nursing'}
               className={input}
             />
             <datalist id="department-suggestions">
@@ -169,6 +206,27 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
               Runs for several days
             </label>
           </div>
+
+          {askReschedule && (
+            <div className="p-3 bg-blue-50/60 border border-blue-100 rounded-lg">
+              <div className="text-sm font-medium text-gray-900">The start date or time changed. Was the event rescheduled?</div>
+              <div className="mt-2 space-y-1.5">
+                <Choice
+                  checked={form.rescheduled === true}
+                  onChange={() => update('rescheduled', true)}
+                  label="Yes, it was moved"
+                  hint={`It will show "Rescheduled from ${formatDayMonth(event.event_date)}${form.event_date === event.event_date && event.event_time ? `, ${formatTime(event.event_time)}` : ''}".`}
+                />
+                <Choice
+                  checked={form.rescheduled === false}
+                  onChange={() => update('rescheduled', false)}
+                  label="No, I'm correcting a mistake"
+                  hint="The date or time was entered wrong."
+                />
+              </div>
+              {errors.rescheduled && <div className="text-xs text-rose-600 mt-1.5">{errors.rescheduled[0]}</div>}
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-3">
             <Field
@@ -269,14 +327,9 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             <textarea rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} className={input} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="Control #" error={errors.control_number?.[0]} optional>
-              <input type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
-            </Field>
-            <Field label="Budget (₱)" error={errors.budget?.[0]} optional>
-              <input type="number" min="0" step="0.01" value={form.budget} onChange={(e) => update('budget', e.target.value)} className={input} />
-            </Field>
-          </div>
+          <Field label="Control #" error={errors.control_number?.[0]} optional>
+            <input type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
+          </Field>
 
           <Field label="Remarks" error={errors.remarks?.[0]} optional>
             <textarea rows={2} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
@@ -320,6 +373,18 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         </footer>
       </div>
     </div>
+  )
+}
+
+function Choice({ checked, onChange, label, hint }) {
+  return (
+    <label className="flex items-start gap-2 cursor-pointer">
+      <input type="radio" name="rescheduled" checked={checked} onChange={onChange} className="mt-0.5 text-neu-green focus:ring-neu-green" />
+      <span className="text-sm">
+        <span className="text-gray-900">{label}</span>
+        <span className="block text-xs text-gray-500">{hint}</span>
+      </span>
+    </label>
   )
 }
 

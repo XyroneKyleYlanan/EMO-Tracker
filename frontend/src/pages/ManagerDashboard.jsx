@@ -5,11 +5,12 @@ import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
-import ReadinessBadge, { ReadinessReason } from '../components/ReadinessBadge'
+import { ReadinessReason } from '../components/ReadinessBadge'
+import EventBadges from '../components/EventBadges'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import TaskRow from '../components/TaskRow'
-import { formatDateRange, formatDayMonth, formatTimeRange } from '../lib/format'
+import { formatDateRange, formatDayMonth, formatRescheduledFrom, formatTimeRange } from '../lib/format'
 
 const WEEK_ROWS = 10
 const NO_BUILDING_COLOR = '#E5E7EB'
@@ -110,7 +111,7 @@ export default function ManagerDashboard() {
                           <ReadinessReason readiness={e.readiness} reason={e.readiness_reason} className="text-xs mt-0.5 truncate" />
                         </div>
                         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          <ReadinessBadge readiness={e.readiness} size="sm" />
+                          <EventBadges event={e} size="sm" showScheduled={false} />
                           <span className="text-[11px] text-gray-500">
                             {e.task_summary.total ? `${e.task_summary.done}/${e.task_summary.total} tasks done` : 'No tasks yet'}
                           </span>
@@ -195,14 +196,15 @@ function WeekList({ events, today, onOpen, scheduleLink }) {
                 <button onClick={() => onOpen(e.id)} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 flex items-start gap-3">
                   <span className="mt-1.5 h-2.5 w-2.5 rounded-sm flex-shrink-0 border border-black/10" style={{ backgroundColor: e.building?.color || NO_BUILDING_COLOR }} />
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm text-gray-900 truncate">{e.name}</div>
+                    <div className={`text-sm truncate ${e.status === 'cancelled' ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{e.name}</div>
                     <div className="text-xs text-gray-500 truncate">
                       {formatTimeRange(e.event_time, e.end_time) || 'Time TBA'}
                       {e.location ? ` · ${e.location}` : ''}
                       {e.end_date && e.end_date !== e.event_date ? ` · until ${formatDayMonth(e.end_date)}` : ''}
+                      {e.original_date ? ` · ${formatRescheduledFrom(e)}` : ''}
                     </div>
                   </div>
-                  {e.needs_preparation && <ReadinessBadge readiness={e.readiness} size="sm" />}
+                  <EventBadges event={e} size="sm" showScheduled={false} />
                 </button>
               </li>
             ))}

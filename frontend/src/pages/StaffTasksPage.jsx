@@ -34,11 +34,13 @@ export default function StaffTasksPage() {
     )
   }
 
+  // Tasks on a cancelled event are on hold: only "All" lists them, matching the counts above.
+  const active = data.tasks.filter((t) => t.event?.status !== 'cancelled')
   const filtered = filter === 'all'
     ? data.tasks
     : filter === 'open'
-      ? data.tasks.filter((t) => t.status !== 'done')
-      : data.tasks.filter((t) => t.status === filter)
+      ? active.filter((t) => t.status !== 'done')
+      : active.filter((t) => t.status === filter)
 
   return (
     <div className="max-w-4xl mx-auto">

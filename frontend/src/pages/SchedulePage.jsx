@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../contexts/ToastContext'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
-import ReadinessBadge from '../components/ReadinessBadge'
+import EventBadges, { RescheduledNote } from '../components/EventBadges'
 import { ChevronDownIcon, SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
 
@@ -87,7 +87,7 @@ export default function SchedulePage() {
 
   const query = search.trim().toLowerCase()
   const rows = (data?.events || []).filter((e) =>
-    !query || [e.name, e.department, e.location, e.control_number, e.remarks]
+    !query || [e.name, e.event_type, e.department, e.location, e.control_number, e.remarks]
       .some((v) => v && v.toLowerCase().includes(query))
   )
   const months = []
@@ -203,11 +203,12 @@ export default function SchedulePage() {
           </div>
 
           <div className="hidden md:block bg-white rounded-xl border border-gray-300 shadow-sm overflow-x-auto">
-            <table className="w-full min-w-[1000px] table-fixed text-[13px] border-collapse">
+            <table className="w-full min-w-[1080px] table-fixed text-[13px] border-collapse">
               <colgroup>
                 <col className="w-32" />
                 <col className="w-36" />
                 <col />
+                <col className="w-24" />
                 <col className="w-32" />
                 <col className="w-36" />
                 <col className="w-28" />
@@ -215,7 +216,7 @@ export default function SchedulePage() {
               </colgroup>
               <thead className="text-gray-700">
                 <tr>
-                  <th colSpan={7} className="border-b border-gray-300 px-3 py-2 text-center text-lg font-semibold text-gray-900">
+                  <th colSpan={8} className="border-b border-gray-300 px-3 py-2 text-center text-lg font-semibold text-gray-900">
                     {data?.year ?? year}
                   </th>
                 </tr>
@@ -223,6 +224,7 @@ export default function SchedulePage() {
                   <Th>Date</Th>
                   <Th>Time</Th>
                   <Th>Event</Th>
+                  <Th>Type</Th>
                   <Th>Department</Th>
                   <Th>Venue</Th>
                   <Th>Control #</Th>
@@ -265,7 +267,7 @@ function MonthRows({ month, onOpen }) {
   return (
     <>
       <tr>
-        <td colSpan={7} className="border border-gray-300 px-2.5 py-1.5 bg-gray-100 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
+        <td colSpan={8} className="border border-gray-300 px-2.5 py-1.5 bg-gray-100 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
           {month.label} · {month.rows.length} event{month.rows.length === 1 ? '' : 's'}
         </td>
       </tr>
@@ -280,6 +282,7 @@ function MonthRows({ month, onOpen }) {
           <Td className="font-semibold">{formatDateRange(row.event_date, row.end_date, formatDayMonth)}</Td>
           <Td className="whitespace-nowrap">{formatTimeRange(row.event_time, row.end_time) || <Muted>TBA</Muted>}</Td>
           <Td><EventName row={row} /></Td>
+          <Td><EventType type={row.event_type} /></Td>
           <Td>{row.department}</Td>
           <Td>{row.location || <Muted>TBA</Muted>}</Td>
           <Td className="break-words">{row.control_number}</Td>
@@ -290,15 +293,24 @@ function MonthRows({ month, onOpen }) {
   )
 }
 
-// Name plus one status badge, the same badges used everywhere else in the app.
+// Name plus its status badges, the same badges used everywhere else in the app.
 function EventName({ row }) {
-  const badge = row.status === 'cancelled' ? 'cancelled' : row.needs_preparation && row.status === 'upcoming' ? row.readiness : null
   return (
     <span className="flex items-start justify-between gap-2">
-      <span className={row.status === 'cancelled' ? 'line-through decoration-gray-700' : ''}>{row.name}</span>
-      {badge && <span className="flex-shrink-0 pt-px"><ReadinessBadge readiness={badge} size="sm" /></span>}
+      <span className="min-w-0">
+        <span className={row.status === 'cancelled' ? 'line-through decoration-gray-700' : ''}>{row.name}</span>
+        <RescheduledNote event={row} className="text-gray-700" />
+      </span>
+      <span className="flex-shrink-0 pt-px"><EventBadges event={row} size="sm" showScheduled={false} showCompleted={false} /></span>
     </span>
   )
+}
+
+// Every row says its type; outside bookings stand out so they can be spotted at a glance.
+function EventType({ type }) {
+  return type === 'external'
+    ? <span className="inline-block px-1.5 py-px rounded border border-gray-700/40 bg-white/80 text-[11px] font-semibold uppercase tracking-wide">External</span>
+    : <span>Internal</span>
 }
 
 function Muted({ children }) {
@@ -330,6 +342,7 @@ function MonthCards({ month, onOpen }) {
               <div className="text-xs mt-0.5">
                 {row.location || 'Venue TBA'}{row.department ? ` · ${row.department}` : ''}
               </div>
+              <div className="text-xs mt-1"><EventType type={row.event_type} /></div>
               {row.remarks && <div className="text-xs mt-1 italic">{row.remarks}</div>}
             </button>
           )
