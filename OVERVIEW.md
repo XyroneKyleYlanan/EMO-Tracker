@@ -93,17 +93,15 @@ users (id, name, email, password, role, is_active, ...)
   │            │       due_date, status, priority,  │
   │            │       assigned_to) ────────────────┘
   │            │
-  │            ├──── documents (id, file_name, file_path,
-  │            │       file_size, mime_type, uploaded_by)
-  │            │
-  │            └──── event_staff (event_id, user_id) ◀── no longer used (see below)
+  │            └──── documents (id, file_name, file_path,
+  │                    file_size, mime_type, uploaded_by)
   │
 settings (id, key, value) ◀── seeded with school year config (unused but harmless)
 ```
 
 **Design rationale:**
 - `users` has 3 roles (admin/officer/staff) via an enum column — simple and clear
-- An event's People is everyone with a task on it, so the old `event_staff` pivot table is no longer used (it will be removed)
+- An event's People is everyone with a task on it, so no separate staff list is stored (the old `event_staff` table was removed in Capstone 2)
 - `tasks` has `assigned_to` directly (one owner per task — clear accountability in a small office); anyone can own a task, whatever their role
 - `documents` are linked to events with `cascadeOnDelete` so deleting an event cleans up its docs
 - All foreign keys use `cascadeOnDelete` or `nullOnDelete` to maintain referential integrity

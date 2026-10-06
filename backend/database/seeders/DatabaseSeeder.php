@@ -83,7 +83,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'completed',
             'created_by' => $admin->id,
         ]);
-        $foundation->staff()->attach([$staff[0]->id, $staff[1]->id, $staff[2]->id]);
         $this->makeTasks($foundation->id, [
             ['Book main hall', 'done', 'high', $staff[0]->id, -25],
             ['Print programs', 'done', 'medium', $staff[1]->id, -23],
@@ -106,7 +105,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'upcoming',
             'created_by' => $officer1->id,
         ]);
-        $orientation->staff()->attach([$staff[0]->id, $staff[3]->id, $staff[4]->id]);
         $this->makeTasks($orientation->id, [
             ['Prepare welcome kits', 'done', 'medium', $staff[0]->id, 10],
             ['Invite keynote speaker', 'done', 'high', $staff[3]->id, 7],
@@ -129,7 +127,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'upcoming',
             'created_by' => $officer2->id,
         ]);
-        $sportsFest->staff()->attach([$staff[1]->id, $staff[5]->id]);
         $this->makeTasks($sportsFest->id, [
             ['Coordinate with college reps', 'done', 'high', $staff[1]->id, 2],
             ['Print event tarpaulins', 'done', 'medium', $staff[5]->id, 3],
@@ -152,7 +149,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'upcoming',
             'created_by' => $officer1->id,
         ]);
-        $facultyNight->staff()->attach([$staff[6]->id]);
         $this->makeTasks($facultyNight->id, [
             ['Print awardee certificates', 'pending', 'high', $staff[6]->id, 1],
             ['Confirm dinner catering', 'pending', 'high', null, 1],
@@ -174,7 +170,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'upcoming',
             'created_by' => $officer2->id,
         ]);
-        $quizBee->staff()->attach([$staff[2]->id]);
 
         // Uploaded files aren't committed, so generate the sample document's file here.
         $samplePath = 'documents/sample/foundation-day-program.pdf';

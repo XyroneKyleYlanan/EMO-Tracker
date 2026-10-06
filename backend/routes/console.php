@@ -49,6 +49,8 @@ Artisan::command('backup:restore {file? : Backup file name, snapshot name, or pa
     }
 
     Backup::restore($path);
+    // A backup from an older version of the system is brought up to date.
+    $this->callSilently('migrate', ['--force' => true]);
     $this->info('Restored. Everyone will need to log in again.');
 })->purpose('Restore a backup (replaces all current data)');
 

@@ -216,14 +216,14 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] An event's People list is automatic (everyone with a task on it), replacing the manual Assigned Staff picker; a staff member's "My Events" are the events where they have a task
 - [x] Readiness rules refined: progress is judged only as the event gets close (At Risk within 14 days if under 70% done; Critical within 7 days if under 40% done or most open tasks have no owner, or within 2 days with work left), and an overdue task makes an event Critical at any time. A new event planned weeks ahead no longer shows Critical just because work hasn't started. Each label now says why ("1 task is overdue", "60% done, 14 days to go") in the event panel, on Home and in the PDF report
 - [x] Task form notes when a due date falls after the event (tasks lock once the event is over)
-- [x] 44 new tests (75 total)
+- [x] 45 new tests (76 total)
 
 ### Next up
 
 **Waiting on group mates**
 - [x] Bacena: remove unused files and fix a seeder comment
 - [x] Sy: Mac launcher (`start.command`, double-click to start), Mac setup steps, and the `.env.example` database fix
-- [ ] After Bacena's commit: drop the unused `event_staff` table, the `Event::staff()` relation, and the seeder lines that fill it
+- [x] Dropped the unused `event_staff` table, the `Event::staff()` relation, and the seeder lines that filled it. Restoring an older backup now also updates it to the current database structure
 
 **Accounts, before the EMO uses it for real**
 - [ ] Create the real members' accounts (names and roles from the client), with at least two administrators (the office head and a backup), since only an admin can reset passwords
@@ -259,3 +259,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-10-02: Cleaned the imported schedule text (221 values: capitalization, typos like "Assestment" → "Assessment", room numbers, remarks; "HINDI NA PO TULOY ITO" → cancelled). Department synonyms (e.g. "CON" vs "College of Nursing") left as-is pending the client. New reset point: `php artisan backup:restore real-data-clean`.
 - 2026-10-02: The EMO has about 5–10 members and all of them handle events, so the staff-only assignment rules were dropped: anyone can own a task, everyone sees every event, and an event's People are its task owners. Kept one owner per task (clear accountability); multi-person tasks wait for user testing. The old `event_staff` table is no longer read; drop it once the demo seeder stops filling it.
 - 2026-10-02: Refined the readiness rules after an event 14 days away with one task in progress showed Critical (0% done is under 40%). Old rules: Critical if under 40% done, 2 days or less away, or most tasks unassigned; At Risk if under 70% done, 6 days or less away, or any task unassigned, however far away the event was. New rules: Critical if a task is overdue, or 2 days or less away with work left, or 7 days or less away and under 40% done or most open tasks without an owner; At Risk if 14 days or less away and under 70% done, or an open task without an owner; done tasks no longer need an owner. The "do not revisit" decisions (priority order, 0 tasks = At Risk, all done = On Track, past = Completed) are unchanged. Docs update handed to Jean (`4-Jean-docs.md`); the paper needs the same wording.
+- 2026-10-06: Dropped the `event_staff` table (an event's People are its task owners). Snapshot taken first: `php artisan backup:restore before-drop-event-staff`. `backup:restore` now runs migrations after restoring, so older snapshots come back in the current structure.

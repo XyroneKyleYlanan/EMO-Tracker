@@ -205,12 +205,8 @@ Stores tasks belonging to events.
 - `assigned_to` (foreign key to users.id, nullable, null on delete)
 - `timestamps`
 
-### `event_staff` table (pivot)
-No longer used: an event's People are now everyone with a task on it. This table will be removed in a later update.
-- `id` (primary key)
-- `event_id` (foreign key to events.id, cascade on delete)
-- `user_id` (foreign key to users.id, cascade on delete)
-- Unique constraint on (event_id, user_id)
+### `event_staff` table (removed in Capstone 2)
+An event's People are now everyone with a task on it, so this table is no longer needed and was removed.
 
 ### `documents` table
 Stores metadata for files uploaded against events.

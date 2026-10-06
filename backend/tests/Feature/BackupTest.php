@@ -9,6 +9,7 @@ use App\Services\Backup;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use RuntimeException;
@@ -57,6 +58,22 @@ class BackupTest extends TestCase
         $this->assertSame(['Foundation Day'], Event::pluck('name')->all());
         $this->assertSame(1, Document::count());
         $this->assertSame('PDF BYTES', Storage::disk('local')->get('documents/event_1/program.pdf'));
+    }
+
+    public function test_restoring_a_backup_from_an_older_version_brings_it_up_to_date(): void
+    {
+        Event::factory()->create(['name' => 'Kept']);
+
+        // A backup taken before the latest database update...
+        $this->artisan('migrate:rollback', ['--step' => 1])->assertSuccessful();
+        Backup::create('older-version');
+        $this->artisan('migrate')->assertSuccessful();
+
+        $this->artisan('backup:restore', ['file' => 'older-version', '--force' => true])->assertSuccessful();
+
+        $this->assertSame(count(File::files(database_path('migrations'))), DB::table('migrations')->count());
+        $this->assertFalse(Schema::hasTable('event_staff'));
+        $this->assertSame(['Kept'], Event::pluck('name')->all());
     }
 
     public function test_only_the_newest_backups_are_kept(): void
