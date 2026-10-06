@@ -309,7 +309,7 @@ function EventName({ row }) {
     <span className="flex items-start justify-between gap-2">
       <span className="min-w-0">
         <span className={row.status === 'cancelled' ? 'line-through decoration-gray-700' : ''}>{row.name}</span>
-        <RescheduledNote event={row} className="text-gray-700" />
+        <RescheduledNote event={row} className="text-gray-800" />
       </span>
       <span className="flex-shrink-0 pt-px"><EventBadges event={row} size="sm" showScheduled={false} showCompleted={false} /></span>
     </span>
@@ -323,8 +323,9 @@ function EventType({ type }) {
     : <span>Internal</span>
 }
 
+// Small notes on a building-colored row stay gray-800 so they're readable on every color.
 function Muted({ children }) {
-  return <span className="text-gray-600 italic">{children}</span>
+  return <span className="text-gray-800 italic">{children}</span>
 }
 
 function MonthCards({ month, onOpen }) {

@@ -46,7 +46,7 @@ export default function VenuesPage() {
   }
 
   if (!data) {
-    return <div className="max-w-4xl mx-auto"><div className="h-64 bg-white rounded-2xl border border-gray-200 animate-pulse" /></div>
+    return <div className="max-w-6xl mx-auto"><div className="h-64 bg-white rounded-2xl border border-gray-200 animate-pulse" /></div>
   }
 
   const groups = [
@@ -55,74 +55,82 @@ export default function VenuesPage() {
   ]
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <Link to="/admin/schedule" className="text-sm text-gray-500 hover:text-neu-green">← Schedule</Link>
       <div className="flex items-start justify-between gap-4 mt-2 mb-6 flex-wrap">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Venues</h1>
-          <p className="text-sm text-gray-500 mt-1">Each building&apos;s color is used for its rows on the Schedule.</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Each building&apos;s color is used for its rows on the Schedule. Venues used by events can&apos;t be deleted; merge duplicates instead.
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setDialog({ type: 'building' })} className="text-sm border border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg font-medium">
-            + Building
+          <button onClick={() => setDialog({ type: 'building' })} className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition">
+            + Add building
           </button>
-          <button onClick={() => setDialog({ type: 'venue' })} className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium">
-            + Venue
+          <button onClick={() => setDialog({ type: 'venue' })} className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+            + Add venue
           </button>
         </div>
       </div>
 
-      <div className="space-y-4">
-        {groups.map(({ building, venues }) => (
-          (building || venues.length > 0) && (
-            <section key={building?.id ?? 'none'} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-              <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-200" style={{ backgroundColor: building?.color || NO_BUILDING_COLOR }}>
-                <div className="font-semibold text-gray-900">
-                  {building ? building.name : 'No building'}
-                  <span className="ml-2 text-xs font-normal text-gray-700">
-                    {venues.length} venue{venues.length === 1 ? '' : 's'}
-                  </span>
-                </div>
-                {building && (
-                  <div className="flex items-center gap-1">
-                    <RowButton onClick={() => setDialog({ type: 'building', item: building })}>Edit</RowButton>
-                    <RowButton dangerOnHover onClick={() => deleteBuilding(building)}>Remove</RowButton>
+      {data.buildings.length === 0 && data.venues.length === 0 ? (
+        <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
+          No buildings or venues yet. Add a building first, then the venues inside it.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+          {groups.map(({ building, venues }) => (
+            (building || venues.length > 0) && (
+              <section key={building?.id ?? 'none'} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-200" style={{ backgroundColor: building?.color || NO_BUILDING_COLOR }}>
+                  <div className="font-semibold text-gray-900">
+                    {building ? building.name : 'No building'}
+                    <span className="ml-2 text-xs font-normal text-gray-800">
+                      {venues.length} venue{venues.length === 1 ? '' : 's'}
+                    </span>
                   </div>
+                  {building && (
+                    <div className="flex items-center gap-1">
+                      <RowButton onColor onClick={() => setDialog({ type: 'building', item: building })}>Edit</RowButton>
+                      <RowButton onColor danger onClick={() => deleteBuilding(building)}>Remove</RowButton>
+                    </div>
+                  )}
+                </header>
+                {venues.length === 0 ? (
+                  <div className="px-4 py-3 text-xs text-gray-400 italic">No venues in this building yet.</div>
+                ) : (
+                  <ul className="divide-y divide-gray-100">
+                    {venues.map((v) => (
+                      <li key={v.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-gray-900 truncate">{v.name}</div>
+                          <div className="text-xs text-gray-500">{v.events_count} event{v.events_count === 1 ? '' : 's'}</div>
+                        </div>
+                        <div className="flex items-center gap-1 flex-shrink-0">
+                          <RowButton onClick={() => setDialog({ type: 'venue', item: v })}>Edit</RowButton>
+                          <RowButton onClick={() => setDialog({ type: 'merge', item: v })}>Merge</RowButton>
+                          <RowButton
+                            danger
+                            disabled={v.events_count > 0}
+                            title={v.events_count > 0 ? 'Used by events. Merge it into another venue instead.' : undefined}
+                            onClick={() => deleteVenue(v)}
+                          >
+                            Delete
+                          </RowButton>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 )}
-              </header>
-              {venues.length === 0 ? (
-                <div className="px-4 py-3 text-xs text-gray-400 italic">No venues in this building yet.</div>
-              ) : (
-                <ul className="divide-y divide-gray-100">
-                  {venues.map((v) => (
-                    <li key={v.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-gray-900 truncate">{v.name}</div>
-                        <div className="text-xs text-gray-500">{v.events_count} event{v.events_count === 1 ? '' : 's'}</div>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <RowButton onClick={() => setDialog({ type: 'venue', item: v })}>Edit</RowButton>
-                        <RowButton onClick={() => setDialog({ type: 'merge', item: v })}>Merge</RowButton>
-                        <RowButton
-                          danger
-                          disabled={v.events_count > 0}
-                          title={v.events_count > 0 ? 'Used by events. Merge it into another venue instead.' : undefined}
-                          onClick={() => deleteVenue(v)}
-                        >
-                          Delete
-                        </RowButton>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-          )
-        ))}
-      </div>
+              </section>
+            )
+          ))}
+        </div>
+      )}
 
       {dialog?.type === 'building' && (
-        <BuildingDialog building={dialog.item} palette={data.palette} onClose={() => setDialog(null)} onSaved={saved} />
+        <BuildingDialog building={dialog.item} buildings={data.buildings} palette={data.palette} onClose={() => setDialog(null)} onSaved={saved} />
       )}
       {dialog?.type === 'venue' && (
         <VenueDialog venue={dialog.item} buildings={data.buildings} onClose={() => setDialog(null)} onSaved={saved} />
@@ -134,9 +142,10 @@ export default function VenuesPage() {
   )
 }
 
-function BuildingDialog({ building, palette, onClose, onSaved }) {
+function BuildingDialog({ building, buildings, palette, onClose, onSaved }) {
+  const usedBy = Object.fromEntries(buildings.filter((b) => b.id !== building?.id).map((b) => [b.color, b.name]))
   const [name, setName] = useState(building?.name || '')
-  const [color, setColor] = useState(building?.color || palette[0])
+  const [color, setColor] = useState(building?.color || palette.find((c) => !usedBy[c]) || palette[0])
   const [errors, setErrors] = useState({})
 
   async function submit(e) {
@@ -146,12 +155,12 @@ function BuildingDialog({ building, palette, onClose, onSaved }) {
       else await api.post('/buildings', { name, color })
       onSaved(building ? 'Building updated.' : `Building "${name}" added.`)
     } catch (err) {
-      setErrors(err.response?.data?.errors || {})
+      setErrors(err.response?.data?.errors || { _: [err.response?.data?.message || 'Failed to save the building.'] })
     }
   }
 
   return (
-    <Dialog title={building ? 'Edit building' : 'New building'} onClose={onClose} onSubmit={submit} submitLabel={building ? 'Save' : 'Add building'}>
+    <Dialog title={building ? 'Edit building' : 'New building'} onClose={onClose} onSubmit={submit} submitLabel={building ? 'Save changes' : 'Add building'} error={errors._?.[0]}>
       <Field label="Name" error={errors.name?.[0]}>
         <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Building" />
       </Field>
@@ -162,13 +171,21 @@ function BuildingDialog({ building, palette, onClose, onSaved }) {
               key={c}
               type="button"
               onClick={() => setColor(c)}
-              aria-label={`Color ${c}`}
+              aria-label={usedBy[c] ? `Color ${c}, used by ${usedBy[c]}` : `Color ${c}`}
               aria-pressed={c === color}
-              className={`h-9 rounded-md border ${c === color ? 'ring-2 ring-offset-2 ring-neu-green border-transparent' : 'border-black/10'}`}
+              title={usedBy[c] ? `Used by ${usedBy[c]}` : undefined}
+              className={`relative h-9 rounded-md border ${c === color ? 'ring-2 ring-offset-2 ring-neu-green border-transparent' : 'border-black/10'}`}
               style={{ backgroundColor: c }}
-            />
+            >
+              {usedBy[c] && <span className="absolute top-1 right-1 h-1.5 w-1.5 rounded-full bg-gray-800" />}
+            </button>
           ))}
         </div>
+        {Object.keys(usedBy).length > 0 && (
+          <p className="text-xs text-gray-500 mt-1.5">
+            A dot means another building uses that color{usedBy[color] ? `. This one is used by ${usedBy[color]}` : ''}.
+          </p>
+        )}
       </Field>
       <div className="rounded-md border border-gray-300 px-3 py-2 text-[13px] text-gray-900" style={{ backgroundColor: color }}>
         Preview: how this building&apos;s rows look on the Schedule
@@ -190,12 +207,12 @@ function VenueDialog({ venue, buildings, onClose, onSaved }) {
       else await api.post('/venues', payload)
       onSaved(venue ? 'Venue updated.' : `Venue "${name}" added.`)
     } catch (err) {
-      setErrors(err.response?.data?.errors || {})
+      setErrors(err.response?.data?.errors || { _: [err.response?.data?.message || 'Failed to save the venue.'] })
     }
   }
 
   return (
-    <Dialog title={venue ? 'Edit venue' : 'New venue'} onClose={onClose} onSubmit={submit} submitLabel={venue ? 'Save' : 'Add venue'}>
+    <Dialog title={venue ? 'Edit venue' : 'New venue'} onClose={onClose} onSubmit={submit} submitLabel={venue ? 'Save changes' : 'Add venue'} error={errors._?.[0]}>
       <Field label="Name" error={errors.name?.[0]}>
         <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Auditorium" />
       </Field>
@@ -248,7 +265,7 @@ function MergeDialog({ venue, venues, onClose, onSaved }) {
 
 const inputClass = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent'
 
-function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, children }) {
+function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, error, children }) {
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
@@ -256,7 +273,10 @@ function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, childre
         <header className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         </header>
-        <div className="px-6 py-5 space-y-4">{children}</div>
+        <div className="px-6 py-5 space-y-4">
+          {children}
+          {error && <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-sm text-rose-800">{error}</div>}
+        </div>
         <footer className="px-6 py-3 border-t border-gray-200 flex items-center justify-end gap-2">
           <button type="button" onClick={onClose} className="text-sm text-gray-600 hover:bg-gray-100 px-3 py-2 rounded-lg transition">Cancel</button>
           <button type="submit" disabled={submitDisabled} className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-50">
@@ -278,15 +298,20 @@ function Field({ label, error, children }) {
   )
 }
 
-// On colored building headers, red text is hard to read, so "Remove" stays dark until hovered.
-function RowButton({ children, danger, dangerOnHover, ...props }) {
+// Same text buttons as the Staff page. On a building's colored header they stay
+// dark gray (red text is hard to read there) and turn red on hover for "Remove".
+// A Delete that can't be used is plain gray, not a faded red that looks clickable.
+function RowButton({ children, danger, onColor, ...props }) {
+  const colors = onColor
+    ? `text-gray-800 hover:bg-white/60 ${danger ? 'hover:text-rose-700' : ''}`
+    : danger
+      ? 'text-rose-600 hover:bg-rose-50 disabled:text-gray-400 disabled:hover:bg-transparent'
+      : 'text-gray-600 hover:bg-gray-100'
   return (
     <button
       type="button"
       {...props}
-      className={`text-xs font-medium px-2 py-1 rounded transition disabled:opacity-40 disabled:cursor-not-allowed ${
-        danger ? 'text-rose-700 hover:bg-rose-50' : dangerOnHover ? 'text-gray-800 hover:text-rose-700 hover:bg-white/60' : 'text-gray-700 hover:bg-black/5'
-      }`}
+      className={`text-sm font-medium px-2.5 py-1 rounded transition disabled:cursor-not-allowed ${colors}`}
     >
       {children}
     </button>

@@ -224,7 +224,9 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Analytics rebuilt around calendar periods (week, month, year, all time): every event's status (upcoming, ongoing, completed, cancelled, rescheduled), internal vs external, busiest venues; the readiness section kept, and its urgent list now opens the event
 - [x] Importer reads columns by their headers (an optional TYPE column works) and turns the sheet's reschedule pairs ("Resched to June 9" + the June 9 row) into one rescheduled event; unclear cases go to the review list
 - [x] Code checker (ESLint) clean, 13 → 0 problems: dialogs mount fresh on each opening (no flash of the previous values), pages load without an extra render, context hooks and the readiness colors moved into plain `.js` files
-- [x] 58 new tests (89 total)
+- [x] Building colors: 12 → 24 (Google Sheets' two lightest rows, the colors the EMO's sheet uses), each checked by a test to keep the Schedule's text and notes readable (4.5:1 contrast or better); the picker marks colors other buildings already use and starts new buildings on a free one. Small notes on colored Schedule rows are now darker so they stay readable on every color
+- [x] Manage venues page made consistent with the rest of the app: wider layout with two building cards per row, "+ Add building" / "+ Add venue" and "Save changes" labels, Staff-page text buttons, a plain gray Delete (instead of faded red) for venues in use with the reason on the page, visible errors when saving fails, and an empty state
+- [x] 59 new tests (90 total)
 
 ### Next up
 

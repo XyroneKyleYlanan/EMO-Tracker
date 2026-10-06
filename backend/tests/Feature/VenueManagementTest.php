@@ -38,6 +38,24 @@ class VenueManagementTest extends TestCase
             ->assertStatus(422)->assertJsonValidationErrors('name');
     }
 
+    public function test_every_palette_color_keeps_schedule_notes_readable(): void
+    {
+        // Small notes on a building-colored Schedule row are gray-800 (#1F2937).
+        $luminance = function (string $hex): float {
+            $channels = array_map(fn ($c) => hexdec($c) / 255, str_split(ltrim($hex, '#'), 2));
+            [$r, $g, $b] = array_map(fn ($c) => $c <= 0.03928 ? $c / 12.92 : (($c + 0.055) / 1.055) ** 2.4, $channels);
+
+            return 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
+        };
+        $note = $luminance('#1F2937');
+
+        $this->assertCount(24, array_unique(Building::PALETTE));
+        foreach (Building::PALETTE as $color) {
+            $contrast = ($luminance($color) + 0.05) / ($note + 0.05);
+            $this->assertGreaterThanOrEqual(4.5, $contrast, "{$color} is too dark for the Schedule's small notes");
+        }
+    }
+
     public function test_recoloring_a_building_recolors_its_schedule_rows(): void
     {
         $building = Building::create(['name' => 'SOM', 'color' => '#B6D7A8']);
