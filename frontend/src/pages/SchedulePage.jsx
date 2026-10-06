@@ -7,7 +7,8 @@ import { useToast } from '../contexts/toast'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import EventBadges, { RescheduledNote } from '../components/EventBadges'
-import { AlertIcon, ChevronDownIcon, SearchIcon } from '../components/icons'
+import ReadinessBadge from '../components/ReadinessBadge'
+import { ChevronDownIcon, SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
 
 const OTHER_COLOR = '#E5E7EB'
@@ -311,32 +312,22 @@ function EventName({ row }) {
         <span className={row.status === 'cancelled' ? 'line-through decoration-gray-700' : ''}>{row.name}</span>
         <RescheduledNote event={row} className="text-gray-800" />
       </span>
-      <span className="flex-shrink-0 pt-px flex flex-col items-end gap-1">
+      <span className="flex-shrink-0 pt-px inline-flex flex-wrap justify-end gap-1">
         <EventBadges event={row} size="sm" showScheduled={false} showCompleted={false} />
-        {row.clashes?.length > 0 && <Overlap names={row.clashes} />}
+        {/* Another upcoming booking at the same venue and time; the event panel has the details. */}
+        {row.clashes?.length > 0 && (
+          <span title={`Overlaps with ${row.clashes.join(', ')}`} className="inline-flex">
+            <ReadinessBadge readiness="overlap" size="sm" />
+          </span>
+        )}
       </span>
-    </span>
-  )
-}
-
-// Another upcoming booking at the same venue and time. Open the event for the details.
-function Overlap({ names }) {
-  return (
-    <span
-      title={`Overlaps with ${names.join(', ')}`}
-      className="inline-flex items-center gap-1 px-1.5 py-px rounded border border-gray-700/40 bg-white/80 text-[11px] font-semibold uppercase tracking-wide"
-    >
-      <AlertIcon width={11} height={11} className="text-orange-600" strokeWidth={2.25} />
-      Overlap
     </span>
   )
 }
 
 // Every row says its type; outside bookings stand out so they can be spotted at a glance.
 function EventType({ type }) {
-  return type === 'external'
-    ? <span className="inline-block px-1.5 py-px rounded border border-gray-700/40 bg-white/80 text-[11px] font-semibold uppercase tracking-wide">External</span>
-    : <span>Internal</span>
+  return type === 'external' ? <ReadinessBadge readiness="external" size="sm" /> : <span>Internal</span>
 }
 
 // Small notes on a building-colored row stay gray-800 so they're readable on every color.

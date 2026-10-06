@@ -46,7 +46,7 @@ export default function VenuesPage() {
   }
 
   if (!data) {
-    return <div className="max-w-6xl mx-auto"><div className="h-64 bg-white rounded-2xl border border-gray-200 animate-pulse" /></div>
+    return <div className="max-w-4xl mx-auto"><div className="h-64 bg-white rounded-2xl border border-gray-200 animate-pulse" /></div>
   }
 
   const groups = [
@@ -55,20 +55,21 @@ export default function VenuesPage() {
   ]
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-4xl mx-auto">
       <Link to="/admin/schedule" className="text-sm text-gray-500 hover:text-neu-green">← Schedule</Link>
       <div className="flex items-start justify-between gap-4 mt-2 mb-6 flex-wrap">
-        <div>
+        {/* Kept narrow so the buttons stay beside the title, as in the original layout. */}
+        <div className="max-w-xl">
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Venues</h1>
           <p className="text-sm text-gray-500 mt-1">
             Each building&apos;s color is used for its rows on the Schedule. Venues used by events can&apos;t be deleted; merge duplicates instead.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setDialog({ type: 'building' })} className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition">
+          <button onClick={() => setDialog({ type: 'building' })} className="text-sm border border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg font-medium">
             + Add building
           </button>
-          <button onClick={() => setDialog({ type: 'venue' })} className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition">
+          <button onClick={() => setDialog({ type: 'venue' })} className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium">
             + Add venue
           </button>
         </div>
@@ -79,10 +80,10 @@ export default function VenuesPage() {
           No buildings or venues yet. Add a building first, then the venues inside it.
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        <div className="space-y-4">
           {groups.map(({ building, venues }) => (
             (building || venues.length > 0) && (
-              <section key={building?.id ?? 'none'} className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+              <section key={building?.id ?? 'none'} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                 <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-gray-200" style={{ backgroundColor: building?.color || NO_BUILDING_COLOR }}>
                   <div className="font-semibold text-gray-900">
                     {building ? building.name : 'No building'}
@@ -298,20 +299,19 @@ function Field({ label, error, children }) {
   )
 }
 
-// Same text buttons as the Staff page. On a building's colored header they stay
-// dark gray (red text is hard to read there) and turn red on hover for "Remove".
-// A Delete that can't be used is plain gray, not a faded red that looks clickable.
+// On colored building headers, red text is hard to read, so "Remove" stays dark
+// until hovered. A Delete that can't be used is plain gray, not a faded red.
 function RowButton({ children, danger, onColor, ...props }) {
   const colors = onColor
     ? `text-gray-800 hover:bg-white/60 ${danger ? 'hover:text-rose-700' : ''}`
     : danger
-      ? 'text-rose-600 hover:bg-rose-50 disabled:text-gray-400 disabled:hover:bg-transparent'
-      : 'text-gray-600 hover:bg-gray-100'
+      ? 'text-rose-700 hover:bg-rose-50 disabled:text-gray-400 disabled:hover:bg-transparent'
+      : 'text-gray-700 hover:bg-black/5'
   return (
     <button
       type="button"
       {...props}
-      className={`text-sm font-medium px-2.5 py-1 rounded transition disabled:cursor-not-allowed ${colors}`}
+      className={`text-xs font-medium px-2 py-1 rounded transition disabled:cursor-not-allowed ${colors}`}
     >
       {children}
     </button>
