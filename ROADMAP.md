@@ -221,7 +221,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 ### Next up
 
 **Waiting on group mates**
-- [ ] Bacena: remove unused files and fix a seeder comment (`1-Bacena-cleanup.md`)
+- [x] Bacena: remove unused files and fix a seeder comment
 - [x] Sy: Mac launcher (`start.command`, double-click to start), Mac setup steps, and the `.env.example` database fix
 - [ ] After Bacena's commit: drop the unused `event_staff` table, the `Event::staff()` relation, and the seeder lines that fill it
 
