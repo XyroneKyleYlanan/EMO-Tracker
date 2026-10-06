@@ -1,5 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
-import { READINESS_HEX } from './ReadinessBadge'
+import { READINESS_HEX } from '../lib/readiness'
 
 const LABELS = {
   green: 'On Track',

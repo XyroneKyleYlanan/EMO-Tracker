@@ -1,21 +1,17 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import api from '../lib/api'
-
-const AuthContext = createContext(null)
+import { AuthContext } from './auth'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem('emo_user')
     return stored ? JSON.parse(stored) : null
   })
-  const [loading, setLoading] = useState(true)
+  // With a saved session, check it with the server before showing pages.
+  const [loading, setLoading] = useState(() => !!localStorage.getItem('emo_token'))
 
   useEffect(() => {
-    const token = localStorage.getItem('emo_token')
-    if (!token) {
-      setLoading(false)
-      return
-    }
+    if (!localStorage.getItem('emo_token')) return
 
     api.get('/me')
       .then((res) => {
@@ -56,10 +52,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   )
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider')
-  return ctx
 }

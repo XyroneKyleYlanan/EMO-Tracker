@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/auth'
 import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
 import TaskRow from '../components/TaskRow'

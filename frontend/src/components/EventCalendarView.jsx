@@ -1,7 +1,7 @@
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { READINESS_HEX } from './ReadinessBadge'
+import { READINESS_HEX } from '../lib/readiness'
 import { formatTimeRange } from '../lib/format'
 
 const READINESS_LABEL = {

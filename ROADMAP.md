@@ -223,6 +223,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Internal / External type on every event (client requirement): chosen in the form, its own Type column on the Schedule (External stands out), in the event panel, PDF, Excel export and Schedule search
 - [x] Analytics rebuilt around calendar periods (week, month, year, all time): every event's status (upcoming, ongoing, completed, cancelled, rescheduled), internal vs external, busiest venues; the readiness section kept, and its urgent list now opens the event
 - [x] Importer reads columns by their headers (an optional TYPE column works) and turns the sheet's reschedule pairs ("Resched to June 9" + the June 9 row) into one rescheduled event; unclear cases go to the review list
+- [x] Code checker (ESLint) clean, 13 → 0 problems: dialogs mount fresh on each opening (no flash of the previous values), pages load without an extra render, context hooks and the readiness colors moved into plain `.js` files
 - [x] 58 new tests (89 total)
 
 ### Next up

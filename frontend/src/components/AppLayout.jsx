@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/auth'
 import ChangePasswordDialog from './ChangePasswordDialog'
 import {
   CalendarIcon,
@@ -185,7 +185,7 @@ export default function AppLayout() {
         </div>
       </nav>
 
-      <ChangePasswordDialog open={pwOpen} onClose={() => setPwOpen(false)} />
+      {pwOpen && <ChangePasswordDialog open onClose={() => setPwOpen(false)} />}
     </div>
   )
 }

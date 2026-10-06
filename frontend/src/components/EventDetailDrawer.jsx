@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import api from '../lib/api'
 import { downloadFile } from '../lib/download'
-import { useAuth } from '../contexts/AuthContext'
-import { useToast } from '../contexts/ToastContext'
+import { useAuth } from '../contexts/auth'
+import { useToast } from '../contexts/toast'
 import { ReadinessReason } from './ReadinessBadge'
 import EventBadges from './EventBadges'
 import TaskRow from './TaskRow'
@@ -34,16 +34,21 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
   const [uploadError, setUploadError] = useState(null)
   const [generatingReport, setGeneratingReport] = useState(false)
 
-  function fetchEvent() {
-    if (!eventId) return
-    setLoading(true)
+  // The drawer is keyed by event, so it starts out loading; refreshes show the loader again.
+  function loadEvent() {
     api.get(`/events/${eventId}`)
       .then((res) => setEvent(res.data.event))
       .finally(() => setLoading(false))
   }
 
+  function fetchEvent() {
+    if (!eventId) return
+    setLoading(true)
+    loadEvent()
+  }
+
   useEffect(() => {
-    fetchEvent()
+    if (eventId) loadEvent()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId])
 
@@ -392,14 +397,17 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
         </div>
       </div>
 
-      <TaskFormDialog
-        open={taskFormOpen}
-        eventId={eventId}
-        eventLastDay={event?.end_date || event?.event_date}
-        task={editingTask}
-        onClose={() => { setTaskFormOpen(false); setEditingTask(null); }}
-        onSaved={handleTaskSaved}
-      />
+      {taskFormOpen && (
+        <TaskFormDialog
+          key={editingTask?.id ?? 'new'}
+          open
+          eventId={eventId}
+          eventLastDay={event?.end_date || event?.event_date}
+          task={editingTask}
+          onClose={() => { setTaskFormOpen(false); setEditingTask(null); }}
+          onSaved={handleTaskSaved}
+        />
+      )}
     </>
   )
 }

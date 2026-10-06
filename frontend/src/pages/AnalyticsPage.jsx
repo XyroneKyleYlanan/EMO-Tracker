@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/auth'
 import StatCard from '../components/StatCard'
 import EventBadges from '../components/EventBadges'
 import ReadinessDonut from '../components/ReadinessDonut'
@@ -31,10 +31,22 @@ export default function AnalyticsPage() {
   const [selectedId, setSelectedId] = useState(null)
   const [refresh, setRefresh] = useState(0)
 
+  // Show the loading state from the moment the period changes (or the drawer
+  // changed something), then fetch.
+  function choosePeriod(value) {
+    if (value === period) return
+    setLoading(true)
+    setPeriod(value)
+  }
+
+  function reload() {
+    setLoading(true)
+    setRefresh((n) => n + 1)
+  }
+
   useEffect(() => {
     // Ignore answers for a period the user has already switched away from.
     let current = true
-    setLoading(true)
     api.get(`/analytics?period=${period}`)
       .then((res) => { if (current) setData(res.data) })
       .finally(() => { if (current) setLoading(false) })
@@ -55,7 +67,7 @@ export default function AnalyticsPage() {
           {PERIODS.map((p) => (
             <button
               key={p.value}
-              onClick={() => setPeriod(p.value)}
+              onClick={() => choosePeriod(p.value)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium whitespace-nowrap transition ${
                 period === p.value ? 'bg-neu-green text-white' : 'text-gray-600 hover:bg-gray-100'
               }`}
@@ -165,7 +177,7 @@ export default function AnalyticsPage() {
         key={selectedId}
         eventId={selectedId}
         onClose={() => setSelectedId(null)}
-        onChanged={() => setRefresh((n) => n + 1)}
+        onChanged={reload}
         canEdit={false}
         canDelete={false}
       />

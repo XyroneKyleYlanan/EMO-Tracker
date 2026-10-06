@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
-import { useToast } from '../contexts/ToastContext'
+import { useAuth } from '../contexts/auth'
+import { useToast } from '../contexts/toast'
 import UserFormDialog from '../components/UserFormDialog'
 
 const ROLE_LABELS = {
@@ -27,15 +27,19 @@ export default function StaffManagementPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
 
-  function fetchUsers() {
-    setLoading(true)
+  function loadUsers() {
     api.get('/users')
       .then((res) => setUsers(res.data.users || []))
       .finally(() => setLoading(false))
   }
 
+  function fetchUsers() {
+    setLoading(true)
+    loadUsers()
+  }
+
   useEffect(() => {
-    fetchUsers()
+    loadUsers()
   }, [])
 
   const filtered = users.filter((u) => {
@@ -205,12 +209,15 @@ export default function StaffManagementPage() {
         </div>
       )}
 
-      <UserFormDialog
-        open={formOpen}
-        user={editingUser}
-        onClose={() => { setFormOpen(false); setEditingUser(null); }}
-        onSaved={handleSaved}
-      />
+      {formOpen && (
+        <UserFormDialog
+          key={editingUser?.id ?? 'new'}
+          open
+          user={editingUser}
+          onClose={() => { setFormOpen(false); setEditingUser(null); }}
+          onSaved={handleSaved}
+        />
+      )}
     </div>
   )
 }

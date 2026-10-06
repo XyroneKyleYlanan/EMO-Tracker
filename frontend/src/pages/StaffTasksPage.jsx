@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from '../contexts/auth'
 import StatCard from '../components/StatCard'
 import TaskRow from '../components/TaskRow'
 
@@ -10,15 +10,19 @@ export default function StaffTasksPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('open')
   
-  function fetchTasks() {
-    setLoading(true)
+  function loadTasks() {
     api.get('/my-tasks')
       .then((res) => setData(res.data))
       .finally(() => setLoading(false))
   }
 
+  function fetchTasks() {
+    setLoading(true)
+    loadTasks()
+  }
+
   useEffect(() => {
-    fetchTasks()
+    loadTasks()
   }, [])
 
   if (loading || !data) {

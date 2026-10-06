@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
-import { useToast } from '../contexts/ToastContext'
+import { useAuth } from '../contexts/auth'
+import { useToast } from '../contexts/toast'
 import EventCalendarView from '../components/EventCalendarView'
 import EventListView from '../components/EventListView'
 import EventDetailDrawer from '../components/EventDetailDrawer'
@@ -37,16 +37,26 @@ export default function EventsPage() {
     return () => mq.removeEventListener('change', handler)
   }, [])
 
-  function fetchEvents() {
-    setLoading(true)
+  function loadEvents() {
     const params = !canFilter ? { mine: 1 } : preparedOnly ? { prepared: 1 } : {}
     api.get('/events', { params })
       .then((res) => setEvents(res.data.events || []))
       .finally(() => setLoading(false))
   }
 
+  function fetchEvents() {
+    setLoading(true)
+    loadEvents()
+  }
+
+  function choosePrepared(value) {
+    if (value === preparedOnly) return
+    setLoading(true)
+    setPreparedOnly(value)
+  }
+
   useEffect(() => {
-    fetchEvents()
+    loadEvents()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preparedOnly])
 
@@ -113,8 +123,8 @@ export default function EventsPage() {
         </div>
         {canFilter && (
           <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 w-fit">
-            <FilterToggle active={preparedOnly} onClick={() => setPreparedOnly(true)} label="EMO-prepared" />
-            <FilterToggle active={!preparedOnly} onClick={() => setPreparedOnly(false)} label="All events" />
+            <FilterToggle active={preparedOnly} onClick={() => choosePrepared(true)} label="EMO-prepared" />
+            <FilterToggle active={!preparedOnly} onClick={() => choosePrepared(false)} label="All events" />
           </div>
         )}
       </div>

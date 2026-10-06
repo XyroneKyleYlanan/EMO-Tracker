@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
-import { useToast } from '../contexts/ToastContext'
+import { useToast } from '../contexts/toast'
 
 const NO_BUILDING_COLOR = '#E5E7EB'
 

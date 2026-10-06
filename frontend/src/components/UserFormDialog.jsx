@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import api from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
-import { useToast } from '../contexts/ToastContext'
+import { useAuth } from '../contexts/auth'
+import { useToast } from '../contexts/toast'
 
 const EMPTY = {
   name: '',
@@ -11,28 +11,22 @@ const EMPTY = {
   is_active: true,
 }
 
+// Mount this only while it's open, so every opening starts from the user it was given.
 export default function UserFormDialog({ open, user, onClose, onSaved }) {
   const { user: currentUser } = useAuth()
   const toast = useToast()
   const isSelf = !!user && user.id === currentUser.id
-  const [form, setForm] = useState(EMPTY)
-  const [errors, setErrors] = useState({})
-  const [submitting, setSubmitting] = useState(false)
-
-  useEffect(() => {
-    if (user) {
-      setForm({
+  const [form, setForm] = useState(() => user
+    ? {
         name: user.name || '',
         email: user.email || '',
         password: '',
         role: user.role || 'staff',
         is_active: user.is_active ?? true,
-      })
-    } else {
-      setForm(EMPTY)
-    }
-    setErrors({})
-  }, [user, open])
+      }
+    : EMPTY)
+  const [errors, setErrors] = useState({})
+  const [submitting, setSubmitting] = useState(false)
 
   if (!open) return null
 

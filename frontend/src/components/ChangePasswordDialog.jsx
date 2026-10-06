@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import api from '../lib/api'
-import { useToast } from '../contexts/ToastContext'
+import { useToast } from '../contexts/toast'
 
+// Mount this only while it's open, so every opening starts with empty fields.
 export default function ChangePasswordDialog({ open, onClose }) {
   const toast = useToast()
   const [currentPassword, setCurrentPassword] = useState('')
@@ -9,15 +10,6 @@ export default function ChangePasswordDialog({ open, onClose }) {
   const [confirm, setConfirm] = useState('')
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
-
-  useEffect(() => {
-    if (open) {
-      setCurrentPassword('')
-      setNewPassword('')
-      setConfirm('')
-      setErrors({})
-    }
-  }, [open])
 
   if (!open) return null
 

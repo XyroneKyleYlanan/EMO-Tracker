@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
 import { downloadFile } from '../lib/download'
-import { useAuth } from '../contexts/AuthContext'
-import { useToast } from '../contexts/ToastContext'
+import { useAuth } from '../contexts/auth'
+import { useToast } from '../contexts/toast'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import EventBadges, { RescheduledNote } from '../components/EventBadges'
@@ -31,16 +31,26 @@ export default function SchedulePage() {
   // Only the latest request may update the page, so switching years quickly
   // can't leave one year's events showing under another year's tab.
   const latestRequest = useRef(0)
-  function fetchSchedule() {
+  function loadSchedule() {
     const request = ++latestRequest.current
-    setLoading(true)
     api.get('/schedule', { params: { year } })
       .then((res) => { if (request === latestRequest.current) setData(res.data) })
       .finally(() => { if (request === latestRequest.current) setLoading(false) })
   }
 
+  function fetchSchedule() {
+    setLoading(true)
+    loadSchedule()
+  }
+
+  function chooseYear(value) {
+    if (value === year) return
+    setLoading(true)
+    setYear(value)
+  }
+
   useEffect(() => {
-    fetchSchedule()
+    loadSchedule()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
@@ -142,7 +152,7 @@ export default function SchedulePage() {
             <div className="relative">
               <select
                 value={olderYears.includes(year) ? year : ''}
-                onChange={(e) => e.target.value && setYear(Number(e.target.value))}
+                onChange={(e) => e.target.value && chooseYear(Number(e.target.value))}
                 aria-label="Past years"
                 className={`appearance-none pl-3 pr-8 py-1.5 rounded-md text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-neu-green ${
                   olderYears.includes(year) ? 'bg-neu-green text-white' : 'bg-transparent text-gray-600 hover:bg-gray-100'
@@ -161,7 +171,7 @@ export default function SchedulePage() {
           {recentYears.map((y) => (
             <button
               key={y}
-              onClick={() => setYear(y)}
+              onClick={() => chooseYear(y)}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
                 y === year ? 'bg-neu-green text-white' : 'text-gray-600 hover:bg-gray-100'
               }`}

@@ -13,8 +13,18 @@ const EMPTY = {
   assigned_to: '',
 }
 
+// Mount this only while it's open, so every opening starts from the task it was given.
 export default function TaskFormDialog({ open, eventId, eventLastDay, task, onClose, onSaved }) {
-  const [form, setForm] = useState(EMPTY)
+  const [form, setForm] = useState(() => task
+    ? {
+        name: task.name || '',
+        description: task.description || '',
+        due_date: task.due_date ? task.due_date.slice(0, 10) : '',
+        status: task.status || 'pending',
+        priority: task.priority || 'medium',
+        assigned_to: task.assigned_to || '',
+      }
+    : EMPTY)
   const [staff, setStaff] = useState([])
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
@@ -26,22 +36,6 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
       setStaff(res.data.users || [])
     })
   }, [open])
-
-  useEffect(() => {
-    if (task) {
-      setForm({
-        name: task.name || '',
-        description: task.description || '',
-        due_date: task.due_date ? task.due_date.slice(0, 10) : '',
-        status: task.status || 'pending',
-        priority: task.priority || 'medium',
-        assigned_to: task.assigned_to || '',
-      })
-    } else {
-      setForm(EMPTY)
-    }
-    setErrors({})
-  }, [task, open])
 
   if (!open) return null
 
