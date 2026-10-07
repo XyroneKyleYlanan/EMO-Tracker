@@ -71,6 +71,9 @@ class AuthController extends Controller
 
         $user->update(['password' => Hash::make($data['new_password'])]);
 
-        return response()->json(['message' => 'Password changed successfully.']);
+        // Anyone still signed in elsewhere with the old password is signed out.
+        $user->signOutEverywhere(except: $user->currentAccessToken());
+
+        return response()->json(['message' => 'Password changed. Your other devices have been signed out.']);
     }
 }

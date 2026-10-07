@@ -69,6 +69,12 @@ class Event extends Model
         return $this->hasMany(Document::class);
     }
 
+    // Where the event's uploaded files are kept (on the private "local" disk).
+    public function documentsFolder(): string
+    {
+        return "documents/event_{$this->id}";
+    }
+
     public function getReadinessAttribute(): string
     {
         return EventClassifier::classify($this);

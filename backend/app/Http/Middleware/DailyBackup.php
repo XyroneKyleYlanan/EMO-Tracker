@@ -14,7 +14,8 @@ use function Illuminate\Support\defer;
 /**
  * Makes one backup a day, the first time the app is used that day, after the
  * response is sent. It works however the app was started, and a failed backup
- * never breaks the request: it's logged and retried an hour later.
+ * never breaks the request: it's logged, shown on the admin's Home page, and
+ * retried an hour later.
  */
 class DailyBackup
 {

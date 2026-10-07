@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Services\VenueClashes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class EventController extends Controller
@@ -116,7 +117,12 @@ class EventController extends Controller
 
     public function destroy(Event $event): JsonResponse
     {
+        $files = $event->documents()->pluck('file_path')->all();
         $event->delete();
+
+        // The database removes the event's documents; their files go with them.
+        Storage::disk('local')->delete($files);
+        Storage::disk('local')->deleteDirectory($event->documentsFolder());
 
         return response()->json(['message' => 'Event deleted.']);
     }

@@ -3,6 +3,7 @@
 use App\Services\Backup;
 use App\Services\ScheduleImport;
 use App\Services\ScheduleTidy;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,35 @@ Artisan::command('backup:restore {file? : Backup file name, snapshot name, or pa
     $this->callSilently('migrate', ['--force' => true]);
     $this->info('Restored. Everyone will need to log in again.');
 })->purpose('Restore a backup (replaces all current data)');
+
+// Run by start.command and start.bat each time the app starts, so a computer
+// that just got a new version of the code gets the matching database changes.
+Artisan::command('app:update-database', function () {
+    $migrator = app('migrator');
+    try {
+        $existing = $migrator->repositoryExists();
+    } catch (QueryException) {
+        $existing = false; // No database yet: migrating creates it.
+    }
+
+    if ($existing) {
+        $files = $migrator->getMigrationFiles([database_path('migrations'), ...$migrator->paths()]);
+        if (! array_diff(array_keys($files), $migrator->getRepository()->getRan())) {
+            return $this->info('The database is up to date.');
+        }
+
+        // An update can change or remove data, so there's a way back first.
+        try {
+            $this->info('Backup saved before updating: '.basename(Backup::create('before-update-'.now()->format('Y-m-d_His'))));
+        } catch (Throwable $e) {
+            $this->error("Couldn't save a backup, so the database wasn't updated: {$e->getMessage()}");
+
+            return 1;
+        }
+    }
+
+    return $this->call('migrate', ['--force' => true]);
+})->purpose('Apply new database changes, saving a backup first');
 
 Artisan::command('schedule:import {file : The schedule spreadsheet (.xlsx)} {--dry-run : Check the file without saving anything}', function () {
     $file = $this->argument('file');

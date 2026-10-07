@@ -78,8 +78,10 @@ class UserController extends Controller
 
         $user->update($data);
 
-        if (! $user->is_active) {
-            $user->tokens()->delete();
+        // A deactivated account, or one given a new password, is signed out
+        // everywhere (an admin resetting their own stays signed in here).
+        if (! $user->is_active || isset($data['password'])) {
+            $user->signOutEverywhere(except: $user->is($request->user()) ? $request->user()->currentAccessToken() : null);
         }
 
         return response()->json([

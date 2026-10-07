@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -24,18 +25,26 @@ class DocumentController extends Controller
 
     public function store(Request $request, Event $event): JsonResponse
     {
+        // PHP turns away a file over its own limit before the app sees it.
+        $upload = $request->file('file');
+        $overLimit = $upload instanceof UploadedFile
+            && in_array($upload->getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true);
+
         $request->validate([
             'file' => [
                 'required',
                 'file',
                 'mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png',
-                'max:10240',
+                'max:'.Document::MAX_UPLOAD_KB,
             ],
+        ], [
+            'file.uploaded' => $overLimit ? Document::tooLargeMessage() : "The file didn't upload completely. Please try again.",
+            'file.max' => Document::tooLargeMessage(),
+            'file.mimes' => "This kind of file isn't accepted. Use a PDF, Word, Excel, JPG or PNG file.",
         ]);
 
         $file = $request->file('file');
-        $folder = "documents/event_{$event->id}";
-        $path = $file->store($folder, 'local');
+        $path = $file->store($event->documentsFolder(), 'local');
 
         $doc = $event->documents()->create([
             'uploaded_by' => $request->user()->id,

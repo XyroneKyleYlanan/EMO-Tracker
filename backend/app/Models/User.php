@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class User extends Authenticatable
 {
@@ -49,6 +50,16 @@ class User extends Authenticatable
     public function isStaff(): bool
     {
         return $this->role === 'staff';
+    }
+
+    /**
+     * Signs the account out on every device, optionally keeping the one in use.
+     */
+    public function signOutEverywhere(mixed $except = null): void
+    {
+        $this->tokens()
+            ->when($except instanceof PersonalAccessToken, fn ($tokens) => $tokens->whereKeyNot($except->getKey()))
+            ->delete();
     }
 
     public function eventsCreated(): HasMany

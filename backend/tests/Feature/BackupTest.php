@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use RuntimeException;
 use Tests\TestCase;
+use Throwable;
+use ZipArchive;
 
 // DatabaseMigrations rather than RefreshDatabase: restoring drops and recreates
 // tables, which can't happen inside the test's wrapping transaction.
@@ -144,6 +146,79 @@ class BackupTest extends TestCase
         Sanctum::actingAs(User::factory()->admin()->create());
 
         $this->getJson('/api/events')->assertOk();
+    }
+
+    public function test_the_admin_home_shows_the_last_backup_and_any_failure(): void
+    {
+        Sanctum::actingAs(User::factory()->admin()->create());
+        $this->getJson('/api/dashboard/admin')->assertOk()->assertJsonPath('backup.last_at', null)->assertJsonPath('backup.failed', null);
+
+        $made = now()->setTime(8, 15);
+        touch(Backup::create(), $made->timestamp);
+        clearstatcache();
+        $this->getJson('/api/dashboard/admin')
+            ->assertJsonPath('backup.last_at', $made->toIso8601String())
+            ->assertJsonPath('backup.failed', null);
+
+        $folder = $this->dir;
+        config(['backup.path' => '/dev/null/not-a-folder']);
+        try {
+            Backup::create();
+        } catch (Throwable) {
+        }
+        $this->assertStringContainsString('not-a-folder', $this->getJson('/api/dashboard/admin')->json('backup.failed.message'));
+
+        // Working again clears the warning.
+        config(['backup.path' => $folder]);
+        Backup::create();
+        $this->getJson('/api/dashboard/admin')->assertJsonPath('backup.failed', null);
+
+        Sanctum::actingAs(User::factory()->officer()->create());
+        $this->getJson('/api/dashboard/officer')->assertOk()->assertJsonMissingPath('backup');
+    }
+
+    public function test_updating_the_database_saves_a_backup_first(): void
+    {
+        $this->artisan('app:update-database')->expectsOutput('The database is up to date.')->assertSuccessful();
+        $this->assertSame([], Backup::all());
+
+        // A new version of the code arrives with a database change.
+        $migrations = $this->dir.'/new-version';
+        File::ensureDirectoryExists($migrations);
+        File::put($migrations.'/2099_01_01_000000_create_update_checks_table.php', <<<'PHP'
+            <?php
+
+            use Illuminate\Database\Migrations\Migration;
+            use Illuminate\Database\Schema\Blueprint;
+            use Illuminate\Support\Facades\Schema;
+
+            return new class extends Migration
+            {
+                public function up(): void
+                {
+                    Schema::create('update_checks', fn (Blueprint $table) => $table->id());
+                }
+
+                public function down(): void
+                {
+                    Schema::dropIfExists('update_checks');
+                }
+            };
+            PHP);
+        $this->app['migrator']->path($migrations);
+
+        $this->artisan('app:update-database')->assertSuccessful();
+
+        $this->assertTrue(Schema::hasTable('update_checks'));
+        $this->assertCount(1, Backup::all());
+        $this->assertStringContainsString('-before-update-', Backup::all()[0]);
+
+        $zip = new ZipArchive;
+        $zip->open(Backup::all()[0]);
+        $tables = array_column(json_decode($zip->getFromName('database.json'), true)['tables'], 'name');
+        $zip->close();
+        $this->assertContains('events', $tables);
+        $this->assertNotContains('update_checks', $tables, 'the backup is from before the change');
     }
 
     public function test_restore_rejects_files_that_are_not_backups(): void

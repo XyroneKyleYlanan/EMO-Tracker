@@ -21,7 +21,7 @@ Route::get('/ping', function () {
     ]);
 });
 
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
@@ -53,13 +53,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/tasks/{task}', [TaskController::class, 'update']);
         Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
         Route::post('/events/{event}/documents', [DocumentController::class, 'store']);
-        Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
         Route::get('/users', [UserController::class, 'index']);
     });
 
     // The admin owns the schedule: event details (date, time, venue, ...) are admin-only.
-    // Officers handle preparation: tasks, documents and reports.
+    // Officers handle preparation: tasks, documents and reports. Documents are
+    // records, so once uploaded only the admin can delete them.
     Route::middleware('role:admin')->group(function () {
+        Route::delete('/documents/{document}', [DocumentController::class, 'destroy']);
         Route::post('/events', [EventController::class, 'store']);
         Route::put('/events/{event}', [EventController::class, 'update']);
         Route::patch('/events/{event}', [EventController::class, 'update']);

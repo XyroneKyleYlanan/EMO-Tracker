@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RuntimeException;
+use Throwable;
 use ZipArchive;
 
 /**
@@ -21,14 +25,46 @@ class Backup
 
     private const DOCUMENTS = 'documents';
 
+    // Set while backups are failing, so the admin's Home page can say so.
+    private const FAILED = 'backup:failed';
+
     /**
      * A named snapshot (e.g. "fresh-import") is kept until someone deletes it;
      * plain daily backups are cleaned up after the newest 14.
      */
     public static function create(?string $name = null): string
     {
+        try {
+            $path = self::write($name);
+        } catch (Throwable $e) {
+            Cache::put(self::FAILED, ['at' => now()->toIso8601String(), 'message' => $e->getMessage()], now()->addDays(30));
+            throw $e;
+        }
+        Cache::forget(self::FAILED);
+
+        return $path;
+    }
+
+    /**
+     * When this database was last backed up, and why the last try failed (if it did).
+     */
+    public static function status(): array
+    {
+        $prefixes = [self::prefix(), 'emo-snapshot-'.self::database().'-'];
+        $latest = collect(self::all())->first(fn ($file) => Str::startsWith(basename($file), $prefixes));
+
+        return [
+            'daily' => (bool) config('backup.daily'),
+            'last_at' => $latest ? Carbon::createFromTimestamp(filemtime($latest), config('app.timezone'))->toIso8601String() : null,
+            'failed' => Cache::get(self::FAILED),
+        ];
+    }
+
+    private static function write(?string $name): string
+    {
         $dir = config('backup.path');
-        if (! is_dir($dir) && ! mkdir($dir, 0755, true) && ! is_dir($dir)) {
+        // @: report which folder failed, not PHP's bare "mkdir(): Not a directory".
+        if (! is_dir($dir) && ! @mkdir($dir, 0755, true) && ! is_dir($dir)) {
             throw new RuntimeException("Can't create the backup folder: {$dir}");
         }
 

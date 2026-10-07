@@ -132,14 +132,73 @@ class AccessControlTest extends TestCase
         $this->putJson("/api/tasks/{$task->id}", ['name' => 'Renamed', 'assigned_to' => $staff->id])->assertOk();
     }
 
-    public function test_login_is_rate_limited(): void
+    public function test_login_is_rate_limited_for_each_account(): void
     {
         $user = User::factory()->create();
+        $other = User::factory()->create();
 
         for ($i = 0; $i < 10; $i++) {
             $this->postJson('/api/login', ['email' => $user->email, 'password' => 'wrong'])->assertStatus(422);
         }
 
-        $this->postJson('/api/login', ['email' => $user->email, 'password' => 'wrong'])->assertStatus(429);
+        $this->postJson('/api/login', ['email' => strtoupper($user->email), 'password' => 'wrong'])
+            ->assertStatus(429)
+            ->assertJsonPath('message', 'Too many login attempts. Wait a minute, then try again.');
+
+        // Someone else signing in from the same place isn't locked out.
+        $this->postJson('/api/login', ['email' => $other->email, 'password' => 'password'])->assertOk();
+    }
+
+    // Every device reaches Laravel through the frontend server on the same
+    // computer, which passes on the device's own address.
+    public function test_login_limit_is_separate_for_each_device(): void
+    {
+        $user = User::factory()->create();
+        $phone = ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '192.168.1.20'];
+        $laptop = ['REMOTE_ADDR' => '127.0.0.1', 'HTTP_X_FORWARDED_FOR' => '192.168.1.30'];
+
+        for ($i = 0; $i < 10; $i++) {
+            $this->withServerVariables($phone)->postJson('/api/login', ['email' => $user->email, 'password' => 'wrong']);
+        }
+        $this->withServerVariables($phone)->postJson('/api/login', ['email' => $user->email, 'password' => 'password'])->assertStatus(429);
+
+        $this->withServerVariables($laptop)->postJson('/api/login', ['email' => $user->email, 'password' => 'password'])->assertOk();
+    }
+
+    public function test_changing_your_password_signs_out_your_other_devices(): void
+    {
+        $user = User::factory()->create();
+        $laptop = $user->createToken('laptop')->plainTextToken;
+        $user->createToken('phone');
+
+        $this->withHeader('Authorization', "Bearer {$laptop}")
+            ->postJson('/api/change-password', [
+                'current_password' => 'password',
+                'new_password' => 'a-new-password',
+                'new_password_confirmation' => 'a-new-password',
+            ])
+            ->assertOk()
+            ->assertJsonPath('message', 'Password changed. Your other devices have been signed out.');
+
+        $this->assertSame(['laptop'], $user->tokens()->pluck('name')->all());
+    }
+
+    public function test_an_admin_giving_someone_a_new_password_signs_them_out(): void
+    {
+        $staff = User::factory()->staff()->create();
+        $staff->createToken('phone');
+        $admin = User::factory()->admin()->create();
+        $here = $admin->createToken('laptop')->plainTextToken;
+        $admin->createToken('old-phone');
+
+        $this->withHeader('Authorization', "Bearer {$here}")->putJson("/api/users/{$staff->id}", ['name' => 'Renamed'])->assertOk();
+        $this->assertSame(1, $staff->tokens()->count(), 'other edits keep them signed in');
+
+        $this->putJson("/api/users/{$staff->id}", ['password' => 'a-new-password'])->assertOk();
+        $this->assertSame(0, $staff->tokens()->count());
+
+        // Admins resetting their own password stay signed in on this device.
+        $this->putJson("/api/users/{$admin->id}", ['password' => 'another-password'])->assertOk();
+        $this->assertSame(['laptop'], $admin->tokens()->pluck('name')->all());
     }
 }

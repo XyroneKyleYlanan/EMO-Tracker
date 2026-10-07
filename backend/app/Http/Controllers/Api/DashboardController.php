@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Task;
+use App\Services\Backup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,8 @@ class DashboardController extends Controller
 
     public function admin(Request $request): JsonResponse
     {
-        return response()->json($this->overview($request));
+        // The admin also sees whether the automatic backups are working.
+        return response()->json([...$this->overview($request), 'backup' => Backup::status()]);
     }
 
     public function officer(Request $request): JsonResponse
