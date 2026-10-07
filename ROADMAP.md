@@ -229,6 +229,21 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] "Overlap" and "External" labels use the same pill style as the status badges (sentence case, no icon) instead of outlined capitals
 - [x] Double-booking warning (`VenueClashes`): same venue and room (or the whole venue), overlapping days and times (no time = all day; cancelled and free-text places don't count). The event form warns live while the venue, date and time are chosen (plus a note by the Save button), the event panel shows the clash to everyone, and the Schedule marks upcoming clashes "Overlap" (with the names on hover, and searchable). A warning, not a block: some overlaps are on purpose. The EMO's real 2026 data has 13 clashing pairs, 9 of them upcoming
 - [x] 70 new tests (101 total)
+- [x] Pre-defense audit fixes (2026-10-07):
+  - Login limit counts each account on each device (10 tries a minute), so one person's typos no longer lock the whole room out; a plain "Too many login attempts" message
+  - 10 MB uploads really work: `php artisan serve` (so both launchers too) now starts PHP with room for them, where PHP's own limit was 2 MB. Files that are too big or the wrong type get a plain message, and big files are caught in the browser before uploading
+  - Debug output off (`APP_DEBUG=false`, now also the default in `.env.example`); something deleted in another window gives "This item no longer exists..." instead of a developer message
+  - Every page explains a failed load ("Can't reach the EMO Tracker server" or "Something went wrong") with a Try again button, instead of loading forever or showing an empty schedule. A page that crashes shows a message with the menu still working, instead of a blank screen (Analytics did this)
+  - Documents: only the admin deletes them (officers still upload); deleting an event also deletes its files
+  - Changing your password signs out your other devices; an admin giving someone a new password signs them out
+  - Admin Home shows when the last backup was made, or a warning if the automatic backup is failing
+  - Launchers apply database changes on start (`php artisan app:update-database`, which saves a backup first); `start.bat` finds Laragon's PHP itself and checks for PHP 8.3+; the Mac launcher no longer prints a blank WiFi address
+  - Events list: upcoming events first, past ones behind "Show past events"
+  - Home's "This week" is now "Next 7 days" (Analytics' "This Week" is Sunday to Saturday); full-name greeting; plurals on the Staff page; neutral login placeholder
+  - Escape closes the top panel or dialog; form labels are linked to their fields; faint gray text darkened
+  - Tests no longer write errors into the real log; npm advisory fixed (0 left); Pint clean
+  - Real data: removed 3 sample events, 7 sample tasks and the "Sample" building (snapshot first: `before-sample-cleanup`)
+- [x] 9 new tests (110 total)
 
 ### Next up
 
@@ -242,9 +257,13 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [ ] Log in as the real admin and deactivate the 10 demo accounts (all use `password123`, including `admin@emo.test`)
 - [ ] Optional: a terminal command to reset a password, in case every admin is locked out
 
-**Client demo**
-- [ ] Mark 3–4 real upcoming events "EMO prepares" and add their real tasks, with owners and due dates
-- [ ] Ask the client: are the 13 same-venue overlaps in the 2026 sheet real conflicts? Should "CON" and "College of Nursing" (and similar) be one department? Are odd imported times typos (e.g. "Recognition/Dry Run" at 1:30 AM)?
+**Docs (group mates)**
+- [ ] README: the "Resetting Demo Data (before defense)" section must use a separate demo database (as written, it wipes the real schedule); add update steps; refresh the features and roles (officers don't create events; staff see the whole Schedule)
+- [ ] OVERVIEW.md and CAPSTONE_PAPER_REFERENCE.md: demo data is now 38 events (not 5 events, 18 tasks); only the admin creates, edits and deletes events; only the admin deletes documents
+
+**Capstone 2 defense (1st week of November, on the MacBook, with the EMO's shared data)**
+- [ ] Mark 3–4 real upcoming events "EMO prepares" and add their real tasks, with owners and due dates. Tanging Pagtitipon and Medical Technology Enhancement Program are already marked but have no tasks since the sample-task cleanup
+- [ ] Data fixes are left to the EMO after the install (they'll bring their latest sheet): which events are external, odd imported times (e.g. "Recognition/Dry Run" at 1:30 AM), the 11 old "Resched/Moved" rows (the importer merges these), the 13 same-venue overlaps, department synonyms like "CON" / "College of Nursing"
 
 **Features (check with the adviser first)**
 - [x] Venue double-booking warning: warn (not block) when an event overlaps another booking in the same venue and room, and mark clashes on the Schedule
@@ -252,7 +271,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [ ] Still open: the user-testing survey format (ISO 25010 or SUS?); email notifications (the client asked; needs internet access and a sending account); whether comments/tagging and an audit trail belong in Capstone 2 or future work
 
 **Pilot and user testing**
-- [ ] Install on an EMO office PC, restore the real data, and point `BACKUP_PATH` at a USB drive
+- [ ] Install on the EMO's Windows laptop with their latest data, and point `BACKUP_PATH` at a USB drive or second disk. Try `start.bat` there first: finding Laragon's PHP and applying database changes are new and haven't run on Windows yet. Also check uploads up to 10 MB
 - [ ] Let the EMO use it for 1–2 weeks, then run the survey (test scenarios and questionnaire once the format is confirmed)
 
 ---
@@ -274,3 +293,4 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - 2026-10-02: Refined the readiness rules after an event 14 days away with one task in progress showed Critical (0% done is under 40%). Old rules: Critical if under 40% done, 2 days or less away, or most tasks unassigned; At Risk if under 70% done, 6 days or less away, or any task unassigned, however far away the event was. New rules: Critical if a task is overdue, or 2 days or less away with work left, or 7 days or less away and under 40% done or most open tasks without an owner; At Risk if 14 days or less away and under 70% done, or an open task without an owner; done tasks no longer need an owner. The "do not revisit" decisions (priority order, 0 tasks = At Risk, all done = On Track, past = Completed) are unchanged. Docs update handed to Jean (`4-Jean-docs.md`); the paper needs the same wording.
 - 2026-10-06: Dropped the `event_staff` table (an event's People are its task owners). Snapshot taken first: `php artisan backup:restore before-drop-event-staff`. `backup:restore` now runs migrations after restoring, so older snapshots come back in the current structure.
 - 2026-10-06: Client feedback: remove budget; know whether an event is cancelled, ongoing or rescheduled; classify every event Internal or External, visible on the Schedule; analytics on event statuses. Professor allowed more than 4 features. Decisions: only upcoming/completed/cancelled are stored and "ongoing" is computed, so everything listing events that aren't over keeps including ongoing ones; completion (and the task lock) moved from midnight to the event's end time; "Rescheduled" is a mark on an event that moved (it keeps its tasks, documents and readiness) rather than a status or a second row like the EMO's sheet. Existing events default to Internal until the EMO marks the external ones. Snapshot before the migration: `before-status-and-type`. The current real data still has the sheet's old-date reschedule rows; the final import will merge them.
+- 2026-10-07: Pre-defense audit, then fixes (listed in Phase 10). Decisions: the Capstone 2 defense runs on the MacBook with the EMO's shared data (not confidential; the EMO gives its latest data at install time), and daily use is on the EMO's Windows laptop. Documents are records: officers upload, only the admin deletes. The repo is public, so `password123` is public too; acceptable while only demo and shared data are used, but the real accounts replace the demo ones before the EMO uses it. Data fixes (external events, odd times, old reschedule rows) are left to the EMO after the install. Snapshot before removing the sample leftovers: `php artisan backup:restore before-sample-cleanup`.
