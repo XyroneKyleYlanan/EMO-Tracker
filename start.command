@@ -18,6 +18,15 @@ if ! mysqladmin ping -u root >/dev/null 2>&1; then
   exit 1
 fi
 
+# A new version of the code may need database changes; they're applied here,
+# after a backup. Usually this just says the database is up to date.
+if ! (cd backend && php artisan app:update-database); then
+  echo ""
+  echo " The database couldn't be updated, so EMO Tracker wasn't started."
+  echo " The message above says why."
+  exit 1
+fi
+
 # Control + C or closing the window stops both servers together.
 trap 'kill 0' INT TERM HUP EXIT
 
@@ -27,10 +36,15 @@ trap 'kill 0' INT TERM HUP EXIT
 sleep 5
 open http://localhost:5173
 
+# The address other devices on the same network use (WiFi is usually en0).
+LAN_IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null)
+
 echo ""
 echo "  Frontend: http://localhost:5173"
 echo "  Backend:  http://127.0.0.1:8000"
-echo "  On the same WiFi: http://$(ipconfig getifaddr en0):5173"
+if [ -n "$LAN_IP" ]; then
+  echo "  On the same WiFi: http://$LAN_IP:5173"
+fi
 echo ""
 echo "  Press Control + C (or close this window) to stop the app."
 echo ""
