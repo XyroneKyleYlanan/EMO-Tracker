@@ -74,7 +74,8 @@ function ToastItem({ toast, onDismiss }) {
       </div>
       <button
         onClick={onDismiss}
-        className="text-gray-400 hover:text-gray-700 p-0.5 flex-shrink-0"
+        aria-label="Dismiss"
+        className="text-gray-500 hover:text-gray-800 p-0.5 flex-shrink-0"
       >
         ✕
       </button>

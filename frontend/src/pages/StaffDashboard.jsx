@@ -6,6 +6,7 @@ import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
 import TaskRow from '../components/TaskRow'
 import EventDetailDrawer from '../components/EventDetailDrawer'
+import LoadError from '../components/LoadError'
 import { CalendarIcon, ClockIcon, MapPinIcon } from '../components/icons'
 import EventBadges, { RescheduledNote } from '../components/EventBadges'
 import { formatDateRange, formatTimeRange } from '../lib/format'
@@ -13,15 +14,26 @@ import { formatDateRange, formatTimeRange } from '../lib/format'
 export default function StaffDashboard() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
+  const [loadError, setLoadError] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
 
   function fetchHome() {
-    api.get('/dashboard/staff').then((res) => setData(res.data))
+    api.get('/dashboard/staff')
+      .then((res) => { setData(res.data); setLoadError(null) })
+      .catch(setLoadError)
   }
 
   useEffect(() => {
     fetchHome()
   }, [])
+
+  if (loadError) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <LoadError error={loadError} onRetry={() => { setLoadError(null); fetchHome() }} />
+      </div>
+    )
+  }
 
   if (!data) {
     return (
@@ -40,7 +52,7 @@ export default function StaffDashboard() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-2 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name.split(' ')[0]}</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name}</h1>
           <p className="text-sm text-gray-500 mt-1">Here&apos;s what&apos;s on your plate.</p>
         </div>
         <DateTimeDisplay />

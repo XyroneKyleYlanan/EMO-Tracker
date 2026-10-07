@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/auth'
+import { isServerUnreachable } from '../lib/errors'
 
 export default function LoginPage() {
   const { user, login } = useAuth()
@@ -22,9 +23,11 @@ export default function LoginPage() {
       const u = await login(email, password)
       navigate(`/${u.role}`, { replace: true })
     } catch (err) {
-      const msg = err.response?.data?.errors?.email?.[0]
-        || err.response?.data?.message
-        || 'Login failed. Please try again.'
+      const msg = isServerUnreachable(err)
+        ? "Can't reach the EMO Tracker server. Make sure the app is running, then try again."
+        : err.response?.data?.errors?.email?.[0]
+          || err.response?.data?.message
+          || 'Login failed. Please try again.'
       setError(msg)
     } finally {
       setSubmitting(false)
@@ -39,7 +42,7 @@ export default function LoginPage() {
           <div className="text-center">
             <h1 className="text-2xl font-semibold text-gray-900">EMO Tracker</h1>
             <p className="text-sm text-gray-500">Events Management Office</p>
-            <p className="text-xs text-gray-400 mt-0.5">New Era University</p>
+            <p className="text-xs text-gray-500 mt-0.5">New Era University</p>
           </div>
         </div>
 
@@ -60,7 +63,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
-                placeholder="you@emo.test"
+                placeholder="you@neu.edu.ph"
               />
             </div>
 
@@ -97,7 +100,7 @@ export default function LoginPage() {
 
         <div className="text-center mt-6 space-y-1">
           <p className="text-xs text-gray-500">Internal use only</p>
-          <p className="text-[11px] text-gray-400">
+          <p className="text-[11px] text-gray-500">
             © 2026 EMO Tracker · A Capstone Project at New Era University
           </p>
         </div>

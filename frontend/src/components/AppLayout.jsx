@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/auth'
 import ChangePasswordDialog from './ChangePasswordDialog'
+import ErrorBoundary from './ErrorBoundary'
 import {
   CalendarIcon,
   ChartIcon,
@@ -55,6 +56,7 @@ function getInitials(name) {
 
 export default function AppLayout() {
   const { user, logout } = useAuth()
+  const { pathname } = useLocation()
   const items = NAV_BY_ROLE[user.role] || []
   const [menuOpen, setMenuOpen] = useState(false)
   const [pwOpen, setPwOpen] = useState(false)
@@ -152,7 +154,10 @@ export default function AppLayout() {
         </aside>
 
         <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 min-w-0">
-          <Outlet />
+          {/* A crashed page keeps the menu usable; going to another page starts fresh. */}
+          <ErrorBoundary key={pathname}>
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
 

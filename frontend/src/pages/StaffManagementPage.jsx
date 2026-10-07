@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import api from '../lib/api'
 import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
+import LoadError from '../components/LoadError'
 import UserFormDialog from '../components/UserFormDialog'
 
 const ROLE_LABELS = {
@@ -22,6 +23,7 @@ export default function StaffManagementPage() {
 
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [roleFilter, setRoleFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('active')
   const [formOpen, setFormOpen] = useState(false)
@@ -29,7 +31,8 @@ export default function StaffManagementPage() {
 
   function loadUsers() {
     api.get('/users')
-      .then((res) => setUsers(res.data.users || []))
+      .then((res) => { setUsers(res.data.users || []); setLoadError(null) })
+      .catch(setLoadError)
       .finally(() => setLoading(false))
   }
 
@@ -103,7 +106,11 @@ export default function StaffManagementPage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Staff Management</h1>
           <p className="text-sm text-gray-500 mt-1">
-            {counts.total} total · {counts.admin} admin · {counts.officer} officer · {counts.staff} staff
+            {loadError
+              ? 'Accounts for everyone who uses EMO Tracker.'
+              : loading && users.length === 0
+                ? ' ' // keeps the line's height until the counts are known
+                : `${counts.total} total · ${counts.admin} admin${counts.admin === 1 ? '' : 's'} · ${counts.officer} officer${counts.officer === 1 ? '' : 's'} · ${counts.staff} staff`}
           </p>
         </div>
         <button
@@ -135,6 +142,8 @@ export default function StaffManagementPage() {
             <div key={i} className="bg-white rounded-xl border border-gray-200 p-4 h-16 animate-pulse"></div>
           ))}
         </div>
+      ) : loadError ? (
+        <LoadError error={loadError} onRetry={fetchUsers} />
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
           No users match these filters.

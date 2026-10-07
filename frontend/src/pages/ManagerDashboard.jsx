@@ -9,8 +9,9 @@ import { ReadinessReason } from '../components/ReadinessBadge'
 import EventBadges from '../components/EventBadges'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
+import LoadError from '../components/LoadError'
 import TaskRow from '../components/TaskRow'
-import { formatDateRange, formatDayMonth, formatRescheduledFrom, formatTimeRange } from '../lib/format'
+import { formatDateRange, formatDateTime, formatDayMonth, formatRescheduledFrom, formatTimeRange } from '../lib/format'
 
 const WEEK_ROWS = 10
 const NO_BUILDING_COLOR = '#E5E7EB'
@@ -21,11 +22,19 @@ export default function ManagerDashboard() {
   const toast = useToast()
   const isAdmin = user.role === 'admin'
   const [data, setData] = useState(null)
+  const [loadError, setLoadError] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
   const [editingEvent, setEditingEvent] = useState(null)
 
   function fetchHome() {
-    api.get(`/dashboard/${isAdmin ? 'admin' : 'officer'}`).then((res) => setData(res.data))
+    api.get(`/dashboard/${isAdmin ? 'admin' : 'officer'}`)
+      .then((res) => { setData(res.data); setLoadError(null) })
+      .catch(setLoadError)
+  }
+
+  function retry() {
+    setLoadError(null)
+    fetchHome()
   }
 
   useEffect(() => {
@@ -54,20 +63,22 @@ export default function ManagerDashboard() {
     <div className="max-w-6xl mx-auto">
       <div className="mb-2 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name.split(' ')[0]}</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name}</h1>
           <p className="text-sm text-gray-500 mt-1">Here&apos;s what needs your attention.</p>
         </div>
         <DateTimeDisplay />
       </div>
 
-      {!data ? (
+      {loadError ? (
+        <LoadError error={loadError} onRetry={retry} className="mt-8" />
+      ) : !data ? (
         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[0, 1, 2, 3].map((i) => <div key={i} className="bg-white rounded-2xl border border-gray-200 h-28 animate-pulse" />)}
         </div>
       ) : (
         <>
           <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard label="This week" value={data.stats.thisWeek} sublabel="on the schedule" accent="blue" />
+            <StatCard label="Next 7 days" value={data.stats.thisWeek} sublabel="on the schedule" accent="blue" />
             <StatCard
               label="EMO-prepared"
               value={data.stats.preparedUpcoming}
@@ -123,7 +134,7 @@ export default function ManagerDashboard() {
               )}
             </Panel>
 
-            <Panel title="This week" link={{ to: `/${user.role}/schedule`, label: 'Open schedule' }}>
+            <Panel title="Next 7 days" link={{ to: `/${user.role}/schedule`, label: 'Open schedule' }}>
               {data.thisWeek.length === 0 ? (
                 <Empty>Nothing on the schedule for the next 7 days.</Empty>
               ) : (
@@ -146,6 +157,8 @@ export default function ManagerDashboard() {
               </div>
             </section>
           )}
+
+          {data.backup && <BackupNote backup={data.backup} />}
         </>
       )}
 
@@ -213,10 +226,32 @@ function WeekList({ events, today, onOpen, scheduleLink }) {
       ))}
       {events.length > WEEK_ROWS && (
         <Link to={scheduleLink} className="block px-4 py-2.5 text-xs font-medium text-neu-green hover:underline border-t border-gray-100">
-          +{events.length - WEEK_ROWS} more this week on the Schedule
+          +{events.length - WEEK_ROWS} more in the next 7 days on the Schedule
         </Link>
       )}
     </div>
+  )
+}
+
+// Admin only: whether the automatic daily backups are working.
+function BackupNote({ backup }) {
+  if (backup.failed) {
+    return (
+      <div role="alert" className="mt-8 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">
+        <span className="font-semibold">The automatic backup isn&apos;t working.</span>{' '}
+        The last try ({formatDateTime(backup.failed.at)}) failed: {backup.failed.message.replace(/\.$/, '')}. It tries again every hour while the app is in use.
+      </div>
+    )
+  }
+
+  return (
+    <p className="mt-8 text-xs text-gray-500">
+      {!backup.daily
+        ? 'Automatic backups are turned off.'
+        : backup.last_at
+          ? `Last backup: ${formatDateTime(backup.last_at)}`
+          : 'No backup yet. One is made automatically each day the app is used.'}
+    </p>
   )
 }
 

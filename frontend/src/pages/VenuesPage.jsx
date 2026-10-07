@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
+import { useEscapeKey } from '../lib/useEscapeKey'
 import { useToast } from '../contexts/toast'
+import LoadError from '../components/LoadError'
 
 const NO_BUILDING_COLOR = '#E5E7EB'
 
@@ -9,10 +11,13 @@ const NO_BUILDING_COLOR = '#E5E7EB'
 export default function VenuesPage() {
   const toast = useToast()
   const [data, setData] = useState(null)
+  const [loadError, setLoadError] = useState(null)
   const [dialog, setDialog] = useState(null) // { type: 'building' | 'venue' | 'merge', item? }
 
   function fetchVenues() {
-    api.get('/venues').then((res) => setData(res.data))
+    api.get('/venues')
+      .then((res) => { setData(res.data); setLoadError(null) })
+      .catch(setLoadError)
   }
 
   useEffect(() => {
@@ -43,6 +48,14 @@ export default function VenuesPage() {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to delete the venue.')
     }
+  }
+
+  if (loadError) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <LoadError error={loadError} onRetry={() => { setLoadError(null); fetchVenues() }} />
+      </div>
+    )
   }
 
   if (!data) {
@@ -99,7 +112,7 @@ export default function VenuesPage() {
                   )}
                 </header>
                 {venues.length === 0 ? (
-                  <div className="px-4 py-3 text-xs text-gray-400 italic">No venues in this building yet.</div>
+                  <div className="px-4 py-3 text-xs text-gray-500 italic">No venues in this building yet.</div>
                 ) : (
                   <ul className="divide-y divide-gray-100">
                     {venues.map((v) => (
@@ -162,8 +175,8 @@ function BuildingDialog({ building, buildings, palette, onClose, onSaved }) {
 
   return (
     <Dialog title={building ? 'Edit building' : 'New building'} onClose={onClose} onSubmit={submit} submitLabel={building ? 'Save changes' : 'Add building'} error={errors._?.[0]}>
-      <Field label="Name" error={errors.name?.[0]}>
-        <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Building" />
+      <Field label="Name" htmlFor="building-name" error={errors.name?.[0]}>
+        <input id="building-name" type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Building" />
       </Field>
       <Field label="Color" error={errors.color?.[0]}>
         <div className="grid grid-cols-6 gap-2">
@@ -214,11 +227,11 @@ function VenueDialog({ venue, buildings, onClose, onSaved }) {
 
   return (
     <Dialog title={venue ? 'Edit venue' : 'New venue'} onClose={onClose} onSubmit={submit} submitLabel={venue ? 'Save changes' : 'Add venue'} error={errors._?.[0]}>
-      <Field label="Name" error={errors.name?.[0]}>
-        <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Auditorium" />
+      <Field label="Name" htmlFor="venue-name" error={errors.name?.[0]}>
+        <input id="venue-name" type="text" required value={name} onChange={(e) => setName(e.target.value)} className={inputClass} placeholder="e.g. CEA Auditorium" />
       </Field>
-      <Field label="Building" error={errors.building_id?.[0]}>
-        <select value={buildingId} onChange={(e) => setBuildingId(e.target.value)} className={inputClass}>
+      <Field label="Building" htmlFor="venue-building" error={errors.building_id?.[0]}>
+        <select id="venue-building" value={buildingId} onChange={(e) => setBuildingId(e.target.value)} className={inputClass}>
           <option value="">No building (shows in gray)</option>
           {buildings.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
         </select>
@@ -249,8 +262,8 @@ function MergeDialog({ venue, venues, onClose, onSaved }) {
   return (
     <Dialog title={`Merge "${venue.name}"`} onClose={onClose} onSubmit={submit} submitLabel="Merge" submitDisabled={!intoId}>
       <p className="text-sm text-gray-600">Use this for duplicates, like &ldquo;UHALL&rdquo; and &ldquo;University Hall&rdquo;.</p>
-      <Field label="Merge into" error={error}>
-        <select required value={intoId} onChange={(e) => setIntoId(e.target.value)} className={inputClass}>
+      <Field label="Merge into" htmlFor="merge-into" error={error}>
+        <select id="merge-into" required value={intoId} onChange={(e) => setIntoId(e.target.value)} className={inputClass}>
           <option value="">Choose a venue…</option>
           {others.map((v) => <option key={v.id} value={v.id}>{v.name}</option>)}
         </select>
@@ -267,6 +280,8 @@ function MergeDialog({ venue, venues, onClose, onSaved }) {
 const inputClass = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent'
 
 function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, error, children }) {
+  useEscapeKey(onClose)
+
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
@@ -289,10 +304,10 @@ function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, error, 
   )
 }
 
-function Field({ label, error, children }) {
+function Field({ label, htmlFor, error, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       {children}
       {error && <div className="text-xs text-rose-600 mt-1">{error}</div>}
     </div>

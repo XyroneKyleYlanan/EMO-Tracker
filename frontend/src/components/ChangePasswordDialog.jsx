@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import api from '../lib/api'
+import { useEscapeKey } from '../lib/useEscapeKey'
 import { useToast } from '../contexts/toast'
 
 // Mount this only while it's open, so every opening starts with empty fields.
@@ -10,6 +11,8 @@ export default function ChangePasswordDialog({ open, onClose }) {
   const [confirm, setConfirm] = useState('')
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
+
+  useEscapeKey(onClose, open)
 
   if (!open) return null
 
@@ -24,12 +27,12 @@ export default function ChangePasswordDialog({ open, onClose }) {
 
     setSubmitting(true)
     try {
-      await api.post('/change-password', {
+      const res = await api.post('/change-password', {
         current_password: currentPassword,
         new_password: newPassword,
         new_password_confirmation: confirm,
       })
-      toast.success('Password changed successfully.')
+      toast.success(res.data.message || 'Password changed.')
       onClose()
     } catch (err) {
       setErrors(err.response?.data?.errors || { _: [err.response?.data?.message || 'Failed to change password.'] })
@@ -49,8 +52,9 @@ export default function ChangePasswordDialog({ open, onClose }) {
         </header>
 
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
-          <Field label="Current password" error={errors.current_password?.[0]}>
+          <Field label="Current password" htmlFor="current-password" error={errors.current_password?.[0]}>
             <input
+              id="current-password"
               type="password"
               required
               value={currentPassword}
@@ -60,8 +64,14 @@ export default function ChangePasswordDialog({ open, onClose }) {
             />
           </Field>
 
-          <Field label="New password" error={errors.new_password?.[0]} hint="Minimum 8 characters.">
+          <Field
+            label="New password"
+            htmlFor="new-password"
+            error={errors.new_password?.[0]}
+            hint="Minimum 8 characters. Your other devices will be signed out."
+          >
             <input
+              id="new-password"
               type="password"
               required
               minLength={8}
@@ -71,8 +81,9 @@ export default function ChangePasswordDialog({ open, onClose }) {
             />
           </Field>
 
-          <Field label="Confirm new password" error={errors.new_password_confirmation?.[0]}>
+          <Field label="Confirm new password" htmlFor="confirm-password" error={errors.new_password_confirmation?.[0]}>
             <input
+              id="confirm-password"
               type="password"
               required
               minLength={8}
@@ -110,12 +121,12 @@ export default function ChangePasswordDialog({ open, onClose }) {
   )
 }
 
-function Field({ label, error, hint, children }) {
+function Field({ label, htmlFor, error, hint, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
       {children}
-      {hint && !error && <div className="text-xs text-gray-400 mt-1">{hint}</div>}
+      {hint && !error && <div className="text-xs text-gray-500 mt-1">{hint}</div>}
       {error && <div className="text-xs text-rose-600 mt-1">{error}</div>}
     </div>
   )

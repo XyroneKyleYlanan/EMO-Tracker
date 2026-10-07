@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
 import { useAuth } from '../contexts/auth'
+import LoadError from '../components/LoadError'
 import StatCard from '../components/StatCard'
 import TaskRow from '../components/TaskRow'
 
@@ -8,11 +9,13 @@ export default function StaffTasksPage() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [filter, setFilter] = useState('open')
-  
+
   function loadTasks() {
     api.get('/my-tasks')
-      .then((res) => setData(res.data))
+      .then((res) => { setData(res.data); setLoadError(null) })
+      .catch(setLoadError)
       .finally(() => setLoading(false))
   }
 
@@ -24,6 +27,14 @@ export default function StaffTasksPage() {
   useEffect(() => {
     loadTasks()
   }, [])
+
+  if (loadError && !loading) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <LoadError error={loadError} onRetry={fetchTasks} />
+      </div>
+    )
+  }
 
   if (loading || !data) {
     return (

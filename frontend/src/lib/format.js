@@ -66,6 +66,18 @@ export function formatDayMonth(iso) {
   return parseDate(iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 }
 
+// "Wed, Oct 7, 8:15 AM": an exact moment (with its time zone), e.g. a backup.
+export function formatDateTime(iso) {
+  if (!iso) return ''
+  return new Date(iso).toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 export function formatMonthYear(iso) {
   return parseDate(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 }

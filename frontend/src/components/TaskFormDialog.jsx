@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
 import { formatDateCompact } from '../lib/format'
+import { useEscapeKey } from '../lib/useEscapeKey'
 
 const ROLE_LABELS = { admin: 'Administrator', officer: 'Officer', staff: 'Staff' }
 
@@ -36,6 +37,8 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
       setStaff(res.data.users || [])
     })
   }, [open])
+
+  useEscapeKey(onClose, open)
 
   if (!open) return null
 
@@ -80,8 +83,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
         </header>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <Field label="Task name" error={errors.name?.[0]}>
+          <Field label="Task name" htmlFor="task-name" error={errors.name?.[0]}>
             <input
+              id="task-name"
               type="text"
               required
               value={form.name}
@@ -90,8 +94,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
             />
           </Field>
 
-          <Field label="Description" optional error={errors.description?.[0]}>
+          <Field label="Description" htmlFor="task-description" optional error={errors.description?.[0]}>
             <textarea
+              id="task-description"
               rows={2}
               value={form.description}
               onChange={(e) => update('description', e.target.value)}
@@ -99,8 +104,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
             />
           </Field>
 
-          <Field label="Due date" error={errors.due_date?.[0]}>
+          <Field label="Due date" htmlFor="task-due" error={errors.due_date?.[0]}>
             <input
+              id="task-due"
               type="date"
               required
               value={form.due_date}
@@ -116,8 +122,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
           </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Priority" error={errors.priority?.[0]}>
+            <Field label="Priority" htmlFor="task-priority" error={errors.priority?.[0]}>
               <select
+                id="task-priority"
                 value={form.priority}
                 onChange={(e) => update('priority', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
@@ -127,8 +134,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
                 <option value="high">High</option>
               </select>
             </Field>
-            <Field label="Status" error={errors.status?.[0]}>
+            <Field label="Status" htmlFor="task-status" error={errors.status?.[0]}>
               <select
+                id="task-status"
                 value={form.status}
                 onChange={(e) => update('status', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
@@ -140,8 +148,9 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
             </Field>
           </div>
 
-          <Field label="Assigned to" optional error={errors.assigned_to?.[0]}>
+          <Field label="Assigned to" htmlFor="task-assignee" optional error={errors.assigned_to?.[0]}>
             <select
+              id="task-assignee"
               value={form.assigned_to}
               onChange={(e) => update('assigned_to', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
@@ -184,11 +193,11 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
   )
 }
 
-function Field({ label, error, optional, children }) {
+function Field({ label, htmlFor, error, optional, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {optional && <span className="text-gray-400 font-normal">(optional)</span>}
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">
+        {label} {optional && <span className="text-gray-500 font-normal">(optional)</span>}
       </label>
       {children}
       {error && <div className="text-xs text-rose-600 mt-1">{error}</div>}

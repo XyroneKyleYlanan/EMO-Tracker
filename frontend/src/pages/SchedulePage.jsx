@@ -7,6 +7,7 @@ import { useToast } from '../contexts/toast'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
 import EventBadges, { RescheduledNote } from '../components/EventBadges'
+import LoadError from '../components/LoadError'
 import ReadinessBadge from '../components/ReadinessBadge'
 import { ChevronDownIcon, SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
@@ -24,6 +25,7 @@ export default function SchedulePage() {
   const [year, setYear] = useState(new Date().getFullYear())
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [search, setSearch] = useState('')
   const [selectedId, setSelectedId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
@@ -35,7 +37,8 @@ export default function SchedulePage() {
   function loadSchedule() {
     const request = ++latestRequest.current
     api.get('/schedule', { params: { year } })
-      .then((res) => { if (request === latestRequest.current) setData(res.data) })
+      .then((res) => { if (request === latestRequest.current) { setData(res.data); setLoadError(null) } })
+      .catch((err) => { if (request === latestRequest.current) setLoadError(err) })
       .finally(() => { if (request === latestRequest.current) setLoading(false) })
   }
 
@@ -195,7 +198,9 @@ export default function SchedulePage() {
         </div>
       </div>
 
-      {loading && !data ? (
+      {loadError ? (
+        <LoadError error={loadError} onRetry={() => { setLoadError(null); fetchSchedule() }} />
+      ) : loading && !data ? (
         <div className="bg-white rounded-2xl border border-gray-200 p-10 animate-pulse">
           <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="h-64 bg-gray-100 rounded"></div>

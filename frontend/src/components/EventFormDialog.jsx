@@ -3,6 +3,7 @@ import api from '../lib/api'
 import ClashWarning from './ClashWarning'
 import { AlertIcon } from './icons'
 import { formatDayMonth, formatTime } from '../lib/format'
+import { useEscapeKey } from '../lib/useEscapeKey'
 
 const NEW_VENUE = '__new'
 
@@ -51,6 +52,8 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
   const [venueError, setVenueError] = useState(null)
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
+
+  useEscapeKey(onClose)
 
   useEffect(() => {
     api.get('/venues').then((res) => {
@@ -162,7 +165,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
   const input = 'w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent'
   // Safari fills empty date/time boxes with today's date and the current time,
   // which look like real values. Gray marks them as "not set yet".
-  const dateTime = (value) => `${input} ${value ? 'text-gray-900' : 'text-gray-400'}`
+  const dateTime = (value) => `${input} ${value ? 'text-gray-900' : 'text-gray-500'}`
 
   return (
     <div className="fixed inset-0 z-40 flex items-start md:items-center justify-center p-4 md:p-6">
@@ -176,8 +179,8 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         </header>
 
         <form id="event-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <Field label="Event" error={errors.name?.[0]}>
-            <input type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} className={input} />
+          <Field label="Event" htmlFor="event-name" error={errors.name?.[0]}>
+            <input id="event-name" type="text" required value={form.name} onChange={(e) => update('name', e.target.value)} className={input} />
           </Field>
 
           <Field label="Type" error={errors.event_type?.[0]}>
@@ -200,8 +203,9 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             </div>
           </Field>
 
-          <Field label={form.event_type === 'external' ? 'Organizer' : 'Department'} error={errors.department?.[0]} optional>
+          <Field label={form.event_type === 'external' ? 'Organizer' : 'Department'} htmlFor="event-department" error={errors.department?.[0]} optional>
             <input
+              id="event-department"
               type="text"
               list="department-suggestions"
               value={form.department}
@@ -216,12 +220,12 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
 
           <div>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Date" error={errors.event_date?.[0]}>
-                <input type="date" required value={form.event_date} onChange={(e) => update('event_date', e.target.value)} className={dateTime(form.event_date)} />
+              <Field label="Date" htmlFor="event-date" error={errors.event_date?.[0]}>
+                <input id="event-date" type="date" required value={form.event_date} onChange={(e) => update('event_date', e.target.value)} className={dateTime(form.event_date)} />
               </Field>
               {multiDay && (
-                <Field label="Until" error={errors.end_date?.[0]}>
-                  <input type="date" required value={form.end_date} min={form.event_date || undefined} onChange={(e) => update('end_date', e.target.value)} className={dateTime(form.end_date)} />
+                <Field label="Until" htmlFor="event-until" error={errors.end_date?.[0]}>
+                  <input id="event-until" type="date" required value={form.end_date} min={form.event_date || undefined} onChange={(e) => update('end_date', e.target.value)} className={dateTime(form.end_date)} />
                 </Field>
               )}
             </div>
@@ -260,24 +264,26 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
           <div className="grid grid-cols-2 gap-3">
             <Field
               label="Start time"
+              htmlFor="event-start"
               error={errors.event_time?.[0]}
               optional
               action={form.event_time && <ClearButton onClick={() => update('event_time', '')} />}
             >
-              <input type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={dateTime(form.event_time)} />
+              <input id="event-start" type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={dateTime(form.event_time)} />
             </Field>
             <Field
               label="End time"
+              htmlFor="event-end"
               error={errors.end_time?.[0]}
               optional
               action={form.end_time && <ClearButton onClick={() => update('end_time', '')} />}
             >
-              <input type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={dateTime(form.end_time)} />
+              <input id="event-end" type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={dateTime(form.end_time)} />
             </Field>
           </div>
 
-          <Field label="Venue" error={errors.venue_id?.[0]}>
-            <select value={form.venue_id} onChange={(e) => update('venue_id', e.target.value)} className={input}>
+          <Field label="Venue" htmlFor="event-venue" error={errors.venue_id?.[0]}>
+            <select id="event-venue" value={form.venue_id} onChange={(e) => update('venue_id', e.target.value)} className={input}>
               <option value="">Other / not listed (type it below)</option>
               {grouped.map((g) => (
                 <optgroup key={g.label} label={g.label}>
@@ -301,11 +307,13 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
                 value={newVenue.name}
                 onChange={(e) => setNewVenue((v) => ({ ...v, name: e.target.value }))}
                 placeholder="Venue name, e.g. CEA Building"
+                aria-label="New venue name"
                 className={input}
               />
               <select
                 value={newVenue.building_id}
                 onChange={(e) => setNewVenue((v) => ({ ...v, building_id: e.target.value }))}
+                aria-label="New venue's building"
                 className={input}
               >
                 <option value="">No building (shows in gray)</option>
@@ -325,10 +333,12 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
 
           <Field
             label={form.venue_id ? 'Room / details' : 'Where'}
+            htmlFor="event-where"
             error={errors.venue_details?.[0]}
             optional={!!form.venue_id && form.venue_id !== NEW_VENUE}
           >
             <input
+              id="event-where"
               type="text"
               value={form.venue_details}
               onChange={(e) => update('venue_details', e.target.value)}
@@ -357,16 +367,16 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             </span>
           </label>
 
-          <Field label="Description" error={errors.description?.[0]} optional>
-            <textarea rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} className={input} />
+          <Field label="Description" htmlFor="event-description" error={errors.description?.[0]} optional>
+            <textarea id="event-description" rows={2} value={form.description} onChange={(e) => update('description', e.target.value)} className={input} />
           </Field>
 
-          <Field label="Control #" error={errors.control_number?.[0]} optional>
-            <input type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
+          <Field label="Control #" htmlFor="event-control" error={errors.control_number?.[0]} optional>
+            <input id="event-control" type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
           </Field>
 
-          <Field label="Remarks" error={errors.remarks?.[0]} optional>
-            <textarea rows={2} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
+          <Field label="Remarks" htmlFor="event-remarks" error={errors.remarks?.[0]} optional>
+            <textarea id="event-remarks" rows={2} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
           </Field>
 
           {event && (
@@ -437,12 +447,12 @@ function ClearButton({ onClick }) {
   )
 }
 
-function Field({ label, error, optional, action, children }) {
+function Field({ label, htmlFor, error, optional, action, children }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-2 mb-1">
-        <label className="block text-sm font-medium text-gray-700">
-          {label} {optional && <span className="text-gray-400 font-normal">(optional)</span>}
+        <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
+          {label} {optional && <span className="text-gray-500 font-normal">(optional)</span>}
         </label>
         {action}
       </div>

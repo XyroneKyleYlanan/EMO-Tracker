@@ -1,17 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import api from '../lib/api'
 import { downloadFile } from '../lib/download'
+import { isServerUnreachable } from '../lib/errors'
+import { useEscapeKey } from '../lib/useEscapeKey'
 import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
 import { ReadinessReason } from './ReadinessBadge'
 import EventBadges from './EventBadges'
 import ClashWarning from './ClashWarning'
+import LoadError from './LoadError'
 import TaskRow from './TaskRow'
 import TaskFormDialog from './TaskFormDialog'
 import { CalendarIcon, ClockIcon, MapPinIcon } from './icons'
 import { formatDateCompact, formatDateLong, formatDateRange, formatRescheduledFrom, formatTime, formatTimeRange } from '../lib/format'
 
 const ACCEPTED_TYPES = '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png'
+// Matches the server's limit (Document::MAX_UPLOAD_KB).
+const MAX_UPLOAD_MB = 10
 
 function formatBytes(bytes) {
   if (!bytes) return '0 B'
@@ -25,10 +30,13 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
   const toast = useToast()
   const canManageTasks = ['admin', 'officer'].includes(user.role)
   const canManageDocs = ['admin', 'officer'].includes(user.role)
+  // Documents are records: officers add them, only the admin deletes them.
+  const canDeleteDocs = user.role === 'admin'
   const fileInputRef = useRef(null)
 
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [taskFormOpen, setTaskFormOpen] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
   const [uploading, setUploading] = useState(false)
@@ -38,7 +46,12 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
   // The drawer is keyed by event, so it starts out loading; refreshes show the loader again.
   function loadEvent() {
     api.get(`/events/${eventId}`)
-      .then((res) => setEvent(res.data.event))
+      .then((res) => { setEvent(res.data.event); setLoadError(null) })
+      .catch((err) => {
+        setLoadError(err)
+        // Deleted meanwhile: the page behind refreshes so it disappears there too.
+        if (err.response?.status === 404) onChanged?.()
+      })
       .finally(() => setLoading(false))
   }
 
@@ -52,6 +65,8 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
     if (eventId) loadEvent()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventId])
+
+  useEscapeKey(onClose, !!eventId)
 
   function handleTaskChanged() {
     fetchEvent()
@@ -89,6 +104,14 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
     const file = e.target.files[0]
     if (!file) return
     setUploadError(null)
+    // Caught here so a big file isn't sent only to be turned away.
+    if (file.size > MAX_UPLOAD_MB * 1024 * 1024) {
+      const msg = `"${file.name}" is larger than ${MAX_UPLOAD_MB} MB. Choose a smaller file.`
+      setUploadError(msg)
+      toast.error(msg)
+      e.target.value = ''
+      return
+    }
     setUploading(true)
     try {
       const formData = new FormData()
@@ -99,7 +122,9 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
       toast.success(`Uploaded "${file.name}".`)
       fetchEvent()
     } catch (err) {
-      const msg = err.response?.data?.errors?.file?.[0] || err.response?.data?.message || 'Upload failed.'
+      const msg = isServerUnreachable(err)
+        ? "Can't reach the EMO Tracker server, so the file wasn't uploaded."
+        : err.response?.data?.errors?.file?.[0] || err.response?.data?.message || 'Upload failed.'
       setUploadError(msg)
       toast.error(msg)
     } finally {
@@ -154,13 +179,22 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
         <div className="ml-auto h-full w-full md:max-w-xl bg-white shadow-xl flex flex-col z-40 relative">
           <header className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
             <div className="text-sm font-semibold text-gray-500">Event details</div>
-            <button onClick={onClose} className="text-gray-400 hover:text-gray-700 p-1 rounded-md text-lg leading-none">
+            <button onClick={onClose} aria-label="Close" title="Close (Esc)" className="text-gray-500 hover:text-gray-800 p-1 rounded-md text-lg leading-none">
               ✕
             </button>
           </header>
 
           <div className="flex-1 overflow-y-auto px-6 py-5">
-            {loading || !event ? (
+            {loadError && !loading ? (
+              loadError.response?.status === 404 ? (
+                <div role="alert" className="py-10 text-center">
+                  <p className="text-sm font-medium text-gray-900">This event no longer exists.</p>
+                  <p className="text-sm text-gray-500 mt-1">Someone may have deleted it.</p>
+                </div>
+              ) : (
+                <LoadError error={loadError} onRetry={fetchEvent} />
+              )
+            ) : loading || !event ? (
               <div className="space-y-3">
                 <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
                 <div className="h-4 bg-gray-100 rounded w-full animate-pulse"></div>
@@ -338,7 +372,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                               </svg>
                             </button>
-                            {canManageDocs && (
+                            {canDeleteDocs && (
                               <button
                                 onClick={() => handleDeleteDoc(doc)}
                                 className="text-gray-400 hover:text-rose-600 p-1 rounded hover:bg-gray-100"
@@ -358,8 +392,9 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                     <Empty text="No documents attached." />
                   )}
                   {canManageDocs && (
-                    <div className="text-[10px] text-gray-400 mt-2">
-                      Accepted: PDF, DOC, DOCX, XLS, XLSX, JPG, PNG · max 10 MB
+                    <div className="text-xs text-gray-500 mt-2">
+                      PDF, Word, Excel, JPG or PNG, up to {MAX_UPLOAD_MB} MB.
+                      {!canDeleteDocs && ' Only the administrator can delete files.'}
                     </div>
                   )}
                 </Section>
@@ -367,7 +402,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
             )}
           </div>
 
-          {event && (
+          {event && !loadError && (
             <footer className="px-6 py-3 border-t border-gray-200 flex items-center justify-between gap-2">
               <button
                 onClick={handleGenerateReport}
@@ -441,5 +476,5 @@ function Section({ title, action, children }) {
 }
 
 function Empty({ text }) {
-  return <div className="text-xs text-gray-400 italic">{text}</div>
+  return <div className="text-xs text-gray-500 italic">{text}</div>
 }

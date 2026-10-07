@@ -12,6 +12,9 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
+        // Tells Laravel which device each request came from (the login limit
+        // counts per device), instead of every device looking like this computer.
+        xfwd: true,
       },
       '/storage': {
         target: 'http://127.0.0.1:8000',

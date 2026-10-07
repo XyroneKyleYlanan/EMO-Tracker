@@ -6,6 +6,7 @@ import EventCalendarView from '../components/EventCalendarView'
 import EventListView from '../components/EventListView'
 import EventDetailDrawer from '../components/EventDetailDrawer'
 import EventFormDialog from '../components/EventFormDialog'
+import LoadError from '../components/LoadError'
 import { CalendarIcon, ChecklistIcon } from '../components/icons'
 
 export default function EventsPage() {
@@ -18,6 +19,7 @@ export default function EventsPage() {
 
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [view, setView] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
       ? 'calendar'
@@ -40,7 +42,8 @@ export default function EventsPage() {
   function loadEvents() {
     const params = !canFilter ? { mine: 1 } : preparedOnly ? { prepared: 1 } : {}
     api.get('/events', { params })
-      .then((res) => setEvents(res.data.events || []))
+      .then((res) => { setEvents(res.data.events || []); setLoadError(null) })
+      .catch(setLoadError)
       .finally(() => setLoading(false))
   }
 
@@ -134,6 +137,8 @@ export default function EventsPage() {
           <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="h-64 bg-gray-100 rounded"></div>
         </div>
+      ) : loadError ? (
+        <LoadError error={loadError} onRetry={fetchEvents} />
       ) : view === 'calendar' ? (
         <EventCalendarView events={events} onSelect={handleSelect} />
       ) : (

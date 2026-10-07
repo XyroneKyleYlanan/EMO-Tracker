@@ -6,6 +6,7 @@ import StatCard from '../components/StatCard'
 import EventBadges from '../components/EventBadges'
 import ReadinessDonut from '../components/ReadinessDonut'
 import EventDetailDrawer from '../components/EventDetailDrawer'
+import LoadError from '../components/LoadError'
 import { formatDateCompact, formatTimeRange } from '../lib/format'
 
 // Calendar periods, like a report. Events count by the day they start.
@@ -28,6 +29,7 @@ export default function AnalyticsPage() {
   const [period, setPeriod] = useState('year')
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
   const [refresh, setRefresh] = useState(0)
 
@@ -44,11 +46,17 @@ export default function AnalyticsPage() {
     setRefresh((n) => n + 1)
   }
 
+  function retry() {
+    setLoadError(null)
+    reload()
+  }
+
   useEffect(() => {
     // Ignore answers for a period the user has already switched away from.
     let current = true
     api.get(`/analytics?period=${period}`)
-      .then((res) => { if (current) setData(res.data) })
+      .then((res) => { if (current) { setData(res.data); setLoadError(null) } })
+      .catch((err) => { if (current) setLoadError(err) })
       .finally(() => { if (current) setLoading(false) })
     return () => { current = false }
   }, [period, refresh])
@@ -78,7 +86,9 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {loading && !data ? (
+      {loadError ? (
+        <LoadError error={loadError} onRetry={retry} />
+      ) : !data ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5 h-28 animate-pulse">

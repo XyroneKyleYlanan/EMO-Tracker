@@ -2,6 +2,7 @@ import { useState } from 'react'
 import api from '../lib/api'
 import { useToast } from '../contexts/toast'
 import { formatDateCompact, formatDateLong } from '../lib/format'
+import { useEscapeKey } from '../lib/useEscapeKey'
 
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending', color: 'bg-slate-100 text-slate-700 border-slate-200' },
@@ -156,6 +157,8 @@ export default function TaskRow({ task, currentUser, onChanged, onEdit, onDelete
 }
 
 function TaskDetailDialog({ task, statusCfg, locked, onClose, onEdit }) {
+  useEscapeKey(onClose)
+
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
@@ -191,7 +194,7 @@ function TaskDetailDialog({ task, statusCfg, locked, onClose, onEdit }) {
             {task.description ? (
               <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">{task.description}</p>
             ) : (
-              <p className="text-xs text-gray-400 italic">No description.</p>
+              <p className="text-xs text-gray-500 italic">No description.</p>
             )}
           </div>
 

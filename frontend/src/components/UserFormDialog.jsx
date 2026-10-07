@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import api from '../lib/api'
+import { useEscapeKey } from '../lib/useEscapeKey'
 import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
 
@@ -27,6 +28,8 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
     : EMPTY)
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
+
+  useEscapeKey(onClose, open)
 
   if (!open) return null
 
@@ -72,8 +75,9 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
         </header>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-          <Field label="Full name" error={errors.name?.[0]}>
+          <Field label="Full name" htmlFor="user-name" error={errors.name?.[0]}>
             <input
+              id="user-name"
               type="text"
               required
               value={form.name}
@@ -82,8 +86,9 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
             />
           </Field>
 
-          <Field label="Email" error={errors.email?.[0]}>
+          <Field label="Email" htmlFor="user-email" error={errors.email?.[0]}>
             <input
+              id="user-email"
               type="email"
               required
               value={form.email}
@@ -94,11 +99,17 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
 
           <Field
             label={user ? 'New password' : 'Password'}
+            htmlFor="user-password"
             optional={!!user}
             error={errors.password?.[0]}
-            hint={user ? 'Leave blank to keep current password.' : 'Minimum 8 characters.'}
+            hint={!user
+              ? 'Minimum 8 characters.'
+              : isSelf
+                ? 'Leave blank to keep your current password. A new one signs you out on your other devices.'
+                : 'Leave blank to keep the current password. A new one signs them out on all their devices.'}
           >
             <input
+              id="user-password"
               type="password"
               required={!user}
               minLength={8}
@@ -110,10 +121,12 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
 
           <Field
             label="Role"
+            htmlFor="user-role"
             error={errors.role?.[0]}
             hint={isSelf ? 'You cannot change your own role.' : undefined}
           >
             <select
+              id="user-role"
               value={form.role}
               onChange={(e) => update('role', e.target.value)}
               disabled={isSelf}
@@ -175,14 +188,14 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
   )
 }
 
-function Field({ label, error, optional, hint, children }) {
+function Field({ label, htmlFor, error, optional, hint, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label} {optional && <span className="text-gray-400 font-normal">(optional)</span>}
+      <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">
+        {label} {optional && <span className="text-gray-500 font-normal">(optional)</span>}
       </label>
       {children}
-      {hint && !error && <div className="text-xs text-gray-400 mt-1">{hint}</div>}
+      {hint && !error && <div className="text-xs text-gray-500 mt-1">{hint}</div>}
       {error && <div className="text-xs text-rose-600 mt-1">{error}</div>}
     </div>
   )
