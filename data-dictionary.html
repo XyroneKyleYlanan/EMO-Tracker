@@ -18,7 +18,8 @@
 <body>
 
 <h1>Data Dictionary — EMO Tracker</h1>
-<p class="note"><strong>How to use:</strong> Select a table below, copy it (Ctrl+C), and paste into Word or Google Docs. It pastes as a native, editable table.</p>
+<p class="note"><strong>How to use:</strong> Select a table below, copy it (Ctrl+C), and paste into Word or Google Docs. It pastes as a native, editable table.<br>
+Checked against the database on October 7, 2026. These are the system's 7 application tables. Laravel's own housekeeping tables (personal_access_tokens, sessions, cache, cache_locks, jobs, job_batches, failed_jobs, password_reset_tokens, migrations) aren't listed.</p>
 
 <h2>Table: users</h2>
 <p class="purpose">Stores all user accounts, roles, and authentication data.</p>
@@ -27,10 +28,10 @@
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each user</td></tr>
 <tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Full name of the user</td></tr>
 <tr><td>email</td><td>varchar(255)</td><td>NOT NULL, Unique</td><td>Email address; used as the login credential</td></tr>
-<tr><td>email_verified_at</td><td>timestamp</td><td>Nullable</td><td>Email verification timestamp (Laravel default; unused)</td></tr>
-<tr><td>password</td><td>varchar(255)</td><td>NOT NULL</td><td>Hashed password (bcrypt)</td></tr>
+<tr><td>email_verified_at</td><td>timestamp</td><td>Nullable</td><td>Set when an administrator creates the account (Laravel default; not used for login)</td></tr>
+<tr><td>password</td><td>varchar(255)</td><td>NOT NULL</td><td>Hashed password (bcrypt, 12 rounds); never stored as plain text</td></tr>
 <tr><td>role</td><td>enum('admin','officer','staff')</td><td>NOT NULL, Default 'staff'</td><td>Determines the user's access level</td></tr>
-<tr><td>is_active</td><td>boolean</td><td>NOT NULL, Default true</td><td>If false, the account cannot log in</td></tr>
+<tr><td>is_active</td><td>boolean</td><td>NOT NULL, Default true</td><td>If false, the account cannot log in and is signed out everywhere. Accounts are deactivated, never deleted</td></tr>
 <tr><td>remember_token</td><td>varchar(100)</td><td>Nullable</td><td>Token for persistent login sessions (Laravel default)</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
@@ -46,18 +47,18 @@
 <tr><td>department</td><td>varchar(255)</td><td>Nullable</td><td>Requesting department, or the organizer for external events</td></tr>
 <tr><td>event_type</td><td>enum('internal','external')</td><td>NOT NULL, Default 'internal'</td><td>Internal: an NEU event. External: organized by an outside person or group</td></tr>
 <tr><td>venue_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; venues(id), Nullable, set null on delete</td><td>The venue from the managed venue list</td></tr>
-<tr><td>venue_details</td><td>varchar(255)</td><td>Nullable</td><td>Room or details within the venue, or the location for unlisted places</td></tr>
-<tr><td>event_date</td><td>date</td><td>NOT NULL</td><td>Start date of the event</td></tr>
-<tr><td>end_date</td><td>date</td><td>Nullable</td><td>Last day of a multi-day event</td></tr>
-<tr><td>event_time</td><td>time</td><td>Nullable</td><td>Start time (empty if not yet announced)</td></tr>
-<tr><td>end_time</td><td>time</td><td>Nullable</td><td>End time</td></tr>
+<tr><td>venue_details</td><td>varchar(255)</td><td>Nullable; required when no venue is chosen</td><td>Room or details within the venue, or the place for unlisted locations</td></tr>
+<tr><td>event_date</td><td>date</td><td>NOT NULL</td><td>Start date (first day) of the event</td></tr>
+<tr><td>end_date</td><td>date</td><td>Nullable; not before event_date</td><td>Last day of a multi-day event</td></tr>
+<tr><td>event_time</td><td>time</td><td>Nullable</td><td>Start time (empty if not yet announced; no time means all day)</td></tr>
+<tr><td>end_time</td><td>time</td><td>Nullable; on a one-day event, must be after event_time</td><td>End time</td></tr>
 <tr><td>original_date</td><td>date</td><td>Nullable</td><td>First scheduled date of a rescheduled event; empty if it was never moved</td></tr>
 <tr><td>original_time</td><td>time</td><td>Nullable</td><td>First scheduled start time of a rescheduled event</td></tr>
 <tr><td>control_number</td><td>varchar(255)</td><td>Nullable</td><td>The EMO's control number for the booking</td></tr>
-<tr><td>remarks</td><td>text</td><td>Nullable</td><td>Free-text notes</td></tr>
-<tr><td>needs_preparation</td><td>tinyint(1)</td><td>NOT NULL, Default 0</td><td>Whether the EMO prepares the event (turns on readiness tracking)</td></tr>
-<tr><td>status</td><td>enum('upcoming','completed','cancelled')</td><td>NOT NULL, Default 'upcoming'</td><td>Upcoming until the event ends, then completed (automatic); cancelled is set by an administrator. "Ongoing" is an upcoming event that has started</td></tr>
-<tr><td>created_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The user who created the event</td></tr>
+<tr><td>remarks</td><td>text</td><td>Nullable; up to 2,000 characters</td><td>Free-text notes</td></tr>
+<tr><td>needs_preparation</td><td>tinyint(1)</td><td>NOT NULL, Default 0</td><td>Whether the EMO prepares the event (turns on readiness tracking; switched on automatically when a task is added)</td></tr>
+<tr><td>status</td><td>enum('upcoming','completed','cancelled')</td><td>NOT NULL, Default 'upcoming'</td><td>Upcoming until the event ends, then completed (automatic); cancelled is set by an administrator and can be undone. "Ongoing" isn't stored: it's an upcoming event that has started</td></tr>
+<tr><td>created_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL, cascade on delete</td><td>The user who created the event (users are deactivated, never deleted)</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
@@ -67,13 +68,13 @@
 <table>
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each task</td></tr>
-<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The event this task belongs to</td></tr>
+<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL, cascade on delete</td><td>The event this task belongs to (deleted together with the event)</td></tr>
 <tr><td>name</td><td>varchar(255)</td><td>NOT NULL</td><td>Name/title of the task</td></tr>
 <tr><td>description</td><td>text</td><td>Nullable</td><td>Detailed description of the task</td></tr>
-<tr><td>due_date</td><td>date</td><td>NOT NULL</td><td>Date the task is due</td></tr>
+<tr><td>due_date</td><td>date</td><td>NOT NULL</td><td>Date the task is due (may fall after the event; the form warns)</td></tr>
 <tr><td>status</td><td>enum('pending','in_progress','done')</td><td>NOT NULL, Default 'pending'</td><td>Current progress status of the task</td></tr>
 <tr><td>priority</td><td>enum('low','medium','high')</td><td>NOT NULL, Default 'medium'</td><td>Priority level of the task</td></tr>
-<tr><td>assigned_to</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), Nullable</td><td>Staff member assigned; null if unassigned</td></tr>
+<tr><td>assigned_to</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), Nullable, set null on delete</td><td>The task's one owner: any active member, whatever their role; null if unassigned</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
@@ -84,7 +85,7 @@
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each building</td></tr>
 <tr><td>name</td><td>varchar(255)</td><td>NOT NULL, UNIQUE</td><td>Building name</td></tr>
-<tr><td>color</td><td>varchar(7)</td><td>NOT NULL</td><td>Hex color for the Schedule, e.g. #A4C2F4</td></tr>
+<tr><td>color</td><td>varchar(7)</td><td>NOT NULL; one of 24 palette colors</td><td>Hex color for the Schedule, e.g. #A4C2F4 (each palette color keeps the Schedule's text readable)</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
@@ -95,7 +96,7 @@
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each venue</td></tr>
 <tr><td>name</td><td>varchar(255)</td><td>NOT NULL, UNIQUE</td><td>Venue name</td></tr>
-<tr><td>building_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; buildings(id), Nullable, set null on delete</td><td>The building the venue is in</td></tr>
+<tr><td>building_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; buildings(id), Nullable, set null on delete</td><td>The building the venue is in (none = shown in gray)</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
@@ -105,12 +106,12 @@
 <table>
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each document</td></tr>
-<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL</td><td>The event the document is attached to</td></tr>
-<tr><td>uploaded_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL</td><td>The user who uploaded the document</td></tr>
+<tr><td>event_id</td><td>bigint unsigned</td><td>Foreign Key &#8594; events(id), NOT NULL, cascade on delete</td><td>The event the document is attached to (the record and the file are deleted with the event)</td></tr>
+<tr><td>uploaded_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL, cascade on delete</td><td>The user who uploaded the document</td></tr>
 <tr><td>file_name</td><td>varchar(255)</td><td>NOT NULL</td><td>Original name of the uploaded file</td></tr>
-<tr><td>file_path</td><td>varchar(255)</td><td>NOT NULL</td><td>Server storage path of the file</td></tr>
-<tr><td>file_size</td><td>bigint unsigned</td><td>NOT NULL</td><td>Size of the file in bytes</td></tr>
-<tr><td>mime_type</td><td>varchar(255)</td><td>NOT NULL</td><td>MIME type of the file (e.g., application/pdf)</td></tr>
+<tr><td>file_path</td><td>varchar(255)</td><td>NOT NULL</td><td>Location of the file in private storage (never sent to browsers)</td></tr>
+<tr><td>file_size</td><td>bigint unsigned</td><td>NOT NULL; up to 10 MB</td><td>Size of the file in bytes</td></tr>
+<tr><td>mime_type</td><td>varchar(255)</td><td>NOT NULL; PDF, Word, Excel, JPG or PNG</td><td>MIME type of the file (e.g., application/pdf)</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>
 </table>
@@ -120,7 +121,7 @@
 <table>
 <tr><th>Field Name</th><th>Data Type</th><th>Constraint</th><th>Description</th></tr>
 <tr><td>id</td><td>bigint unsigned</td><td>Primary Key, Auto-increment</td><td>Unique identifier for each setting</td></tr>
-<tr><td>key</td><td>varchar(255)</td><td>NOT NULL, Unique</td><td>The setting's unique key/name</td></tr>
+<tr><td>key</td><td>varchar(255)</td><td>NOT NULL, Unique</td><td>The setting's unique key/name (the demo data has school-year settings, not yet used by the app)</td></tr>
 <tr><td>value</td><td>text</td><td>Nullable</td><td>The setting's value</td></tr>
 <tr><td>created_at</td><td>timestamp</td><td>Nullable</td><td>Record creation timestamp</td></tr>
 <tr><td>updated_at</td><td>timestamp</td><td>Nullable</td><td>Record last-update timestamp</td></tr>

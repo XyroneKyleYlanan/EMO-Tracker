@@ -17,26 +17,37 @@
 <body>
 
 <h1>Software and Hardware Compatibility — EMO Tracker</h1>
-<p class="note"><strong>How to use:</strong> Select the table below, copy (Ctrl+C), and paste into Word or Google Docs — it pastes as a native, editable table.</p>
+<p class="note"><strong>How to use:</strong> Select the table below, copy (Ctrl+C), and paste into Word or Google Docs — it pastes as a native, editable table.<br>
+Versions are the ones the project used on October 7, 2026.</p>
 
 <table>
-<tr><th>Technology</th><th>Type</th><th>Relevance</th></tr>
+<tr><th>Technology</th><th>Version</th><th>Type</th><th>Relevance</th></tr>
 
-<tr><td class="tech">Laravel (13.x)</td><td>Software</td><td class="rel">Backend framework providing the REST API</td></tr>
-<tr><td class="tech">PHP (8.3)</td><td>Software</td><td class="rel">Backend programming language</td></tr>
-<tr><td class="tech">React (19.x)</td><td>Software</td><td class="rel">Frontend user interface library</td></tr>
-<tr><td class="tech">Vite</td><td>Software</td><td class="rel">Frontend build tool and development server</td></tr>
-<tr><td class="tech">Tailwind CSS (v4)</td><td>Software</td><td class="rel">Frontend styling framework</td></tr>
-<tr><td class="tech">MySQL (8.4)</td><td>Software</td><td class="rel">Centralized relational database engine</td></tr>
-<tr><td class="tech">Laragon</td><td>Software</td><td class="rel">Local server environment (Apache + PHP + MySQL)</td></tr>
-<tr><td class="tech">Composer (2.x)</td><td>Software</td><td class="rel">PHP dependency manager</td></tr>
-<tr><td class="tech">Node.js (20 LTS)</td><td>Software</td><td class="rel">JavaScript runtime for frontend tooling</td></tr>
-<tr><td class="tech">npm (10.x)</td><td>Software</td><td class="rel">Frontend package manager</td></tr>
-<tr><td class="tech">Windows 10 / 11</td><td>Software</td><td class="rel">Host operating system for the server</td></tr>
-<tr><td class="tech">Web Browser (Chrome / Edge / Firefox)</td><td>Software</td><td class="rel">Runs the web application on client devices</td></tr>
-<tr><td class="tech">Server Laptop</td><td>Hardware</td><td class="rel">Hosts the database, backend, and frontend</td></tr>
-<tr><td class="tech">Wireless Router / Hotspot</td><td>Hardware</td><td class="rel">Provides the local network (LAN) for all devices</td></tr>
-<tr><td class="tech">Client Devices (laptop, desktop, tablet, phone)</td><td>Hardware</td><td class="rel">Used by staff to access the system via browser</td></tr>
+<tr><td class="tech">Laravel</td><td>13.34</td><td>Software</td><td class="rel">Backend framework providing the REST API (routing, validation, database access, security)</td></tr>
+<tr><td class="tech">PHP</td><td>8.3 or newer</td><td>Software</td><td class="rel">Backend programming language (required by Laravel 13)</td></tr>
+<tr><td class="tech">Laravel Sanctum</td><td>4.3</td><td>Software</td><td class="rel">Token-based login for the API</td></tr>
+<tr><td class="tech">barryvdh/laravel-dompdf</td><td>3.1</td><td>Software</td><td class="rel">Generates PDF event reports on the server (a package, not an external service)</td></tr>
+<tr><td class="tech">PhpSpreadsheet</td><td>5.10</td><td>Software</td><td class="rel">Reads the EMO's .xlsx schedule (one-time import) and writes the Excel export</td></tr>
+<tr><td class="tech">MySQL</td><td>8.4</td><td>Software</td><td class="rel">Centralized relational database engine</td></tr>
+<tr><td class="tech">React</td><td>19.2</td><td>Software</td><td class="rel">Frontend user interface library (single-page application)</td></tr>
+<tr><td class="tech">React Router</td><td>7.18</td><td>Software</td><td class="rel">Pages and role-based routes in the browser</td></tr>
+<tr><td class="tech">Vite</td><td>8.3</td><td>Software</td><td class="rel">Frontend development server and build tool; forwards API requests to Laravel</td></tr>
+<tr><td class="tech">Tailwind CSS</td><td>4.3</td><td>Software</td><td class="rel">Frontend styling framework (responsive layouts)</td></tr>
+<tr><td class="tech">axios</td><td>1.20</td><td>Software</td><td class="rel">Sends the frontend's requests to the API, with the login token</td></tr>
+<tr><td class="tech">FullCalendar</td><td>6.1</td><td>Software</td><td class="rel">Monthly calendar view of events (a UI library, not a service)</td></tr>
+<tr><td class="tech">Recharts</td><td>3.8</td><td>Software</td><td class="rel">Readiness distribution chart on the Analytics page (a UI library, not a service)</td></tr>
+<tr><td class="tech">Composer</td><td>2.x</td><td>Software</td><td class="rel">PHP dependency manager</td></tr>
+<tr><td class="tech">Node.js</td><td>20 LTS</td><td>Software</td><td class="rel">JavaScript runtime for the frontend server and tools</td></tr>
+<tr><td class="tech">npm</td><td>10.x</td><td>Software</td><td class="rel">Frontend package manager</td></tr>
+<tr><td class="tech">Laragon</td><td>—</td><td>Software</td><td class="rel">Provides PHP and MySQL on the EMO's Windows laptop (its Apache web server isn't used)</td></tr>
+<tr><td class="tech">Homebrew</td><td>—</td><td>Software</td><td class="rel">Installs PHP, MySQL and Node.js on the Mac used for development and the defense</td></tr>
+<tr><td class="tech">Windows</td><td>10 / 11</td><td>Software</td><td class="rel">Operating system of the EMO's server laptop (daily use)</td></tr>
+<tr><td class="tech">macOS</td><td>tested on 27</td><td>Software</td><td class="rel">Operating system of the Mac used for development and the Capstone 2 defense</td></tr>
+<tr><td class="tech">Web Browser</td><td>Google Chrome (tested)</td><td>Software</td><td class="rel">Runs the web application on client devices. Tested in Chrome at desktop and phone screen sizes; other modern browsers (Edge, Firefox, Safari) are expected to work and will be checked during the pilot</td></tr>
+<tr><td class="tech">Server Laptop</td><td>—</td><td>Hardware</td><td class="rel">Hosts the database, backend, and frontend; must stay on while the office uses the system</td></tr>
+<tr><td class="tech">Wireless Router / Hotspot</td><td>—</td><td>Hardware</td><td class="rel">Provides the local network (LAN) for all devices; no internet access needed</td></tr>
+<tr><td class="tech">USB Flash Drive / External Drive</td><td>—</td><td>Hardware</td><td class="rel">Recommended place for the automatic daily backups, so a broken laptop doesn't take them with it</td></tr>
+<tr><td class="tech">Client Devices (laptop, desktop, tablet, phone)</td><td>—</td><td>Hardware</td><td class="rel">Used by EMO members to access the system through a browser on the same network</td></tr>
 
 </table>
 

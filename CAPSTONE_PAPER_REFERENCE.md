@@ -14,7 +14,7 @@
 |---|---|---|
 | Chapter 1: Introduction | Part A + Part C | Part B (what changed) |
 | Chapter 2: Review of Related Literature and Systems | Part A + Part D | — |
-| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures) |
+| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures and copy-ready tables) |
 | Chapter 4: Results and Discussion | Part A + Part F + Part G | Appendix G (screenshots) |
 | Chapter 5: Summary, Conclusions and Recommendations | Part A + Part H | Part G |
 | User's manual / appendices | Part A + Appendix E + Appendix F | Appendix G (screenshots) |
@@ -445,6 +445,8 @@ erDiagram
 ```
 
 ### Data dictionary
+
+The same tables, ready to paste into Word, are in [data-dictionary.html](data-dictionary.html) (see Appendix G).
 
 Every table also has `created_at` and `updated_at` timestamps.
 
@@ -1415,7 +1417,7 @@ Mark each scenario Passed or Failed, and write notes.
 
 ---
 
-# Appendix G. Figures: screenshots and diagrams
+# Appendix G. Figures (screenshots and diagrams) and copy-ready tables
 
 **Screenshots** (in `docs/screenshots/`; demo data only; desktop 1440×900, phone 390×844):
 
@@ -1453,6 +1455,15 @@ Mark each scenario Passed or Failed, and write notes.
 | [login-sequence.png](docs/diagrams/login-sequence.png) | Login and request sequence | E.8.4 |
 
 To edit a diagram, copy its Mermaid code into [mermaid.live](https://mermaid.live), change it, and export a PNG or SVG.
+
+**Copy-ready tables** (in the project's main folder, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
+
+| File | What it is | Use in |
+|---|---|---|
+| [data-dictionary.html](data-dictionary.html) | Every column of the 7 application tables, with types, constraints and meanings | Chapter 3, database design |
+| [compatibility-table.html](compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
+| [risk-assessment.html](risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
+| [user-journey-map.html](user-journey-map.html) | Journey of each role (Administrator, Officer, Staff), stage by stage | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
 
 ---
 

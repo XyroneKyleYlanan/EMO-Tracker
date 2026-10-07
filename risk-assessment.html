@@ -21,7 +21,7 @@
 <body>
 
 <h1>Risk Assessment and Analysis — EMO Tracker</h1>
-<p class="note"><strong>How to use:</strong> Select the table below, copy (Ctrl+C), and paste into Word or Google Docs. It pastes as a native table. Risk Level is derived from a standard Likelihood &times; Impact matrix.</p>
+<p class="note"><strong>How to use:</strong> Select the table below, copy (Ctrl+C), and paste into Word or Google Docs. It pastes as a native table. Risk Level is derived from a standard Likelihood &times; Impact matrix, rated before mitigation. The mitigations describe what the system and the team do now (updated October 7, 2026).</p>
 
 <table>
 <tr>
@@ -40,16 +40,16 @@
   <td class="center">Medium</td>
   <td class="center">High</td>
   <td class="center high">High</td>
-  <td>Keep the server laptop plugged in and fully charged during operation (the battery serves as a built-in UPS against power interruptions); designate a backup device with the environment pre-installed; maintain documented setup instructions for quick restoration.</td>
+  <td>Keep the server laptop plugged in and charged during office hours (the battery acts as a built-in UPS); starting the system is a double-click on the start file; documented setup steps (README) let another laptop take over, and the latest backup can be restored on it.</td>
 </tr>
 <tr>
   <td class="center">R2</td>
-  <td>Data loss due to the absence of automated cloud backup (LAN-only deployment)</td>
+  <td>Data loss from laptop failure or theft, accidental deletion, or a faulty update</td>
   <td>Data</td>
   <td class="center">Medium</td>
   <td class="center">High</td>
   <td class="center high">High</td>
-  <td>Perform regular local database backups using mysqldump; store backup copies on a separate external drive; schedule backups before and after major events.</td>
+  <td>Automatic daily backups of the database and all uploaded documents (made on the first use each day; the newest 14 are kept, plus named snapshots that are never deleted automatically); backups can be stored on a USB drive (BACKUP_PATH); the administrator's Home shows the last backup, or a warning if backups fail; a backup is saved automatically before database updates; a restore command brings back all data and documents.</td>
 </tr>
 <tr>
   <td class="center">R3</td>
@@ -58,7 +58,7 @@
   <td class="center">Medium</td>
   <td class="center">High</td>
   <td class="center high">High</td>
-  <td>Use a dedicated router or mobile hotspot for the deployment; prepare a backup network connection; the system requires only a local network and no internet access.</td>
+  <td>Use a dedicated router or mobile hotspot; the system needs only a local network, not internet access; the office laptop itself can still use the system; when a device can't connect, the app says "Can't reach the EMO Tracker server" and offers Try again, and no data is lost.</td>
 </tr>
 <tr>
   <td class="center">R4</td>
@@ -67,16 +67,16 @@
   <td class="center">Low</td>
   <td class="center">High</td>
   <td class="center medium">Medium</td>
-  <td>Maintain complete, documented setup instructions (README) so the system can be redeployed on another machine; keep all dependencies and versions recorded.</td>
+  <td>Documented setup and update steps (README) so the system can be redeployed on another machine; backups restore on any machine (older backups are brought up to the current database structure); the Windows start file finds Laragon's PHP by itself.</td>
 </tr>
 <tr>
   <td class="center">R5</td>
-  <td>Unauthorized access through shared or weak user credentials</td>
+  <td>Unauthorized access through shared, guessed, or leftover credentials</td>
   <td>Security</td>
   <td class="center">Low</td>
   <td class="center">High</td>
   <td class="center medium">Medium</td>
-  <td>Enforce role-based access control; instruct users not to share credentials; the administrator assigns strong initial passwords; deactivate accounts of staff who leave the office.</td>
+  <td>Role-based access checked by the backend on every request; login limited to 10 attempts a minute per account and device; passwords hashed with bcrypt; deactivating a departed member signs them out immediately; changing a password signs out the account's other devices; the demo accounts (with a published demo password) are replaced by real accounts before the EMO uses the system.</td>
 </tr>
 <tr>
   <td class="center">R6</td>
@@ -85,72 +85,107 @@
   <td class="center">Low</td>
   <td class="center">High</td>
   <td class="center medium">Medium</td>
-  <td>Limit the number of administrator accounts; use a strong administrator password; do not share the administrator account; all passwords are stored hashed using bcrypt.</td>
+  <td>Keep administrator accounts few (the office head and one backup); use strong, unshared passwords; an administrator can't deactivate or demote themselves, so an active administrator always remains; error messages never reveal technical details about the server.</td>
 </tr>
 <tr>
   <td class="center">R7</td>
-  <td>User resistance to adopting the new system over familiar manual methods</td>
+  <td>Double-booking: two events booked at the same venue and time</td>
   <td>Operational</td>
   <td class="center">Medium</td>
   <td class="center">Medium</td>
   <td class="center medium">Medium</td>
-  <td>Conduct a hands-on training and orientation session; provide an intuitive, simple interface; demonstrate the time saved compared to manual spreadsheet and paper methods.</td>
+  <td>The event form warns while the venue, date and time are chosen; the event panel and the Schedule ("Overlap" label) show clashes to everyone; a managed venue list keeps names consistent so clashes can be detected. It is a warning, not a block, since some overlaps are intended; places typed as free text aren't checked.</td>
 </tr>
 <tr>
   <td class="center">R8</td>
+  <td>User resistance to adopting the new system over the familiar spreadsheet</td>
+  <td>Operational</td>
+  <td class="center">Medium</td>
+  <td class="center">Medium</td>
+  <td class="center medium">Medium</td>
+  <td>The Schedule page is laid out like the EMO's own sheet (one tab per year, colored by building); the EMO's existing schedule is imported so no re-typing is needed; Excel export keeps the familiar format; hands-on orientation during the pilot.</td>
+</tr>
+<tr>
+  <td class="center">R9</td>
   <td>Users forgetting passwords; the system has no self-service password reset</td>
   <td>Operational</td>
   <td class="center">Medium</td>
   <td class="center">Low</td>
   <td class="center low">Low</td>
-  <td>Administrators can manually reset user passwords; users can change their own password once logged in; self-service password reset is identified as a future enhancement.</td>
+  <td>Administrators reset passwords in Staff Management; users change their own password once logged in; self-service (email) reset is a future enhancement, since the system runs without internet.</td>
 </tr>
 <tr>
-  <td class="center">R9</td>
-  <td>Incorrect or inconsistent data entry by users (e.g., wrong event dates or details)</td>
+  <td class="center">R10</td>
+  <td>Incorrect or inconsistent data entry (e.g., wrong dates, times, or venue names)</td>
   <td>Operational</td>
   <td class="center">Medium</td>
   <td class="center">Medium</td>
   <td class="center medium">Medium</td>
-  <td>Apply input validation on both the frontend and backend; allow authorized users to edit records; require confirmation before destructive actions.</td>
+  <td>Server-side validation (an end date can't be before the start date; an end time must be after the start time); venues chosen from a managed list; department suggestions; when a date or time changes, the form asks whether it was a reschedule or a correction; cancelling is reversible; text cleanup makes names and rooms consistent.</td>
 </tr>
 <tr>
-  <td class="center">R10</td>
-  <td>Accidental deletion of events and their related tasks and documents</td>
+  <td class="center">R11</td>
+  <td>Errors when migrating the EMO's hand-typed spreadsheet into the system</td>
+  <td>Data</td>
+  <td class="center">Medium</td>
+  <td class="center">Medium</td>
+  <td class="center medium">Medium</td>
+  <td>A dry run checks the file before anything is saved; rows that can't be read with confidence are listed for a person to review instead of being guessed; running the import twice never duplicates events; a snapshot is taken before importing; the final import uses the EMO's latest sheet.</td>
+</tr>
+<tr>
+  <td class="center">R12</td>
+  <td>Accidental deletion of events, documents, or other records</td>
   <td>Data</td>
   <td class="center">Low</td>
   <td class="center">Medium</td>
   <td class="center low">Low</td>
-  <td>Require confirmation dialogs before deletion; restrict event deletion to administrators only; completed events are locked from editing to protect historical records.</td>
+  <td>Confirmation before every deletion; only the administrator can delete events and documents; completed events lock their tasks for other roles; people are deactivated, never deleted; daily backups allow recovery.</td>
 </tr>
 <tr>
-  <td class="center">R11</td>
-  <td>Concurrent editing conflicts when two users modify the same record simultaneously</td>
+  <td class="center">R13</td>
+  <td>A new version of the code runs on a database that hasn't been updated, causing errors</td>
+  <td>Technical</td>
+  <td class="center">Low</td>
+  <td class="center">High</td>
+  <td class="center medium">Medium</td>
+  <td>The start files (start.bat, start.command) apply any database changes automatically each time the system starts, after saving a backup; if the update can't be applied, the system doesn't start and says why.</td>
+</tr>
+<tr>
+  <td class="center">R14</td>
+  <td>Concurrent editing conflicts when two users change the same record</td>
   <td>Technical</td>
   <td class="center">Low</td>
   <td class="center">Medium</td>
   <td class="center low">Low</td>
-  <td>The small office size (approximately ten staff) makes simultaneous edits unlikely; record-level locking is identified as a future enhancement.</td>
+  <td>The small office (about 5–10 members) makes simultaneous edits unlikely, and event details have one editor (the administrator); if a record was deleted meanwhile, the user gets a plain "This item no longer exists" message; record-level locking is a future enhancement.</td>
 </tr>
 <tr>
-  <td class="center">R12</td>
+  <td class="center">R15</td>
+  <td>Exposure of the EMO's real data through the public code repository</td>
+  <td>Security</td>
+  <td class="center">Low</td>
+  <td class="center">Medium</td>
+  <td class="center low">Low</td>
+  <td>Real schedule data is kept only in the local database and never committed; screenshots and documentation use demo data or totals only; the import's review list is saved in private storage.</td>
+</tr>
+<tr>
+  <td class="center">R16</td>
   <td>Scope changes arising from panel or client feedback during development</td>
   <td>Project</td>
   <td class="center">Medium</td>
   <td class="center">Medium</td>
   <td class="center medium">Medium</td>
-  <td>Finalize and document requirements early; develop features in defined phases; record all approved changes and their rationale for traceability.</td>
+  <td>Develop in defined phases; confirm added features with the adviser (the professor allowed more than four features if they fit the client's needs); record every approved change and its reason in the project's decision log (ROADMAP.md) for traceability.</td>
 </tr>
 </table>
 
 <div class="legend">
   <strong>Risk Level Legend:</strong><br><br>
-  <span class="high">High</span> Requires immediate, priority mitigation.<br><br>
-  <span class="medium">Medium</span> Should be monitored and mitigated during development.<br><br>
+  <span class="high">High</span> Requires immediate, priority mitigation.<br>
+  <span class="medium">Medium</span> Should be monitored and mitigated during development.<br>
   <span class="low">Low</span> Acceptable; managed with standard practices.
 </div>
-
-<p class="note" style="margin-top:18px;"><strong>Risk Level matrix:</strong> Likelihood (Low / Medium / High) &times; Impact (Low / Medium / High). High likelihood with High impact yields High risk; Low likelihood with Low impact yields Low risk, and so on.</p>
+<p class="note">Risk Level matrix: Likelihood (Low / Medium / High) &times; Impact (Low / Medium / High). Medium or High likelihood with High impact yields High risk; Low likelihood with High impact, or Medium with Medium, yields Medium; lower combinations yield Low.</p>
 
 </body>
 </html>
