@@ -446,7 +446,7 @@ erDiagram
 
 ### Data dictionary
 
-The same tables, ready to paste into Word, are in [data-dictionary.html](data-dictionary.html) (see Appendix G).
+The same tables, ready to paste into Word, are in [data-dictionary.html](tables/data-dictionary.html) (see Appendix G).
 
 Every table also has `created_at` and `updated_at` timestamps.
 
@@ -1419,51 +1419,51 @@ Mark each scenario Passed or Failed, and write notes.
 
 # Appendix G. Figures (screenshots and diagrams) and copy-ready tables
 
-**Screenshots** (in `docs/screenshots/`; demo data only; desktop 1440×900, phone 390×844):
+**Screenshots** (in the `screenshots/` folder next to this file; demo data only; desktop 1440×900, phone 390×844):
 
 | File | Suggested caption |
 |---|---|
-| [01-login.png](docs/screenshots/01-login.png) | Login page |
-| [02-admin-home.png](docs/screenshots/02-admin-home.png) | Administrator's Home: statistics, needs attention, next 7 days |
-| [03-events-calendar.png](docs/screenshots/03-events-calendar.png) | Events page, calendar view, colored by readiness |
-| [04-event-details.png](docs/screenshots/04-event-details.png) | Event panel: readiness with its reason, people, tasks, documents |
-| [05-event-form-overlap-warning.png](docs/screenshots/05-event-form-overlap-warning.png) | New event form warning about a double-booking |
-| [06-reschedule-question.png](docs/screenshots/06-reschedule-question.png) | Editing an event's date: "Was the event rescheduled?" |
-| [07-task-form.png](docs/screenshots/07-task-form.png) | Adding a task with an owner, due date and priority |
-| [08-schedule.png](docs/screenshots/08-schedule.png) | Schedule page, laid out like the EMO's sheet and colored by building |
-| [09-venues.png](docs/screenshots/09-venues.png) | Venues page: buildings, colors and venues |
-| [10-analytics.png](docs/screenshots/10-analytics.png) | Analytics: schedule statistics, preparation, readiness distribution, most urgent events |
-| [11-staff-management.png](docs/screenshots/11-staff-management.png) | Staff Management (accounts) |
-| [12-my-tasks.png](docs/screenshots/12-my-tasks.png) | My Tasks (Staff) |
-| [13-staff-home-phone.png](docs/screenshots/13-staff-home-phone.png) | Staff Home on a phone |
-| [14-events-list-phone.png](docs/screenshots/14-events-list-phone.png) | Events list on a phone: upcoming events first |
-| [15-schedule-phone.png](docs/screenshots/15-schedule-phone.png) | Schedule on a phone (cards by month) |
-| [16-completed-event-officer.png](docs/screenshots/16-completed-event-officer.png) | A completed event as an Officer: tasks locked |
-| [17-pdf-report.png](docs/screenshots/17-pdf-report.png) | PDF event report |
+| [01-login.png](screenshots/01-login.png) | Login page |
+| [02-admin-home.png](screenshots/02-admin-home.png) | Administrator's Home: statistics, needs attention, next 7 days |
+| [03-events-calendar.png](screenshots/03-events-calendar.png) | Events page, calendar view, colored by readiness |
+| [04-event-details.png](screenshots/04-event-details.png) | Event panel: readiness with its reason, people, tasks, documents |
+| [05-event-form-overlap-warning.png](screenshots/05-event-form-overlap-warning.png) | New event form warning about a double-booking |
+| [06-reschedule-question.png](screenshots/06-reschedule-question.png) | Editing an event's date: "Was the event rescheduled?" |
+| [07-task-form.png](screenshots/07-task-form.png) | Adding a task with an owner, due date and priority |
+| [08-schedule.png](screenshots/08-schedule.png) | Schedule page, laid out like the EMO's sheet and colored by building |
+| [09-venues.png](screenshots/09-venues.png) | Venues page: buildings, colors and venues |
+| [10-analytics.png](screenshots/10-analytics.png) | Analytics: schedule statistics, preparation, readiness distribution, most urgent events |
+| [11-staff-management.png](screenshots/11-staff-management.png) | Staff Management (accounts) |
+| [12-my-tasks.png](screenshots/12-my-tasks.png) | My Tasks (Staff) |
+| [13-staff-home-phone.png](screenshots/13-staff-home-phone.png) | Staff Home on a phone |
+| [14-events-list-phone.png](screenshots/14-events-list-phone.png) | Events list on a phone: upcoming events first |
+| [15-schedule-phone.png](screenshots/15-schedule-phone.png) | Schedule on a phone (cards by month) |
+| [16-completed-event-officer.png](screenshots/16-completed-event-officer.png) | A completed event as an Officer: tasks locked |
+| [17-pdf-report.png](screenshots/17-pdf-report.png) | PDF event report |
 
-**Diagrams** (drawn from this document's Mermaid code; images in `docs/diagrams/`):
+**Diagrams** (drawn from this document's Mermaid code; images in the `diagrams/` folder next to this file):
 
 | File | Diagram | Section |
 |---|---|---|
-| [architecture.png](docs/diagrams/architecture.png) | System architecture | E.3 |
-| [erd.png](docs/diagrams/erd.png) | Entity relationship diagram | E.4 |
-| [use-cases.png](docs/diagrams/use-cases.png) | Use cases by role | E.6 |
-| [context-diagram.png](docs/diagrams/context-diagram.png) | Context diagram (data flow, level 0) | E.7 |
-| [readiness-flowchart.png](docs/diagrams/readiness-flowchart.png) | Readiness classification flowchart | E.8.1 |
-| [status-lifecycle.png](docs/diagrams/status-lifecycle.png) | Event status lifecycle (state diagram) | E.8.2 |
-| [overlap-check.png](docs/diagrams/overlap-check.png) | Double-booking check flowchart | E.8.3 |
-| [login-sequence.png](docs/diagrams/login-sequence.png) | Login and request sequence | E.8.4 |
+| [architecture.png](diagrams/architecture.png) | System architecture | E.3 |
+| [erd.png](diagrams/erd.png) | Entity relationship diagram | E.4 |
+| [use-cases.png](diagrams/use-cases.png) | Use cases by role | E.6 |
+| [context-diagram.png](diagrams/context-diagram.png) | Context diagram (data flow, level 0) | E.7 |
+| [readiness-flowchart.png](diagrams/readiness-flowchart.png) | Readiness classification flowchart | E.8.1 |
+| [status-lifecycle.png](diagrams/status-lifecycle.png) | Event status lifecycle (state diagram) | E.8.2 |
+| [overlap-check.png](diagrams/overlap-check.png) | Double-booking check flowchart | E.8.3 |
+| [login-sequence.png](diagrams/login-sequence.png) | Login and request sequence | E.8.4 |
 
 To edit a diagram, copy its Mermaid code into [mermaid.live](https://mermaid.live), change it, and export a PNG or SVG.
 
-**Copy-ready tables** (in the project's main folder, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
+**Copy-ready tables** (in the `tables/` folder next to this file, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
 
 | File | What it is | Use in |
 |---|---|---|
-| [data-dictionary.html](data-dictionary.html) | Every column of the 7 application tables, with types, constraints and meanings | Chapter 3, database design |
-| [compatibility-table.html](compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
-| [risk-assessment.html](risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
-| [user-journey-map.html](user-journey-map.html) | Journey of each role (Administrator, Officer, Staff), stage by stage | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
+| [data-dictionary.html](tables/data-dictionary.html) | Every column of the 7 application tables, with types, constraints and meanings | Chapter 3, database design |
+| [compatibility-table.html](tables/compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
+| [risk-assessment.html](tables/risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
+| [user-journey-map.html](tables/user-journey-map.html) | Journey of each role (Administrator, Officer, Staff), stage by stage | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
 
 ---
 
@@ -1501,4 +1501,4 @@ To edit a diagram, copy its Mermaid code into [mermaid.live](https://mermaid.liv
 
 ---
 
-*Checked against the code on October 7, 2026. If the system changes, update this file in the same commit. For implementation details, see `OVERVIEW.md` or the code itself.*
+*Checked against the code on October 7, 2026. If the system changes, update this file in the same commit. For implementation details, see [docs/OVERVIEW.md](../OVERVIEW.md) or the code itself.*

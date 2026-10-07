@@ -259,8 +259,8 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 
 **Docs (group mates)**
 - [ ] README: the "Resetting Demo Data (before defense)" section must use a separate demo database (as written, it wipes the real schedule); add update steps; refresh the features and roles (officers don't create events; staff see the whole Schedule)
-- [ ] OVERVIEW.md: demo data is now 38 events (not 5); only the admin deletes documents
-- [x] CAPSTONE_PAPER_REFERENCE.md rewritten for the Capstone 2 paper: organized by chapter, with what changed since Capstone 1, the data dictionary, the rules behind readiness, statuses and overlaps, test and audit results, evaluation options (SUS or ISO/IEC 25010), panel questions, and rules for using AI without inventing facts or citations. Figures in `docs/screenshots/` (17, demo data only) and `docs/diagrams/` (8, drawn from the document's Mermaid code)
+- [ ] docs/OVERVIEW.md: demo data is now 38 events (not 5); only the admin deletes documents
+- [x] docs/paper/CAPSTONE_PAPER_REFERENCE.md rewritten for the Capstone 2 paper: organized by chapter, with what changed since Capstone 1, the data dictionary, the rules behind readiness, statuses and overlaps, test and audit results, evaluation options (SUS or ISO/IEC 25010), panel questions, and rules for using AI without inventing facts or citations. Figures in `docs/paper/screenshots/` (17, demo data only) and `docs/paper/diagrams/` (8, drawn from the document's Mermaid code); copy-ready tables in `docs/paper/tables/` (data dictionary, compatibility, risk assessment, user journey map)
 
 **Capstone 2 paper**
 - [ ] Settle the open items in Appendix I of the paper reference with the adviser (title, section, how to count the features, SDLC model, survey format and respondents)

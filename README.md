@@ -240,8 +240,8 @@ The tests use a temporary in-memory database, so they never touch your demo data
 C:\laragon\www\EMOTracker\
 ├── README.md                 This file
 ├── ROADMAP.md                Phased build log
-├── OVERVIEW.md               Architectural reference
-├── CAPSTONE_PAPER_REFERENCE.md   Reference doc for paper writing
+├── docs/                     Architectural overview (OVERVIEW.md), demo accounts
+│   └── paper/                Capstone paper reference, copy-ready tables, screenshots, diagrams
 ├── start.bat                 One-click launcher (Windows)
 ├── start.command             Double-click launcher (Mac)
 ├── backend/                  Laravel app

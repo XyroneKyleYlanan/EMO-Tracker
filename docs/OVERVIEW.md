@@ -268,6 +268,7 @@ All accounts use password: **`password123`**
 
 ## Related Documents
 
-- `README.md` — Setup guide for teammates and panel
-- `ROADMAP.md` — Phased build log (all 8 phases checked off)
-- `OVERVIEW.md` — This document
+- `README.md` (main folder) — Setup guide for teammates and panel
+- `ROADMAP.md` (main folder) — Phased build log and decision log
+- `docs/OVERVIEW.md` — This document
+- `docs/paper/CAPSTONE_PAPER_REFERENCE.md` — Facts and materials for writing the Capstone 2 paper
