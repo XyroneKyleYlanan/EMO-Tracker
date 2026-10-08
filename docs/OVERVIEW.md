@@ -144,7 +144,7 @@ The Event model's `readiness` accessor delegates to this service. Called automat
 | **Officer** | Event preparation: add, edit and assign tasks; upload and delete documents; view analytics; export the Schedule to Excel | Edit event details or delete events; manage user accounts or venues |
 | **Staff** | See every event and the Schedule; update the status of their own tasks; download reports and documents; change own password | Create or edit events or tasks, assign tasks, view analytics, manage users |
 
-Everyone, whatever their role, can be given tasks and has a **My Tasks** page: the EMO is a small office where everyone handles events.
+Everyone, whatever their role, can be given tasks and has a **My tasks** page: the EMO is a small office where everyone handles events.
 
 Role enforcement happens in **two places**:
 - **Backend:** middleware on routes (`role:admin,officer`)
@@ -255,13 +255,13 @@ All accounts use password: **`password123`**
 ## Recommended Demo Flow (for defense)
 
 1. **Login as admin** → tour the dashboard stats
-2. **Staff Management** → show user CRUD (admin-only, demonstrates role gating)
+2. **Accounts** → show user CRUD (admin-only, demonstrates role gating)
 3. **Events** → show Calendly-style calendar with classification colors
 4. **Click into Sports Fest** → show tasks → mark some Done → close drawer
 5. **Click Freshmen Orientation** → mark tasks done → close drawer → watch it turn GREEN (live AI demo)
 6. **Analytics** → show donut chart, top urgent list, period filter
-7. **Open an event** → click **Generate Report** → show downloaded PDF
-8. **Logout** → login as **staff** to show role gating (no Staff/Analytics in sidebar)
+7. **Open an event** → click **Download report** → show downloaded PDF
+8. **Log out** → log in as **staff** to show role gating (no Accounts/Analytics in the menu)
 9. **Click user menu** → demonstrate Change Password
 
 ---

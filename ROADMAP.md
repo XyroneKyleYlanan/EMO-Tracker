@@ -244,6 +244,14 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
   - Tests no longer write errors into the real log; npm advisory fixed (0 left); Pint clean
   - Real data: removed 3 sample events, 7 sample tasks and the "Sample" building (snapshot first: `before-sample-cleanup`)
 - [x] 9 new tests (110 total)
+- [x] UI polish after a review with Anthropic's frontend-design skill (2026-10-08). The look stays simple; these are consistency fixes:
+  - One name per action: "+ Add event", then **Add event**, then "Event added" (same for tasks and accounts); "Download report"; "Log out"; the Staff page is now **Accounts** (the old address still works)
+  - Sentence case everywhere and no all-caps labels, except the Schedule's column headers, which copy the EMO's sheet; priorities read "High priority"
+  - Home opens with one summary sentence instead of four number cards, and Needs attention gets the widest column (Staff Home too)
+  - Calendar marks today with a green circle, since yellow means At Risk; Overlap is violet so it can't be mistaken for At Risk
+  - One bundled typeface designed for easy reading (Atkinson Hyperlegible Next), so the Mac and the EMO's Windows laptop look the same, with no internet needed
+  - Consistent corner rounding (panels, buttons, badges) and no repeated card shadows; motion turns off for people who ask their device for less of it
+  - Paper screenshots retaken; paper reference, tables and overview updated to the new labels
 
 ### Next up
 

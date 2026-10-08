@@ -88,7 +88,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 | Who sees what | Staff saw only events assigned to them | **Everyone can see and open every event**; editing still depends on the role | The office has 5 to 10 people |
 | Readiness rules | Critical if under 40% done, 2 days or less away, or most tasks unassigned. At Risk if under 70% done, 6 days or less away, or any task unassigned | **Time-aware rules** (Part E.8.1). Each label also states its reason, e.g. "1 task is overdue" | When tested on the real schedule, an event 14 days away was labeled Critical at 0% done |
 | Analytics | Readiness statistics, a donut chart, the 5 most urgent events | Adds **schedule statistics** for a chosen period: statuses, rescheduled events, internal vs external, busiest venues | The client asked for analytics on event statuses |
-| Home pages | Statistics cards and shortcut links | Built around **"what needs my attention"**: a needs-attention list, the next 7 days, my open tasks, and the backup status (Administrator) | The shortcut links repeated the menu |
+| Home pages | Statistics cards and shortcut links | Built around **"what needs my attention"**: a one-sentence summary, a needs-attention list, the next 7 days, my open tasks, and the backup status (Administrator) | The shortcut links repeated the menu, and the cards competed with the list that matters most |
 | Reports | PDF event report | Adds an **Excel export** of a year's Schedule, laid out like the EMO's sheet | For year-end records |
 | Documents | Officers and Administrators could delete them | **Only the Administrator deletes documents**; deleting an event also deletes its files | Documents are records |
 | Existing data | None | A **one-time import** of the EMO's spreadsheet, with a list of rows to review, plus automatic text cleanup | To bring in the real 2026 schedule |
@@ -299,6 +299,7 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 | Frontend | axios | 1.20 | API requests (adds the login token to each request) |
 | Frontend | FullCalendar | 6.1 | Monthly calendar view (a UI library, not a service) |
 | Frontend | Recharts | 3.8 | Readiness donut chart (a UI library, not a service) |
+| Frontend | Atkinson Hyperlegible Next (font) | 5.3 | The app's typeface, designed for easy reading; bundled with the app so it works without internet and looks the same on Mac and Windows |
 | Backend | Laravel | 13.34 | REST API: routing, validation, database access, security |
 | Backend | PHP | 8.3 | Language Laravel 13 requires |
 | Backend | Laravel Sanctum | 4.3 | Token-based login for the API |
@@ -539,7 +540,7 @@ Every table also has `created_at` and `updated_at` timestamps.
 | Log in, log out, change own password | ✓ | ✓ | ✓ |
 | See Home, the Schedule, the Events page and every event's details | ✓ | ✓ | ✓ |
 | Download documents and PDF reports | ✓ | ✓ | ✓ |
-| My Tasks; update the status of own tasks | ✓ | ✓ | ✓ |
+| My tasks; update the status of own tasks | ✓ | ✓ | ✓ |
 | Add, edit, delete and assign tasks; change any task's status | ✓ | ✓ | |
 | Upload documents | ✓ | ✓ | |
 | View Analytics; export the Schedule to Excel | ✓ | ✓ | |
@@ -565,7 +566,7 @@ flowchart LR
         S1(["Log in and change password"])
         S2(["View Home, Schedule and events"])
         S3(["View event details, download documents and reports"])
-        S4(["View My Tasks and update own task status"])
+        S4(["View my tasks and update own task status"])
         O1(["Manage and assign tasks"])
         O2(["Upload documents"])
         O3(["View Analytics"])
@@ -921,20 +922,20 @@ Sample statements for EMO Tracker (rate 1 to 5):
 ### Accounts and login
 - **Login:** email and password, with clear messages for wrong credentials, deactivated accounts, too many attempts, and a server that can't be reached.
 - **Menus by role:**
-  - Administrator: Home, My Tasks, Events, Schedule, Analytics and Staff, plus Venues from the Schedule.
-  - Officer: Home, My Tasks, Events, Schedule and Analytics.
-  - Staff: Home, My Tasks, My Events and Schedule.
+  - Administrator: Home, My tasks, Events, Schedule, Analytics and Accounts, plus Venues from the Schedule.
+  - Officer: Home, My tasks, Events, Schedule and Analytics.
+  - Staff: Home, My tasks, My events and Schedule.
   - On phones, the menu becomes a bar at the bottom of the screen.
 - **Change password:** current password, new password (at least 8 characters) and confirmation. Changing it signs out the account's other devices.
 
 ### Home pages ("what needs my attention")
 - **Administrator and Officer:**
-  - **Statistics cards:** events in the next 7 days; EMO-prepared upcoming events, and how many need attention; open tasks and how many are overdue; tasks done, as a percentage.
-  - **Needs attention:** prepared events labeled Critical or At Risk, most urgent first, each with its reason.
+  - **Summary sentence** under the greeting, instead of a row of number cards. For example: "Of the 4 EMO-prepared events, 4 need attention. Across them, 9 tasks are still open (2 overdue) and 5 of 14 are done. The schedule has 11 events in the next 7 days."
+  - **Needs attention** (the widest column, because it is the reason to open Home): prepared events labeled Critical or At Risk, most urgent first, each with its reason.
   - **Next 7 days:** grouped by Today, Tomorrow and then by date, up to 10 rows. Cancelled events stay visible, struck through.
   - **My open tasks.**
 - **Administrator only:** "Last backup: [date and time]", or a warning if the automatic backup is failing.
-- **Staff:** counts of pending, in-progress and done tasks and of upcoming events, then their open tasks and the upcoming events where they have tasks.
+- **Staff:** a summary sentence (for example "You have 1 open task (in progress) and 1 finished task. You have tasks on 1 upcoming event."), then their open tasks and the upcoming events where they have tasks.
 
 ### Events page (F1)
 - **Two views:**
@@ -985,20 +986,20 @@ Sample statements for EMO Tracker (rate 1 to 5):
 - **Duplicates** (for example "UHALL" and "University Hall") can be merged, which moves the events. A venue used by events can't be deleted.
 
 ### Tasks (F2)
-- **Fields:** name, description, due date, priority (Low, Medium, High), status (Pending, In Progress, Done) and one owner. The owner can be any active member, whatever their role.
+- **Fields:** name, description, due date, priority (Low, Medium, High), status (Pending, In progress, Done) and one owner. The owner can be any active member, whatever their role.
 - **Who changes what:** Administrators and Officers add, edit, delete and assign tasks. Owners update their own tasks' status, and Administrators and Officers can update any task's status.
 - **Rules:**
   - A due date after the event ends is allowed, with a warning.
   - Adding a task to a schedule-only event turns on "The EMO prepares this event".
   - Completed events lock their tasks (E.8.2).
   - Cancelled events accept no new tasks, and their tasks are on hold.
-- **My Tasks:** every task assigned to the user across all events. Filters: Open (the default), All, Pending, In Progress and Done. Tasks on cancelled events appear only under All.
+- **My tasks:** every task assigned to the user across all events. Filters: Open (the default), All, Pending, In progress and Done. Tasks on cancelled events appear only under All.
 - **Task details:** clicking a task shows its description, owner, due date, priority and event.
 
 ### Readiness and Analytics (F3)
 - **Readiness classification:** see E.8.1.
 - **Analytics (Administrator and Officer):**
-  - **Periods:** This Week (Sunday to Saturday), This Month, This Year (the default) or All Time. Events are counted by their start date.
+  - **Periods:** This week (Sunday to Saturday), This month, This year (the default) or All time. Events are counted by their start date.
   - **Events section:**
     - Upcoming, Ongoing, Completed and Cancelled counts with percentages (together they add up to all events)
     - Rescheduled count
@@ -1023,7 +1024,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
   - **Download:** everyone.
   - **Delete:** only the Administrator. Deleting an event deletes its files.
 
-### Staff management (Administrator)
+### Accounts (Administrator)
 - **List:** filter by role (Admin, Officer, Staff) and status (Active, Deactivated), with counts.
 - **Create:** name, email, password (at least 8 characters) and role.
 - **Edit and deactivate:** edit name, email, role and password; deactivate or reactivate accounts. Accounts are never deleted, so records keep their owners.
@@ -1039,7 +1040,13 @@ Sample statements for EMO Tracker (rate 1 to 5):
 - **Clear messages:**
   - If data can't load, the page says so ("Can't reach the EMO Tracker server" or "Something went wrong") and offers **Try again**. It never just looks empty.
   - A page that crashes shows a message, with the menu still working.
-- **Keyboard and screen readers:** Escape closes the topmost panel or dialog, and form labels are linked to their fields.
+- **Keyboard and screen readers:** Escape closes the topmost panel or dialog, and form labels are linked to their fields. Keyboard focus is always visible.
+- **Calm, consistent look:**
+  - one bundled typeface designed for easy reading (Atkinson Hyperlegible Next)
+  - sentence case everywhere, with no all-caps labels (except the Schedule's column headers, which copy the EMO's sheet)
+  - each action keeps one name all the way through ("+ Add event", then the **Add event** button, then "Event added")
+  - red, amber and green are kept for readiness; Overlap is violet, and the calendar marks today with a green circle
+  - motion turns off for people who ask their device for less of it
 - **Notifications:** short pop-up messages ("toasts") confirm actions such as saving, uploading and deleting, or explain why they failed.
 
 ---
@@ -1146,7 +1153,7 @@ Don't let an AI write this section before the real data exists. Templates:
 | 1. Scheduling | Events page, Schedule page, event form | Screenshots 03, 08, 15; ScheduleTest |
 | 2. Statuses | Status lifecycle, reschedule mark, cancel | Screenshots 06, 08; EventStatusTest, EventLifecycleTest |
 | 3. Venues and double-booking | Venues page, overlap warning | Screenshots 05, 09; VenueClashTest, VenueManagementTest; 13 pairs found in real data |
-| 4. Tasks | Tasks, My Tasks, completed-event lock | Screenshots 07, 12, 16; AccessControlTest, EventLifecycleTest |
+| 4. Tasks | Tasks, My tasks, completed-event lock | Screenshots 07, 12, 16; AccessControlTest, EventLifecycleTest |
 | 5. Readiness | EventClassifier | Screenshots 02, 04, 10; EventClassifierTest (18 cases) |
 | 6. Analytics | Analytics page | Screenshot 10; AnalyticsTest |
 | 7. Records | PDF report, Excel export, documents | Screenshots 04, 17; DocumentAndReportTest, ScheduleExportTest |
@@ -1350,7 +1357,7 @@ For the defense, the team uses the EMO's shared 2026 data (not confidential) on 
 | PDF template | `backend/resources/views/pdf/event-report.blade.php` |
 | Database | `backend/database/migrations/`, `backend/database/seeders/` |
 | Tests | `backend/tests/Unit/`, `backend/tests/Feature/` |
-| Pages | `frontend/src/pages/` (Home pages, Events, Schedule, Venues, Analytics, My Tasks, Staff Management, Login) |
+| Pages | `frontend/src/pages/` (Home pages, Events, Schedule, Venues, Analytics, My tasks, Accounts, Login) |
 | Components | `frontend/src/components/` (event panel, forms, calendar, list, badges, charts) |
 | Start files | `start.bat` (Windows), `start.command` (Mac) |
 
@@ -1364,13 +1371,13 @@ Use the screenshots in Appendix G.
 1. Open `http://LAPTOP-IP:5173` (or `http://localhost:5173` on the office laptop) and log in.
 2. **Home** shows what needs your attention.
 3. **Schedule:** choose a year, search, and click an event to see its details.
-4. **My Tasks:** update a task's status from its dropdown (Pending → In Progress → Done).
+4. **My tasks:** update a task's status from its dropdown (Pending → In progress → Done).
 5. **Change password:** click your name (top right) → Change password.
 
 **Officer** (everything above, plus)
 1. Open an event → **+ Add task**: name, due date, priority, owner.
-2. **+ Upload file** to attach documents; **Generate Report** for a PDF.
-3. **Analytics:** choose This Week, This Month, This Year or All Time.
+2. **+ Upload file** to attach documents; **Download report** for a PDF.
+3. **Analytics:** choose This week, This month, This year or All time.
 4. **Schedule → Export to Excel.**
 
 **Administrator** (everything above, plus)
@@ -1382,7 +1389,7 @@ Use the screenshots in Appendix G.
    - Change the date or time and answer "moved or correction?".
    - Tick "cancelled" to cancel it, or untick to restore it.
 3. **Schedule → Manage venues:** add buildings (with colors) and venues; merge duplicates.
-4. **Staff:** create accounts, edit roles, reset passwords, deactivate or reactivate.
+4. **Accounts:** add accounts, edit roles, reset passwords, deactivate or reactivate.
 5. Check **Home → Last backup** now and then.
 
 **Office laptop (whoever starts the system)**
@@ -1407,10 +1414,10 @@ Mark each scenario Passed or Failed, and write notes.
 | 8 | Officer | Open a prepared event and add 3 tasks with owners and due dates | The readiness label and its reason update |
 | 9 | Officer | Upload a PDF, then download it | The file appears in Documents and downloads |
 | 10 | Officer | Generate the event's PDF report | A PDF downloads with the event, tasks and readiness |
-| 11 | Officer | Open Analytics and choose This Month | The counts change to this month's events |
+| 11 | Officer | Open Analytics and choose This month | The counts change to this month's events |
 | 12 | Officer | Try to edit a task of a completed event | It's locked ("Contact an administrator") |
 | 13 | Staff | Log in on a phone | The phone layout, with the bottom menu and open tasks |
-| 14 | Staff | Mark own task In Progress, then Done | The status changes; the event's readiness updates |
+| 14 | Staff | Mark own task In progress, then Done | The status changes; the event's readiness updates |
 | 15 | Staff | Find an event on the Schedule with search | Matching events are listed |
 | 16 | Any | Change own password | It works; other devices are signed out |
 | 17 | Officer | Export the Schedule to Excel | An .xlsx downloads, laid out like the EMO's sheet |
@@ -1424,7 +1431,7 @@ Mark each scenario Passed or Failed, and write notes.
 | File | Suggested caption |
 |---|---|
 | [01-login.png](screenshots/01-login.png) | Login page |
-| [02-admin-home.png](screenshots/02-admin-home.png) | Administrator's Home: statistics, needs attention, next 7 days |
+| [02-admin-home.png](screenshots/02-admin-home.png) | Administrator's Home: summary, needs attention, next 7 days |
 | [03-events-calendar.png](screenshots/03-events-calendar.png) | Events page, calendar view, colored by readiness |
 | [04-event-details.png](screenshots/04-event-details.png) | Event panel: readiness with its reason, people, tasks, documents |
 | [05-event-form-overlap-warning.png](screenshots/05-event-form-overlap-warning.png) | New event form warning about a double-booking |
@@ -1433,8 +1440,8 @@ Mark each scenario Passed or Failed, and write notes.
 | [08-schedule.png](screenshots/08-schedule.png) | Schedule page, laid out like the EMO's sheet and colored by building |
 | [09-venues.png](screenshots/09-venues.png) | Venues page: buildings, colors and venues |
 | [10-analytics.png](screenshots/10-analytics.png) | Analytics: schedule statistics, preparation, readiness distribution, most urgent events |
-| [11-staff-management.png](screenshots/11-staff-management.png) | Staff Management (accounts) |
-| [12-my-tasks.png](screenshots/12-my-tasks.png) | My Tasks (Staff) |
+| [11-accounts.png](screenshots/11-accounts.png) | Accounts page (user accounts) |
+| [12-my-tasks.png](screenshots/12-my-tasks.png) | My tasks (Staff) |
 | [13-staff-home-phone.png](screenshots/13-staff-home-phone.png) | Staff Home on a phone |
 | [14-events-list-phone.png](screenshots/14-events-list-phone.png) | Events list on a phone: upcoming events first |
 | [15-schedule-phone.png](screenshots/15-schedule-phone.png) | Schedule on a phone (cards by month) |
