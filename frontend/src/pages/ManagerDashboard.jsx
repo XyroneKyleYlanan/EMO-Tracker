@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import api from '../lib/api'
 import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
-import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
 import { ReadinessReason } from '../components/ReadinessBadge'
 import EventBadges from '../components/EventBadges'
@@ -64,7 +63,9 @@ export default function ManagerDashboard() {
       <div className="mb-2 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name}</h1>
-          <p className="text-sm text-gray-500 mt-1">Here&apos;s what needs your attention.</p>
+          {data && !loadError
+            ? <HomeSummary stats={data.stats} />
+            : <p className="text-sm text-gray-500 mt-1">Here&apos;s what needs your attention.</p>}
         </div>
         <DateTimeDisplay />
       </div>
@@ -72,35 +73,15 @@ export default function ManagerDashboard() {
       {loadError ? (
         <LoadError error={loadError} onRetry={retry} className="mt-8" />
       ) : !data ? (
-        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[0, 1, 2, 3].map((i) => <div key={i} className="bg-white rounded-2xl border border-gray-200 h-28 animate-pulse" />)}
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-3 bg-white rounded-xl border border-gray-200 h-64 animate-pulse" />
+          <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 h-64 animate-pulse" />
         </div>
       ) : (
         <>
-          <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard label="Next 7 days" value={data.stats.thisWeek} sublabel="on the schedule" accent="blue" />
-            <StatCard
-              label="EMO-prepared"
-              value={data.stats.preparedUpcoming}
-              sublabel={data.stats.preparedUpcoming === 0 ? null : data.stats.needAttention ? `${data.stats.needAttention} need attention` : 'all on track'}
-              accent={data.stats.needAttention ? 'rose' : 'green'}
-            />
-            <StatCard
-              label="Open tasks"
-              value={data.stats.openTasks}
-              sublabel={data.stats.overdueTasks ? `${data.stats.overdueTasks} overdue` : null}
-              accent="rose"
-            />
-            <StatCard
-              label="Tasks done"
-              value={data.stats.tasksDone}
-              sublabel={data.stats.tasksTotal ? `${Math.round((data.stats.tasksDone / data.stats.tasksTotal) * 100)}%` : null}
-              accent="green"
-            />
-          </section>
-
-          <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <Panel title="Needs attention" link={{ to: `/${user.role}/events`, label: 'All events' }}>
+          {/* Needs attention is the reason to open Home, so it gets the most room. */}
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+            <Panel className="lg:col-span-3" title="Needs attention" link={{ to: `/${user.role}/events`, label: 'All events' }}>
               {data.needsAttention.length === 0 ? (
                 <Empty>
                   {data.stats.preparedUpcoming === 0
@@ -134,7 +115,7 @@ export default function ManagerDashboard() {
               )}
             </Panel>
 
-            <Panel title="Next 7 days" link={{ to: `/${user.role}/schedule`, label: 'Open schedule' }}>
+            <Panel className="lg:col-span-2" title="Next 7 days" link={{ to: `/${user.role}/schedule`, label: 'Open schedule' }}>
               {data.thisWeek.length === 0 ? (
                 <Empty>Nothing on the schedule for the next 7 days.</Empty>
               ) : (
@@ -147,7 +128,7 @@ export default function ManagerDashboard() {
           {data.myOpenTasks.length > 0 && (
             <section className="mt-8">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">My open tasks</h2>
+                <h2 className="text-sm font-semibold text-gray-900">My open tasks</h2>
                 <Link to={`/${user.role}/tasks`} className="text-xs font-medium text-neu-green hover:underline">View all</Link>
               </div>
               <div className="space-y-2">
@@ -184,6 +165,41 @@ export default function ManagerDashboard() {
   )
 }
 
+// The day in one plain paragraph, in place of a row of number cards.
+function HomeSummary({ stats }) {
+  const n = (count) => <strong className="font-semibold text-gray-900">{count}</strong>
+  const plural = (count, one, many) => (count === 1 ? one : many)
+  const {
+    preparedUpcoming: prepared, needAttention, openTasks, overdueTasks, tasksDone, tasksTotal, thisWeek,
+  } = stats
+
+  return (
+    <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-gray-600">
+      {prepared === 0 ? (
+        <>No upcoming events are marked &ldquo;EMO prepares&rdquo; yet. </>
+      ) : prepared === 1 ? (
+        <>The EMO-prepared event {needAttention ? 'needs attention' : 'is on track'}. </>
+      ) : needAttention === 0 ? (
+        <>All {n(prepared)} EMO-prepared events are on track. </>
+      ) : (
+        <>Of the {n(prepared)} EMO-prepared events, {n(needAttention)} {plural(needAttention, 'needs', 'need')} attention. </>
+      )}
+      {tasksTotal > 0 && (openTasks === 0 ? (
+        <>All {n(tasksTotal)} of their tasks are done. </>
+      ) : (
+        <>
+          Across them, {n(openTasks)} {plural(openTasks, 'task is', 'tasks are')} still open
+          {overdueTasks > 0 && <> (<strong className="font-semibold text-rose-700">{overdueTasks} overdue</strong>)</>}
+          {' '}and {n(tasksDone)} of {n(tasksTotal)} are done.{' '}
+        </>
+      ))}
+      {thisWeek === 0
+        ? <>Nothing is on the schedule in the next 7 days.</>
+        : <>The schedule has {n(thisWeek)} {plural(thisWeek, 'event', 'events')} in the next 7 days.</>}
+    </p>
+  )
+}
+
 // Grouped by day; an event that started earlier and is still running shows under Today.
 // "Today" comes from the server (Manila time), not the viewer's device.
 function WeekList({ events, today, onOpen, scheduleLink }) {
@@ -200,7 +216,7 @@ function WeekList({ events, today, onOpen, scheduleLink }) {
     <div>
       {days.map(({ day, events: list }) => (
         <div key={day}>
-          <div className="px-4 py-1.5 bg-gray-50 text-[11px] font-semibold uppercase tracking-wide text-gray-500 border-y border-gray-100">
+          <div className="px-4 py-1.5 bg-gray-50 text-xs font-semibold text-gray-600 border-y border-gray-100">
             {day === today ? 'Today' : day === tomorrow ? 'Tomorrow' : formatDayMonth(day)}
           </div>
           <ul className="divide-y divide-gray-100">
@@ -261,11 +277,11 @@ function dayAfter(isoDate) {
   return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`
 }
 
-function Panel({ title, link, children }) {
+function Panel({ title, link, className = '', children }) {
   return (
-    <section className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+    <section className={`bg-white rounded-xl border border-gray-200 overflow-hidden ${className}`}>
       <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">{title}</h2>
+        <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
         <Link to={link.to} className="text-xs font-medium text-neu-green hover:underline">{link.label}</Link>
       </header>
       {children}

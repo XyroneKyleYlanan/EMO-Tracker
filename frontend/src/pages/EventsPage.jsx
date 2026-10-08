@@ -95,7 +95,7 @@ export default function EventsPage() {
     setFormOpen(false)
     setEditingEvent(null)
     fetchEvents()
-    toast.success(wasEditing ? 'Event updated.' : `Event "${savedEvent?.name || ''}" created.`)
+    toast.success(wasEditing ? 'Event updated.' : `Event "${savedEvent?.name || ''}" added.`)
   }
 
   return (
@@ -114,7 +114,7 @@ export default function EventsPage() {
             onClick={handleNew}
             className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition flex-shrink-0"
           >
-            + New event
+            + Add event
           </button>
         )}
       </div>
@@ -133,9 +133,9 @@ export default function EventsPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-64 bg-gray-100 rounded"></div>
+        <div className="bg-white rounded-xl border border-gray-200 p-10 animate-pulse">
+          <div className="h-6 bg-gray-200 rounded-md w-1/4 mb-4"></div>
+          <div className="h-64 bg-gray-100 rounded-md"></div>
         </div>
       ) : loadError ? (
         <LoadError error={loadError} onRetry={fetchEvents} />

@@ -7,7 +7,7 @@ const CONFIG = {
   scheduled: { label: 'Scheduled', classes: 'bg-cyan-50 text-cyan-800 border-cyan-200' },
   cancelled: { label: 'Cancelled', classes: 'bg-gray-100 text-gray-500 border-gray-200' },
   // Not statuses, but shown with the same pill: a double booking, and an outside organizer.
-  overlap: { label: 'Overlap', classes: 'bg-orange-100 text-orange-800 border-orange-200' },
+  overlap: { label: 'Overlap', classes: 'bg-violet-100 text-violet-800 border-violet-200' },
   external: { label: 'External', classes: 'bg-white text-gray-800 border-gray-300' },
 }
 

@@ -11,10 +11,10 @@ import { formatDateCompact, formatTimeRange } from '../lib/format'
 
 // Calendar periods, like a report. Events count by the day they start.
 const PERIODS = [
-  { value: 'week', label: 'This Week' },
-  { value: 'month', label: 'This Month' },
-  { value: 'year', label: 'This Year' },
-  { value: 'all', label: 'All Time' },
+  { value: 'week', label: 'This week' },
+  { value: 'month', label: 'This month' },
+  { value: 'year', label: 'This year' },
+  { value: 'all', label: 'All time' },
 ]
 
 const STATUSES = [
@@ -91,9 +91,9 @@ export default function AnalyticsPage() {
       ) : !data ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5 h-28 animate-pulse">
-              <div className="h-3 bg-gray-200 rounded w-2/3 mb-3"></div>
-              <div className="h-8 bg-gray-100 rounded w-1/3"></div>
+            <div key={i} className="bg-white rounded-xl border border-gray-200 p-5 h-28 animate-pulse">
+              <div className="h-3 bg-gray-200 rounded-md w-2/3 mb-3"></div>
+              <div className="h-8 bg-gray-100 rounded-md w-1/3"></div>
             </div>
           ))}
         </div>
@@ -127,9 +127,9 @@ export default function AnalyticsPage() {
           <SectionHeading title="EMO preparation" subtitle="Events the EMO prepares, and how ready they are." className="mt-10" />
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <StatCard label="Prepared events" value={data.stats.totalEvents} accent="blue" />
-            <StatCard label="Total Tasks" value={data.stats.totalTasks} accent="slate" />
+            <StatCard label="Total tasks" value={data.stats.totalTasks} accent="slate" />
             <StatCard
-              label="Tasks Done"
+              label="Tasks done"
               value={data.stats.tasksDone}
               sublabel={`${data.stats.tasksDonePercent}%`}
               accent="green"
@@ -140,9 +140,9 @@ export default function AnalyticsPage() {
           <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ReadinessDonut distribution={data.distribution} />
 
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+            <div className="bg-white rounded-xl border border-gray-200 p-5">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <h3 className="text-sm font-semibold text-gray-900">
                   Top 5 most urgent events
                 </h3>
                 <Link to={`/${user.role}/events`} className="text-xs font-medium text-neu-green hover:underline">
@@ -202,7 +202,7 @@ function percent(part, whole) {
 function SectionHeading({ title, subtitle, className = '' }) {
   return (
     <div className={`mb-3 ${className}`}>
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-700">{title}</h2>
+      <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
     </div>
   )
@@ -212,8 +212,8 @@ function SectionHeading({ title, subtitle, className = '' }) {
 function EventTypeSplit({ type }) {
   const total = type.internal + type.external
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">Internal vs external</h3>
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 mb-4">Internal vs external</h3>
       {total === 0 ? (
         <div className="text-sm text-gray-500 py-4 text-center">No events in this period.</div>
       ) : (
@@ -223,7 +223,7 @@ function EventTypeSplit({ type }) {
             <TypeCount label="External" hint="Outside organizers" value={type.external} total={total} />
           </div>
           <div
-            className="mt-4 h-2.5 rounded bg-neu-green/15 overflow-hidden"
+            className="mt-4 h-2.5 rounded-md bg-neu-green/15 overflow-hidden"
             role="img"
             aria-label={`${type.external} of ${total} events are external`}
             title={`External: ${type.external} of ${total} events (${percent(type.external, total)}%)`}
@@ -254,8 +254,8 @@ function TypeCount({ label, hint, value, total }) {
 function BusiestVenues({ venues }) {
   const most = venues[0]?.events || 0
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">Busiest venues</h3>
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <h3 className="text-sm font-semibold text-gray-900">Busiest venues</h3>
       <p className="text-xs text-gray-500 mt-0.5 mb-4">Events per venue, not counting cancelled ones.</p>
       {venues.length === 0 ? (
         <div className="text-sm text-gray-500 py-4 text-center">No venue bookings in this period.</div>

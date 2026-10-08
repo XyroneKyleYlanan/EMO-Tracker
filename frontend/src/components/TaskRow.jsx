@@ -6,9 +6,11 @@ import { useEscapeKey } from '../lib/useEscapeKey'
 
 const STATUS_OPTIONS = [
   { value: 'pending', label: 'Pending', color: 'bg-slate-100 text-slate-700 border-slate-200' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-amber-100 text-amber-800 border-amber-200' },
+  { value: 'in_progress', label: 'In progress', color: 'bg-amber-100 text-amber-800 border-amber-200' },
   { value: 'done', label: 'Done', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
 ]
+
+const PRIORITY_NAMES = { low: 'Low', medium: 'Medium', high: 'High' }
 
 const PRIORITY_COLORS = {
   low: 'text-slate-500',
@@ -77,16 +79,16 @@ export default function TaskRow({ task, currentUser, onChanged, onEdit, onDelete
             <span>{task.assignee ? task.assignee.name : 'Unassigned'}</span>
             <span>·</span>
             <span>Due {formatDateCompact(task.due_date)}</span>
-            <span className={`text-[10px] font-semibold uppercase tracking-wide ${PRIORITY_COLORS[task.priority]}`}>
-              {task.priority}
+            <span className={`font-medium ${PRIORITY_COLORS[task.priority]}`}>
+              {PRIORITY_NAMES[task.priority]} priority
             </span>
             {isEventCompleted && (
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+              <span className="font-medium text-slate-500">
                 · Locked
               </span>
             )}
             {isEventCancelled && (
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
+              <span className="font-medium text-gray-500">
                 · Event cancelled
               </span>
             )}
@@ -163,7 +165,7 @@ function TaskDetailDialog({ task, statusCfg, locked, onClose, onEdit }) {
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
         <header className="px-6 py-4 border-b border-gray-200 flex items-start justify-between gap-3">
           <h2 className="text-lg font-semibold text-gray-900 break-words min-w-0">{task.name}</h2>
           <span className={`text-xs font-medium px-2 py-1 rounded-md border flex-shrink-0 ${statusCfg.color}`}>
@@ -184,13 +186,13 @@ function TaskDetailDialog({ task, statusCfg, locked, onClose, onEdit }) {
             <dt className="text-gray-500">Due</dt>
             <dd className="text-gray-900">{formatDateLong(task.due_date)}</dd>
             <dt className="text-gray-500">Priority</dt>
-            <dd className={`font-semibold uppercase text-xs tracking-wide self-center ${PRIORITY_COLORS[task.priority]}`}>
-              {task.priority}
+            <dd className={`font-medium ${PRIORITY_COLORS[task.priority]}`}>
+              {PRIORITY_NAMES[task.priority]}
             </dd>
           </dl>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Description</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">Description</h3>
             {task.description ? (
               <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">{task.description}</p>
             ) : (

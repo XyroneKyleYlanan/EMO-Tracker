@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Bundled with the app (no internet needed on the office network), so the Mac
+   and the EMO's Windows laptop look the same. Designed for easy reading. */
+@import "@fontsource-variable/atkinson-hyperlegible-next";
 
 @theme {
   --color-neu-green: #0a5c3a;
@@ -7,6 +10,7 @@
   --color-status-on-track: #059669;
   --color-status-at-risk: #d97706;
   --color-status-critical: #dc2626;
+  --font-sans: "Atkinson Hyperlegible Next Variable", ui-sans-serif, system-ui, sans-serif;
 }
 
 @keyframes slide-in {
@@ -54,8 +58,6 @@
   font-weight: 600;
   font-size: 0.75rem;
   color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding: 0.5rem 0;
 }
 
@@ -79,11 +81,27 @@
   padding: 6px 8px;
 }
 
+/* Today gets a green circle: yellow already means At Risk. */
 .fc-emo .fc-day-today {
-  background-color: #fef3c7 !important;
+  background-color: transparent !important;
 }
 
 .fc-emo .fc-day-today .fc-daygrid-day-number {
-  color: #92400e;
+  background-color: #0a5c3a;
+  color: white;
   font-weight: 600;
+  border-radius: 9999px;
+  min-width: 1.75rem;
+  text-align: center;
+  margin: 4px 4px 0 0;
+  padding: 3px 6px;
+}
+
+/* People who ask their device for less motion get none. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

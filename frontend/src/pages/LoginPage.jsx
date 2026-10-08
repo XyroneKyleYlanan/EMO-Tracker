@@ -46,7 +46,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-8">
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-1">Sign in</h2>
           <p className="text-sm text-gray-500 mb-6">Welcome back. Use your EMO credentials.</p>
 

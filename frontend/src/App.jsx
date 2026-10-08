@@ -33,7 +33,9 @@ function App() {
           >
             <Route index element={<ManagerDashboard />} />
             <Route path="tasks" element={<StaffTasksPage />} />
-            <Route path="staff" element={<StaffManagementPage />} />
+            <Route path="accounts" element={<StaffManagementPage />} />
+            {/* Old address of the Accounts page, kept so saved links still work. */}
+            <Route path="staff" element={<Navigate to="/admin/accounts" replace />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="schedule" element={<SchedulePage />} />
             <Route path="venues" element={<VenuesPage />} />

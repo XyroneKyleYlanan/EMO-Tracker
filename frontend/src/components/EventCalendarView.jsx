@@ -34,7 +34,7 @@ export default function EventCalendarView({ events, onSelect }) {
   }))
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm fc-emo">
+    <div className="bg-white rounded-xl border border-gray-200 p-4 fc-emo">
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"

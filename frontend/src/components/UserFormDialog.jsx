@@ -51,11 +51,11 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
         payload.is_active = form.is_active
         if (form.password) payload.password = form.password
         await api.put(`/users/${user.id}`, payload)
-        toast.success('User updated.')
+        toast.success('Account updated.')
       } else {
         payload.password = form.password
         await api.post('/users', payload)
-        toast.success(`User "${form.name}" created.`)
+        toast.success(`Account for "${form.name}" added.`)
       }
       onSaved()
     } catch (err) {
@@ -69,9 +69,9 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
         <header className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{user ? 'Edit user' : 'New user'}</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{user ? 'Edit account' : 'New account'}</h2>
         </header>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
@@ -150,7 +150,7 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
                   checked={form.is_active}
                   onChange={(e) => update('is_active', e.target.checked)}
                   disabled={isSelf}
-                  className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
+                  className="rounded-md border-gray-300 text-neu-green focus:ring-neu-green"
                 />
                 <span className="text-sm text-gray-700">
                   {form.is_active ? 'Account is active' : 'Account is deactivated'}
@@ -180,7 +180,7 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
             disabled={submitting}
             className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-60"
           >
-            {submitting ? 'Saving...' : user ? 'Save changes' : 'Create user'}
+            {submitting ? 'Saving...' : user ? 'Save changes' : 'Add account'}
           </button>
         </footer>
       </div>

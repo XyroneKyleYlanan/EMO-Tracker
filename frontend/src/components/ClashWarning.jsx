@@ -7,9 +7,9 @@ export default function ClashWarning({ clashes, intro, className = '' }) {
   if (!clashes?.length) return null
 
   return (
-    <div role="status" className={`p-3 bg-orange-50 border border-orange-200 rounded-lg text-orange-950 ${className}`}>
+    <div role="status" className={`p-3 bg-violet-50 border border-violet-200 rounded-lg text-violet-950 ${className}`}>
       <div className="flex items-start gap-2">
-        <AlertIcon width={16} height={16} className="mt-0.5 flex-shrink-0 text-orange-600" />
+        <AlertIcon width={16} height={16} className="mt-0.5 flex-shrink-0 text-violet-600" />
         <div className="min-w-0 text-sm">
           <div className="font-medium">{intro(clashes.length)}</div>
           <ul className="mt-1 space-y-0.5 text-xs">

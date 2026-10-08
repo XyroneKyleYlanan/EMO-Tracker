@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
 import { useAuth } from '../contexts/auth'
-import StatCard from '../components/StatCard'
 import DateTimeDisplay from '../components/DateTimeDisplay'
 import TaskRow from '../components/TaskRow'
 import EventDetailDrawer from '../components/EventDetailDrawer'
@@ -38,10 +37,10 @@ export default function StaffDashboard() {
   if (!data) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="h-8 bg-gray-200 rounded w-1/3 animate-pulse mb-6"></div>
+        <div className="h-8 bg-gray-200 rounded-md w-1/3 animate-pulse mb-6"></div>
         <div className="space-y-3">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5 h-20 animate-pulse"></div>
+            <div key={i} className="bg-white rounded-xl border border-gray-200 p-5 h-20 animate-pulse"></div>
           ))}
         </div>
       </div>
@@ -53,19 +52,12 @@ export default function StaffDashboard() {
       <div className="mb-2 flex flex-col md:flex-row md:items-start md:justify-between gap-3 md:gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Hello, {user.name}</h1>
-          <p className="text-sm text-gray-500 mt-1">Here&apos;s what&apos;s on your plate.</p>
+          <StaffSummary summary={data.summary} />
         </div>
         <DateTimeDisplay />
       </div>
 
-      <section className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Pending" value={data.summary.pendingTasks} accent="slate" />
-        <StatCard label="In Progress" value={data.summary.inProgressTasks} accent="amber" />
-        <StatCard label="Done" value={data.summary.doneTasks} accent="green" />
-        <StatCard label="Upcoming events" value={data.summary.upcomingEvents} accent="blue" />
-      </section>
-
-      <section className="mt-10">
+      <section className="mt-8">
         <SectionHeader title="My open tasks" to="/staff/tasks" />
         {data.openTasks.length === 0 ? (
           <EmptyState message="No open tasks. You're all caught up." />
@@ -129,10 +121,32 @@ export default function StaffDashboard() {
   )
 }
 
+// The day in one plain paragraph, in place of a row of number cards.
+function StaffSummary({ summary }) {
+  const n = (count) => <strong className="font-semibold text-gray-900">{count}</strong>
+  const inProgress = summary.inProgressTasks
+  const open = summary.pendingTasks + inProgress
+  const done = summary.doneTasks
+  const events = summary.upcomingEvents
+
+  return (
+    <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-gray-600">
+      {open === 0 ? <>You have no open tasks</> : <>You have {n(open)} open {open === 1 ? 'task' : 'tasks'}</>}
+      {inProgress > 0 && (inProgress === open
+        ? <>{open === 1 ? ' (in progress)' : ' (all in progress)'}</>
+        : <> ({n(inProgress)} in progress)</>)}
+      {done > 0 && <> and {n(done)} finished {done === 1 ? 'task' : 'tasks'}</>}.{' '}
+      {events === 0
+        ? <>None of your events are coming up.</>
+        : <>You have tasks on {n(events)} upcoming {events === 1 ? 'event' : 'events'}.</>}
+    </p>
+  )
+}
+
 function SectionHeader({ title, to }) {
   return (
     <div className="flex items-center justify-between mb-3">
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500">{title}</h2>
+      <h2 className="text-sm font-semibold text-gray-900">{title}</h2>
       <Link to={to} className="text-xs font-medium text-neu-green hover:underline">View all</Link>
     </div>
   )

@@ -201,9 +201,9 @@ export default function SchedulePage() {
       {loadError ? (
         <LoadError error={loadError} onRetry={() => { setLoadError(null); fetchSchedule() }} />
       ) : loading && !data ? (
-        <div className="bg-white rounded-2xl border border-gray-200 p-10 animate-pulse">
-          <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-64 bg-gray-100 rounded"></div>
+        <div className="bg-white rounded-xl border border-gray-200 p-10 animate-pulse">
+          <div className="h-6 bg-gray-200 rounded-md w-1/4 mb-4"></div>
+          <div className="h-64 bg-gray-100 rounded-md"></div>
         </div>
       ) : rows.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
@@ -218,7 +218,7 @@ export default function SchedulePage() {
             ))}
           </div>
 
-          <div className="hidden md:block bg-white rounded-xl border border-gray-300 shadow-sm overflow-x-auto">
+          <div className="hidden md:block bg-white rounded-xl border border-gray-300 overflow-x-auto">
             <table className="w-full min-w-[1080px] table-fixed text-[13px] border-collapse">
               <colgroup>
                 <col className="w-32" />
@@ -283,7 +283,7 @@ function MonthRows({ month, onOpen }) {
   return (
     <>
       <tr>
-        <td colSpan={8} className="border border-gray-300 px-2.5 py-1.5 bg-gray-100 text-[11px] font-semibold uppercase tracking-wide text-gray-600">
+        <td colSpan={8} className="border border-gray-300 px-2.5 py-1.5 bg-gray-100 text-xs font-semibold text-gray-700">
           {month.label} · {month.rows.length} event{month.rows.length === 1 ? '' : 's'}
         </td>
       </tr>
@@ -343,7 +343,7 @@ function Muted({ children }) {
 function MonthCards({ month, onOpen }) {
   return (
     <section>
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+      <h2 className="text-sm font-semibold text-gray-900 mb-2">
         {month.label} · {month.rows.length} event{month.rows.length === 1 ? '' : 's'}
       </h2>
       <div className="space-y-2">

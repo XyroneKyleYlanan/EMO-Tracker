@@ -59,7 +59,7 @@ export default function VenuesPage() {
   }
 
   if (!data) {
-    return <div className="max-w-4xl mx-auto"><div className="h-64 bg-white rounded-2xl border border-gray-200 animate-pulse" /></div>
+    return <div className="max-w-4xl mx-auto"><div className="h-64 bg-white rounded-xl border border-gray-200 animate-pulse" /></div>
   }
 
   const groups = [
@@ -285,7 +285,7 @@ function Dialog({ title, onClose, onSubmit, submitLabel, submitDisabled, error, 
   return (
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
-      <form onSubmit={onSubmit} className="relative bg-white rounded-2xl shadow-xl w-full max-w-md">
+      <form onSubmit={onSubmit} className="relative bg-white rounded-xl shadow-xl w-full max-w-md">
         <header className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
         </header>
@@ -326,7 +326,7 @@ function RowButton({ children, danger, onColor, ...props }) {
     <button
       type="button"
       {...props}
-      className={`text-xs font-medium px-2 py-1 rounded transition disabled:cursor-not-allowed ${colors}`}
+      className={`text-xs font-medium px-2 py-1 rounded-md transition disabled:cursor-not-allowed ${colors}`}
     >
       {children}
     </button>

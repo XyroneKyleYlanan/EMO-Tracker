@@ -45,7 +45,7 @@ export default function ChangePasswordDialog({ open, onClose }) {
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md">
         <header className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Change password</h2>
           <p className="text-xs text-gray-500 mt-0.5">Use a strong password you don't reuse elsewhere.</p>

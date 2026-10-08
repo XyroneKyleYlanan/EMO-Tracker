@@ -104,7 +104,7 @@ export default function StaffManagementPage() {
     <div className="max-w-6xl mx-auto">
       <div className="flex items-start justify-between gap-4 mb-6 flex-wrap">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Staff Management</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Accounts</h1>
           <p className="text-sm text-gray-500 mt-1">
             {loadError
               ? 'Accounts for everyone who uses EMO Tracker.'
@@ -117,7 +117,7 @@ export default function StaffManagementPage() {
           onClick={handleNew}
           className="bg-neu-green hover:bg-neu-green-dark text-white text-sm font-medium px-4 py-2 rounded-lg transition flex-shrink-0"
         >
-          + New user
+          + Add account
         </button>
       </div>
 
@@ -146,11 +146,11 @@ export default function StaffManagementPage() {
         <LoadError error={loadError} onRetry={fetchUsers} />
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
-          No users match these filters.
+          No accounts match these filters.
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="hidden md:grid grid-cols-[minmax(0,2fr)_minmax(0,2fr)_140px_120px_180px] gap-4 px-5 py-3 bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-500 border-b border-gray-200">
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="hidden md:grid grid-cols-[minmax(0,2fr)_minmax(0,2fr)_140px_120px_180px] gap-4 px-5 py-3 bg-gray-50 text-xs font-semibold text-gray-600 border-b border-gray-200">
             <div>Name</div>
             <div>Email</div>
             <div>Role</div>
@@ -166,7 +166,7 @@ export default function StaffManagementPage() {
               <div className="font-medium text-gray-900 flex items-center gap-2">
                 {u.name}
                 {u.id === currentUser.id && (
-                  <span className="text-[10px] uppercase tracking-wide bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">You</span>
+                  <span className="text-[11px] font-medium bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-md">You</span>
                 )}
               </div>
               <div className="text-sm text-gray-600 truncate">{u.email}</div>
@@ -191,7 +191,7 @@ export default function StaffManagementPage() {
               <div className="flex items-center gap-1 justify-end">
                 <button
                   onClick={() => handleEdit(u)}
-                  className="text-sm text-gray-600 hover:bg-gray-100 px-2.5 py-1 rounded"
+                  className="text-sm text-gray-600 hover:bg-gray-100 px-2.5 py-1 rounded-md"
                 >
                   Edit
                 </button>
@@ -199,14 +199,14 @@ export default function StaffManagementPage() {
                   u.is_active ? (
                     <button
                       onClick={() => handleDeactivate(u)}
-                      className="text-sm text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded"
+                      className="text-sm text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded-md"
                     >
                       Deactivate
                     </button>
                   ) : (
                     <button
                       onClick={() => handleReactivate(u)}
-                      className="text-sm text-emerald-700 hover:bg-emerald-50 px-2.5 py-1 rounded"
+                      className="text-sm text-emerald-700 hover:bg-emerald-50 px-2.5 py-1 rounded-md"
                     >
                       Reactivate
                     </button>

@@ -77,7 +77,7 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
     <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
         <header className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">{task ? 'Edit task' : 'New task'}</h2>
         </header>
@@ -142,7 +142,7 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-neu-green focus:border-transparent"
               >
                 <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
+                <option value="in_progress">In progress</option>
                 <option value="done">Done</option>
               </select>
             </Field>
@@ -185,7 +185,7 @@ export default function TaskFormDialog({ open, eventId, eventLastDay, task, onCl
             disabled={submitting}
             className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-60"
           >
-            {submitting ? 'Saving...' : task ? 'Save changes' : 'Create task'}
+            {submitting ? 'Saving...' : task ? 'Save changes' : 'Add task'}
           </button>
         </footer>
       </div>

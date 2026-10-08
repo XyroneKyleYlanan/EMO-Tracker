@@ -9,7 +9,7 @@ export default function EventCard({ event, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:border-neu-green hover:shadow-md transition"
+      className="w-full text-left bg-white rounded-xl border border-gray-200 p-5 hover:border-neu-green hover:shadow-md transition"
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="min-w-0 flex-1">

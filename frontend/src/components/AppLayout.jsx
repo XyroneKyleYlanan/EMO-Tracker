@@ -16,31 +16,31 @@ import {
 const NAV_BY_ROLE = {
   admin: [
     { to: '/admin', label: 'Home', Icon: HomeIcon, end: true },
-    { to: '/admin/tasks', label: 'My Tasks', Icon: ChecklistIcon },
+    { to: '/admin/tasks', label: 'My tasks', Icon: ChecklistIcon },
     { to: '/admin/events', label: 'Events', Icon: CalendarIcon },
     { to: '/admin/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/admin/analytics', label: 'Analytics', Icon: ChartIcon },
-    { to: '/admin/staff', label: 'Staff', Icon: UsersIcon },
+    { to: '/admin/accounts', label: 'Accounts', Icon: UsersIcon },
   ],
   officer: [
     { to: '/officer', label: 'Home', Icon: HomeIcon, end: true },
-    { to: '/officer/tasks', label: 'My Tasks', Icon: ChecklistIcon },
+    { to: '/officer/tasks', label: 'My tasks', Icon: ChecklistIcon },
     { to: '/officer/events', label: 'Events', Icon: CalendarIcon },
     { to: '/officer/schedule', label: 'Schedule', Icon: TableIcon },
     { to: '/officer/analytics', label: 'Analytics', Icon: ChartIcon },
   ],
   staff: [
     { to: '/staff', label: 'Home', Icon: HomeIcon, end: true },
-    { to: '/staff/tasks', label: 'My Tasks', Icon: ChecklistIcon },
-    { to: '/staff/events', label: 'My Events', Icon: CalendarIcon },
+    { to: '/staff/tasks', label: 'My tasks', Icon: ChecklistIcon },
+    { to: '/staff/events', label: 'My events', Icon: CalendarIcon },
     { to: '/staff/schedule', label: 'Schedule', Icon: TableIcon },
   ],
 }
 
 const ROLE_LABELS = {
-  admin: 'ADMINISTRATOR',
-  officer: 'OFFICER',
-  staff: 'STAFF',
+  admin: 'Administrator',
+  officer: 'Officer',
+  staff: 'Staff',
 }
 
 const ROLE_BADGE = {
@@ -92,7 +92,7 @@ export default function AppLayout() {
             >
               <div className="text-right hidden sm:block">
                 <div className="text-sm font-medium text-gray-900 leading-tight">{user.name}</div>
-                <div className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold ${ROLE_BADGE[user.role]}`}>
+                <div className={`inline-block px-1.5 py-0.5 rounded-md text-[10px] font-semibold ${ROLE_BADGE[user.role]}`}>
                   {ROLE_LABELS[user.role]}
                 </div>
               </div>
@@ -122,7 +122,7 @@ export default function AppLayout() {
                   className="w-full text-left px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-2 border-t border-gray-100"
                 >
                   <LogOutIcon width={16} height={16} />
-                  Logout
+                  Log out
                 </button>
               </div>
             )}

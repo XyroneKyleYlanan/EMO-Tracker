@@ -171,7 +171,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
     <div className="fixed inset-0 z-40 flex items-start md:items-center justify-center p-4 md:p-6">
       <div className="fixed inset-0 bg-black/40" onClick={onClose}></div>
 
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
         <header className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             {event ? 'Edit event' : 'New event'}
@@ -234,7 +234,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
                 type="checkbox"
                 checked={multiDay}
                 onChange={(e) => toggleMultiDay(e.target.checked)}
-                className="rounded border-gray-300 text-neu-green focus:ring-neu-green"
+                className="rounded-md border-gray-300 text-neu-green focus:ring-neu-green"
               />
               Runs for several days
             </label>
@@ -357,7 +357,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
               type="checkbox"
               checked={form.needs_preparation}
               onChange={(e) => update('needs_preparation', e.target.checked)}
-              className="mt-0.5 rounded border-gray-300 text-neu-green focus:ring-neu-green"
+              className="mt-0.5 rounded-md border-gray-300 text-neu-green focus:ring-neu-green"
             />
             <span className="text-sm">
               <span className="font-medium text-gray-900">The EMO prepares this event</span>
@@ -385,7 +385,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
                 type="checkbox"
                 checked={form.cancelled}
                 onChange={(e) => update('cancelled', e.target.checked)}
-                className="rounded border-gray-300 text-rose-600 focus:ring-rose-500"
+                className="rounded-md border-gray-300 text-rose-600 focus:ring-rose-500"
               />
               <span className="text-sm text-gray-700">This event is cancelled (it stays on the schedule, marked cancelled)</span>
             </label>
@@ -401,7 +401,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
         <footer className="px-6 py-3 border-t border-gray-200 flex items-center justify-end gap-2">
           {/* Always in view, even when the full warning is scrolled out of sight. */}
           {clashes.length > 0 && (
-            <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-orange-700">
+            <span className="mr-auto inline-flex items-center gap-1.5 text-xs font-medium text-violet-700">
               <AlertIcon width={14} height={14} />
               Overlaps with {clashes.length} booking{clashes.length === 1 ? '' : 's'}
             </span>
@@ -419,7 +419,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             disabled={submitting || form.venue_id === NEW_VENUE}
             className="text-sm bg-neu-green hover:bg-neu-green-dark text-white px-4 py-2 rounded-lg font-medium transition disabled:opacity-60"
           >
-            {submitting ? 'Saving...' : event ? 'Save changes' : 'Create event'}
+            {submitting ? 'Saving...' : event ? 'Save changes' : 'Add event'}
           </button>
         </footer>
       </div>

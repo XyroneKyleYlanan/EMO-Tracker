@@ -22,15 +22,15 @@ export default function ReadinessDonut({ distribution }) {
 
   if (total === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm flex items-center justify-center min-h-[280px]">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 flex items-center justify-center min-h-[280px]">
         <div className="text-sm text-gray-500">No events to display.</div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">
         Readiness distribution
       </h3>
       <div className="relative">
@@ -79,7 +79,7 @@ export default function ReadinessDonut({ distribution }) {
           style={{ paddingBottom: 38 }}
         >
           <div className="text-3xl font-semibold text-gray-900">{total}</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">Prepared events</div>
+          <div className="text-xs text-gray-500">Prepared events</div>
         </div>
       </div>
     </div>

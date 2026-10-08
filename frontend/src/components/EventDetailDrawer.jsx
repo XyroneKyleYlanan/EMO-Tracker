@@ -196,9 +196,9 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
               )
             ) : loading || !event ? (
               <div className="space-y-3">
-                <div className="h-6 bg-gray-200 rounded w-2/3 animate-pulse"></div>
-                <div className="h-4 bg-gray-100 rounded w-full animate-pulse"></div>
-                <div className="h-4 bg-gray-100 rounded w-5/6 animate-pulse"></div>
+                <div className="h-6 bg-gray-200 rounded-md w-2/3 animate-pulse"></div>
+                <div className="h-4 bg-gray-100 rounded-md w-full animate-pulse"></div>
+                <div className="h-4 bg-gray-100 rounded-md w-5/6 animate-pulse"></div>
               </div>
             ) : (
               <>
@@ -229,7 +229,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                         {event.location || 'Venue to be announced'}
                         {event.venue?.building && (
                           <span
-                            className="text-[10px] font-semibold px-1.5 py-0.5 rounded text-gray-800"
+                            className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md text-gray-800"
                             style={{ backgroundColor: event.venue.building.color }}
                           >
                             {event.venue.building.name}
@@ -345,7 +345,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   )}
                 >
                   {uploadError && (
-                    <div className="mb-2 p-2 bg-rose-50 border border-rose-200 rounded text-xs text-rose-800">
+                    <div className="mb-2 p-2 bg-rose-50 border border-rose-200 rounded-md text-xs text-rose-800">
                       {uploadError}
                     </div>
                   )}
@@ -365,7 +365,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                           <div className="flex items-center gap-1 flex-shrink-0">
                             <button
                               onClick={() => handleDownloadDoc(doc)}
-                              className="text-gray-400 hover:text-neu-green p-1 rounded hover:bg-gray-100"
+                              className="text-gray-400 hover:text-neu-green p-1 rounded-md hover:bg-gray-100"
                               title="Download"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -375,7 +375,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                             {canDeleteDocs && (
                               <button
                                 onClick={() => handleDeleteDoc(doc)}
-                                className="text-gray-400 hover:text-rose-600 p-1 rounded hover:bg-gray-100"
+                                className="text-gray-400 hover:text-rose-600 p-1 rounded-md hover:bg-gray-100"
                                 title="Delete"
                               >
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
@@ -413,7 +413,7 @@ export default function EventDetailDrawer({ eventId, onClose, onEdit, onDelete, 
                   <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
                   <polyline points="14 2 14 8 20 8" />
                 </svg>
-                {generatingReport ? 'Generating...' : 'Generate Report'}
+                {generatingReport ? 'Preparing report...' : 'Download report'}
               </button>
 
               <div className="flex items-center gap-2">
@@ -467,7 +467,7 @@ function Section({ title, action, children }) {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">{title}</h3>
+        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
         {action}
       </div>
       {children}

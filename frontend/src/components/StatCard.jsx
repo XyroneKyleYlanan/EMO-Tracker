@@ -8,8 +8,8 @@ export default function StatCard({ label, value, sublabel, accent = 'green' }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
-      <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</div>
+    <div className="bg-white rounded-xl border border-gray-200 p-5">
+      <div className="text-sm font-medium text-gray-600">{label}</div>
       <div className="mt-2 flex items-baseline gap-2">
         <div className="text-3xl font-semibold text-gray-900">{value}</div>
         {sublabel && (
