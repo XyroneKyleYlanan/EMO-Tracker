@@ -1,7 +1,8 @@
 @import "tailwindcss";
-/* Bundled with the app (no internet needed on the office network), so the Mac
-   and the EMO's Windows laptop look the same. Designed for easy reading. */
-@import "@fontsource-variable/atkinson-hyperlegible-next";
+/* Apple devices show their own San Francisco font. Apple's license keeps it on
+   Apple devices, so everything else gets Inter, its closest free match, bundled
+   with the app (no internet needed on the office network). */
+@import "@fontsource-variable/inter";
 
 @theme {
   --color-neu-green: #0a5c3a;
@@ -10,7 +11,7 @@
   --color-status-on-track: #059669;
   --color-status-at-risk: #d97706;
   --color-status-critical: #dc2626;
-  --font-sans: "Atkinson Hyperlegible Next Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Inter Variable", "Segoe UI", sans-serif;
 }
 
 @keyframes slide-in {

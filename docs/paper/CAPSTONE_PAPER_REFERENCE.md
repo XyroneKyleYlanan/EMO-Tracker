@@ -299,7 +299,7 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 | Frontend | axios | 1.20 | API requests (adds the login token to each request) |
 | Frontend | FullCalendar | 6.1 | Monthly calendar view (a UI library, not a service) |
 | Frontend | Recharts | 3.8 | Readiness donut chart (a UI library, not a service) |
-| Frontend | Atkinson Hyperlegible Next (font) | 5.3 | The app's typeface, designed for easy reading; bundled with the app so it works without internet and looks the same on Mac and Windows |
+| Frontend | San Francisco / Inter (fonts) | Inter 5.3 | Apple devices use their own San Francisco font; Windows and Android use Inter, its closest free match, bundled with the app so it works without internet (Apple's license keeps San Francisco on Apple devices) |
 | Backend | Laravel | 13.34 | REST API: routing, validation, database access, security |
 | Backend | PHP | 8.3 | Language Laravel 13 requires |
 | Backend | Laravel Sanctum | 4.3 | Token-based login for the API |
@@ -1042,7 +1042,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
   - A page that crashes shows a message, with the menu still working.
 - **Keyboard and screen readers:** Escape closes the topmost panel or dialog, and form labels are linked to their fields. Keyboard focus is always visible.
 - **Calm, consistent look:**
-  - one bundled typeface designed for easy reading (Atkinson Hyperlegible Next)
+  - one look on every device: San Francisco on Apple devices, and the closely matching Inter (bundled with the app) on Windows and Android
   - sentence case everywhere, with no all-caps labels (except the Schedule's column headers, which copy the EMO's sheet)
   - each action keeps one name all the way through ("+ Add event", then the **Add event** button, then "Event added")
   - red, amber and green are kept for readiness; Overlap is violet, and the calendar marks today with a green circle

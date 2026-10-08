@@ -249,7 +249,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
   - Sentence case everywhere and no all-caps labels, except the Schedule's column headers, which copy the EMO's sheet; priorities read "High priority"
   - Home opens with one summary sentence instead of four number cards, and Needs attention gets the widest column (Staff Home too)
   - Calendar marks today with a green circle, since yellow means At Risk; Overlap is violet so it can't be mistaken for At Risk
-  - One bundled typeface designed for easy reading (Atkinson Hyperlegible Next), so the Mac and the EMO's Windows laptop look the same, with no internet needed
+  - Font: Apple devices keep their San Francisco font (the original look); Windows and Android use Inter, its closest free match, bundled with the app so it works without internet. Apple's license doesn't allow San Francisco on other devices. (Atkinson Hyperlegible Next was tried first; the team preferred the original look)
   - Consistent corner rounding (panels, buttons, badges) and no repeated card shadows; motion turns off for people who ask their device for less of it
   - Paper screenshots retaken; paper reference, tables and overview updated to the new labels
 
