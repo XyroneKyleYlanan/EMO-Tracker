@@ -11,32 +11,35 @@ A web application for event planning and task management with rule-based event r
 - **Frontend:** React + Vite + Tailwind CSS v4
 - **Backend:** Laravel 13 + Sanctum (PHP 8.3)
 - **Database:** MySQL 8.4
-- **Local server:** Laragon (LAN-only hosting)
+- **Local server:** Laragon on Windows, Homebrew on Mac (LAN-only hosting)
 - **Charts:** Recharts
 - **Calendar:** FullCalendar
 - **PDF generation:** barryvdh/laravel-dompdf
 
 ---
 
-## 4 Core Features
+## Features
 
-1. **Event Planning & Scheduling** — Create, edit, and view events in calendar or list view (Calendly-style)
-2. **Task & Staff Assignment Tracking** — Manage tasks per event, assign staff, track status
-3. **Rule-Based Event Readiness Classification** — Hardcoded RED/YELLOW/GREEN logic + analytics dashboard with donut chart
-4. **Reports & Document Management** — PDF event reports + file upload/download
+1. **Event Planning & Scheduling** — Calendar and list views, plus a Schedule page laid out like the EMO's sheet (one tab per year, colored by building). Every event is Internal or External, shows its status (Upcoming, Ongoing, Completed, Cancelled), and notes when it was rescheduled
+2. **Task Assignment & Tracking** — Tasks per event, each with an owner, due date, priority and status; everyone has a My tasks page
+3. **Rule-Based Event Readiness Classification** — Hardcoded On Track / At Risk / Critical rules that also say why, plus an Analytics page
+4. **Reports & Document Management** — PDF event reports, Excel export of the Schedule, and file upload and download (PDF, Word, Excel, JPG, PNG, up to 10 MB)
+5. **Venue Double-Booking Warning** — Warns when an event overlaps another booking at the same venue and time
+
+Also included: automatic daily backups (database and documents), and a one-time import of the EMO's schedule spreadsheet.
 
 ## User Roles
 
-- **Administrator** — Full access, manages staff accounts, deletes events
-- **Officer** — Creates/manages events, tasks, and documents
-- **Staff** — Views only the events they're assigned to and updates own task status
+- **Administrator** — Full access: manages the schedule (adds, edits, cancels and deletes events), venues and user accounts; the only role that can delete documents
+- **Officer** — Prepares events: adds and edits tasks, uploads documents, makes reports, views Analytics, exports the Schedule
+- **Staff** — Sees every event and the Schedule, and updates the status of their own tasks
 
 ---
 
 ## First-time Setup
 
 ### Prerequisites
-- [Laragon](https://laragon.org) (includes PHP 8.3, MySQL 8.4, Apache)
+- [Laragon](https://laragon.org) (includes PHP 8.3 and MySQL 8.4)
 - [Node.js 20+](https://nodejs.org) and npm
 - Composer (bundled with Laragon)
 
@@ -50,7 +53,7 @@ git clone https://github.com/XyroneKyleYlanan/EMO-Tracker.git EMOTracker
 The project must live inside Laragon's `www` folder — i.e., `C:\laragon\www\EMOTracker\`.
 
 ### 2. Start Laragon
-Open Laragon → click **"Start All"**. This launches Apache and MySQL.
+Open Laragon → click **"Start All"**. This starts MySQL (the app doesn't use Laragon's Apache).
 
 ### 3. Backend setup
 Open **Terminal → Laragon Terminal** (this gives you the correct PHP path automatically).
@@ -77,6 +80,8 @@ php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
+Only run `migrate:fresh` on a new, empty database: it deletes everything first.
+
 ### 6. Frontend setup
 Open a second terminal:
 
@@ -96,9 +101,10 @@ First make sure **Laragon is running** (open Laragon → "Start All").
 Double-click **`start.bat`** in the project root (`C:\laragon\www\EMOTracker\start.bat`).
 
 It automatically:
-1. Starts the Laravel backend in its own window
-2. Starts the React frontend in its own window
-3. Opens `http://localhost:5173` in your browser after 5 seconds
+1. Finds Laragon's PHP and applies any database changes that came with a new version (saving a backup first)
+2. Starts the Laravel backend in its own window
+3. Starts the React frontend in its own window
+4. Opens `http://localhost:5173` in your browser after 5 seconds
 
 To stop the app, close the two CMD windows that opened.
 
@@ -163,6 +169,8 @@ mysql -u root -e "CREATE DATABASE emo_tracker CHARACTER SET utf8mb4 COLLATE utf8
 php artisan migrate:fresh --seed
 ```
 
+Only run `migrate:fresh` on a new, empty database: it deletes everything first.
+
 **4. Frontend setup:**
 
 ```bash
@@ -172,7 +180,7 @@ npm install
 
 ### Running the app (Mac)
 
-In Finder, open the `EMOTracker` folder and double-click **`start.command`**. A Terminal window opens, checks that MySQL is running, starts both servers, opens `http://localhost:5173`, and prints the address other devices on the same WiFi can use. To stop the app, press **Control + C** in that window, or just close it.
+In Finder, open the `EMOTracker` folder and double-click **`start.command`**. A Terminal window opens, checks that MySQL is running, applies any database changes (saving a backup first), starts both servers, opens `http://localhost:5173`, and prints the address other devices on the same WiFi can use. To stop the app, press **Control + C** in that window, or just close it.
 
 If macOS says the file can't be opened, right-click it, choose **Open**, then click **Open** again. You only need to do this once.
 
@@ -188,6 +196,16 @@ The first time, macOS may ask whether to allow incoming connections for `node`. 
 If MySQL isn't running (for example after a restart), start it with `brew services start mysql@8.4`.
 
 The other commands in this README (resetting demo data, running tests) are the same on Mac. Just use your Mac path, e.g. `cd ~/Projects/EMOTracker/backend`.
+
+---
+
+## Updating to a New Version
+
+1. In the project folder, run `git pull`.
+2. In `backend`, run `composer install`. In `frontend`, run `npm install`.
+3. Start the app with `start.bat` (or `start.command` on Mac). It applies any database changes itself, after saving a backup. If you start the servers by hand instead, first run `php artisan app:update-database` in `backend`.
+
+Never use `php artisan migrate:fresh` to update: it deletes all the data.
 
 ---
 
@@ -210,16 +228,16 @@ All demo accounts use password: **`password123`**
 
 ---
 
-## Resetting Demo Data (before defense)
+## Resetting Demo Data
 
-To wipe everything and reload fresh demo data:
+**Careful:** `php artisan migrate:fresh --seed` deletes everything in the database it runs on, including the EMO's real schedule. Only run it on a separate demo database:
 
-```bash
-cd C:\laragon\www\EMOTracker\backend
-php artisan migrate:fresh --seed
-```
+1. Create a database named `emo_tracker_demo` (same as step 4 above, with that name).
+2. In `backend/.env`, change `DB_DATABASE=emo_tracker` to `DB_DATABASE=emo_tracker_demo`.
+3. In `backend`, run `php artisan migrate:fresh --seed`. This loads 38 sample events, 18 tasks, the 10 demo accounts and a sample document.
+4. To switch back to the real data, change `DB_DATABASE` back to `emo_tracker` and restart the app.
 
-This recreates all tables and reseeds 5 events, 18 tasks, 10 users, and the sample Foundation Day document.
+Deleted something by mistake? The app backs up each database once a day. `php artisan backup:list` shows the backups, and `php artisan backup:restore` brings back the newest one.
 
 ---
 
@@ -230,7 +248,7 @@ cd C:\laragon\www\EMOTracker\backend
 php artisan test
 ```
 
-The tests use a temporary in-memory database, so they never touch your demo data. They cover the readiness rules, role and record access, the completed-event lock, document storage, and PDF reports.
+The tests use a temporary in-memory database, so they never touch your demo data. The 110 tests cover the readiness rules, event statuses, the double-booking check, roles and access, the completed-event lock, backups, the schedule import and export, documents and PDF reports.
 
 ---
 
@@ -247,9 +265,9 @@ C:\laragon\www\EMOTracker\
 ├── backend/                  Laravel app
 │   ├── app/
 │   │   ├── Http/Controllers/Api/   API endpoints
-│   │   ├── Http/Middleware/         Role + JSON middleware
+│   │   ├── Http/Middleware/         Roles, JSON, finished events, daily backup
 │   │   ├── Models/                  Eloquent models
-│   │   └── Services/                EventClassifier service
+│   │   └── Services/                Readiness, overlaps, import/export, backups
 │   ├── database/
 │   │   ├── migrations/              Schema definitions
 │   │   └── seeders/                 Demo data
@@ -267,7 +285,7 @@ C:\laragon\www\EMOTracker\
 
 ## Roadmap & Progress
 
-See `ROADMAP.md` for the phased build log. All 4 features and supporting infrastructure are complete.
+See `ROADMAP.md` for the phased build log and what's next. Materials for the Capstone 2 paper are in [`docs/paper`](docs/paper/).
 
 ---
 
@@ -275,7 +293,7 @@ See `ROADMAP.md` for the phased build log. All 4 features and supporting infrast
 
 - **No external service APIs.** All data and logic come from the self-built Laravel backend.
 - **No machine learning or AI APIs.** The readiness classification is hardcoded rule-based logic in `App\Services\EventClassifier`.
-- **LAN-only hosting.** App runs on a laptop via Laragon, accessible to other devices on the same WiFi network.
+- **LAN-only hosting.** App runs on a laptop (Laragon on Windows, Homebrew on Mac), accessible to other devices on the same WiFi network.
 - **UI component libraries are allowed** (FullCalendar, Recharts, Tailwind, axios). These are visual tools, not feature APIs.
 
 ---

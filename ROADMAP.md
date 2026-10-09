@@ -266,7 +266,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [ ] Optional: a terminal command to reset a password, in case every admin is locked out
 
 **Docs (group mates)**
-- [ ] README: the "Resetting Demo Data (before defense)" section must use a separate demo database (as written, it wipes the real schedule); add update steps; refresh the features and roles (officers don't create events; staff see the whole Schedule)
+- [x] README: the demo reset now uses a separate demo database (it used to wipe the real schedule); added update steps and `migrate:fresh` warnings; features, roles, launchers and tests brought up to date
 - [ ] docs/OVERVIEW.md: demo data is now 38 events (not 5); only the admin deletes documents
 - [x] docs/paper/CAPSTONE_PAPER_REFERENCE.md rewritten for the Capstone 2 paper: organized by chapter, with what changed since Capstone 1, the data dictionary, the rules behind readiness, statuses and overlaps, test and audit results, evaluation options (SUS or ISO/IEC 25010), panel questions, and rules for using AI without inventing facts or citations. Figures in `docs/paper/screenshots/` (17, demo data only) and `docs/paper/diagrams/` (8, drawn from the document's Mermaid code); copy-ready tables in `docs/paper/tables/` (data dictionary, compatibility, risk assessment, user journey map)
 
