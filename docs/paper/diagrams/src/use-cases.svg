@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1363" viewBox="0 0 1180 1363" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#333333">
+<title>EMO Tracker use case diagram</title>
+<defs>
+  <marker id="solid" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#555555"/>
+  </marker>
+  <marker id="open" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10" fill="none" stroke="#555555" stroke-width="1.3"/>
+  </marker>
+</defs>
+<rect width="1180" height="1363" fill="#ffffff"/>
+<rect x="335" y="40" width="825" height="1293" fill="#fafafa" stroke="#999999" stroke-width="1.2"/>
+<text x="747.5" y="66.0" text-anchor="middle" dominant-baseline="central" font-size="17" font-weight="bold">EMO Tracker</text>
+<line x1="156" y1="325" x2="397" y2="125" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="185" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="245" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="305" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="365" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="425" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="485" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="325" x2="397" y2="545" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="719" x2="397" y2="639" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="719" x2="397" y2="699" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="719" x2="397" y2="759" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="719" x2="397" y2="819" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="913" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="973" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="1033" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="1093" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="1153" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="1213" stroke="#555555" stroke-width="1.2"/>
+<line x1="156" y1="1083" x2="397" y2="1273" stroke="#555555" stroke-width="1.2"/>
+<ellipse cx="565" cy="125" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="125.0" text-anchor="middle" dominant-baseline="central" font-size="15">Log in</text>
+<ellipse cx="565" cy="185" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="185.0" text-anchor="middle" dominant-baseline="central" font-size="15">Log out</text>
+<ellipse cx="565" cy="245" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="245.0" text-anchor="middle" dominant-baseline="central" font-size="15">Change own password</text>
+<ellipse cx="565" cy="305" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="305.0" text-anchor="middle" dominant-baseline="central" font-size="15">View Home, Events and Schedule</text>
+<ellipse cx="565" cy="365" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="365.0" text-anchor="middle" dominant-baseline="central" font-size="15">View event details</text>
+<ellipse cx="565" cy="425" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="425.0" text-anchor="middle" dominant-baseline="central" font-size="15">Download documents and PDF reports</text>
+<ellipse cx="565" cy="485" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="485.0" text-anchor="middle" dominant-baseline="central" font-size="15">View my tasks</text>
+<ellipse cx="565" cy="545" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="545.0" text-anchor="middle" dominant-baseline="central" font-size="15">Update own task status</text>
+<ellipse cx="565" cy="639" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="639.0" text-anchor="middle" dominant-baseline="central" font-size="15">Manage tasks (add, edit, delete, assign)</text>
+<ellipse cx="565" cy="699" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="699.0" text-anchor="middle" dominant-baseline="central" font-size="15">Upload documents</text>
+<ellipse cx="565" cy="759" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="759.0" text-anchor="middle" dominant-baseline="central" font-size="15">View Analytics</text>
+<ellipse cx="565" cy="819" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="819.0" text-anchor="middle" dominant-baseline="central" font-size="15">Export the Schedule to Excel</text>
+<ellipse cx="565" cy="913" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="913.0" text-anchor="middle" dominant-baseline="central" font-size="15">Add event</text>
+<ellipse cx="565" cy="973" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="973.0" text-anchor="middle" dominant-baseline="central" font-size="15">Edit event</text>
+<ellipse cx="565" cy="1033" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="1033.0" text-anchor="middle" dominant-baseline="central" font-size="15">Cancel, restore or delete events</text>
+<ellipse cx="565" cy="1093" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="1093.0" text-anchor="middle" dominant-baseline="central" font-size="15">Manage venues and buildings</text>
+<ellipse cx="565" cy="1153" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="1153.0" text-anchor="middle" dominant-baseline="central" font-size="15">Manage user accounts</text>
+<ellipse cx="565" cy="1213" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="1213.0" text-anchor="middle" dominant-baseline="central" font-size="15">Delete documents</text>
+<ellipse cx="565" cy="1273" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="565" y="1273.0" text-anchor="middle" dominant-baseline="central" font-size="15">See backup status</text>
+<g stroke="#333333" stroke-width="1.8" fill="none">
+  <circle cx="130" cy="297" r="11" fill="#ffffff"/>
+  <line x1="130" y1="308" x2="130" y2="343"/>
+  <line x1="110" y1="321" x2="150" y2="321"/>
+  <line x1="130" y1="343" x2="114" y2="369"/>
+  <line x1="130" y1="343" x2="146" y2="369"/>
+</g>
+<text x="130" y="389.0" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">Staff</text>
+<g stroke="#333333" stroke-width="1.8" fill="none">
+  <circle cx="130" cy="691" r="11" fill="#ffffff"/>
+  <line x1="130" y1="702" x2="130" y2="737"/>
+  <line x1="110" y1="715" x2="150" y2="715"/>
+  <line x1="130" y1="737" x2="114" y2="763"/>
+  <line x1="130" y1="737" x2="146" y2="763"/>
+</g>
+<text x="130" y="783.0" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">Officer</text>
+<g stroke="#333333" stroke-width="1.8" fill="none">
+  <circle cx="130" cy="1055" r="11" fill="#ffffff"/>
+  <line x1="130" y1="1066" x2="130" y2="1101"/>
+  <line x1="110" y1="1079" x2="150" y2="1079"/>
+  <line x1="130" y1="1101" x2="114" y2="1127"/>
+  <line x1="130" y1="1101" x2="146" y2="1127"/>
+</g>
+<text x="130" y="1147.0" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">Administrator</text>
+<line x1="130" y1="677" x2="130" y2="417" stroke="#555555" stroke-width="1.4"/>
+<path d="M130,401 L120,417 L140,417 z" fill="#ffffff" stroke="#555555" stroke-width="1.4"/>
+<line x1="130" y1="1041" x2="130" y2="811" stroke="#555555" stroke-width="1.4"/>
+<path d="M130,795 L120,811 L140,811 z" fill="#ffffff" stroke="#555555" stroke-width="1.4"/>
+<ellipse cx="990" cy="943" rx="132" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="990" y="943.0" text-anchor="middle" dominant-baseline="central" font-size="15">Check venue overlap</text>
+<ellipse cx="990" cy="1048" rx="132" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="990" y="1048.0" text-anchor="middle" dominant-baseline="central" font-size="15">Record a reschedule</text>
+<line x1="733" y1="913" x2="858" y2="937" stroke="#555555" stroke-width="1.3" stroke-dasharray="7 5" marker-end="url(#open)"/>
+<line x1="733" y1="973" x2="858" y2="949" stroke="#555555" stroke-width="1.3" stroke-dasharray="7 5" marker-end="url(#open)"/>
+<text x="795.5" y="907.0" text-anchor="middle" dominant-baseline="central" font-size="13">«include»</text>
+<text x="795.5" y="979.0" text-anchor="middle" dominant-baseline="central" font-size="13">«include»</text>
+<line x1="858" y1="1048" x2="733" y2="981" stroke="#555555" stroke-width="1.3" stroke-dasharray="7 5" marker-end="url(#open)"/>
+<text x="803.5" y="1036.5" text-anchor="middle" dominant-baseline="central" font-size="13">«extend»</text>
+</svg>

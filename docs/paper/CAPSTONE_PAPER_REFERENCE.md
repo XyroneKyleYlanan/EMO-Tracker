@@ -14,10 +14,10 @@
 |---|---|---|
 | Chapter 1: Introduction | Part A + Part C | Part B (what changed) |
 | Chapter 2: Review of Related Literature and Systems | Part A + Part D | — |
-| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures and copy-ready tables) |
-| Chapter 4: Results and Discussion | Part A + Part F + Part G | Appendix G (screenshots) |
+| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures and copy-ready tables), [Diagram_Descriptions.md](Diagram_Descriptions.md) |
+| Chapter 4: Results and Discussion | Part A + Part F + Part G | Appendix G (screenshots), [Screenshot_Descriptions.md](Screenshot_Descriptions.md) |
 | Chapter 5: Summary, Conclusions and Recommendations | Part A + Part H | Part G |
-| User's manual / appendices | Part A + Appendix E + Appendix F | Appendix G (screenshots) |
+| User's manual / appendices | Part A + Appendix E + Appendix F | Appendix G (screenshots), [Screenshot_Descriptions.md](Screenshot_Descriptions.md) |
 | Defense preparation | Part A + Part I | Part B |
 
 ### Rules for using AI with this document
@@ -322,21 +322,20 @@ EMO Tracker uses a **three-tier, client-server architecture**:
 3. **Data tier:** a MySQL database, plus private file storage for uploaded documents and a backup folder.
 
 ```mermaid
-flowchart TB
-    subgraph Devices["Devices on the EMO's network"]
-        direction LR
+flowchart LR
+    subgraph Devices["Devices on the EMO's Wi-Fi"]
         Office["Office laptop<br/>localhost:5173"]
         Others["Phones and other laptops<br/>LAPTOP-IP:5173"]
     end
     subgraph Server["Server laptop: Windows with Laragon, or macOS"]
-        Vite["Frontend server (Vite)<br/>port 5173: the React app"]
+        Vite["Frontend server (Vite)<br/>port 5173<br/>sends the React app and<br/>forwards /api requests"]
         API["Laravel REST API<br/>127.0.0.1:8000<br/>login, roles, rules"]
         DB[("MySQL 8.4")]
         Files[["Uploaded documents<br/>(private storage)"]]
-        Backups[["Daily backups<br/>(e.g. a USB drive)"]]
+        Backups[["Daily backups<br/>(folder or USB drive)"]]
     end
-    Office --> Vite
-    Others --> Vite
+    Office -- "HTTP" --> Vite
+    Others -- "HTTP" --> Vite
     Vite -- "/api requests" --> API
     API --> DB
     API --> Files
@@ -372,15 +371,24 @@ The database has **7 application tables**: `users`, `buildings`, `venues`, `even
 
 Two changes since Capstone 1: the `event_staff` table was removed (an event's People are its task owners), and `buildings` and `venues` were added.
 
+The ERD shows the 7 application tables plus `personal_access_tokens`, because logging in writes to it (E.8.4). To stay readable, it leaves out the `created_at` and `updated_at` columns that every table has, and two Laravel columns on `users` (`email_verified_at`, `remember_token`). The data dictionary below lists every column.
+
 ```mermaid
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+---
 erDiagram
-    USERS ||--o{ EVENTS : "creates"
     USERS |o--o{ TASKS : "owns"
+    USERS ||--o{ EVENTS : "creates"
     USERS ||--o{ DOCUMENTS : "uploads"
-    BUILDINGS |o--o{ VENUES : "contains"
-    VENUES |o--o{ EVENTS : "hosts"
+    USERS ||--o{ PERSONAL_ACCESS_TOKENS : "signs in with"
     EVENTS ||--o{ TASKS : "has"
     EVENTS ||--o{ DOCUMENTS : "has"
+    VENUES |o--o{ EVENTS : "hosts"
+    BUILDINGS |o--o{ VENUES : "contains"
     USERS {
         bigint id PK
         string name
@@ -388,6 +396,15 @@ erDiagram
         string password "bcrypt hash"
         enum role "admin, officer, staff"
         boolean is_active
+    }
+    PERSONAL_ACCESS_TOKENS {
+        bigint id PK
+        string tokenable_type "the User model"
+        bigint tokenable_id FK "user id"
+        string name
+        string token UK "SHA-256 hash"
+        timestamp last_used_at
+        timestamp expires_at "30 days"
     }
     BUILDINGS {
         bigint id PK
@@ -555,62 +572,33 @@ Roles are checked twice: by the backend on every request, and by the frontend, w
 
 ## E.6 Use cases
 
-```mermaid
-flowchart LR
-    Staff["Staff"]
-    Officer["Officer"]
-    Admin["Administrator"]
-    Admin -. "can also do everything an Officer can" .-> Officer
-    Officer -. "can also do everything Staff can" .-> Staff
-    subgraph System["EMO Tracker"]
-        S1(["Log in and change password"])
-        S2(["View Home, Schedule and events"])
-        S3(["View event details, download documents and reports"])
-        S4(["View my tasks and update own task status"])
-        O1(["Manage and assign tasks"])
-        O2(["Upload documents"])
-        O3(["View Analytics"])
-        O4(["Export the Schedule to Excel"])
-        A1(["Add, edit, cancel, reschedule and delete events"])
-        A2(["Manage venues and buildings"])
-        A3(["Manage user accounts"])
-        A4(["Delete documents"])
-        A5(["See backup status"])
-    end
-    Staff --> S1
-    Staff --> S2
-    Staff --> S3
-    Staff --> S4
-    Officer --> O1
-    Officer --> O2
-    Officer --> O3
-    Officer --> O4
-    Admin --> A1
-    Admin --> A2
-    Admin --> A3
-    Admin --> A4
-    Admin --> A5
-```
+![Use case diagram](diagrams/use-cases.png)
+
+The diagram uses standard UML use case notation: stick figures for the actors, ovals for the use cases, and a box for the system boundary. Mermaid can't draw UML use case diagrams, so this one is drawn as an SVG file ([`diagrams/src/use-cases.svg`](diagrams/src/use-cases.svg)). It opens in any browser and can be edited in a vector editor such as Inkscape.
+
+- **Generalization** (solid line with a hollow triangle): an Officer is a kind of Staff member and can do everything Staff can, and an Administrator can do everything an Officer can.
+- **«include»:** adding or editing an event always runs the venue overlap check.
+- **«extend»:** when the start date or time of an event changes, the Administrator can record it as a reschedule.
+
+| Actor | Use cases (each actor also has the use cases of the actors above it) |
+|---|---|
+| Staff | Log in; Log out; Change own password; View Home, Events and Schedule; View event details; Download documents and PDF reports; View my tasks; Update own task status |
+| Officer | Manage tasks (add, edit, delete, assign); Upload documents; View Analytics; Export the Schedule to Excel |
+| Administrator | Add event; Edit event; Cancel, restore or delete events; Manage venues and buildings; Manage user accounts; Delete documents; See backup status |
 
 ## E.7 Context diagram (data flow, level 0)
 
-```mermaid
-flowchart LR
-    Admin["Administrator"]
-    Officer["Officer"]
-    Staff["Staff"]
-    Sheet["EMO's schedule spreadsheet (.xlsx)"]
-    Drive["Backup drive"]
-    S(("EMO Tracker"))
-    Admin -- "events, venues, accounts" --> S
-    S -- "schedule, readiness, analytics, backup status" --> Admin
-    Officer -- "tasks, documents" --> S
-    S -- "readiness, analytics, PDF reports, Excel export" --> Officer
-    Staff -- "task status updates" --> S
-    S -- "schedule, my tasks, PDF reports" --> Staff
-    Sheet -- "one-time import" --> S
-    S -- "daily backups" --> Drive
-```
+![Context diagram](diagrams/context-diagram.png)
+
+Drawn in Yourdon–DeMarco notation: the whole system is one process (numbered 0), the outside entities are rectangles, and each arrow is a labeled data flow. It's an SVG file ([`diagrams/src/context-diagram.svg`](diagrams/src/context-diagram.svg)), like the use case diagram, so the flows could be laid out without crossing.
+
+| Entity | Data flowing in to EMO Tracker | Data flowing out of EMO Tracker |
+|---|---|---|
+| Administrator | Login details; event, venue, building and account details; tasks and documents | Schedule and readiness; analytics; PDF reports and Excel export; backup status |
+| Officer | Login details; tasks and task assignments; documents | Schedule and readiness; analytics; documents; PDF reports and Excel export |
+| Staff | Login details; status updates for their own tasks | Schedule and event details; assigned tasks; documents and PDF reports |
+| EMO's schedule spreadsheet (.xlsx) | Schedule rows, imported once from the command line (`schedule:import`) when the system is installed | |
+| Backup storage | | Daily backup of the database and documents (a folder on the laptop by default, or a USB drive set with `BACKUP_PATH`) |
 
 ## E.8 Processes and algorithms
 
@@ -646,20 +634,25 @@ if any open task has no owner            → At Risk   "1 open task has no owner
 ```
 
 ```mermaid
+---
+config:
+  flowchart:
+    wrappingWidth: 340
+---
 flowchart TD
-    A["Event"] --> B{"Cancelled, completed,<br/>or not prepared by the EMO?"}
-    B -- yes --> Bx["Not classified:<br/>Cancelled, Completed or Scheduled"]
+    A(["Start: an event"]) --> B{"Cancelled, completed,<br/>or not prepared by the EMO?"}
+    B -- yes --> Bx(["Not classified:<br/>Cancelled, Completed or Scheduled"])
     B -- no --> C{"Has tasks?"}
-    C -- no --> Y0["At Risk<br/>(no tasks yet)"]
+    C -- no --> Y0(["At Risk<br/>(no tasks yet)"])
     C -- yes --> D{"All tasks done?"}
-    D -- yes --> G0["On Track<br/>(all tasks done)"]
+    D -- yes --> G0(["On Track<br/>(all tasks done)"])
     D -- no --> R{"Any Critical condition?"}
-    R -- yes --> RED["Critical"]
+    R -- yes --> RED(["Critical"])
     R -- no --> Y{"Any At Risk condition?"}
-    Y -- yes --> YEL["At Risk"]
-    Y -- no --> GRN["On Track"]
-    RC["Critical conditions:<br/>an open task is overdue<br/>or 2 days or less to go<br/>or 7 days or less and under 40% done<br/>or 7 days or less and most open tasks have no owner"] -.- R
-    YC["At Risk conditions:<br/>14 days or less and under 70% done<br/>or an open task has no owner"] -.- Y
+    Y -- yes --> YEL(["At Risk"])
+    Y -- no --> GRN(["On Track"])
+    RC["Critical conditions, checked in this order:<br/>an open task is overdue,<br/>or 2 days or less to go,<br/>or 7 days or less and under 40% done,<br/>or 7 days or less and more than half<br/>of the open tasks have no owner"] -.- R
+    YC["At Risk conditions, checked in this order:<br/>14 days or less and under 70% done,<br/>or an open task has no owner"] -.- Y
 ```
 
 **Worked examples** (all events the EMO prepares; none of their open tasks are overdue unless stated):
@@ -690,7 +683,7 @@ flowchart TD
 - **Stored statuses** are Upcoming, Completed and Cancelled. **Ongoing** isn't stored: it's worked out from the date and time.
 - An event is **Ongoing** from its start time on the first day until its end time on the last day. Without times, the event lasts all day; without an end time, it lasts until the end of the last day.
 - It becomes **Completed** once its end passes. This is checked at the start of every request, so it happens right away whichever page is open. An event added with a past date starts out Completed.
-- **Cancelled** is set by the Administrator and can be undone. When it's restored, the status follows the date again.
+- **Cancelled** is set by the Administrator, from any other status (a completed event too, for example one that was entered but never held), and can be undone. When it's restored, the status follows the date again.
 - Changing an event's dates **recalculates its status**. Moving a completed event to a future date reopens it, and moving an upcoming event into the past completes it.
 - **Rescheduled** is a mark, not a status:
   - When an Administrator changes the start date or time, the form asks whether the event was moved (a reschedule) or entered wrong (a correction).
@@ -699,19 +692,31 @@ flowchart TD
   - The event keeps its tasks, documents and readiness.
 
 ```mermaid
+---
+config:
+  layout: elk
+  themeVariables:
+    noteBkgColor: "#f7f7f7"
+    noteTextColor: "#333333"
+    noteBorderColor: "#999999"
+---
 stateDiagram-v2
-    [*] --> Upcoming : added with a future date
+    state "Not over yet (stored as Upcoming)" as Active {
+        [*] --> Upcoming
+        Upcoming --> Ongoing : start time on the first day arrives
+        Ongoing --> Upcoming : moved to a later date
+    }
+    [*] --> Active : added with a future date
     [*] --> Completed : added or imported with a past date
-    Upcoming --> Ongoing : start time on the first day
-    Ongoing --> Completed : end time on the last day passes
-    Upcoming --> Cancelled : Administrator cancels
-    Ongoing --> Cancelled : Administrator cancels
-    Cancelled --> Upcoming : restored, still ahead
+    Active --> Completed : its end passes, or its<br/>date is moved into the past
+    Completed --> Active : moved to a future date
+    Active --> Cancelled : Administrator cancels
+    Completed --> Cancelled : Administrator cancels
+    Cancelled --> Active : restored, still ahead
     Cancelled --> Completed : restored, already over
-    Completed --> Upcoming : moved to a later date
-    note right of Ongoing
-        Not stored: worked out from
-        the date and time
+    note right of Cancelled
+        An Administrator can delete
+        an event in any state.
     end note
 ```
 
@@ -744,41 +749,69 @@ Places typed as free text (with no venue chosen) aren't checked, because they ca
 **It's a warning, not a block:** some overlaps are on purpose (for example a rehearsal right before its own event), so the event can still be saved.
 
 ```mermaid
-flowchart LR
-    A["Booking being<br/>added or edited"] --> B{"Venue from<br/>the list?"}
-    B -- "no (typed place)" --> N1["Not checked"]
-    B -- yes --> C{"Either one<br/>cancelled?"}
-    C -- no --> D{"Same room, or<br/>one names no room?"}
-    D -- yes --> E{"Days<br/>overlap?"}
-    E -- yes --> F{"Hours overlap?<br/>(no time = all day)"}
-    F -- yes --> W["Overlap warning:<br/>form, event panel,<br/>Schedule label"]
-    C -- yes --> N2["No overlap"]
-    D -- no --> N2
+flowchart TD
+    A(["Start: an event<br/>with a date"]) --> B{"Venue picked<br/>from the list?"}
+    B -- "no (typed place)" --> N1(["Not checked"])
+    B -- yes --> C["Take each other booking<br/>at the same venue"]
+    C --> D{"Either one<br/>cancelled?"}
+    D -- no --> E{"Same room, or<br/>one names no room?"}
+    E -- yes --> F{"Days<br/>overlap?"}
+    F -- yes --> G{"Hours<br/>overlap?"}
+    G -- yes --> W(["Overlap warning<br/>(saving is still allowed)"])
+    D -- yes --> N2(["No overlap with that booking"])
     E -- no --> N2
     F -- no --> N2
+    G -- no --> N2
+    HC["No start time = all day<br/>No end time = until midnight<br/>Past midnight = all day<br/>Times that only touch don't overlap"] -.- G
 ```
 
 ### E.8.4 Login and a typical request
 
 ```mermaid
+---
+config:
+  themeVariables:
+    noteBkgColor: "#f7f7f7"
+    noteTextColor: "#333333"
+    noteBorderColor: "#999999"
+---
 sequenceDiagram
     actor U as User
-    participant B as Browser
+    participant B as Browser (React app)
     participant V as Vite server
     participant L as Laravel API
     participant D as MySQL
     U->>B: Email and password
     B->>V: POST /api/login
-    V->>L: Forward (with device address)
-    L->>L: Login limit check
-    L->>D: Find user, check password, active?
-    L-->>B: Token (30 days), name, role
-    B->>B: Keep token, open Home
+    V->>L: Forward, with the device's address
+    L->>L: Login limit check (10 tries a minute)
+    L->>D: Find the user by email
+    D-->>L: User record
+    L->>L: Check the password hash and that the account is active
+    alt Correct password, active account
+        L->>D: Save a new token (expires in 30 days)
+        L-->>V: Token, name and role
+        V-->>B: Token, name and role
+        B->>B: Keep the token, open the role's Home
+    else Wrong email or password, or deactivated account
+        L-->>V: 422 with the reason
+        V-->>B: 422 with the reason
+        B-->>U: Reason shown on the login form
+    else More than 10 tries in a minute
+        L-->>V: 429 Too many attempts
+        V-->>B: 429 Too many attempts
+        B-->>U: Message shown on the login form
+    end
+    Note over B,D: Later requests carry the token. Example: the Administrator's Home
     B->>V: GET /api/dashboard/admin + token
     V->>L: Forward
-    L->>L: Check token and role, complete finished events
+    L->>D: Mark finished events completed (every request)
+    L->>D: Look up the token
+    L->>L: Check the role (Administrator)
     L->>D: Read events and tasks
-    L-->>B: JSON
+    D-->>L: Rows
+    L-->>V: JSON
+    V-->>B: JSON
     B-->>U: Home page
 ```
 
@@ -1055,7 +1088,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
 
 ## G.1 The developed system
 
-Use the screenshots in Appendix G as figures. They were taken from the **demo data**, never the EMO's real data. Describe each screen with Part F.
+Use the screenshots in Appendix G as figures. They were taken from the **demo data**, never the EMO's real data. Describe each screen with Part F, or start from the ready-made descriptions in [Screenshot_Descriptions.md](Screenshot_Descriptions.md).
 
 ## G.2 Automated test results
 
@@ -1150,14 +1183,14 @@ Don't let an AI write this section before the real data exists. Templates:
 
 | Objective (C.4) | Feature (Part F) | Evidence |
 |---|---|---|
-| 1. Scheduling | Events page, Schedule page, event form | Screenshots 03, 08, 15; ScheduleTest |
-| 2. Statuses | Status lifecycle, reschedule mark, cancel | Screenshots 06, 08; EventStatusTest, EventLifecycleTest |
-| 3. Venues and double-booking | Venues page, overlap warning | Screenshots 05, 09; VenueClashTest, VenueManagementTest; 13 pairs found in real data |
-| 4. Tasks | Tasks, My tasks, completed-event lock | Screenshots 07, 12, 16; AccessControlTest, EventLifecycleTest |
-| 5. Readiness | EventClassifier | Screenshots 02, 04, 10; EventClassifierTest (18 cases) |
-| 6. Analytics | Analytics page | Screenshot 10; AnalyticsTest |
-| 7. Records | PDF report, Excel export, documents | Screenshots 04, 17; DocumentAndReportTest, ScheduleExportTest |
-| 8. Security and backups | Roles, tokens, login limit, backups | E.9; AccessControlTest, BackupTest |
+| 1. Scheduling | Events page, Schedule page, event form | Screenshots 05, 06, 07, 15; ScheduleTest |
+| 2. Statuses | Status lifecycle, reschedule mark, cancel | Screenshots 06, 08, 10, 19; EventStatusTest, EventLifecycleTest |
+| 3. Venues and double-booking | Venues page, overlap warning | Screenshots 07, 11; VenueClashTest, VenueManagementTest; 13 pairs found in real data |
+| 4. Tasks | Tasks, My tasks, completed-event lock | Screenshots 17, 19, 22, 24; AccessControlTest, EventLifecycleTest |
+| 5. Readiness | EventClassifier | Screenshots 04, 09, 16, 20; EventClassifierTest (18 cases) |
+| 6. Analytics | Analytics page | Screenshot 20; AnalyticsTest |
+| 7. Records | PDF report, Excel export, documents | Screenshots 18, 25, 26; DocumentAndReportTest, ScheduleExportTest |
+| 8. Security and backups | Roles, tokens, login limit, backups | E.9; screenshots 02, 03, 13, 24; AccessControlTest, BackupTest |
 | 9. Existing data | Spreadsheet import, text cleanup | G.7; ScheduleImportTest, ScheduleTidyTest |
 | 10. Evaluation | Pilot and survey | G.8 **[TO FILL IN]** |
 
@@ -1426,42 +1459,56 @@ Mark each scenario Passed or Failed, and write notes.
 
 # Appendix G. Figures (screenshots and diagrams) and copy-ready tables
 
-**Screenshots** (in the `screenshots/` folder next to this file; demo data only; desktop 1440×900, phone 390×844):
+**Screenshots** (in the `screenshots/` folder next to this file, one folder per role, numbered in the order a user goes through them; demo data only; taken October 9, 2026; desktop 1440×900, phone 390×844). Descriptions for the paper are in [Screenshot_Descriptions.md](Screenshot_Descriptions.md).
 
 | File | Suggested caption |
 |---|---|
-| [01-login.png](screenshots/01-login.png) | Login page |
-| [02-admin-home.png](screenshots/02-admin-home.png) | Administrator's Home: summary, needs attention, next 7 days |
-| [03-events-calendar.png](screenshots/03-events-calendar.png) | Events page, calendar view, colored by readiness |
-| [04-event-details.png](screenshots/04-event-details.png) | Event panel: readiness with its reason, people, tasks, documents |
-| [05-event-form-overlap-warning.png](screenshots/05-event-form-overlap-warning.png) | New event form warning about a double-booking |
-| [06-reschedule-question.png](screenshots/06-reschedule-question.png) | Editing an event's date: "Was the event rescheduled?" |
-| [07-task-form.png](screenshots/07-task-form.png) | Adding a task with an owner, due date and priority |
-| [08-schedule.png](screenshots/08-schedule.png) | Schedule page, laid out like the EMO's sheet and colored by building |
-| [09-venues.png](screenshots/09-venues.png) | Venues page: buildings, colors and venues |
-| [10-analytics.png](screenshots/10-analytics.png) | Analytics: schedule statistics, preparation, readiness distribution, most urgent events |
-| [11-accounts.png](screenshots/11-accounts.png) | Accounts page (user accounts) |
-| [12-my-tasks.png](screenshots/12-my-tasks.png) | My tasks (Staff) |
-| [13-staff-home-phone.png](screenshots/13-staff-home-phone.png) | Staff Home on a phone |
-| [14-events-list-phone.png](screenshots/14-events-list-phone.png) | Events list on a phone: upcoming events first |
-| [15-schedule-phone.png](screenshots/15-schedule-phone.png) | Schedule on a phone (cards by month) |
-| [16-completed-event-officer.png](screenshots/16-completed-event-officer.png) | A completed event as an Officer: tasks locked |
-| [17-pdf-report.png](screenshots/17-pdf-report.png) | PDF event report |
+| **1-all-roles/** | |
+| [01-login.png](screenshots/1-all-roles/01-login.png) | Login page |
+| [02-login-error.png](screenshots/1-all-roles/02-login-error.png) | Login page after a wrong password |
+| [03-change-password.png](screenshots/1-all-roles/03-change-password.png) | Change password dialog (every role) |
+| **2-administrator/** | |
+| [04-home.png](screenshots/2-administrator/04-home.png) | Administrator's Home: summary, needs attention, next 7 days |
+| [05-events-calendar.png](screenshots/2-administrator/05-events-calendar.png) | Events page, calendar view, colored by readiness |
+| [06-schedule.png](screenshots/2-administrator/06-schedule.png) | Schedule page, laid out like the EMO's sheet and colored by building |
+| [07-new-event-overlap-warning.png](screenshots/2-administrator/07-new-event-overlap-warning.png) | New event form warning about a double-booking |
+| [08-reschedule-question.png](screenshots/2-administrator/08-reschedule-question.png) | Editing an event's date: "Was the event rescheduled?" |
+| [09-event-details.png](screenshots/2-administrator/09-event-details.png) | Event panel: readiness with its reason, details, people and tasks |
+| [10-cancelled-event.png](screenshots/2-administrator/10-cancelled-event.png) | A cancelled event: struck through on the Schedule, tasks on hold |
+| [11-venues.png](screenshots/2-administrator/11-venues.png) | Venues page: buildings, colors and venues |
+| [12-accounts.png](screenshots/2-administrator/12-accounts.png) | Accounts page |
+| [13-add-account.png](screenshots/2-administrator/13-add-account.png) | Adding an account |
+| [14-events-list-phone.png](screenshots/2-administrator/14-events-list-phone.png) | Events list on a phone |
+| [15-schedule-phone.png](screenshots/2-administrator/15-schedule-phone.png) | Schedule on a phone (cards by month) |
+| **3-officer/** | |
+| [16-home.png](screenshots/3-officer/16-home.png) | Officer's Home |
+| [17-add-task.png](screenshots/3-officer/17-add-task.png) | Adding a task with an owner, due date and priority |
+| [18-documents.png](screenshots/3-officer/18-documents.png) | Uploading a document to an event |
+| [19-completed-event.png](screenshots/3-officer/19-completed-event.png) | A completed event: tasks locked |
+| [20-analytics.png](screenshots/3-officer/20-analytics.png) | Analytics: schedule statistics, preparation, readiness distribution, most urgent events |
+| **4-staff/** | |
+| [21-home-phone.png](screenshots/4-staff/21-home-phone.png) | Staff Home on a phone |
+| [22-my-tasks.png](screenshots/4-staff/22-my-tasks.png) | My tasks |
+| [23-my-events.png](screenshots/4-staff/23-my-events.png) | My events: the events where the staff member has tasks |
+| [24-event-details-view-only.png](screenshots/4-staff/24-event-details-view-only.png) | Event panel for Staff: view only |
+| **5-reports/** | |
+| [25-pdf-report.png](screenshots/5-reports/25-pdf-report.png) | PDF event report (both pages) |
+| [26-excel-export.png](screenshots/5-reports/26-excel-export.png) | Schedule exported to Excel (file preview) |
 
-**Diagrams** (drawn from this document's Mermaid code; images in the `diagrams/` folder next to this file):
+**Diagrams** (in the `diagrams/` folder next to this file, listed in the suggested order for Chapter 3). Descriptions for the paper are in [Diagram_Descriptions.md](Diagram_Descriptions.md).
 
-| File | Diagram | Section |
-|---|---|---|
-| [architecture.png](diagrams/architecture.png) | System architecture | E.3 |
-| [erd.png](diagrams/erd.png) | Entity relationship diagram | E.4 |
-| [use-cases.png](diagrams/use-cases.png) | Use cases by role | E.6 |
-| [context-diagram.png](diagrams/context-diagram.png) | Context diagram (data flow, level 0) | E.7 |
-| [readiness-flowchart.png](diagrams/readiness-flowchart.png) | Readiness classification flowchart | E.8.1 |
-| [status-lifecycle.png](diagrams/status-lifecycle.png) | Event status lifecycle (state diagram) | E.8.2 |
-| [overlap-check.png](diagrams/overlap-check.png) | Double-booking check flowchart | E.8.3 |
-| [login-sequence.png](diagrams/login-sequence.png) | Login and request sequence | E.8.4 |
+| File | Diagram | Section | Drawn from |
+|---|---|---|---|
+| [architecture.png](diagrams/architecture.png) | System architecture | E.3 | Mermaid code in E.3 |
+| [context-diagram.png](diagrams/context-diagram.png) | Context diagram (data flow, level 0) | E.7 | [src/context-diagram.svg](diagrams/src/context-diagram.svg) |
+| [use-cases.png](diagrams/use-cases.png) | Use case diagram (UML) | E.6 | [src/use-cases.svg](diagrams/src/use-cases.svg) |
+| [erd.png](diagrams/erd.png) | Entity relationship diagram | E.4 | Mermaid code in E.4 |
+| [readiness-flowchart.png](diagrams/readiness-flowchart.png) | Readiness classification flowchart | E.8.1 | Mermaid code in E.8.1 |
+| [overlap-check.png](diagrams/overlap-check.png) | Double-booking check flowchart | E.8.3 | Mermaid code in E.8.3 |
+| [status-lifecycle.png](diagrams/status-lifecycle.png) | Event status lifecycle (state diagram) | E.8.2 | Mermaid code in E.8.2 |
+| [login-sequence.png](diagrams/login-sequence.png) | Login and request sequence | E.8.4 | Mermaid code in E.8.4 |
 
-To edit a diagram, copy its Mermaid code into [mermaid.live](https://mermaid.live), change it, and export a PNG or SVG.
+To edit a Mermaid diagram, copy its code into [mermaid.live](https://mermaid.live), including the lines between `---` at the top where there are any (they set the layout and colors), change it, and export a PNG or SVG. The use case and context diagrams are SVG files: open them in a browser to view them, or in a vector editor such as Inkscape to edit them.
 
 **Copy-ready tables** (in the `tables/` folder next to this file, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
 
