@@ -471,16 +471,15 @@ Four phone screens, because Staff often update their tasks from a phone:
 
 **File:** [diagrams/gantt-chart.png](diagrams/gantt-chart.png) (source: [diagrams/src/gantt-chart.mmd](diagrams/src/gantt-chart.mmd))
 
-The Gantt chart shows the Capstone 2 project timeline from September to November 2026, continuing the Capstone 1 timeline (February to June 2026). It is grouped into the same phases as the Capstone 1 chart, plus implementation:
+The Gantt chart shows the Capstone 2 project timeline from September to November 2026, continuing the Capstone 1 timeline (February to June 2026). It uses the same phases as the Capstone 1 chart, plus implementation and evaluation:
 
 | Phase | Activities |
 |---|---|
-| Planning and Analysis | Capstone 2 preparation (September 4 to 28, to be confirmed); consultations with the EMO (October 2 and 6) |
-| System Design | Design updates for the Schedule, venues and statuses (October 2 to 7) |
-| Development | Security hardening and automated tests (September 28 to October 1); prototype round 1: Schedule, venues and import (October 1 to 6); prototype round 2: statuses and double-booking (October 6 to 7); pre-defense audit, fixes and UI polish (October 7 to 10) |
-| Defense and Revision | Defense preparation, the Capstone 2 defense (first week of November), and revisions based on the panel's feedback (planned) |
-| Documentation and Finalization | The paper reference, figures and tables (October 7 to 11); manuscript writing (planned, to November 2) |
-| Implementation and Evaluation | Installation at the EMO, the pilot and the survey (planned, November) |
+| Planning and Analysis | Capstone 2 planning and system review (September 1 to 28); requirements gathering with the EMO (September 28 to October 7) |
+| System Design | Database and UI/UX design updates for the Schedule, venues and statuses (October 1 to 8) |
+| Development | Security hardening and automated testing (September 28 to October 2); prototype refinement for the Schedule and venues (October 2 to 6), then for statuses and overlaps (October 6 to 8); pre-defense audit and UI polish (October 7 to 12) |
+| Defense and Revision | Final defense preparation (October 26 to November 5); the Capstone 2 final defense in the first week of November (shown as a milestone); revisions based on the panel's feedback (November 5 to 19) |
+| Documentation and Finalization | Documentation and manuscript writing (October 7 to November 5); final checking by the panel (November 19 to 26) |
+| Implementation and Evaluation | Installation at the EMO and pilot testing (November 9 to 23); user evaluation by survey (November 23 to 28) |
 
-- **Bar colors:** light bars are finished work, dark bars are planned work, and the red bar marks the defense week.
-- **Dates:** the development and documentation dates come from the project's records, and the consultation dates from the paper reference. The September preparation bar is estimated from a few small changes made that month, so confirm it. The defense date and the planned activities are also to be confirmed.
+Bars are activities and the diamond is the defense milestone. Development overlaps with requirements and design because the system was built with the Prototyping Model: each consultation with the EMO led directly to a new round of refinement.
