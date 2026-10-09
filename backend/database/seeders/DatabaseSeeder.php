@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        $officer2 = User::create([
+        User::create([
             'name' => 'Juan Dela Cruz',
             'email' => 'juan.officer@emo.test',
             'password' => Hash::make('password123'),
@@ -101,7 +101,7 @@ class DatabaseSeeder extends Seeder
             'end_time' => '12:00:00',
             'needs_preparation' => true,
             'status' => 'upcoming',
-            'created_by' => $officer1->id,
+            'created_by' => $admin->id,
         ]);
         $this->makeTasks($orientation->id, [
             ['Prepare welcome kits', 'done', 'medium', $staff[0]->id, 10],
@@ -122,7 +122,7 @@ class DatabaseSeeder extends Seeder
             'end_time' => '18:00:00',
             'needs_preparation' => true,
             'status' => 'upcoming',
-            'created_by' => $officer2->id,
+            'created_by' => $admin->id,
         ]);
         $this->makeTasks($sportsFest->id, [
             ['Coordinate with college reps', 'done', 'high', $staff[1]->id, 2],
@@ -143,7 +143,7 @@ class DatabaseSeeder extends Seeder
             'end_time' => '21:00:00',
             'needs_preparation' => true,
             'status' => 'upcoming',
-            'created_by' => $officer1->id,
+            'created_by' => $admin->id,
         ]);
         $this->makeTasks($facultyNight->id, [
             ['Print awardee certificates', 'pending', 'high', $staff[6]->id, 1],
@@ -163,7 +163,7 @@ class DatabaseSeeder extends Seeder
             'end_time' => '17:00:00',
             'needs_preparation' => true,
             'status' => 'upcoming',
-            'created_by' => $officer2->id,
+            'created_by' => $admin->id,
         ]);
 
         // Uploaded files aren't committed, so generate the sample document's file here.

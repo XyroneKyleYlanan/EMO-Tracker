@@ -10,7 +10,7 @@
         .header { border-bottom: 2px solid #0a5c3a; padding-bottom: 12px; margin-bottom: 20px; }
         .header .brand { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; }
         .header h1 { font-size: 22px; margin: 4px 0 6px 0; color: #111827; }
-        .header .sub { font-size: 11px; color: #4b5563; font-weight: 600; }
+        .header .sub { font-size: 11px; color: #4b5563; font-weight: bold; }
         .header .sub-row { margin-top: 6px; }
 
         .badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 9px; font-weight: bold; text-transform: uppercase; }
@@ -24,7 +24,7 @@
         .reason { font-size: 10px; color: #4b5563; margin-left: 6px; }
 
         .section { margin-bottom: 18px; }
-        .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin: 0 0 8px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; }
+        .section h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin: 0 0 8px 0; border-bottom: 1px solid #e5e7eb; padding-bottom: 4px; page-break-after: avoid; }
 
         .meta-grid { width: 100%; }
         .meta-grid td { padding: 4px 0; vertical-align: top; color: #111827; }

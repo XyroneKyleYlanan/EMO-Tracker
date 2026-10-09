@@ -153,19 +153,23 @@ export default function AppLayout() {
           </nav>
         </aside>
 
-        <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 min-w-0">
-          {/* A crashed page keeps the menu usable; going to another page starts fresh. */}
-          <ErrorBoundary key={pathname}>
-            <Outlet />
-          </ErrorBoundary>
-        </main>
-      </div>
+        {/* The footer sits in this column, not below the sidebar, so the sidebar
+            keeps its full height at the bottom of long pages. */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8">
+            {/* A crashed page keeps the menu usable; going to another page starts fresh. */}
+            <ErrorBoundary key={pathname}>
+              <Outlet />
+            </ErrorBoundary>
+          </main>
 
-      <footer className="hidden md:block bg-white border-t border-gray-200 py-3 px-6">
-        <div className="text-center text-xs text-gray-500">
-          © 2026 EMO Tracker · A Capstone Project at New Era University
+          <footer className="hidden md:block bg-white border-t border-gray-200 py-3 px-6">
+            <div className="text-center text-xs text-gray-500">
+              © 2026 EMO Tracker · A Capstone Project at New Era University
+            </div>
+          </footer>
         </div>
-      </footer>
+      </div>
 
       <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-20">
         <div
