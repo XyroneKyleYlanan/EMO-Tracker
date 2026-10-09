@@ -1,0 +1,27 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 260
+---
+flowchart TD
+    S(["Start"]) --> O["Open EMO Tracker in a browser"]
+    O --> I[/"Enter email and password"/]
+    I --> V{"Valid, and the<br/>account active?"}
+    V -- no --> ER["Show the reason"] --> I
+    V -- yes --> H["Show the Administrator's Home:<br/>summary, needs attention, next 7 days"]
+    H --> M{"Choose an action"}
+    M -- "Events" --> EV[/"Enter or change the event's details"/]
+    EV --> OV{"Overlaps another<br/>booking?"}
+    OV -- yes --> W["Show the overlap warning"] --> SV
+    OV -- no --> SV["Save the event;<br/>its status follows the date"]
+    M -- "Venues" --> VN["Add, edit or merge<br/>venues and buildings"]
+    M -- "Accounts" --> AC["Add, edit or deactivate accounts"]
+    M -- "Tasks and documents" --> TK["Manage tasks; upload<br/>or delete documents"]
+    M -- "Analytics and reports" --> AN["View Analytics; download PDF reports;<br/>export the Schedule to Excel"]
+    SV --> MORE{"Another action?"}
+    VN --> MORE
+    AC --> MORE
+    TK --> MORE
+    AN --> MORE
+    MORE -- yes --> M
+    MORE -- no --> LO["Log out"] --> E(["End"])

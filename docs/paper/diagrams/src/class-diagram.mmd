@@ -1,0 +1,108 @@
+---
+config:
+  layout: elk
+  elk:
+    nodePlacementStrategy: NETWORK_SIMPLEX
+  class:
+    hideEmptyMembersBox: true
+  themeVariables:
+    noteBkgColor: "#f7f7f7"
+    noteTextColor: "#333333"
+    noteBorderColor: "#999999"
+---
+classDiagram
+    direction TB
+    class User {
+        +int id
+        +string name
+        +string email
+        +string password
+        +string role
+        +bool is_active
+        +isAdmin() bool
+        +isOfficer() bool
+        +isStaff() bool
+        +signOutEverywhere(except)
+    }
+    class Event {
+        +int id
+        +string name
+        +string department
+        +string event_type
+        +string venue_details
+        +date event_date
+        +date end_date
+        +time event_time
+        +time end_time
+        +date original_date
+        +bool needs_preparation
+        +string status
+        +readiness() string
+        +readinessReason() string
+        +ongoing() bool
+        +lifecycle() string
+        +location() string
+        +statusForDate(date, endDate, endTime)$ string
+        +completePastEvents()$
+    }
+    class Task {
+        +int id
+        +string name
+        +date due_date
+        +string status
+        +string priority
+    }
+    class Document {
+        +int id
+        +string file_name
+        +string file_path
+        +int file_size
+        +string mime_type
+        +int MAX_UPLOAD_KB$
+    }
+    class Venue {
+        +int id
+        +string name
+    }
+    class Building {
+        +int id
+        +string name
+        +string color
+    }
+    class EventClassifier {
+        <<service>>
+        +classify(event)$ string
+        +reason(event)$ string
+    }
+    class VenueClashes {
+        <<service>>
+        +between(a, b)$ bool
+        +for(event)$ Collection
+        +within(events)$ array
+    }
+    class ScheduleImport {
+        <<service>>
+        +run(file, dryRun)$ array
+    }
+    class ScheduleExport {
+        <<service>>
+        +build(year)$ string
+    }
+    class Backup {
+        <<service>>
+        +create(name)$ string
+        +status()$ array
+        +restore(path)$
+    }
+    User "1" -- "0..*" Event : creates
+    User "0..1" -- "0..*" Task : owns
+    User "1" -- "0..*" Document : uploads
+    Event "1" *-- "0..*" Task : has
+    Event "1" *-- "0..*" Document : has
+    Venue "0..1" -- "0..*" Event : hosts
+    Building "0..1" o-- "0..*" Venue : groups
+    EventClassifier ..> Event : classifies
+    VenueClashes ..> Event : compares
+    ScheduleImport ..> Event : creates
+    ScheduleExport ..> Event : reads
+    note for Backup "Copies the whole database and the<br>uploaded documents into one .zip file"

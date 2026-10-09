@@ -14,7 +14,7 @@
 |---|---|---|
 | Chapter 1: Introduction | Part A + Part C | Part B (what changed) |
 | Chapter 2: Review of Related Literature and Systems | Part A + Part D | — |
-| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures and copy-ready tables), [Diagram_Descriptions.md](Diagram_Descriptions.md) |
+| Chapter 3: Methodology and System Design | Part A + Part E | Part F (features), Appendix G (figures and copy-ready tables), [Diagram_Descriptions.md](Diagram_Descriptions.md), [Table_Descriptions.md](Table_Descriptions.md) |
 | Chapter 4: Results and Discussion | Part A + Part F + Part G | Appendix G (screenshots), [Screenshot_Descriptions.md](Screenshot_Descriptions.md) |
 | Chapter 5: Summary, Conclusions and Recommendations | Part A + Part H | Part G |
 | User's manual / appendices | Part A + Appendix E + Appendix F | Appendix G (screenshots), [Screenshot_Descriptions.md](Screenshot_Descriptions.md) |
@@ -260,11 +260,14 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 
 ## E.1 Development approach and timeline
 
-- **Approach:** iterative, phase-based development. Each phase was built, checked and then extended. Capstone 2 added iterations driven by client feedback. **[TO CONFIRM: use the same SDLC model your Capstone 1 paper named (for example Agile or iterative and incremental), and describe Capstone 2 as further iterations of it.]**
+- **Approach: the Prototyping Model**, the same SDLC model as the Capstone 1 paper. A working prototype was built early, evaluated, and refined in rounds. Capstone 1 built the first prototype; Capstone 2 is further rounds of evaluation and refinement driven by the EMO's feedback (see the prototyping model diagram and the Gantt chart in Appendix G).
 
 | When | Phase | What was done |
 |---|---|---|
-| May 2026 | Capstone 1, Phases 0–8 | Setup, database, login and roles, dashboards, events (calendar and list), tasks, readiness classifier and analytics, PDF reports and documents, polishing and preparing the LAN demo |
+| Feb to Mar 2026 | Capstone 1: planning and analysis | Title proposal, then requirements gathering and analysis (from the Capstone 1 Gantt chart) |
+| Mar to Apr 2026 | Capstone 1: system design | Database and UI/UX design |
+| Apr to May 2026 | Capstone 1: prototype (Phases 0–8) | Setup, database, login and roles, dashboards, events (calendar and list), tasks, readiness classifier and analytics, PDF reports and documents, polishing and preparing the LAN demo |
+| May to Jun 2026 | Capstone 1: defense and revision | Pre-oral defense, revisions based on the panel's feedback, final checking by the panel |
 | Sep 28, 2026 | Capstone 2, Phase 9 (kickoff review) | Fixed access-control gaps, a classifier edge case and the time zone (UTC to Asia/Manila); moved documents to private storage; added a login limit and the first 30 automated tests |
 | Oct 2, 2026 | Phase 10, client consultation 1 **[TO CONFIRM format]** | Client clarified the office's name (EMO) and showed the schedule sheet. Built the Schedule page, the venue list with buildings, the "EMO prepares this event" switch, the import of the real 2026 sheet and the text cleanup |
 | Oct 6, 2026 | Phase 10, client consultation 2 **[TO CONFIRM format]** | Client asked to remove budget, to show cancelled/ongoing/rescheduled events, to classify Internal/External (visible on the Schedule) and for status analytics. The professor allowed more than 4 features. Built the status lifecycle, the reschedule mark, the event types, the new analytics and the double-booking warning |
@@ -883,6 +886,7 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
   5. prints the address other devices can use (Mac)
 - **Updating:** `git pull`, `composer install`, `npm install`, then start the app as usual; the start file applies database changes itself.
 - **No internet needed** after installation; everything runs on the LAN.
+- **Network topology:** a star. Every device connects through one Wi-Fi access point (the university Wi-Fi or an office router) to the server laptop, with a USB drive on the server for backups (network topology diagram, Appendix G).
 - **After the defense:** install it on the EMO's Windows laptop with their latest data, point `BACKUP_PATH` to a USB drive, and run a pilot of 1 to 2 weeks. **[TO CONFIRM dates]**
 
 ## E.11 Testing and evaluation plan
@@ -1495,22 +1499,36 @@ Mark each scenario Passed or Failed, and write notes.
 | [25-pdf-report.png](screenshots/5-reports/25-pdf-report.png) | PDF event report (both pages) |
 | [26-excel-export.png](screenshots/5-reports/26-excel-export.png) | Schedule exported to Excel (file preview) |
 
-**Diagrams** (in the `diagrams/` folder next to this file, listed in the suggested order for Chapter 3). Descriptions for the paper are in [Diagram_Descriptions.md](Diagram_Descriptions.md).
+**Chapter 3 figures** (Figures 3.1 to 3.9 in [Diagram_Descriptions.md](Diagram_Descriptions.md), in the `diagrams/` folder next to this file):
 
-| File | Diagram | Section | Drawn from |
+| File | Figure | Section | Drawn from |
 |---|---|---|---|
-| [architecture.png](diagrams/architecture.png) | System architecture | E.3 | Mermaid code in E.3 |
-| [context-diagram.png](diagrams/context-diagram.png) | Context diagram (data flow, level 0) | E.7 | [src/context-diagram.svg](diagrams/src/context-diagram.svg) |
-| [use-cases.png](diagrams/use-cases.png) | Use case diagram (UML) | E.6 | [src/use-cases.svg](diagrams/src/use-cases.svg) |
-| [erd.png](diagrams/erd.png) | Entity relationship diagram | E.4 | Mermaid code in E.4 |
-| [readiness-flowchart.png](diagrams/readiness-flowchart.png) | Readiness classification flowchart | E.8.1 | Mermaid code in E.8.1 |
-| [overlap-check.png](diagrams/overlap-check.png) | Double-booking check flowchart | E.8.3 | Mermaid code in E.8.3 |
-| [status-lifecycle.png](diagrams/status-lifecycle.png) | Event status lifecycle (state diagram) | E.8.2 | Mermaid code in E.8.2 |
-| [login-sequence.png](diagrams/login-sequence.png) | Login and request sequence | E.8.4 | Mermaid code in E.8.4 |
+| [prototyping-model.png](diagrams/prototyping-model.png) | 3.1 Prototyping Model | E.1 | [src/prototyping-model.mmd](diagrams/src/prototyping-model.mmd) |
+| [architecture.png](diagrams/architecture.png) | 3.2 System architecture | E.3 | Mermaid code in E.3 |
+| [network-topology.png](diagrams/network-topology.png) | 3.3 Network topology | E.10 | [src/network-topology.svg](diagrams/src/network-topology.svg) |
+| [context-diagram.png](diagrams/context-diagram.png) | 3.4 Context diagram (data flow, level 0) | E.7 | [src/context-diagram.svg](diagrams/src/context-diagram.svg) |
+| [use-cases.png](diagrams/use-cases.png) | 3.5 Use case diagram (UML) | E.6 | [src/use-cases.svg](diagrams/src/use-cases.svg) |
+| [erd.png](diagrams/erd.png) | 3.6 Entity relationship diagram | E.4 | Mermaid code in E.4 |
+| [readiness-flowchart.png](diagrams/readiness-flowchart.png) | 3.7 Readiness classification flowchart | E.8.1 | Mermaid code in E.8.1 |
+| [overlap-check.png](diagrams/overlap-check.png) | 3.8 Double-booking check flowchart | E.8.3 | Mermaid code in E.8.3 |
+| [status-lifecycle.png](diagrams/status-lifecycle.png) | 3.9 Event status lifecycle (state diagram) | E.8.2 | Mermaid code in E.8.2 |
 
-To edit a Mermaid diagram, copy its code into [mermaid.live](https://mermaid.live), including the lines between `---` at the top where there are any (they set the layout and colors), change it, and export a PNG or SVG. The use case and context diagrams are SVG files: open them in a browser to view them, or in a vector editor such as Inkscape to edit them.
+**Appendix figures** (in the order of the Capstone 1 appendices; described in Part 2 of [Diagram_Descriptions.md](Diagram_Descriptions.md)):
 
-**User journey maps** (in the `journey-maps/` folder next to this file; Figures 3.9 to 3.12 in [Diagram_Descriptions.md](Diagram_Descriptions.md)). The same content is in [tables/user-journey-map.html](tables/user-journey-map.html) as tables that can be edited in Word.
+| Appendix item | Files |
+|---|---|
+| System flowcharts | [flowcharts/admin.png](flowcharts/admin.png), [flowcharts/officer.png](flowcharts/officer.png), [flowcharts/staff.png](flowcharts/staff.png) |
+| Data flow diagram, level 1 | [diagrams/dfd-level-1.png](diagrams/dfd-level-1.png) |
+| Class diagram | [diagrams/class-diagram.png](diagrams/class-diagram.png) |
+| Sequence diagrams | [diagrams/login-sequence.png](diagrams/login-sequence.png), [diagrams/sequence-add-event.png](diagrams/sequence-add-event.png), [diagrams/sequence-task-update.png](diagrams/sequence-task-update.png) |
+| Site maps | [site-maps/admin.png](site-maps/admin.png), [site-maps/officer.png](site-maps/officer.png), [site-maps/staff.png](site-maps/staff.png) |
+| User journey maps | the four maps in the `journey-maps/` folder (below) |
+| UI wireframes | [wireframes/1-administrator.png](wireframes/1-administrator.png), [wireframes/2-officer.png](wireframes/2-officer.png), [wireframes/3-staff.png](wireframes/3-staff.png) |
+| Gantt chart | [diagrams/gantt-chart.png](diagrams/gantt-chart.png) |
+
+To edit a Mermaid diagram (code in Part E, or a `.mmd` file in a `src/` folder), copy its code into [mermaid.live](https://mermaid.live), including the lines between `---` at the top where there are any (they set the layout and colors), change it, and export a PNG or SVG. The use case, context, level 1 data flow and network topology diagrams are SVG files: open them in a browser to view them, or in a vector editor such as Inkscape to edit them. The wireframes come from [wireframes/src/wireframes.html](wireframes/src/wireframes.html), which opens in a browser.
+
+**User journey maps** (in the `journey-maps/` folder next to this file; described under "User journey maps" in [Diagram_Descriptions.md](Diagram_Descriptions.md)). The same content is in [tables/user-journey-map.html](tables/user-journey-map.html) as tables that can be edited in Word.
 
 | File | Map |
 |---|---|
@@ -1521,14 +1539,22 @@ To edit a Mermaid diagram, copy its code into [mermaid.live](https://mermaid.liv
 
 To change a map, edit the text at the top of [journey-maps/src/journey-maps.html](journey-maps/src/journey-maps.html) and open the file in a browser. The To-Be thoughts and feelings are the expected experience, to be confirmed during the pilot. The As-Is items marked * are to be confirmed with the EMO.
 
-**Copy-ready tables** (in the `tables/` folder next to this file, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
+**Copy-ready tables** (in the `tables/` folder next to this file; descriptions in [Table_Descriptions.md](Table_Descriptions.md)). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
 
 | File | What it is | Use in |
 |---|---|---|
 | [data-dictionary.html](tables/data-dictionary.html) | Every column of the 7 application tables, with types, constraints and meanings | Chapter 3, database design |
 | [compatibility-table.html](tables/compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
 | [risk-assessment.html](tables/risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
-| [user-journey-map.html](tables/user-journey-map.html) | The four user journey maps as tables: the current process (As-Is) and each role with EMO Tracker (To-Be) | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
+| [user-journey-map.html](tables/user-journey-map.html) | The four user journey maps as tables: the current process (As-Is) and each role with EMO Tracker (To-Be) | Appendix, user journey maps (confirm the expected emotions during the pilot) |
+| [api-endpoints.html](tables/api-endpoints.html) | All 42 API endpoints: method, path, who can use it, what it does (generated from the route list) | Appendix, API endpoint documentation |
+
+**Appendix listings** (in the `appendices/` folder next to this file):
+
+| File | What it is | Use in |
+|---|---|---|
+| [source-code.md](appendices/source-code.md) | The key code of the 7 modules, copied from the repository with file names and line numbers | Appendix, source code (7 key modules) |
+| [database-schema.sql](appendices/database-schema.sql) | The SQL that creates all 16 tables (structure only, tested on an empty database) | Appendix, database schema / SQL scripts |
 
 ---
 
@@ -1556,7 +1582,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 1. Program and section for Capstone 2, and the exact defense date.
 2. Whether the title changes for Capstone 2 (adviser).
 3. How to number and present the features: 4 core features plus the additions, or a new numbering (adviser).
-4. The SDLC model name: keep it consistent with the Capstone 1 paper.
+4. ~~The SDLC model name~~ Settled: the Prototyping Model, as in the Capstone 1 paper (E.1).
 5. Evaluation instrument (SUS or ISO/IEC 25010, and which edition), respondents (EMO members only, or also IT experts), and the interpretation scale (adviser).
 6. The exact number of EMO members.
 7. The format and dates of the client consultations (Oct 2 and Oct 6, 2026).

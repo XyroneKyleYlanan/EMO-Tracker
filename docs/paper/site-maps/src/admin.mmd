@@ -1,0 +1,28 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 200
+    nodeSpacing: 22
+    rankSpacing: 46
+---
+flowchart TD
+    L["Login page"] --> H["Home"]
+    H --> T["My tasks"]
+    H --> E["Events<br/>(calendar and list)"]
+    H --> S["Schedule"]
+    H --> A["Analytics"]
+    H --> C["Accounts"]
+    H --> U["User menu"]
+    E --> P(["Event panel"])
+    P --> EF(["Edit event form (cancel,<br/>reschedule); delete event"])
+    P --> TF(["Task form"])
+    P --> D(["Documents: upload,<br/>download, delete"])
+    P --> R@{ shape: doc, label: "PDF report" }
+    S --> SP(["Event panel<br/>(same as under Events)"])
+    S --> SF(["Event form: add"])
+    S --> X@{ shape: doc, label: "Excel export" }
+    S --> V["Venues"]
+    V --> VF(["Venue and building<br/>forms; merge venues"])
+    C --> CF(["Account form: add,<br/>edit, deactivate"])
+    U --> PW(["Change password"])
+    U --> LO(["Log out"])

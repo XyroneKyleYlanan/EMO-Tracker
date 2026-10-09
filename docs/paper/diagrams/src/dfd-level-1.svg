@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="2280.4" viewBox="0 0 1500 2280.4" font-family="Arial, Helvetica, sans-serif" fill="#333333">
+<title>EMO Tracker data flow diagram, level 1</title>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#555555"/>
+  </marker>
+</defs>
+<rect width="1500" height="2280.4" fill="#ffffff"/>
+<text x="50" y="44" font-size="22" font-weight="bold">EMO Tracker: Data Flow Diagram (Level 1)</text>
+<text x="50" y="74" font-size="14" fill="#555555">Circles are processes, rectangles are external entities, and pairs of parallel lines are data stores.</text>
+<text x="50" y="96" font-size="14" fill="#555555">Each process has its own row, so entities and data stores marked * are drawn more than once; each copy is the same entity or store.</text>
+<rect x="50" y="155" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="182.0" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,182.0 L500.0,182.0 L656.7,256.1" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="174" text-anchor="start" font-size="13.5">login and account details</text>
+<rect x="50" y="259" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="286.0" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
+<path d="M290.0,286.0 L500.0,286.0 L650.0,286.0" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="278" text-anchor="start" font-size="13.5">login details</text>
+<rect x="50" y="363" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="390.0" text-anchor="middle" dominant-baseline="central" font-size="15">Staff *</text>
+<path d="M290.0,390.0 L500.0,390.0 L656.7,315.9" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="382" text-anchor="start" font-size="13.5">login details</text>
+<circle cx="720" cy="286" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="259.0" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">1.0</text>
+<text x="720" y="277.0" text-anchor="middle" dominant-baseline="central" font-size="15">Authenticate</text>
+<text x="720" y="295.0" text-anchor="middle" dominant-baseline="central" font-size="15">and manage</text>
+<text x="720" y="313.0" text-anchor="middle" dominant-baseline="central" font-size="15">accounts</text>
+<rect x="1170" y="263" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="263" x2="1450" y2="263" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="309" x2="1450" y2="309" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="263" x2="1232" y2="309" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="286.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D1</text>
+<text x="1244" y="286.0" text-anchor="start" dominant-baseline="central" font-size="15">Users *</text>
+<path d="M790.0,286.0 L940.0,286.0 L1170.0,286.0" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="1158" y="278" text-anchor="end" font-size="13.5">user records</text>
+<line x1="40" y1="456" x2="1460" y2="456" stroke="#e2e2e2"/>
+<rect x="50" y="495" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="522.0" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,512.0 L500.0,512.0 L657.2,589.2" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="504" text-anchor="start" font-size="13.5">event details</text>
+<path d="M290.0,532.0 L500.0,532.0 L656.3,603.0" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="551" text-anchor="start" font-size="13.5">schedule, overlap warnings</text>
+<rect x="50" y="599" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="626.0" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
+<path d="M290.0,626.0 L500.0,626.0 L650.0,626.0" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="618" text-anchor="start" font-size="13.5">schedule and event details</text>
+<rect x="50" y="703" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="730.0" text-anchor="middle" dominant-baseline="central" font-size="15">Staff *</text>
+<path d="M290.0,730.0 L500.0,730.0 L656.7,655.9" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="722" text-anchor="start" font-size="13.5">schedule and event details</text>
+<circle cx="720" cy="626" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="599.0" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">2.0</text>
+<text x="720" y="617.0" text-anchor="middle" dominant-baseline="central" font-size="15">Manage events</text>
+<text x="720" y="635.0" text-anchor="middle" dominant-baseline="central" font-size="15">and check</text>
+<text x="720" y="653.0" text-anchor="middle" dominant-baseline="central" font-size="15">overlaps</text>
+<rect x="1170" y="551" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="551" x2="1450" y2="551" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="597" x2="1450" y2="597" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="551" x2="1232" y2="597" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="574.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D2</text>
+<text x="1244" y="574.0" text-anchor="start" dominant-baseline="central" font-size="15">Events *</text>
+<path d="M788.1,609.9 L940.0,574.0 L1170.0,574.0" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="1158" y="566" text-anchor="end" font-size="13.5">event records</text>
+<rect x="1170" y="655" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="655" x2="1450" y2="655" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="701" x2="1450" y2="701" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="655" x2="1232" y2="701" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="678.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D3</text>
+<text x="1244" y="678.0" text-anchor="start" dominant-baseline="central" font-size="15">Venues and buildings *</text>
+<path d="M788.1,642.1 L940.0,678.0 L1170.0,678.0" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="670" text-anchor="end" font-size="13.5">venue list</text>
+<line x1="40" y1="796" x2="1460" y2="796" stroke="#e2e2e2"/>
+<rect x="50" y="866.2" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="893.2" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,893.2 L500.0,893.2 L650.0,893.2" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="885.2" text-anchor="start" font-size="13.5">venue and building details</text>
+<circle cx="720" cy="893.2" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="875.2" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">3.0</text>
+<text x="720" y="893.2" text-anchor="middle" dominant-baseline="central" font-size="15">Manage venues</text>
+<text x="720" y="911.2" text-anchor="middle" dominant-baseline="central" font-size="15">and buildings</text>
+<rect x="1170" y="870.2" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="870.2" x2="1450" y2="870.2" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="916.2" x2="1450" y2="916.2" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="870.2" x2="1232" y2="916.2" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="893.2" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D3</text>
+<text x="1244" y="893.2" text-anchor="start" dominant-baseline="central" font-size="15">Venues and buildings *</text>
+<path d="M790.0,893.2 L940.0,893.2 L1170.0,893.2" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="1158" y="885.2" text-anchor="end" font-size="13.5">venue records</text>
+<line x1="40" y1="990.4" x2="1460" y2="990.4" stroke="#e2e2e2"/>
+<rect x="50" y="1029.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1056.4" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,1056.4 L500.0,1056.4 L656.7,1130.5" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1048.4" text-anchor="start" font-size="13.5">tasks</text>
+<rect x="50" y="1133.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1160.4" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
+<path d="M290.0,1160.4 L500.0,1160.4 L650.0,1160.4" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1152.4" text-anchor="start" font-size="13.5">tasks and assignments</text>
+<rect x="50" y="1237.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1264.4" text-anchor="middle" dominant-baseline="central" font-size="15">Staff *</text>
+<path d="M290.0,1254.4 L500.0,1254.4 L656.3,1183.4" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1246.4" text-anchor="start" font-size="13.5">own task status</text>
+<path d="M290.0,1274.4 L500.0,1274.4 L657.2,1197.2" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1293.4" text-anchor="start" font-size="13.5">assigned tasks</text>
+<circle cx="720" cy="1160.4" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="1142.4" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">4.0</text>
+<text x="720" y="1160.4" text-anchor="middle" dominant-baseline="central" font-size="15">Manage</text>
+<text x="720" y="1178.4" text-anchor="middle" dominant-baseline="central" font-size="15">tasks</text>
+<rect x="1170" y="1085.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1085.4" x2="1450" y2="1085.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1131.4" x2="1450" y2="1131.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1085.4" x2="1232" y2="1131.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1108.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D4</text>
+<text x="1244" y="1108.4" text-anchor="start" dominant-baseline="central" font-size="15">Tasks *</text>
+<path d="M788.1,1144.3 L940.0,1108.4 L1170.0,1108.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="1158" y="1100.4" text-anchor="end" font-size="13.5">task records</text>
+<rect x="1170" y="1189.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1189.4" x2="1450" y2="1189.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1235.4" x2="1450" y2="1235.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1189.4" x2="1232" y2="1235.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1212.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D1</text>
+<text x="1244" y="1212.4" text-anchor="start" dominant-baseline="central" font-size="15">Users *</text>
+<path d="M788.1,1176.5 L940.0,1212.4 L1170.0,1212.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="1204.4" text-anchor="end" font-size="13.5">possible task owners</text>
+<line x1="40" y1="1330.4" x2="1460" y2="1330.4" stroke="#e2e2e2"/>
+<rect x="50" y="1369.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1396.4" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,1396.4 L500.0,1396.4 L651.9,1432.3" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1388.4" text-anchor="start" font-size="13.5">readiness and analytics</text>
+<rect x="50" y="1473.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1500.4" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
+<path d="M290.0,1500.4 L500.0,1500.4 L651.9,1464.5" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1492.4" text-anchor="start" font-size="13.5">readiness and analytics</text>
+<circle cx="720" cy="1448.4" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="1421.4" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">5.0</text>
+<text x="720" y="1439.4" text-anchor="middle" dominant-baseline="central" font-size="15">Classify</text>
+<text x="720" y="1457.4" text-anchor="middle" dominant-baseline="central" font-size="15">readiness</text>
+<text x="720" y="1475.4" text-anchor="middle" dominant-baseline="central" font-size="15">and analyze</text>
+<rect x="1170" y="1373.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1373.4" x2="1450" y2="1373.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1419.4" x2="1450" y2="1419.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1373.4" x2="1232" y2="1419.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1396.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D2</text>
+<text x="1244" y="1396.4" text-anchor="start" dominant-baseline="central" font-size="15">Events *</text>
+<path d="M788.1,1432.3 L940.0,1396.4 L1170.0,1396.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="1388.4" text-anchor="end" font-size="13.5">dates and statuses</text>
+<rect x="1170" y="1477.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1477.4" x2="1450" y2="1477.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1523.4" x2="1450" y2="1523.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1477.4" x2="1232" y2="1523.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1500.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D4</text>
+<text x="1244" y="1500.4" text-anchor="start" dominant-baseline="central" font-size="15">Tasks *</text>
+<path d="M788.1,1464.5 L940.0,1500.4 L1170.0,1500.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="1492.4" text-anchor="end" font-size="13.5">task progress</text>
+<line x1="40" y1="1566.4" x2="1460" y2="1566.4" stroke="#e2e2e2"/>
+<rect x="50" y="1605.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1632.4" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,1622.4 L500.0,1622.4 L657.2,1699.6" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1614.4" text-anchor="start" font-size="13.5">documents, deletions</text>
+<path d="M290.0,1642.4 L500.0,1642.4 L656.3,1713.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1661.4" text-anchor="start" font-size="13.5">PDF reports, Excel export</text>
+<rect x="50" y="1709.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1736.4" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
+<path d="M290.0,1726.4 L500.0,1726.4 L650.0,1729.1" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1718.4" text-anchor="start" font-size="13.5">documents</text>
+<path d="M290.0,1746.4 L500.0,1746.4 L650.0,1743.7" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1765.4" text-anchor="start" font-size="13.5">documents, reports, export</text>
+<rect x="50" y="1813.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1840.4" text-anchor="middle" dominant-baseline="central" font-size="15">Staff *</text>
+<path d="M290.0,1840.4 L500.0,1840.4 L656.7,1766.3" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="1832.4" text-anchor="start" font-size="13.5">documents, PDF reports</text>
+<circle cx="720" cy="1736.4" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="1709.4" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">6.0</text>
+<text x="720" y="1727.4" text-anchor="middle" dominant-baseline="central" font-size="15">Manage</text>
+<text x="720" y="1745.4" text-anchor="middle" dominant-baseline="central" font-size="15">documents</text>
+<text x="720" y="1763.4" text-anchor="middle" dominant-baseline="central" font-size="15">and reports</text>
+<rect x="1170" y="1609.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1609.4" x2="1450" y2="1609.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1655.4" x2="1450" y2="1655.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1609.4" x2="1232" y2="1655.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1632.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D5</text>
+<text x="1244" y="1632.4" text-anchor="start" dominant-baseline="central" font-size="15">Documents</text>
+<path d="M783.3,1706.5 L940.0,1632.4 L1170.0,1632.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+<text x="1158" y="1624.4" text-anchor="end" font-size="13.5">document records and files</text>
+<rect x="1170" y="1713.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1713.4" x2="1450" y2="1713.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1759.4" x2="1450" y2="1759.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1713.4" x2="1232" y2="1759.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1736.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D2</text>
+<text x="1244" y="1736.4" text-anchor="start" dominant-baseline="central" font-size="15">Events *</text>
+<path d="M790.0,1736.4 L940.0,1736.4 L1170.0,1736.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="1728.4" text-anchor="end" font-size="13.5">event details</text>
+<rect x="1170" y="1817.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1817.4" x2="1450" y2="1817.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1863.4" x2="1450" y2="1863.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1817.4" x2="1232" y2="1863.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1840.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D4</text>
+<text x="1244" y="1840.4" text-anchor="start" dominant-baseline="central" font-size="15">Tasks *</text>
+<path d="M783.3,1766.3 L940.0,1840.4 L1170.0,1840.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="1832.4" text-anchor="end" font-size="13.5">tasks</text>
+<line x1="40" y1="1906.4" x2="1460" y2="1906.4" stroke="#e2e2e2"/>
+<rect x="50" y="1945.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="1962.9" text-anchor="middle" dominant-baseline="central" font-size="15">EMO's schedule</text>
+<text x="170" y="1981.9" text-anchor="middle" dominant-baseline="central" font-size="15">spreadsheet (.xlsx)</text>
+<path d="M290.0,1972.4 L500.0,1972.4 L656.7,2046.5" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="302" y="1964.4" text-anchor="start" font-size="13.5">schedule rows</text>
+<rect x="50" y="2049.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="2076.4" text-anchor="middle" dominant-baseline="central" font-size="15">Administrator *</text>
+<path d="M290.0,2076.4 L500.0,2076.4 L650.0,2076.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="2068.4" text-anchor="start" font-size="13.5">backup status</text>
+<rect x="50" y="2153.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
+<text x="170" y="2180.4" text-anchor="middle" dominant-baseline="central" font-size="15">Backup storage</text>
+<path d="M290.0,2180.4 L500.0,2180.4 L656.7,2106.3" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="302" y="2172.4" text-anchor="start" font-size="13.5">daily backup</text>
+<circle cx="720" cy="2076.4" r="70" fill="#ececec" stroke="#999999" stroke-width="1.4"/>
+<text x="720" y="2058.4" text-anchor="middle" dominant-baseline="central" font-size="15" font-weight="bold">7.0</text>
+<text x="720" y="2076.4" text-anchor="middle" dominant-baseline="central" font-size="15">Import and</text>
+<text x="720" y="2094.4" text-anchor="middle" dominant-baseline="central" font-size="15">back up data</text>
+<rect x="1170" y="1949.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="1949.4" x2="1450" y2="1949.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="1995.4" x2="1450" y2="1995.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="1949.4" x2="1232" y2="1995.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="1972.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D2</text>
+<text x="1244" y="1972.4" text-anchor="start" dominant-baseline="central" font-size="15">Events *</text>
+<path d="M783.3,2046.5 L940.0,1972.4 L1170.0,1972.4" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1158" y="1964.4" text-anchor="end" font-size="13.5">imported events</text>
+<rect x="1170" y="2053.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="2053.4" x2="1450" y2="2053.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="2099.4" x2="1450" y2="2099.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="2053.4" x2="1232" y2="2099.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="2076.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D3</text>
+<text x="1244" y="2076.4" text-anchor="start" dominant-baseline="central" font-size="15">Venues and buildings *</text>
+<path d="M790.0,2076.4 L940.0,2076.4 L1170.0,2076.4" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="1158" y="2068.4" text-anchor="end" font-size="13.5">new venues</text>
+<rect x="1170" y="2157.4" width="280" height="46" fill="#ffffff"/>
+<line x1="1170" y1="2157.4" x2="1450" y2="2157.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1170" y1="2203.4" x2="1450" y2="2203.4" stroke="#666666" stroke-width="1.5"/>
+<line x1="1232" y1="2157.4" x2="1232" y2="2203.4" stroke="#999999" stroke-width="1"/>
+<text x="1201" y="2180.4" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="bold">D1–D5</text>
+<text x="1244" y="2180.4" text-anchor="start" dominant-baseline="central" font-size="15">All data stores</text>
+<path d="M783.3,2106.3 L940.0,2180.4 L1170.0,2180.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
+<text x="1158" y="2172.4" text-anchor="end" font-size="13.5">all data</text>
+</svg>

@@ -1,0 +1,35 @@
+---
+config:
+  themeVariables:
+    noteBkgColor: "#f7f7f7"
+    noteTextColor: "#333333"
+    noteBorderColor: "#999999"
+---
+sequenceDiagram
+    actor A as Administrator
+    participant B as Browser (React app)
+    participant L as Laravel API
+    participant C as VenueClashes
+    participant D as MySQL
+    A->>B: Enter the event's venue, date and time
+    Note over B: Waits 0.4 s after each change
+    B->>L: GET /api/event-clashes (venue, dates, times)
+    L->>C: Find bookings that clash with this one
+    C->>D: Other bookings at the same venue on overlapping days, not cancelled
+    D-->>C: Bookings
+    C->>C: Keep those with the same room (or no room) and overlapping hours
+    C-->>L: Clashing bookings
+    L-->>B: JSON list of clashes
+    alt One or more clashes
+        B-->>A: Overlap warning, naming each booking ("You can still save it")
+    else No clash
+        B-->>A: No warning
+    end
+    A->>B: Click "Add event"
+    B->>L: POST /api/events + token
+    L->>L: Check the role (Administrator) and validate the details
+    L->>L: Set the status from the date (upcoming, or completed if already over)
+    L->>D: Save the event
+    D-->>L: Saved event
+    L-->>B: 201 Created, with the event
+    B-->>A: "Event added", and the Schedule and calendar show it

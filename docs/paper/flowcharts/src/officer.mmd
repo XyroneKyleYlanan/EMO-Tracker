@@ -1,0 +1,31 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 260
+---
+flowchart TD
+    S(["Start"]) --> O["Open EMO Tracker in a browser"]
+    O --> I[/"Enter email and password"/]
+    I --> V{"Valid, and the<br/>account active?"}
+    V -- no --> ER["Show the reason"] --> I
+    V -- yes --> H["Show the Officer's Home:<br/>summary, needs attention, next 7 days"]
+    H --> M{"Choose an action"}
+    M -- "Prepare an event" --> P["Open the event panel"]
+    P --> CMP{"Event<br/>completed?"}
+    CMP -- yes --> RO["Tasks are locked: view only"]
+    CMP -- no --> TK[/"Add or edit tasks: owner,<br/>due date, priority"/]
+    TK --> RC["The system recalculates<br/>the readiness label"]
+    M -- "Upload a document" --> UP[/"Choose a file"/]
+    UP --> OK{"PDF, Word, Excel,<br/>JPG or PNG, up to 10 MB?"}
+    OK -- no --> RJ["Show why the file<br/>was refused"]
+    OK -- yes --> ST["Store the file privately<br/>with the event"]
+    M -- "Monitor" --> AN["View readiness labels,<br/>reasons and Analytics"]
+    M -- "Report" --> RP["Download the PDF report or<br/>export the Schedule to Excel"]
+    RO --> MORE{"Another action?"}
+    RC --> MORE
+    RJ --> MORE
+    ST --> MORE
+    AN --> MORE
+    RP --> MORE
+    MORE -- yes --> M
+    MORE -- no --> LO["Log out"] --> E(["End"])

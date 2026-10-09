@@ -1,0 +1,35 @@
+---
+config:
+  themeVariables:
+    noteBkgColor: "#f7f7f7"
+    noteTextColor: "#333333"
+    noteBorderColor: "#999999"
+---
+sequenceDiagram
+    actor S as Staff member
+    participant B as Browser (React app)
+    participant L as Laravel API
+    participant D as MySQL
+    participant K as EventClassifier
+    S->>B: Choose "Done" in the task's status menu
+    B->>L: PATCH /api/tasks/{id}/status + token
+    L->>D: Mark finished events completed, look up the token and the task
+    D-->>L: Task and its event
+    alt Not the task's owner (and not an Officer or Administrator)
+        L-->>B: 403 "You can only update your own tasks."
+        B-->>S: Error message
+    else The event is completed (and the user is not the Administrator)
+        L-->>B: 403 "This event is completed..."
+        B-->>S: Error message
+    else Allowed
+        L->>D: Save the new status
+        L-->>B: The updated task
+        B-->>S: "Task marked as Done."
+        B->>L: Reload the event or the task list
+        L->>D: Read the event and its tasks
+        D-->>L: Event and tasks
+        L->>K: Classify the event's readiness
+        K-->>L: Label and reason, e.g. On Track, "All tasks done"
+        L-->>B: JSON
+        B-->>S: Updated progress and readiness label
+    end

@@ -1,0 +1,25 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 260
+---
+flowchart TD
+    S(["Start"]) --> O["Open EMO Tracker on a laptop or phone"]
+    O --> I[/"Enter email and password"/]
+    I --> V{"Valid, and the<br/>account active?"}
+    V -- no --> ER["Show the reason"] --> I
+    V -- yes --> H["Show the Staff Home:<br/>open tasks and upcoming events"]
+    H --> M{"Choose an action"}
+    M -- "Update a task" --> T["Open My tasks"]
+    T --> U[/"Choose the new status:<br/>Pending, In progress or Done"/]
+    U --> OWN{"Own task, and the<br/>event not completed?"}
+    OWN -- no --> DEN["Show that the change<br/>isn't allowed"]
+    OWN -- yes --> SAVE["Save the status; the<br/>event's readiness updates"]
+    M -- "Check events" --> EV["Open My events or the Schedule;<br/>view the event's details"]
+    M -- "Get files" --> DL["Download documents<br/>or the PDF report"]
+    DEN --> MORE{"Another action?"}
+    SAVE --> MORE
+    EV --> MORE
+    DL --> MORE
+    MORE -- yes --> M
+    MORE -- no --> LO["Log out"] --> E(["End"])

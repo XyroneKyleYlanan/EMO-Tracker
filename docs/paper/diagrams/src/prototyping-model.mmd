@@ -1,0 +1,28 @@
+---
+config:
+  flowchart:
+    wrappingWidth: 540
+---
+flowchart TD
+    S(["Start"]) --> R["`**1. Requirements gathering and analysis**
+    Capstone 1: title proposal and requirements (Feb to Mar 2026)
+    Capstone 2: EMO consultations and the 2026 schedule sheet (Oct 2026)`"]
+    R --> Q["`**2. Quick design**
+    Database and UI/UX design (Mar to Apr 2026), updated
+    for the Schedule, venues and statuses (Oct 2026)`"]
+    Q --> B["`**3. Build the prototype**
+    Capstone 1 prototype (Apr to May 2026)`"]
+    B --> E{"`**4. Evaluation**
+    Does it meet the EMO's needs?`"}
+    E -- "no: feedback" --> F["`**5. Refine the prototype**
+    Capstone 2 rounds (Sep 28 to Oct 9, 2026): Schedule, venues,
+    import and backups; statuses, event types and the
+    double-booking warning; audit fixes and UI polish`"]
+    F --> Q
+    E -- yes --> I["`**6. Implementation and maintenance**
+    Capstone 2 defense (Nov 2026), then installation
+    on the EMO's laptop, pilot and evaluation`"]
+    I --> X(["End"])
+    EN["`Evaluations so far: pre-oral defense (May 2026),
+    EMO consultations (Oct 2 and Oct 6, 2026),
+    pre-defense audit (Oct 7, 2026)`"] -.- E

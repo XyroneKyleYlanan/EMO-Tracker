@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EMO Tracker UI wireframes</title>
+<!--
+  Low-fidelity wireframes of EMO Tracker, one sheet per role. Open this file in a browser to view or print it.
+  The PNGs in the folder above were taken from this page at 2x size, one per sheet.
+  Gray bars stand for text; labels in brackets are the real button and heading names.
+-->
+<style>
+  :root { --line: #9a9a9a; --soft: #d9d9d9; --fill: #f2f2f2; --ink: #333; --mid: #777; }
+  body { margin: 0; background: #ffffff; font-family: Arial, Helvetica, sans-serif; color: var(--ink); }
+  .sheet { width: 1440px; padding: 30px 34px 34px; box-sizing: border-box; background: #fff; }
+  .sheet + .sheet { margin-top: 40px; }
+  .sheet h1 { margin: 0 0 4px; font-size: 24px; }
+  .sheet .sub { margin: 0 0 22px; font-size: 14px; color: var(--mid); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px 34px; }
+  .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .cap { margin-top: 8px; font-size: 14px; font-weight: bold; }
+  .cap span { font-weight: normal; color: var(--mid); }
+
+  /* Desktop browser frame */
+  .win { border: 2px solid var(--line); border-radius: 8px; overflow: hidden; height: 400px; display: flex; flex-direction: column; background: #fff; }
+  .win .chrome { height: 22px; border-bottom: 1.5px solid var(--soft); display: flex; align-items: center; gap: 6px; padding: 0 10px; background: var(--fill); }
+  .win .chrome i { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--line); }
+  .win .chrome b { margin-left: 12px; height: 11px; width: 210px; border: 1.5px solid var(--soft); border-radius: 6px; background: #fff; }
+  .top { height: 34px; border-bottom: 1.5px solid var(--soft); display: flex; align-items: center; padding: 0 10px; gap: 8px; font-size: 12px; font-weight: bold; }
+  .logo { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); }
+  .avatar { margin-left: auto; width: 20px; height: 20px; border-radius: 50%; background: #bbb; }
+  .body { flex: 1; display: flex; min-height: 0; }
+  .side { width: 112px; border-right: 1.5px solid var(--soft); padding: 8px 6px; font-size: 11px; }
+  .side div { padding: 5px 6px; border-radius: 4px; margin-bottom: 2px; color: #555; }
+  .side .on { background: #555; color: #fff; }
+  .main { flex: 1; padding: 10px 12px; position: relative; overflow: hidden; }
+  .h { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
+  .bar { height: 7px; border-radius: 4px; background: var(--soft); margin: 5px 0; }
+  .bar.d { background: #bdbdbd; }
+  .box { border: 1.5px solid var(--line); border-radius: 6px; padding: 7px 8px; background: #fff; }
+  .lbl { font-size: 10.5px; font-weight: bold; color: #444; margin-bottom: 4px; }
+  .btn { display: inline-block; font-size: 10px; padding: 4px 8px; border-radius: 4px; background: #555; color: #fff; }
+  .btn.o { background: #fff; color: #444; border: 1.5px solid var(--line); }
+  .pill { white-space: nowrap; align-self: flex-start; display: inline-block; font-size: 9px; padding: 2px 6px; border-radius: 8px; border: 1.2px solid var(--line); color: #444; background: #fff; }
+  .pill.f { background: #ddd; }
+  .field { border: 1.5px solid var(--line); border-radius: 4px; height: 16px; margin: 2px 0 7px; background: #fff; }
+  .flab { font-size: 10px; color: #555; }
+  .warn { border: 1.5px dashed #777; border-radius: 5px; padding: 5px 7px; font-size: 10px; background: #f7f7f7; }
+  .item { display: flex; align-items: center; gap: 6px; padding: 5px 0; border-bottom: 1px solid #e6e6e6; font-size: 10px; }
+  .item .grow { flex: 1; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #aaa; flex: none; }
+  table.t { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+  table.t th { text-align: left; font-weight: bold; border-bottom: 1.5px solid var(--line); padding: 3px 4px; color: #444; }
+  table.t td { padding: 4px; border-bottom: 1px solid #e3e3e3; }
+  table.t tr.band td { background: #ececec; }
+  table.t tr.band2 td { background: #f6f6f6; }
+  .shade { position: absolute; inset: 0; background: rgba(0,0,0,0.18); }
+  .dialog { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: 300px; background: #fff; border: 2px solid var(--line); border-radius: 7px; padding: 10px 12px; }
+  .drawer { position: absolute; right: 0; top: 0; bottom: 0; width: 56%; background: #fff; border-left: 2px solid var(--line); padding: 10px 12px; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .card { border: 1.5px solid var(--line); border-radius: 5px; padding: 6px; font-size: 9.5px; }
+  .card b { display: block; font-size: 15px; margin-top: 2px; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); border-left: 1px solid #ccc; border-top: 1px solid #ccc; }
+  .cal div { height: 40px; border-right: 1px solid #ccc; border-bottom: 1px solid #ccc; font-size: 8.5px; padding: 2px; position: relative; }
+  .cal .ev { position: absolute; left: 2px; right: 2px; height: 7px; border-radius: 2px; background: #999; }
+
+  /* Phone frame */
+  .phone { width: 300px; height: 600px; border: 2.5px solid var(--line); border-radius: 26px; padding: 14px 10px; box-sizing: border-box; display: flex; flex-direction: column; background: #fff; }
+  .phone .scr { flex: 1; border: 1.5px solid var(--soft); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .ptop { height: 34px; border-bottom: 1.5px solid var(--soft); display: flex; align-items: center; padding: 0 8px; }
+  .pmain { flex: 1; padding: 10px; font-size: 11px; position: relative; overflow: hidden; }
+  .pnav { height: 40px; border-top: 1.5px solid var(--soft); display: grid; grid-template-columns: repeat(4, 1fr); font-size: 9px; text-align: center; align-items: center; color: #555; }
+  .pnav .on { font-weight: bold; color: #222; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ Administrator -->
+<section class="sheet" id="1-administrator">
+  <h1>UI Wireframes: Administrator</h1>
+  <p class="sub">Low-fidelity layouts of the Administrator's main screens (desktop). Gray bars stand for text.</p>
+  <div class="grid">
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div class="on">Home</div><div>My tasks</div><div>Events</div><div>Schedule</div><div>Analytics</div><div>Accounts</div></div>
+          <div class="main">
+            <div class="h">Hello, [name]</div>
+            <div class="bar d" style="width:92%"></div><div class="bar d" style="width:60%"></div>
+            <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:10px;margin-top:10px">
+              <div class="box"><div class="lbl">Needs attention</div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:70%"></div><div class="bar" style="width:50%"></div></div><span class="pill f">Critical</span></div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:62%"></div><div class="bar" style="width:45%"></div></div><span class="pill">At Risk</span></div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:66%"></div><div class="bar" style="width:40%"></div></div><span class="pill">At Risk</span></div>
+                <div class="item" style="border:0"><div class="grow"><div class="bar d" style="width:58%"></div><div class="bar" style="width:35%"></div></div><span class="pill">At Risk</span></div>
+              </div>
+              <div class="box"><div class="lbl">Next 7 days</div>
+                <div class="flab">Today</div>
+                <div class="item"><span class="dot"></span><div class="grow"><div class="bar d" style="width:80%"></div></div><span class="pill">Ongoing</span></div>
+                <div class="item"><span class="dot"></span><div class="grow"><div class="bar d" style="width:70%"></div></div></div>
+                <div class="flab" style="margin-top:4px">Tomorrow</div>
+                <div class="item"><span class="dot"></span><div class="grow"><div class="bar d" style="width:76%"></div></div><span class="pill f">Critical</span></div>
+                <div class="item" style="border:0"><span class="dot"></span><div class="grow"><div class="bar d" style="width:60%"></div></div></div>
+              </div>
+            </div>
+            <div class="bar" style="width:30%;margin-top:10px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">A1. Home <span>Summary sentence, Needs attention (with reasons), Next 7 days, backup status</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div class="on">Schedule</div><div>Analytics</div><div>Accounts</div></div>
+          <div class="main">
+            <div style="display:flex;align-items:center;gap:6px"><div class="h" style="margin:0">Schedule</div><span style="margin-left:auto" class="btn o">Export to Excel</span><span class="btn o">Manage venues</span><span class="btn">+ Add event</span></div>
+            <div style="display:flex;gap:6px;margin:8px 0"><span class="btn">2026</span><span class="field" style="margin:0 0 0 auto;width:150px;height:18px"></span></div>
+            <table class="t">
+              <tr><th>DATE</th><th>TIME</th><th>EVENT</th><th>TYPE</th><th>DEPARTMENT</th><th>VENUE</th><th>CONTROL #</th></tr>
+              <tr><td colspan="7" style="font-weight:bold;color:#555">October 2026 · 30 events</td></tr>
+              <tr class="band"><td>Thu, Oct 1</td><td>7:00 AM</td><td><div class="bar d"></div></td><td>Internal</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td></td></tr>
+              <tr class="band2"><td>Sat, Oct 3</td><td>8:00 AM</td><td><div class="bar d"></div><span class="pill">Overlap</span></td><td>Internal</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td><div class="bar"></div></td></tr>
+              <tr class="band"><td>Mon, Oct 5</td><td>9:00 AM</td><td><div class="bar d"></div></td><td>External</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td><div class="bar"></div></td></tr>
+              <tr class="band2"><td>Fri, Oct 9</td><td>8:00 AM</td><td><div class="bar d"></div><span class="pill">At Risk</span></td><td>Internal</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td></td></tr>
+              <tr class="band"><td>Sat, Oct 10</td><td>6:00 PM</td><td><div class="bar d"></div><span class="pill f">Critical</span></td><td>Internal</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td><div class="bar"></div></td></tr>
+              <tr class="band2"><td>Fri, Oct 23</td><td>8:00 AM</td><td><s>Cancelled event</s></td><td>Internal</td><td><div class="bar"></div></td><td><div class="bar"></div></td><td><div class="bar"></div></td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="cap">A2. Schedule <span>Year tabs, search, rows grouped by month and shaded by building</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div class="on">Schedule</div><div>Analytics</div><div>Accounts</div></div>
+          <div class="main"><div class="bar" style="width:40%"></div><div class="bar" style="width:70%"></div>
+            <div class="shade"></div>
+            <div class="dialog">
+              <div class="h" style="font-size:13px">New event</div>
+              <div class="flab">Event</div><div class="field"></div>
+              <div style="display:flex;gap:6px"><span class="btn o" style="flex:1">Internal</span><span class="btn o" style="flex:1">External</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px">
+                <div><div class="flab">Date</div><div class="field"></div></div><div><div class="flab">Start time</div><div class="field"></div></div><div><div class="flab">End time</div><div class="field"></div></div>
+              </div>
+              <div class="flab">Venue</div><div class="field"></div>
+              <div class="warn">⚠ This overlaps with another booking at this venue. You can still save it.<div class="bar" style="width:70%;margin-top:4px"></div></div>
+              <div style="display:flex;gap:6px;margin-top:8px;align-items:center"><span style="font-size:9.5px;color:#555">⚠ Overlaps with 1 booking</span><span style="margin-left:auto;font-size:10px">Cancel</span><span class="btn">Add event</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">A3. New event form <span>Type, date and time, venue; overlap warning while choosing</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div>Schedule</div><div>Analytics</div><div class="on">Accounts</div></div>
+          <div class="main">
+            <div style="display:flex;align-items:center"><div class="h" style="margin:0">Accounts</div><span style="margin-left:auto" class="btn">+ Add account</span></div>
+            <div class="bar" style="width:35%"></div>
+            <div style="display:flex;gap:6px;margin:8px 0"><span class="btn">All roles</span><span class="btn o">Admin</span><span class="btn o">Officer</span><span class="btn o">Staff</span><span style="width:12px"></span><span class="btn">Active</span><span class="btn o">Deactivated</span><span class="btn o">All</span></div>
+            <table class="t">
+              <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>
+              <tr><td><div class="bar d"></div></td><td><div class="bar"></div></td><td><span class="pill">Staff</span></td><td>● Active</td><td>Edit · Deactivate</td></tr>
+              <tr><td><div class="bar d"></div></td><td><div class="bar"></div></td><td><span class="pill">Officer</span></td><td>● Active</td><td>Edit · Deactivate</td></tr>
+              <tr><td><div class="bar d"></div> <span class="pill">You</span></td><td><div class="bar"></div></td><td><span class="pill">Administrator</span></td><td>● Active</td><td>Edit</td></tr>
+              <tr><td><div class="bar d"></div></td><td><div class="bar"></div></td><td><span class="pill">Staff</span></td><td>● Active</td><td>Edit · Deactivate</td></tr>
+              <tr><td><div class="bar d"></div></td><td><div class="bar"></div></td><td><span class="pill">Staff</span></td><td>● Active</td><td>Edit · Deactivate</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="cap">A4. Accounts <span>Filter by role and status; add, edit or deactivate accounts</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Officer -->
+<section class="sheet" id="2-officer">
+  <h1>UI Wireframes: Officer</h1>
+  <p class="sub">Low-fidelity layouts of the Officer's main screens (desktop). Gray bars stand for text.</p>
+  <div class="grid">
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div class="on">Events</div><div>Schedule</div><div>Analytics</div></div>
+          <div class="main">
+            <div style="display:flex;align-items:center;gap:6px"><div class="h" style="margin:0">Events</div><span style="margin-left:auto" class="btn">Calendar</span><span class="btn o">List</span></div>
+            <div style="display:flex;gap:6px;margin:8px 0;align-items:center"><span class="btn o">‹</span><span class="btn o">›</span><b style="font-size:12px">October 2026</b><span style="margin-left:auto" class="btn">EMO-prepared</span><span class="btn o">All events</span></div>
+            <div class="cal">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+              <div></div><div></div><div></div><div></div><div>1</div><div>2</div><div>3</div>
+              <div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9 <span class="ev" style="top:14px"></span></div><div>10 <span class="ev" style="top:14px;background:#666"></span></div>
+              <div>11</div><div>12</div><div>13</div><div>14 <span class="ev" style="top:14px"></span></div><div>15</div><div>16</div><div>17</div>
+              <div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23 <span class="ev" style="top:14px"></span></div><div>24</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">O1. Events, calendar view <span>Month calendar; each event shaded by its readiness</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div class="on">Schedule</div><div>Analytics</div></div>
+          <div class="main"><div class="bar" style="width:40%"></div><div class="bar" style="width:70%"></div><div class="bar" style="width:55%"></div>
+            <div class="shade"></div>
+            <div class="drawer">
+              <div style="display:flex;align-items:center"><div class="h" style="margin:0;font-size:13px">[Event name]</div><span class="pill" style="margin-left:auto">At Risk</span></div>
+              <div class="bar d" style="width:45%"></div>
+              <div class="bar" style="width:60%;margin-top:6px"></div><div class="bar" style="width:50%"></div><div class="bar" style="width:55%"></div>
+              <div class="lbl" style="margin-top:8px;display:flex">Tasks (5)<span style="margin-left:auto;font-weight:normal">+ Add task</span></div>
+              <div class="item"><div class="grow"><div class="bar d" style="width:70%"></div><div class="bar" style="width:50%"></div></div><span class="pill">Done ▾</span></div>
+              <div class="item"><div class="grow"><div class="bar d" style="width:60%"></div><div class="bar" style="width:45%"></div></div><span class="pill">In progress ▾</span></div>
+              <div class="item"><div class="grow"><div class="bar d" style="width:65%"></div><div class="bar" style="width:40%"></div></div><span class="pill">Pending ▾</span></div>
+              <div class="lbl" style="margin-top:8px;display:flex">Documents (1)<span style="margin-left:auto;font-weight:normal">+ Upload file</span></div>
+              <div class="box" style="display:flex;gap:6px;align-items:center;font-size:9px"><span class="pill">PDF</span><div class="grow" style="flex:1"><div class="bar d" style="width:60%"></div></div>⤓</div>
+              <div style="position:absolute;bottom:10px;left:12px;font-size:10px">⎙ Download report</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">O2. Event panel <span>Readiness and reason, details, tasks with status, documents, PDF report</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div class="on">Schedule</div><div>Analytics</div></div>
+          <div class="main"><div class="bar" style="width:40%"></div><div class="bar" style="width:70%"></div>
+            <div class="shade"></div>
+            <div class="dialog">
+              <div class="h" style="font-size:13px">New task</div>
+              <div class="flab">Task name</div><div class="field"></div>
+              <div class="flab">Description (optional)</div><div class="field" style="height:30px"></div>
+              <div class="flab">Due date</div><div class="field"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div><div class="flab">Priority</div><div class="field"></div></div><div><div class="flab">Status</div><div class="field"></div></div></div>
+              <div class="flab">Assigned to (optional)</div><div class="field"></div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center"><span style="font-size:10px">Cancel</span><span class="btn">Add task</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">O3. New task form <span>Name, due date, priority, status and one owner</span></div>
+    </div>
+
+    <div>
+      <div class="win"><div class="chrome"><i></i><i></i><i></i><b></b></div>
+        <div class="top"><span class="logo"></span>EMO Tracker<span class="avatar"></span></div>
+        <div class="body">
+          <div class="side"><div>Home</div><div>My tasks</div><div>Events</div><div>Schedule</div><div class="on">Analytics</div></div>
+          <div class="main">
+            <div style="display:flex;align-items:center;gap:4px"><div class="h" style="margin:0">Analytics</div><span style="margin-left:auto" class="btn o">This week</span><span class="btn o">This month</span><span class="btn">This year</span><span class="btn o">All time</span></div>
+            <div class="lbl" style="margin-top:8px">Events</div>
+            <div class="cards"><div class="card">Upcoming<b>27</b></div><div class="card">Ongoing<b>1</b></div><div class="card">Completed<b>8</b></div><div class="card">Cancelled<b>2</b></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+              <div class="box"><div class="lbl">Readiness distribution</div><svg width="100%" height="104" viewBox="0 0 200 104"><path d="M40,94 A60,60 0 0 1 160,94" fill="none" stroke="#bbb" stroke-width="18"/><path d="M40,94 A60,60 0 0 1 70,42" fill="none" stroke="#666" stroke-width="18"/><text x="100" y="88" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">5</text></svg></div>
+              <div class="box"><div class="lbl">Top 5 most urgent events</div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:70%"></div></div><span class="pill f">Critical</span></div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:60%"></div></div><span class="pill">At Risk</span></div>
+                <div class="item"><div class="grow"><div class="bar d" style="width:66%"></div></div><span class="pill">At Risk</span></div>
+                <div class="item" style="border:0"><div class="grow"><div class="bar d" style="width:55%"></div></div><span class="pill">At Risk</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">O4. Analytics <span>Period switch, event counts, readiness distribution, most urgent events</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ Staff -->
+<section class="sheet" id="3-staff">
+  <h1>UI Wireframes: Staff</h1>
+  <p class="sub">Low-fidelity layouts of the Staff screens on a phone, where staff often update their tasks. Gray bars stand for text.</p>
+  <div class="row4">
+    <div>
+      <div class="phone"><div class="scr"><div class="pmain" style="display:flex;flex-direction:column;align-items:center;padding-top:40px">
+        <span class="logo" style="width:46px;height:46px"></span>
+        <div class="h" style="margin-top:10px">EMO Tracker</div><div class="bar" style="width:55%"></div>
+        <div class="box" style="width:100%;box-sizing:border-box;margin-top:20px">
+          <div class="h" style="font-size:13px">Sign in</div><div class="bar" style="width:70%"></div>
+          <div class="flab" style="margin-top:8px">Email</div><div class="field"></div>
+          <div class="flab">Password</div><div class="field"></div>
+          <div class="btn" style="display:block;text-align:center;margin-top:6px">Sign in</div>
+        </div>
+      </div></div></div>
+      <div class="cap">S1. Login <span>The same page for every role</span></div>
+    </div>
+    <div>
+      <div class="phone"><div class="scr">
+        <div class="ptop"><span class="logo"></span><span class="avatar"></span></div>
+        <div class="pmain">
+          <div class="h">Hello, [name]</div><div class="bar d" style="width:95%"></div><div class="bar d" style="width:75%"></div>
+          <div class="lbl" style="margin-top:12px;display:flex">My open tasks<span style="margin-left:auto;font-weight:normal">View all</span></div>
+          <div class="box"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:80%"></div><div class="bar" style="width:60%"></div></div><span class="pill">In progress ▾</span></div></div>
+          <div class="lbl" style="margin-top:12px;display:flex">My upcoming events<span style="margin-left:auto;font-weight:normal">View all</span></div>
+          <div class="box"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:75%"></div></div><span class="pill">At Risk</span></div><div class="bar" style="width:45%"></div><div class="bar" style="width:40%"></div><div class="bar" style="width:50%"></div></div>
+        </div>
+        <div class="pnav"><div class="on">Home</div><div>My tasks</div><div>My events</div><div>Schedule</div></div>
+      </div></div>
+      <div class="cap">S2. Home <span>Summary, open tasks (status menu), upcoming events</span></div>
+    </div>
+    <div>
+      <div class="phone"><div class="scr">
+        <div class="ptop"><span class="logo"></span><span class="avatar"></span></div>
+        <div class="pmain">
+          <div class="h">My tasks</div>
+          <div class="cards" style="grid-template-columns:1fr 1fr"><div class="card">Total<b>2</b></div><div class="card">Pending<b>0</b></div><div class="card">In progress<b>1</b></div><div class="card">Done<b>1</b></div></div>
+          <div style="display:flex;gap:4px;margin:8px 0;flex-wrap:wrap"><span class="btn">Open</span><span class="btn o">Pending</span><span class="btn o">In progress</span><span class="btn o">Done</span></div>
+          <div class="box" style="margin-bottom:6px"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:80%"></div><div class="bar" style="width:65%"></div><div class="bar" style="width:40%"></div></div><span class="pill">In progress ▾</span></div></div>
+          <div class="box"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:70%"></div><div class="bar" style="width:55%"></div><div class="bar" style="width:35%"></div></div><span class="pill">Done ▾</span></div></div>
+        </div>
+        <div class="pnav"><div>Home</div><div class="on">My tasks</div><div>My events</div><div>Schedule</div></div>
+      </div></div>
+      <div class="cap">S3. My tasks <span>Counts, filters, a status menu on each own task</span></div>
+    </div>
+    <div>
+      <div class="phone"><div class="scr">
+        <div class="ptop"><span style="font-size:11px;font-weight:bold">Event details</span><span style="margin-left:auto">✕</span></div>
+        <div class="pmain">
+          <div style="display:flex"><div class="h" style="font-size:13px">[Event name]</div><span class="pill" style="margin-left:auto">At Risk</span></div>
+          <div class="bar d" style="width:50%"></div>
+          <div class="bar" style="width:70%;margin-top:8px"></div><div class="bar" style="width:55%"></div><div class="bar" style="width:62%"></div>
+          <div class="lbl" style="margin-top:10px">People (3)</div>
+          <div style="display:flex;gap:4px"><span class="pill">[name]</span><span class="pill">[name]</span><span class="pill">[name]</span></div>
+          <div class="lbl" style="margin-top:10px">Tasks (5)</div>
+          <div class="item"><div class="grow"><div class="bar d" style="width:70%"></div></div><span class="pill">Done ▾</span></div>
+          <div class="item"><div class="grow"><div class="bar d" style="width:60%"></div></div><span class="pill f">Done</span></div>
+          <div class="item"><div class="grow"><div class="bar d" style="width:66%"></div></div><span class="pill f">Pending</span></div>
+          <div style="position:absolute;bottom:10px;left:10px;font-size:10px">⎙ Download report</div>
+        </div>
+      </div></div>
+      <div class="cap">S4. Event panel, view only <span>Only own tasks have a status menu</span></div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
