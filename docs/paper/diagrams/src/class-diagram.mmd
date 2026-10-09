@@ -97,12 +97,14 @@ classDiagram
     User "1" -- "0..*" Event : creates
     User "0..1" -- "0..*" Task : owns
     User "1" -- "0..*" Document : uploads
-    Event "1" *-- "0..*" Task : has
-    Event "1" *-- "0..*" Document : has
+    %% A filled diamond (composition) already means each part belongs to exactly one Event.
+    Event *-- "0..*" Task : has
+    Event *-- "0..*" Document : has
     Venue "0..1" -- "0..*" Event : hosts
     Building "0..1" o-- "0..*" Venue : groups
     EventClassifier ..> Event : classifies
     VenueClashes ..> Event : compares
     ScheduleImport ..> Event : creates
+    ScheduleImport ..> Venue : creates
     ScheduleExport ..> Event : reads
     note for Backup "Copies the whole database and the<br>uploaded documents into one .zip file"

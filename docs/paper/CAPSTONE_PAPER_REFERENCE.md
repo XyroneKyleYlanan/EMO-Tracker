@@ -1081,7 +1081,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
 - **Calm, consistent look:**
   - one look on every device: San Francisco on Apple devices, and the closely matching Inter (bundled with the app) on Windows and Android
   - sentence case everywhere, with no all-caps labels (except the Schedule's column headers, which copy the EMO's sheet)
-  - each action keeps one name all the way through ("+ Add event", then the **Add event** button, then "Event added")
+  - each action keeps one name all the way through ("+ Add event", then the **Add event** button, then *Event "[name]" added*)
   - red, amber and green are kept for readiness; Overlap is violet, and the calendar marks today with a green circle
   - motion turns off for people who ask their device for less of it
 - **Notifications:** short pop-up messages ("toasts") confirm actions such as saving, uploading and deleting, or explain why they failed.

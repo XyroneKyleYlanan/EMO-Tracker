@@ -145,17 +145,18 @@
               <div class="h" style="font-size:13px">New event</div>
               <div class="flab">Event</div><div class="field"></div>
               <div style="display:flex;gap:6px"><span class="btn o" style="flex:1">Internal</span><span class="btn o" style="flex:1">External</span></div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px">
+              <div class="flab" style="margin-top:6px">Department (optional)</div><div class="field"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
                 <div><div class="flab">Date</div><div class="field"></div></div><div><div class="flab">Start time</div><div class="field"></div></div><div><div class="flab">End time</div><div class="field"></div></div>
               </div>
-              <div class="flab">Venue</div><div class="field"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><div><div class="flab">Venue</div><div class="field"></div></div><div><div class="flab">Room / details (optional)</div><div class="field"></div></div></div>
               <div class="warn">⚠ This overlaps with another booking at this venue. You can still save it.<div class="bar" style="width:70%;margin-top:4px"></div></div>
               <div style="display:flex;gap:6px;margin-top:8px;align-items:center"><span style="font-size:9.5px;color:#555">⚠ Overlaps with 1 booking</span><span style="margin-left:auto;font-size:10px">Cancel</span><span class="btn">Add event</span></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="cap">A3. New event form <span>Type, date and time, venue; overlap warning while choosing</span></div>
+      <div class="cap">A3. New event form <span>Type, department, date and time, venue and room; overlap warning while choosing</span></div>
     </div>
 
     <div>
@@ -264,7 +265,7 @@
           <div class="main">
             <div style="display:flex;align-items:center;gap:4px"><div class="h" style="margin:0">Analytics</div><span style="margin-left:auto" class="btn o">This week</span><span class="btn o">This month</span><span class="btn">This year</span><span class="btn o">All time</span></div>
             <div class="lbl" style="margin-top:8px">Events</div>
-            <div class="cards"><div class="card">Upcoming<b>27</b></div><div class="card">Ongoing<b>1</b></div><div class="card">Completed<b>8</b></div><div class="card">Cancelled<b>2</b></div></div>
+            <div class="cards" style="grid-template-columns:repeat(5,1fr)"><div class="card">Upcoming<b>27</b></div><div class="card">Ongoing<b>1</b></div><div class="card">Completed<b>8</b></div><div class="card">Cancelled<b>2</b></div><div class="card">Rescheduled<b>2</b></div></div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
               <div class="box"><div class="lbl">Readiness distribution</div><svg width="100%" height="104" viewBox="0 0 200 104"><path d="M40,94 A60,60 0 0 1 160,94" fill="none" stroke="#bbb" stroke-width="18"/><path d="M40,94 A60,60 0 0 1 70,42" fill="none" stroke="#666" stroke-width="18"/><text x="100" y="88" text-anchor="middle" font-size="16" font-weight="bold" fill="#333">5</text></svg></div>
               <div class="box"><div class="lbl">Top 5 most urgent events</div>
@@ -277,7 +278,7 @@
           </div>
         </div>
       </div>
-      <div class="cap">O4. Analytics <span>Period switch, event counts, readiness distribution, most urgent events</span></div>
+      <div class="cap">O4. Analytics <span>Period switch, event and reschedule counts, readiness distribution, most urgent events</span></div>
     </div>
   </div>
 </section>
@@ -320,7 +321,7 @@
         <div class="pmain">
           <div class="h">My tasks</div>
           <div class="cards" style="grid-template-columns:1fr 1fr"><div class="card">Total<b>2</b></div><div class="card">Pending<b>0</b></div><div class="card">In progress<b>1</b></div><div class="card">Done<b>1</b></div></div>
-          <div style="display:flex;gap:4px;margin:8px 0;flex-wrap:wrap"><span class="btn">Open</span><span class="btn o">Pending</span><span class="btn o">In progress</span><span class="btn o">Done</span></div>
+          <div style="display:flex;gap:4px;margin:8px 0;flex-wrap:wrap"><span class="btn">Open</span><span class="btn o">All</span><span class="btn o">Pending</span><span class="btn o">In progress</span><span class="btn o">Done</span></div>
           <div class="box" style="margin-bottom:6px"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:80%"></div><div class="bar" style="width:65%"></div><div class="bar" style="width:40%"></div></div><span class="pill">In progress ▾</span></div></div>
           <div class="box"><div style="display:flex"><div style="flex:1"><div class="bar d" style="width:70%"></div><div class="bar" style="width:55%"></div><div class="bar" style="width:35%"></div></div><span class="pill">Done ▾</span></div></div>
         </div>

@@ -52,7 +52,7 @@ EMO Tracker runs on the EMO office's local network in a star topology: every dev
   - the MySQL 8.4 database
   - the uploaded documents, in private storage
   - the React application, served to the other devices on port 5173
-- **USB drive:** connected to the server laptop, it receives the automatic daily backups. The `BACKUP_PATH` setting points the backups to it, so a broken laptop does not take the backups with it.
+- **USB drive (recommended):** connected to the server laptop, it receives the automatic daily backups. By default, backups are saved in a folder on the laptop; the `BACKUP_PATH` setting points them to the USB drive instead, so a broken laptop does not take the backups with it.
 - **Access point:** the university Wi-Fi or a router of the office's own. The topology is the same either way.
 - **Clients:** office laptops and phones open the system in any web browser at the server's address (`http://SERVER-IP:5173`). Nothing is installed on them.
 
@@ -223,15 +223,15 @@ The Level 1 data flow diagram breaks the single process of the context diagram (
 - rectangles are external entities
 - pairs of parallel lines are data stores
 
-Each process has its own row so that no flows cross. Entities and data stores used by more than one process are therefore drawn more than once, marked with an asterisk, as DFD notation allows.
+Each process has its own row so that no flows cross. Entities and data stores used by more than one process are therefore drawn more than once, marked with an asterisk, as DFD notation allows. Lookups of people's names (for example, a task owner's name on a report) are left out for readability.
 
 **Processes:**
 - **1.0 Authenticate and manage accounts:** receives login details from all three roles and account details from the Administrator, and reads and writes the user records (D1 Users).
-- **2.0 Manage events and check overlaps:** receives event details from the Administrator and keeps the event records (D2). It reads the venue list (D3) to check for overlaps, and sends the schedule and event details to every role, with overlap warnings to the Administrator.
+- **2.0 Manage events and check overlaps:** receives event details from the Administrator and keeps the event records (D2). It reads the venue list (D3) to check for overlaps, and sends the schedule and event details to every role, with overlap warnings to the Administrator. Deleting an event also deletes its tasks (D4) and its documents (D5).
 - **3.0 Manage venues and buildings:** keeps the venue records (D3) from the Administrator's details.
 - **4.0 Manage tasks:** receives tasks and assignments from the Administrator and Officers, and status updates from Staff. It keeps the task records (D4), reads the users who can own tasks (D1), and sends Staff their assigned tasks.
 - **5.0 Classify readiness and analyze:** reads event dates and statuses (D2) and task progress (D4), and sends readiness labels and analytics to the Administrator and Officers.
-- **6.0 Manage documents and reports:** stores uploaded documents (D5), and produces documents, PDF reports and the Excel export from the event (D2) and task (D4) data.
+- **6.0 Manage documents and reports:** stores uploaded documents (D5), and produces documents, PDF reports and the Excel export. It draws on the event (D2), task (D4), and venue and building (D3) data; the building colors shade the Excel export.
 - **7.0 Import and back up data:**
   - imports the EMO's spreadsheet once, creating events (D2) and any new venues (D3)
   - copies all data stores into the daily backup
@@ -254,12 +254,12 @@ The UML class diagram shows the main classes of the backend, with their attribut
 - **Associations:**
   - a User creates many Events, may own many Tasks and uploads many Documents
   - a Venue hosts many Events
-- **Composition** (filled diamonds): an Event *has* its Tasks and Documents. They cannot exist without it and are deleted with it.
+- **Composition** (filled diamonds): an Event *has* its Tasks and Documents. They cannot exist without it and are deleted with it. A filled diamond already means each part belongs to exactly one event, so no number is written on the Event side.
 - **Aggregation** (hollow diamond): a Building *groups* Venues. The venues remain if the building is deleted.
-- **Service classes** (marked «service»): hold the business rules as static methods, and depend on Event (dashed arrows).
+- **Service classes** (marked «service»): hold the business rules as static methods, and depend on Event, and in one case on Venue (dashed arrows).
   - **EventClassifier:** classifies readiness.
   - **VenueClashes:** compares bookings for overlaps.
-  - **ScheduleImport:** creates events from the spreadsheet.
+  - **ScheduleImport:** creates events from the spreadsheet, and any venues it doesn't find in the list.
   - **ScheduleExport:** reads events to build the Excel file.
   - **Backup:** copies the whole database and the uploaded documents into one .zip file.
 - **Left out for readability:** the controllers, Laravel's framework classes and the unused Setting model.
@@ -289,7 +289,7 @@ This sequence diagram shows how the overlap check works while an Administrator a
 1. **Checking as the form is filled:** while the Administrator enters the venue, date and time, the browser waits 0.4 seconds after each change, then asks the Laravel API for clashing bookings.
 2. **Finding clashes:** the VenueClashes service retrieves the other bookings at the same venue on overlapping days that are not cancelled. It keeps those in the same room (or with no room) and with overlapping hours, and returns them as a list.
 3. **Showing the result:** if there is a clash, the form shows a warning naming each booking and noting that the event can still be saved; otherwise no warning appears.
-4. **Saving:** when the Administrator clicks "Add event", the API checks the role and validates the details. It sets the status from the date (upcoming, or completed if the event is already over), saves the event and returns it. The Schedule and the calendar then show the new event.
+4. **Saving:** when the Administrator clicks "Add event", the API checks the role and validates the details. It sets the status from the date (upcoming, or completed if the event is already over), saves the event and returns it. The browser confirms *Event "[name]" added to the schedule.*, and the event appears on the Schedule and the calendar.
 
 ### Sequence Diagram: Updating a Task's Status
 
@@ -317,12 +317,12 @@ The three site maps show how the screens of EMO Tracker are organized for each r
 
 After logging in, the Administrator's Home leads to six areas:
 - **My tasks.**
-- **Events** (calendar and list), whose event panel leads to:
+- **Events** (calendar and list), with the add event form, and an event panel that leads to:
   - the edit event form (including cancel and reschedule) and deleting the event
   - the task form
   - documents (upload, download, delete)
   - the PDF report
-- **Schedule**, which also has the add event form, the Excel export, and the Venues page, with its venue and building forms and venue merging.
+- **Schedule**, which also has the add event form, the Excel export, and the Venues page, with its venue and building forms and venue merging. The add event form can also create a new venue on the spot.
 - **Analytics.**
 - **Accounts**, with the account form (add, edit, deactivate).
 - **The user menu**, with change password and log out.
@@ -442,7 +442,7 @@ The wireframes are low-fidelity, grayscale layouts of the main screens of each r
 Four desktop screens:
 - **A1. Home:** the summary sentence, the "Needs attention" list with readiness labels, and the "Next 7 days" list.
 - **A2. Schedule:** the year tabs, the search box, and the buttons to export to Excel, manage venues and add events. Rows are grouped by month and shaded by building, with labels for overlaps and readiness and struck-through cancellations.
-- **A3. New event form:** the type, date and time, and venue fields, with the overlap warning that appears while they are filled in.
+- **A3. New event form:** the event name, type, department, date and times, venue and room fields, with the overlap warning that appears while they are filled in. (The real form also has optional description, control number and remarks fields below these.)
 - **A4. Accounts:** filters by role and status, and the accounts table with edit and deactivate actions.
 
 ### UI Wireframes: Officer
@@ -453,7 +453,7 @@ Four desktop screens:
 - **O1. Events (calendar view):** a month calendar whose events are shaded by readiness, with switches for calendar or list and EMO-prepared or all events.
 - **O2. Event panel:** opened from the Schedule. It shows the readiness label and reason, the event details, the tasks with their status menus, the documents with an upload link, and the PDF report link.
 - **O3. New task form:** name, description, due date, priority, status and owner.
-- **O4. Analytics:** the period switch, the event counts, the readiness distribution chart and the most urgent events.
+- **O4. Analytics:** the period switch, the event counts by status plus the rescheduled count, the readiness distribution chart and the most urgent events.
 
 ### UI Wireframes: Staff
 
@@ -462,7 +462,7 @@ Four desktop screens:
 Four phone screens, because Staff often update their tasks from a phone:
 - **S1. Login:** the sign-in form shared by every role.
 - **S2. Home:** the summary, the open tasks with a status menu, and the upcoming events, with the bottom navigation bar.
-- **S3. My tasks:** the task counts, the filters, and each task with its status menu.
+- **S3. My tasks:** the task counts, the filters (Open, All, Pending, In progress, Done), and each task with its status menu.
 - **S4. Event panel (view only):** the event's details, people and tasks. Only the user's own tasks have a status menu.
 
 ## Gantt chart
@@ -475,12 +475,12 @@ The Gantt chart shows the Capstone 2 project timeline from September to November
 
 | Phase | Activities |
 |---|---|
-| Planning and Analysis | Capstone 2 planning and system review (September 4 to 28); requirements gathering with the EMO (October 1 to 7) |
-| System Design | Design updates for the Schedule, venues and statuses (October 1 to 7) |
+| Planning and Analysis | Capstone 2 preparation (September 4 to 28, to be confirmed); consultations with the EMO (October 2 and 6) |
+| System Design | Design updates for the Schedule, venues and statuses (October 2 to 7) |
 | Development | Security hardening and automated tests (September 28 to October 1); prototype round 1: Schedule, venues and import (October 1 to 6); prototype round 2: statuses and double-booking (October 6 to 7); pre-defense audit, fixes and UI polish (October 7 to 10) |
 | Defense and Revision | Defense preparation, the Capstone 2 defense (first week of November), and revisions based on the panel's feedback (planned) |
 | Documentation and Finalization | The paper reference, figures and tables (October 7 to 11); manuscript writing (planned, to November 2) |
 | Implementation and Evaluation | Installation at the EMO, the pilot and the survey (planned, November) |
 
 - **Bar colors:** light bars are finished work, dark bars are planned work, and the red bar marks the defense week.
-- **Dates:** the finished dates come from the project's records. The defense date and the planned activities are to be confirmed.
+- **Dates:** the development and documentation dates come from the project's records, and the consultation dates from the paper reference. The September preparation bar is estimated from a few small changes made that month, so confirm it. The defense date and the planned activities are also to be confirmed.
