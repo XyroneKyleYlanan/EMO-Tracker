@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EMO Tracker user journey maps</title>
+<!--
+  How to change a map: edit the text in MAPS below, save, and open this file in a browser.
+  Each stage is: [name, actions, touchpoint, thought, feeling score from 1 (very negative) to 5 (very positive),
+  feeling word, pain point, opportunity]. Leave a pain point or opportunity as '' when there is none.
+  The PNGs in the folder above were taken from this page at 2x size.
+-->
+<style>
+  body { margin: 0; background: #ffffff; font-family: Arial, Helvetica, sans-serif; color: #333333; }
+  .map { width: 1600px; padding: 32px 36px 28px; box-sizing: border-box; background: #ffffff; }
+  .map + .map { margin-top: 40px; }
+  .title { font-size: 26px; font-weight: bold; color: #1f2937; }
+  .kind { display: inline-block; margin-left: 12px; font-size: 14px; font-weight: bold; color: #0a5c3a; background: #e8f3ec; border: 1px solid #b9d9c5; padding: 3px 10px; vertical-align: 4px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr 1fr 1.6fr; gap: 10px; margin: 14px 0 18px; }
+  .fact { background: #f5f5f5; border: 1px solid #dddddd; padding: 9px 12px; font-size: 14px; line-height: 1.35; }
+  .fact b { display: block; font-size: 12px; color: #6b6b6b; margin-bottom: 3px; }
+  .grid { display: grid; border: 1px solid #cfcfcf; }
+  .label { background: #f0f0f0; font-size: 13px; font-weight: bold; color: #444444; padding: 10px; border-bottom: 1px solid #dddddd; display: flex; align-items: center; }
+  .stage { background: #0a5c3a; color: #ffffff; font-weight: bold; font-size: 14.5px; padding: 10px; border-left: 1px solid #2f7a57; }
+  .stage span { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: #ffffff; color: #0a5c3a; font-size: 12px; margin-right: 6px; }
+  .cell { font-size: 13.5px; line-height: 1.38; padding: 9px 10px; border-left: 1px solid #e3e3e3; border-bottom: 1px solid #dddddd; }
+  .thought { font-style: italic; color: #444444; }
+  .pain { background: #fbefef; }
+  .opp { background: #edf6f0; }
+  .none { color: #aaaaaa; }
+  .feel { border-left: 1px solid #e3e3e3; border-bottom: 1px solid #dddddd; height: 190px; position: relative; }
+  .feel svg { position: absolute; inset: 0; }
+  .note { font-size: 12.5px; color: #666666; margin-top: 10px; }
+</style>
+</head>
+<body>
+<script>
+const MAPS = [
+ {
+  "id": "1-as-is-current-process",
+  "title": "Current Process (As-Is)",
+  "kind": "As-Is: how the EMO works before EMO Tracker",
+  "facts": [
+   [
+    "Who",
+    "EMO members who keep the schedule and prepare the EMO's events"
+   ],
+   [
+    "Goal",
+    "Record every booking correctly and get each event ready on time"
+   ],
+   [
+    "Tools",
+    "One shared Google Sheets file, typed by hand (one tab per year)"
+   ],
+   [
+    "Basis",
+    "The analysis of the EMO's 2026 schedule sheet and the problems found in Capstone 1. Feelings are inferred. Items marked * are to be confirmed with the EMO."
+   ]
+  ],
+  "lastLane": "How EMO Tracker addresses it",
+  "stages": [
+   [
+    "Receive a request",
+    "A department asks to book a venue or hold an event*",
+    "To be confirmed*",
+    "Is the venue free that day?",
+    3,
+    "Neutral",
+    "",
+    ""
+   ],
+   [
+    "Check the venue",
+    "Scroll the sheet for bookings at the same venue and date",
+    "Shared Google Sheet",
+    "I hope I didn't miss one.",
+    2,
+    "Unsure",
+    "Overlaps are found only by noticing them: 13 overlapping pairs in the 2026 sheet",
+    "Overlap warning on the form, the event panel and the Schedule"
+   ],
+   [
+    "Type the booking",
+    "Type a row (date, time, event, department, venue, control #, remarks) and color it by building",
+    "Shared Google Sheet",
+    "Which spelling did we use for this venue?",
+    3,
+    "Routine",
+    "Venues typed freely: about 80 spellings for about 25 places",
+    "One managed venue list; duplicate spellings can be merged"
+   ],
+   [
+    "Record a change",
+    "Write \"Resched to …\" on the old row and add a new row; note cancellations in the remarks",
+    "Shared Google Sheet",
+    "Where did this event move to?",
+    2,
+    "Tedious",
+    "Changes are hidden in text, so each row's status has to be read",
+    "Stored statuses, the \"Was it rescheduled?\" question, struck-through cancellations"
+   ],
+   [
+    "Divide the work",
+    "Assign the preparation work among members*",
+    "To be confirmed*",
+    "Who is doing what?",
+    2,
+    "Scattered",
+    "No single place tracks event tasks and who does them",
+    "Tasks with one owner, a due date and a priority"
+   ],
+   [
+    "Track readiness",
+    "Judge whether each event is ready*",
+    "To be confirmed*",
+    "Are we ready for this weekend?",
+    1,
+    "Anxious",
+    "No objective way to tell which events need attention before they happen",
+    "Readiness labels with reasons; the Needs attention list"
+   ],
+   [
+    "Report",
+    "Put together post-event reports and counts by hand",
+    "To be confirmed*",
+    "Compiling this again by hand.",
+    2,
+    "Burdened",
+    "Post-event reports are made by hand",
+    "PDF reports, Analytics and the Excel export"
+   ]
+  ]
+ },
+ {
+  "id": "2-administrator",
+  "title": "Administrator",
+  "kind": "To-Be: with EMO Tracker",
+  "facts": [
+   [
+    "Who",
+    "Owns the schedule, the venues and the user accounts"
+   ],
+   [
+    "Goal",
+    "Keep one accurate schedule and see which events need attention"
+   ],
+   [
+    "Scenario",
+    "A working day in the EMO office"
+   ],
+   [
+    "Basis",
+    "The system as built. Thoughts and feelings are the expected experience, to be confirmed with EMO users during the pilot."
+   ]
+  ],
+  "lastLane": "Opportunities (possible future work)",
+  "stages": [
+   [
+    "Log in",
+    "Open EMO Tracker in a browser on the office network and sign in",
+    "Login page",
+    "Let's see what today looks like.",
+    3,
+    "Ready",
+    "",
+    ""
+   ],
+   [
+    "Check Home",
+    "Read the summary, Needs attention, the next 7 days and the backup status",
+    "Home page",
+    "I can see which events need help, and why.",
+    4,
+    "In command",
+    "Other people's changes show only after the page reloads",
+    "Refresh the Home page automatically"
+   ],
+   [
+    "Record events",
+    "Add events with type, department, venue, room, dates and times; mark the ones the EMO prepares",
+    "Event form, Schedule",
+    "Every booking in one place, in one format.",
+    4,
+    "Productive",
+    "Requests still arrive outside the system and are typed in",
+    "Let departments send booking requests through the system"
+   ],
+   [
+    "Spot overlaps",
+    "See the overlap warning while choosing the venue and time; decide whether to keep both",
+    "Event form, Schedule",
+    "Glad I saw this before confirming.",
+    3,
+    "Alert",
+    "The system only warns; settling the clash still takes a call",
+    "Show the other booking's department in the warning"
+   ],
+   [
+    "Handle changes",
+    "Change a date and answer \"moved or correction?\"; cancel or restore events",
+    "Event form, event panel",
+    "The original date is kept, so nothing gets lost.",
+    4,
+    "Confident",
+    "Task owners aren't told when an event moves",
+    "Notify task owners of changes"
+   ],
+   [
+    "Manage venues",
+    "Add buildings and venues; merge duplicate spellings",
+    "Venues page",
+    "One spelling for each place.",
+    4,
+    "Organized",
+    "",
+    ""
+   ],
+   [
+    "Manage accounts",
+    "Create accounts, set roles, reset forgotten passwords, deactivate members who leave",
+    "Accounts page",
+    "Only our office can get in.",
+    3,
+    "In control",
+    "Every forgotten password comes to the Administrator",
+    "Self-service password reset (needs email)"
+   ],
+   [
+    "Review and report",
+    "View Analytics; download PDF reports; export the Schedule to Excel",
+    "Analytics, event panel, Schedule",
+    "The numbers are ready without compiling them.",
+    5,
+    "Accomplished",
+    "",
+    "A record of who changed what (audit trail)"
+   ]
+  ]
+ },
+ {
+  "id": "3-officer",
+  "title": "Officer",
+  "kind": "To-Be: with EMO Tracker",
+  "facts": [
+   [
+    "Who",
+    "Prepares the events the EMO handles: tasks, documents, readiness and reports"
+   ],
+   [
+    "Goal",
+    "Get each event ready on time and keep its records"
+   ],
+   [
+    "Scenario",
+    "Preparing an upcoming event"
+   ],
+   [
+    "Basis",
+    "The system as built. Thoughts and feelings are the expected experience, to be confirmed with EMO users during the pilot."
+   ]
+  ],
+  "lastLane": "Opportunities (possible future work)",
+  "stages": [
+   [
+    "Log in",
+    "Sign in on the office network",
+    "Login page",
+    "Time to prepare this week's events.",
+    3,
+    "Ready",
+    "",
+    ""
+   ],
+   [
+    "Check Home",
+    "Review Needs attention with its reasons, and the next 7 days",
+    "Home page",
+    "The reason tells me what to fix first.",
+    4,
+    "Aware",
+    "Other people's changes show only after the page reloads",
+    "Refresh the Home page automatically"
+   ],
+   [
+    "Check the Schedule",
+    "Browse and search the year; open any event's details",
+    "Schedule, event panel",
+    "I can see every booking, but not change its date.",
+    3,
+    "Informed",
+    "Date, time and venue changes go through the Administrator",
+    "Request a change from inside the system"
+   ],
+   [
+    "Prepare an event",
+    "Add tasks with an owner, a due date and a priority",
+    "Event panel, task form",
+    "Each task has one owner, so nothing falls through.",
+    4,
+    "Organized",
+    "Owners learn of a new task only when they open the app",
+    "Notify owners of new tasks"
+   ],
+   [
+    "Upload documents",
+    "Upload proposals, permits and post-event files (up to 10 MB)",
+    "Documents section",
+    "The files stay with the event.",
+    4,
+    "Confident",
+    "A wrong upload can only be deleted by the Administrator",
+    ""
+   ],
+   [
+    "Monitor readiness",
+    "Watch the readiness labels and their reasons; check Analytics",
+    "Event panel, Analytics",
+    "I can see which event is slipping while there's time.",
+    3,
+    "Watchful",
+    "A Critical label still needs people to act on it",
+    "Alert the team when an event turns Critical"
+   ],
+   [
+    "Report",
+    "Download the event's PDF report; export the Schedule to Excel",
+    "Event panel, Schedule",
+    "The report is ready in one click.",
+    5,
+    "Accomplished",
+    "",
+    ""
+   ],
+   [
+    "After the event",
+    "The event completes and its tasks lock as a record",
+    "Event panel",
+    "The record is final and safe.",
+    4,
+    "Satisfied",
+    "A late correction needs the Administrator",
+    ""
+   ]
+  ]
+ },
+ {
+  "id": "4-staff",
+  "title": "Staff",
+  "kind": "To-Be: with EMO Tracker",
+  "facts": [
+   [
+    "Who",
+    "Carries out tasks for the EMO's events, often from a phone"
+   ],
+   [
+    "Goal",
+    "Know what to do and report progress"
+   ],
+   [
+    "Scenario",
+    "Working on an assigned task"
+   ],
+   [
+    "Basis",
+    "The system as built. Thoughts and feelings are the expected experience, to be confirmed with EMO users during the pilot."
+   ]
+  ],
+  "lastLane": "Opportunities (possible future work)",
+  "stages": [
+   [
+    "Log in",
+    "Sign in on a phone or laptop on the office network",
+    "Login page",
+    "What do I need to do today?",
+    3,
+    "Neutral",
+    "A forgotten password waits for the Administrator",
+    "Self-service password reset (needs email)"
+   ],
+   [
+    "View Home",
+    "Read the summary, open tasks and upcoming events",
+    "Home page",
+    "Everything I need is on one screen.",
+    4,
+    "Oriented",
+    "",
+    ""
+   ],
+   [
+    "Review my tasks",
+    "Open My tasks; read each due date, priority and event",
+    "My tasks page",
+    "I know what to do first.",
+    4,
+    "Clear",
+    "No place to ask about a task inside the system",
+    "Comments on tasks"
+   ],
+   [
+    "Check events",
+    "Browse the Schedule or My events; open an event (view only)",
+    "Schedule, My events, event panel",
+    "I know where and when it happens.",
+    4,
+    "Informed",
+    "",
+    ""
+   ],
+   [
+    "Update progress",
+    "Change the task's status: Pending, In progress, Done",
+    "Home page, My tasks",
+    "One tap and it's recorded.",
+    5,
+    "Productive",
+    "Others see the update only after their page reloads",
+    "Refresh screens automatically"
+   ],
+   [
+    "Get files",
+    "Download the event's documents and PDF report",
+    "Event panel",
+    "The files are right there.",
+    4,
+    "Supported",
+    "Staff can't upload files; they pass them to an Officer",
+    "Let task owners attach files"
+   ],
+   [
+    "Finish",
+    "Mark the task Done; the event's readiness improves",
+    "My tasks, event panel",
+    "My part is done.",
+    5,
+    "Accomplished",
+    "",
+    ""
+   ]
+  ]
+ }
+]
+
+const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+for (const m of MAPS) {
+  const n = m.stages.length
+  const col = (i) => i + 2
+  let html = '<section class="map" id="' + m.id + '">'
+  html += '<div><span class="title">User Journey Map: ' + esc(m.title) + '</span><span class="kind">' + esc(m.kind) + '</span></div>'
+  html += '<div class="facts">' + m.facts.map(([k, v]) => '<div class="fact"><b>' + esc(k) + '</b>' + esc(v) + '</div>').join('') + '</div>'
+  html += '<div class="grid" style="grid-template-columns: 128px repeat(' + n + ', 1fr)">'
+  html += '<div class="label" style="background:#0a5c3a;color:#fff">Stage</div>'
+  m.stages.forEach((s, i) => { html += '<div class="stage"><span>' + (i + 1) + '</span>' + esc(s[0]) + '</div>' })
+  const lane = (label, idx, cls = '') => {
+    html += '<div class="label">' + label + '</div>'
+    m.stages.forEach((s) => { const t = s[idx]; html += '<div class="cell ' + cls + '">' + (t ? esc(t) : '<span class="none">—</span>') + '</div>' })
+  }
+  lane('Actions', 1)
+  lane('Touchpoints', 2)
+  lane('Thoughts', 3, 'thought')
+  html += '<div class="label">Feelings</div><div class="feel" style="grid-column: 2 / span ' + n + '"><svg></svg></div>'
+  lane('Pain points', 6, 'pain')
+  lane(esc(m.lastLane), 7, 'opp')
+  html += '</div>'
+  if (m.id.startsWith('1-')) html += '<div class="note">* To be confirmed with the EMO. Feelings are inferred from the documented problems.</div>'
+  else html += '<div class="note">Feelings show the expected experience on a scale from very negative (bottom) to very positive (top).</div>'
+  html += '</section>'
+  document.body.insertAdjacentHTML('beforeend', html)
+
+  // The feelings curve: one point per stage, drawn once the lane has its real size.
+  const box = document.getElementById(m.id).querySelector('.feel')
+  const svg = box.querySelector('svg')
+  const w = box.clientWidth, h = box.clientHeight, pad = 30
+  svg.setAttribute('width', w); svg.setAttribute('height', h); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h)
+  const x = (i) => (i + 0.5) * (w / n)
+  const y = (s) => pad + ((5 - s) / 4) * (h - 2 * pad)
+  const color = (s) => (s >= 4 ? '#2e7d4f' : s === 3 ? '#b7791f' : '#c0392b')
+  let out = ''
+  for (let i = 1; i < n; i++) out += '<line x1="' + (i * w / n) + '" y1="0" x2="' + (i * w / n) + '" y2="' + h + '" stroke="#efefef"/>'
+  out += '<line x1="0" y1="' + y(3) + '" x2="' + w + '" y2="' + y(3) + '" stroke="#cccccc" stroke-dasharray="5 5"/>'
+  out += '<text x="8" y="' + (y(5) + 4) + '" font-size="12" fill="#2e7d4f">+ positive</text><text x="8" y="' + (y(1) + 4) + '" font-size="12" fill="#c0392b">– negative</text>'
+  const pts = m.stages.map((s, i) => [x(i), y(s[4])])
+  let d = 'M' + pts[0][0] + ',' + pts[0][1]
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], mx = (x0 + x1) / 2
+    d += ' C' + mx + ',' + y0 + ' ' + mx + ',' + y1 + ' ' + x1 + ',' + y1
+  }
+  out += '<path d="' + d + '" fill="none" stroke="#555555" stroke-width="2.5"/>'
+  m.stages.forEach((s, i) => {
+    const [px, py] = pts[i]
+    out += '<circle cx="' + px + '" cy="' + py + '" r="8" fill="' + color(s[4]) + '" stroke="#ffffff" stroke-width="2"/>'
+    const below = s[4] > 1
+    out += '<text x="' + px + '" y="' + (below ? py + 26 : py - 16) + '" text-anchor="middle" font-size="13" font-weight="bold" fill="' + color(s[4]) + '">' + esc(s[5]) + '</text>'
+  })
+  svg.innerHTML = out
+}
+</script>
+</body>
+</html>

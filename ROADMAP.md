@@ -272,6 +272,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 
 **Capstone 2 paper**
 - [x] Chapter 3 and appendix figures reviewed against the code (2026-10-09): use case diagram redrawn in UML notation; context diagram, login sequence, status lifecycle, ERD and overlap flowchart corrected; screenshots retaken as 26 in role folders (added login error, change password, cancelled event, add account, Officer's Home, documents, staff's My events and view-only panel, Excel export); descriptions written for each figure
+- [x] User journey maps redone as visual maps (2026-10-10): the current spreadsheet process (As-Is, from the documented problems) plus one map per role with EMO Tracker (To-Be), each with a feelings curve and honest pain points; the Word tables carry the same content
 - [ ] Settle the open items in Appendix I of the paper reference with the adviser (title, section, how to count the features, SDLC model, survey format and respondents)
 - [ ] Split the chapters among the team; everyone works from the paper reference (Part A plus their chapter's part)
 - [ ] After the pilot: fill in the user evaluation results (Part G.8) and finalize the conclusions
@@ -284,6 +285,14 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [x] Venue double-booking warning: warn (not block) when an event overlaps another booking in the same venue and room, and mark clashes on the Schedule
 - [x] Professor: more than 4 features are allowed if they fit the system and the client's needs
 - [ ] Still open: the user-testing survey format (ISO 25010 or SUS?); email notifications (the client asked; needs internet access and a sending account); whether comments/tagging and an audit trail belong in Capstone 2 or future work
+
+**Office install (planned 2026-10-09; on hold while the team writes the paper)**
+- How it works: install on one laptop only (the server: database, documents, backups). Other laptops and phones open it in a browser and install nothing. Data is shared through the one database, but other screens show a change only when their page loads (no live push). The server laptop must stay on and awake. It works only on the same network, by design
+- [ ] Wi-Fi test: in the EMO office on the university Wi-Fi, run `start.command` on the MacBook and open the printed address on a phone on the same Wi-Fi. If it loads, use the university Wi-Fi and ask IT for a fixed address for the laptop. If it's blocked (client isolation), get a small Wi-Fi router for the office; otherwise use it only on the server laptop. Cloud hosting or tunnels break the LAN-only rule
+- [ ] "Office mode" so the EMO never opens a terminal: build the React app once and have Laravel serve it, run it on Laragon's web server and MySQL with Laragon set to start with Windows and Start All automatically, and add an "EMO Tracker" desktop icon. Keep `start.bat` / `start.command` for development. Needs a check on a Windows machine
+- [ ] Install day (about 1–2 hours): Laragon and the project; `.env` (debug off, `BACKUP_PATH` to a USB drive); their latest data (`schedule:import`); real accounts in place of the demo ones; laptop settings (never sleep when plugged in, lid close does nothing, Manila time zone, firewall rule for other devices); test from a phone and another laptop; named backup snapshot
+- [ ] Optional: auto-refresh on Home and the event panel (every minute and when the tab is opened again), so other screens catch up without pressing refresh
+- [ ] One-page guide for the EMO: how to open it, the address for other devices, keep the laptop on and plugged in, the USB backup, who to contact (group-mate task)
 
 **Pilot and user testing**
 - [ ] Install on the EMO's Windows laptop with their latest data, and point `BACKUP_PATH` at a USB drive or second disk. Try `start.bat` there first: finding Laragon's PHP and applying database changes are new and haven't run on Windows yet. Also check uploads up to 10 MB

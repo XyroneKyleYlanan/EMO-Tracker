@@ -7,7 +7,8 @@
 | [paper/screenshots/](paper/screenshots/) | 26 screenshots of the system, one folder per role (demo data only) |
 | [paper/Screenshot_Descriptions.md](paper/Screenshot_Descriptions.md) | A caption and description for each screenshot, for the appendices |
 | [paper/diagrams/](paper/diagrams/) | 8 diagrams: architecture, context diagram, use cases, ERD, readiness flowchart, overlap check, status lifecycle, login sequence |
-| [paper/Diagram_Descriptions.md](paper/Diagram_Descriptions.md) | A caption and description for each diagram, for Chapter 3 |
+| [paper/journey-maps/](paper/journey-maps/) | 4 user journey maps: the current process (As-Is) and each role with EMO Tracker (To-Be) |
+| [paper/Diagram_Descriptions.md](paper/Diagram_Descriptions.md) | A caption and description for each diagram and journey map, for Chapter 3 |
 | [OVERVIEW.md](OVERVIEW.md) | Technical overview of the code |
 | [demo-accounts.txt](demo-accounts.txt) | Demo login accounts (demo data only) |
 

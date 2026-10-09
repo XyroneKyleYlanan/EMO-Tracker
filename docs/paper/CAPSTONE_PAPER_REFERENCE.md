@@ -1510,6 +1510,17 @@ Mark each scenario Passed or Failed, and write notes.
 
 To edit a Mermaid diagram, copy its code into [mermaid.live](https://mermaid.live), including the lines between `---` at the top where there are any (they set the layout and colors), change it, and export a PNG or SVG. The use case and context diagrams are SVG files: open them in a browser to view them, or in a vector editor such as Inkscape to edit them.
 
+**User journey maps** (in the `journey-maps/` folder next to this file; Figures 3.9 to 3.12 in [Diagram_Descriptions.md](Diagram_Descriptions.md)). The same content is in [tables/user-journey-map.html](tables/user-journey-map.html) as tables that can be edited in Word.
+
+| File | Map |
+|---|---|
+| [1-as-is-current-process.png](journey-maps/1-as-is-current-process.png) | The EMO's current process with the spreadsheet (As-Is), with the EMO Tracker feature that addresses each pain point |
+| [2-administrator.png](journey-maps/2-administrator.png) | Administrator with EMO Tracker (To-Be) |
+| [3-officer.png](journey-maps/3-officer.png) | Officer with EMO Tracker (To-Be) |
+| [4-staff.png](journey-maps/4-staff.png) | Staff with EMO Tracker (To-Be) |
+
+To change a map, edit the text at the top of [journey-maps/src/journey-maps.html](journey-maps/src/journey-maps.html) and open the file in a browser. The To-Be thoughts and feelings are the expected experience, to be confirmed during the pilot. The As-Is items marked * are to be confirmed with the EMO.
+
 **Copy-ready tables** (in the `tables/` folder next to this file, updated October 7, 2026). Open a file in a browser, select a table, copy it, and paste it into Word or Google Docs. It pastes as an editable table.
 
 | File | What it is | Use in |
@@ -1517,7 +1528,7 @@ To edit a Mermaid diagram, copy its code into [mermaid.live](https://mermaid.liv
 | [data-dictionary.html](tables/data-dictionary.html) | Every column of the 7 application tables, with types, constraints and meanings | Chapter 3, database design |
 | [compatibility-table.html](tables/compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
 | [risk-assessment.html](tables/risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
-| [user-journey-map.html](tables/user-journey-map.html) | Journey of each role (Administrator, Officer, Staff), stage by stage | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
+| [user-journey-map.html](tables/user-journey-map.html) | The four user journey maps as tables: the current process (As-Is) and each role with EMO Tracker (To-Be) | Chapter 3, user experience design (confirm the expected emotions during the pilot) |
 
 ---
 

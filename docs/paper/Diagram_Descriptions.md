@@ -1,10 +1,10 @@
 # Diagram Descriptions
 
-Descriptions of the eight system diagrams for **Chapter 3 (Methodology and System Design)** of the EMO Tracker Capstone 2 paper. The images are in the [`diagrams/`](diagrams/) folder. The entries below are in the suggested order for the chapter.
+Descriptions of the eight system diagrams and the four user journey maps for **Chapter 3 (Methodology and System Design)** of the EMO Tracker Capstone 2 paper. The images are in the [`diagrams/`](diagrams/) and [`journey-maps/`](journey-maps/) folders. The entries below are in the suggested order for the chapter.
 
 - **Figure numbers** assume these are the first figures in Chapter 3. Renumber them if other figures come first, such as a conceptual framework.
 - **Accuracy:** every description was checked against the system's code as of October 9, 2026. It uses the system's own terms: Administrator, Officer, Staff; On Track, At Risk, Critical; Upcoming, Ongoing, Completed, Cancelled.
-- **Sources:** the drawing code for six of the diagrams is in [CAPSTONE_PAPER_REFERENCE.md](CAPSTONE_PAPER_REFERENCE.md) (Part E). The use case and context diagrams are SVG files in [`diagrams/src/`](diagrams/src/).
+- **Sources:** the drawing code for six of the diagrams is in [CAPSTONE_PAPER_REFERENCE.md](CAPSTONE_PAPER_REFERENCE.md) (Part E). The use case and context diagrams are SVG files in [`diagrams/src/`](diagrams/src/). The journey maps come from [`journey-maps/src/journey-maps.html`](journey-maps/src/journey-maps.html); the same content is in [`tables/user-journey-map.html`](tables/user-journey-map.html) as tables that can be edited in Word.
 
 ---
 
@@ -138,3 +138,79 @@ The sequence diagram traces a login and one authenticated request through five p
    - **Wrong email or password, or a deactivated account:** Laravel returns an error (HTTP 422) whose reason the login form displays.
    - **More than ten attempts in a minute:** Laravel returns HTTP 429, and the form shows a "too many attempts" message.
 4. **Later requests:** every later request carries the token. The diagram uses the Administrator's Home page as the example. Laravel marks finished events as completed (it does this on every request), looks up the token, and checks that the user's role may use the route. It then reads the events and tasks and returns JSON through the frontend server to the browser, which displays the Home page.
+
+---
+
+## User journey maps
+
+Each journey map follows one kind of user across the stages of their work. Every map has the same layout:
+- **Header:** who the user is, their goal, and the scenario.
+- **One column per stage,** with rows for the user's actions, the touchpoint they use, a representative thought, their feeling, the pain point, and an opportunity.
+- **A feelings curve** running across the stages, from very negative (bottom) to very positive (top).
+
+The first map shows the EMO's current process (As-Is). The other three show each role's journey with EMO Tracker (To-Be). Their thoughts and feelings are the expected experience, to be confirmed with EMO users during the pilot.
+
+### Figure 3.9. User Journey Map of the Current Process (As-Is)
+
+**File:** [journey-maps/1-as-is-current-process.png](journey-maps/1-as-is-current-process.png)
+
+The As-Is map describes how EMO members keep the schedule and prepare events before EMO Tracker. It is based on the analysis of the office's 2026 schedule sheet and the problems identified in Capstone 1. It follows seven stages, from receiving a request to reporting after an event.
+
+- **Pain points (all documented):**
+  - overlapping bookings are found only by noticing them (13 pairs in the 2026 sheet)
+  - venues typed freely, giving about 80 spellings for about 25 places
+  - reschedules and cancellations hidden in text
+  - no single place that tracks tasks and who does them
+  - no objective way to tell which events need attention
+  - reports made by hand
+- **Feelings curve:** stays at or below neutral throughout, and reaches its lowest point at tracking readiness.
+- **Last row:** instead of opportunities, it names the EMO Tracker feature that addresses each pain point.
+- **Limits:** items marked with an asterisk, such as how requests arrive and how work is assigned today, are to be confirmed with the EMO. The feelings are inferred from the documented problems rather than observed.
+
+This map supports the need for the system: each of its pain points corresponds to a feature in the To-Be journeys that follow.
+
+### Figure 3.10. User Journey Map of the Administrator (To-Be)
+
+**File:** [journey-maps/2-administrator.png](journey-maps/2-administrator.png)
+
+This map shows the Administrator's expected journey with EMO Tracker across eight stages: logging in, checking the Home page, recording events, spotting overlaps, handling changes, managing venues, managing accounts, and reviewing and reporting.
+
+- **Feelings curve:** stays above neutral for most of the day, and peaks when reports and statistics are ready without being compiled by hand.
+- **Dips to neutral** at two stages:
+  - when an overlap warning appears, because settling the clash still requires contacting the other party
+  - when managing accounts, because the Administrator resets every forgotten password
+- **Opportunities** for future work that would address the remaining pain points:
+  - refreshing the Home page automatically
+  - notifying task owners when an event changes
+  - showing the other booking's department in the overlap warning
+  - self-service password reset (which needs email)
+  - an audit trail of who changed what
+
+### Figure 3.11. User Journey Map of the Officer (To-Be)
+
+**File:** [journey-maps/3-officer.png](journey-maps/3-officer.png)
+
+This map shows the Officer's expected journey while preparing an event, across eight stages: logging in, checking the Home page, checking the Schedule, preparing the event's tasks, uploading documents, monitoring readiness, reporting, and closing the event.
+
+- **Feelings curve:** rises as tasks are assigned to owners and documents are stored with the event, and peaks when the report is generated in one step.
+- **Dips to neutral** at two stages:
+  - checking the Schedule, because changes to an event's date, time or venue go through the Administrator
+  - monitoring readiness, because a Critical label still needs people to act on it
+- **Opportunities:**
+  - refreshing screens automatically
+  - requesting schedule changes inside the system
+  - notifying owners of new tasks
+  - alerting the team when an event turns Critical
+
+### Figure 3.12. User Journey Map of the Staff (To-Be)
+
+**File:** [journey-maps/4-staff.png](journey-maps/4-staff.png)
+
+This map shows a Staff member's expected journey while working on an assigned task, often from a phone. It covers seven stages: logging in, viewing the Home page, reviewing their tasks, checking events, updating progress, getting files, and finishing the task.
+
+- **Feelings curve:** starts at neutral, because a forgotten password has to wait for the Administrator. It stays positive afterwards, and peaks when progress is updated and the task is finished.
+- **Remaining pain points:**
+  - there is no place inside the system to ask about a task
+  - other users see an update only after their page reloads
+  - Staff cannot upload files, so they pass them to an Officer
+- **Opportunities:** comments on tasks, automatic refresh, file attachments by task owners, and self-service password reset.
