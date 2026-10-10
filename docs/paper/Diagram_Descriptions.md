@@ -45,16 +45,16 @@ The system runs entirely on the local network and uses no external services or c
 
 **File:** [diagrams/network-topology.png](diagrams/network-topology.png) (source: [diagrams/src/network-topology.svg](diagrams/src/network-topology.svg))
 
-EMO Tracker runs on the EMO office's local network in a star topology: every device connects to one central Wi-Fi access point or router.
+EMO Tracker runs on the EMO office's local network in a star topology: every device connects to one central Wi-Fi access point or router. The diagram shows the server laptop at the top, the access point in the middle and the users' devices below, with a note on how they connect.
 
-- **Server laptop:** the EMO's Windows laptop runs the whole system through Laragon:
+- **Server laptop:** the EMO's Windows laptop runs the whole system:
+  - Laragon, which provides PHP 8.3 and the MySQL 8.4 database
   - the Laravel API, which listens only on the laptop itself (`127.0.0.1:8000`)
-  - the MySQL 8.4 database
   - the uploaded documents, in private storage
   - the React application, served to the other devices on port 5173
 - **USB drive (recommended):** connected to the server laptop, it receives the automatic daily backups. By default, backups are saved in a folder on the laptop; the `BACKUP_PATH` setting points them to the USB drive instead, so a broken laptop does not take the backups with it.
 - **Access point:** the university Wi-Fi or a router of the office's own. The topology is the same either way.
-- **Clients:** office laptops and phones open the system in any web browser at the server's address (`http://SERVER-IP:5173`). Nothing is installed on them.
+- **Users' devices:** laptops, computers, tablets and phones open the system in any web browser at the server's address (for example, `http://192.168.1.5:5173`). Nothing is installed on them. The diagram labels four devices by role (an Administrator's office laptop, an Officer's computer, and a Staff member's tablet and phone), but these are examples: any role can use any device.
 
 No internet connection is needed. The system can only be reached from devices on the same network, which keeps the EMO's data inside the office.
 

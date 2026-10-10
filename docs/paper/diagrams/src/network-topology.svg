@@ -1,69 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" font-family="Arial, Helvetica, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1150" height="770" viewBox="0 0 1150 770" font-family="Arial, Helvetica, sans-serif">
 <title>EMO Tracker network topology</title>
-<rect width="1400" height="900" fill="#ffffff"/>
-<text x="50" y="48" text-anchor="start" font-size="22" fill="#333333" font-weight="bold">EMO Tracker: Network Topology (star topology, local network only)</text>
-<rect x="40" y="80" width="1320" height="690" rx="14" fill="#fafafa" stroke="#bbbbbb" stroke-width="1.5" stroke-dasharray="6 5"/>
-<text x="64" y="110" text-anchor="start" font-size="15" fill="#555555" font-weight="bold">EMO office local network (university Wi-Fi, or the office's own router)</text>
-<line x1="350" y1="394" x2="614" y2="400" stroke="#555555" stroke-width="2" stroke-dasharray="9 7"/>
-<line x1="786" y1="390" x2="1020" y2="230" stroke="#555555" stroke-width="2" stroke-dasharray="9 7"/>
-<line x1="786" y1="404" x2="1020" y2="420" stroke="#555555" stroke-width="2" stroke-dasharray="9 7"/>
-<line x1="780" y1="422" x2="1050" y2="580" stroke="#555555" stroke-width="2" stroke-dasharray="9 7"/>
-<line x1="260" y1="452" x2="260" y2="582" stroke="#555555" stroke-width="3"/>
-<g transform="translate(260,400) scale(1.15)">
-  <rect x="-62" y="-50" width="124" height="80" rx="5" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="-52" y="-41" width="104" height="62" fill="#ffffff" stroke="#bbbbbb"/>
-  <path d="M-80,30 L80,30 L70,44 L-70,44 Z" fill="#ececec" stroke="#888888" stroke-width="2"/>
-</g>
-<text x="260" y="228" text-anchor="middle" font-size="15" fill="#333333" font-weight="bold">Server laptop (the EMO's Windows laptop)</text>
-<text x="260" y="250" text-anchor="middle" font-size="14" fill="#444444">Laragon: Laravel API (127.0.0.1:8000), MySQL 8.4</text>
-<text x="260" y="269" text-anchor="middle" font-size="14" fill="#444444">React app served on port 5173</text>
-<text x="260" y="288" text-anchor="middle" font-size="14" fill="#444444">Uploaded documents in private storage</text>
-<g transform="translate(260,600)">
-  <rect x="-34" y="-18" width="58" height="36" rx="6" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="24" y="-11" width="20" height="22" fill="#ffffff" stroke="#888888" stroke-width="2"/>
-</g>
-<text x="260" y="646" text-anchor="middle" font-size="14" fill="#444444">USB drive or second disk (recommended): daily backups,</text>
-<text x="260" y="665" text-anchor="middle" font-size="14" fill="#444444">set with BACKUP_PATH (default: a folder on the laptop)</text>
-<g transform="translate(700,400)">
-  <line x1="-40" y1="-22" x2="-52" y2="-62" stroke="#888888" stroke-width="4" stroke-linecap="round"/>
-  <line x1="40" y1="-22" x2="52" y2="-62" stroke="#888888" stroke-width="4" stroke-linecap="round"/>
-  <rect x="-80" y="-24" width="160" height="48" rx="8" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <circle cx="-48" cy="0" r="4" fill="#2e7d4f"/><circle cx="-30" cy="0" r="4" fill="#2e7d4f"/><circle cx="-12" cy="0" r="4" fill="#2e7d4f"/>
-  <path d="M-22,-82 Q0,-100 22,-82" fill="none" stroke="#888888" stroke-width="3" stroke-linecap="round"/>
-  <path d="M-34,-92 Q0,-120 34,-92" fill="none" stroke="#888888" stroke-width="3" stroke-linecap="round"/>
-</g>
-<text x="700" y="452" text-anchor="middle" font-size="15" fill="#333333" font-weight="bold">Wi-Fi access point or router</text>
-<text x="700" y="474" text-anchor="middle" font-size="14" fill="#444444">connects every device in a star</text>
-<g transform="translate(1110,230) scale(0.85)">
-  <rect x="-62" y="-50" width="124" height="80" rx="5" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="-52" y="-41" width="104" height="62" fill="#ffffff" stroke="#bbbbbb"/>
-  <path d="M-80,30 L80,30 L70,44 L-70,44 Z" fill="#ececec" stroke="#888888" stroke-width="2"/>
-</g>
-<text x="1110" y="294" text-anchor="middle" font-size="15" fill="#333333" font-weight="bold">Office laptops (any browser)</text>
-<g transform="translate(1110,420) scale(0.85)">
-  <rect x="-62" y="-50" width="124" height="80" rx="5" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="-52" y="-41" width="104" height="62" fill="#ffffff" stroke="#bbbbbb"/>
-  <path d="M-80,30 L80,30 L70,44 L-70,44 Z" fill="#ececec" stroke="#888888" stroke-width="2"/>
-</g>
-<text x="1110" y="484" text-anchor="middle" font-size="15" fill="#333333" font-weight="bold">More laptops, as needed</text>
-<g transform="translate(1080,610)">
-  <rect x="-24" y="-44" width="48" height="88" rx="8" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="-18" y="-34" width="36" height="62" fill="#ffffff" stroke="#bbbbbb"/>
-  <circle cx="0" cy="36" r="3.5" fill="#888888"/>
-</g>
-<g transform="translate(1180,610)">
-  <rect x="-24" y="-44" width="48" height="88" rx="8" fill="#ececec" stroke="#888888" stroke-width="2"/>
-  <rect x="-18" y="-34" width="36" height="62" fill="#ffffff" stroke="#bbbbbb"/>
-  <circle cx="0" cy="36" r="3.5" fill="#888888"/>
-</g>
-<text x="1130" y="682" text-anchor="middle" font-size="15" fill="#333333" font-weight="bold">Phones (any browser)</text>
-<text x="1130" y="140" text-anchor="middle" font-size="14" fill="#444444">Clients open http://SERVER-IP:5173</text>
-<line x1="60" y1="805" x2="130" y2="805" stroke="#555555" stroke-width="2" stroke-dasharray="9 7"/>
-<text x="142" y="810" text-anchor="start" font-size="14" fill="#333333">Wireless connection (Wi-Fi)</text>
-<line x1="400" y1="805" x2="470" y2="805" stroke="#555555" stroke-width="3"/>
-<text x="482" y="810" text-anchor="start" font-size="14" fill="#333333">Wired connection (USB)</text>
-<rect x="700" y="793" width="60" height="24" rx="5" fill="#fafafa" stroke="#bbbbbb" stroke-dasharray="6 5"/>
-<text x="772" y="810" text-anchor="start" font-size="14" fill="#333333">Local network boundary</text>
-<text x="60" y="853" text-anchor="start" font-size="14" fill="#555555">No internet connection is needed. The system can only be reached from devices on the same network, and only the server laptop runs EMO Tracker.</text>
+<rect width="1150" height="770" fill="#ffffff"/>
+<text x="575" y="40.0" text-anchor="middle" dominant-baseline="central" font-size="19" fill="#333333" font-weight="bold">Network Topology — EMO Tracker</text>
+<line x1="745" y1="132" x2="880" y2="132" stroke="#555555" stroke-width="3"/>
+<rect x="795.7" y="123" width="33.6" height="18" fill="#ffffff"/>
+<text x="812.5" y="132.0" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">USB</text>
+<rect x="405" y="72" width="340" height="120" rx="10" fill="#555555" stroke="#444444" stroke-width="1.5"/>
+<text x="575" y="100.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#ffffff" font-weight="bold">Server Laptop (the EMO's Windows laptop)</text>
+<text x="575" y="121.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#ffffff">Laragon: PHP 8.3 and MySQL 8.4</text>
+<text x="575" y="142.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#ffffff">Laravel API (127.0.0.1:8000) · React app (port 5173)</text>
+<text x="575" y="163.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#ffffff">Uploaded documents (private storage)</text>
+<rect x="880" y="97" width="220" height="70" rx="10" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="990" y="122.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">USB Drive</text>
+<text x="990" y="142.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">Daily backups (BACKUP_PATH)</text>
+<line x1="575" y1="192" x2="575" y2="292" stroke="#555555" stroke-width="2"/>
+<rect x="551" y="233" width="48" height="18" fill="#ffffff"/>
+<text x="575" y="242.0" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">Wi-Fi</text>
+<rect x="445" y="292" width="260" height="80" rx="10" fill="#ececec" stroke="#999999" stroke-width="1.5"/>
+<text x="575" y="321.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">Wi-Fi Router / Access Point</text>
+<text x="575" y="342.5" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">(university Wi-Fi or an office router)</text>
+<line x1="485" y1="372" x2="145" y2="525" stroke="#555555" stroke-width="2"/>
+<rect x="291" y="439.5" width="48" height="18" fill="#ffffff"/>
+<text x="315" y="448.5" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">Wi-Fi</text>
+<rect x="35" y="525" width="220" height="76" rx="10" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="145" y="553.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">Administrator</text>
+<text x="145" y="573.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">(Office Laptop)</text>
+<line x1="545" y1="372" x2="431.6666666666667" y2="525" stroke="#555555" stroke-width="2"/>
+<rect x="464.33333333333337" y="439.5" width="48" height="18" fill="#ffffff"/>
+<text x="488.33333333333337" y="448.5" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">Wi-Fi</text>
+<rect x="321.6666666666667" y="525" width="220" height="76" rx="10" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="431.6666666666667" y="553.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">Officer</text>
+<text x="431.6666666666667" y="573.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">(Laptop / Computer)</text>
+<line x1="605" y1="372" x2="718.3333333333334" y2="525" stroke="#555555" stroke-width="2"/>
+<rect x="637.6666666666667" y="439.5" width="48" height="18" fill="#ffffff"/>
+<text x="661.6666666666667" y="448.5" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">Wi-Fi</text>
+<rect x="608.3333333333334" y="525" width="220" height="76" rx="10" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="718.3333333333334" y="553.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">Staff</text>
+<text x="718.3333333333334" y="573.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">(Laptop / Tablet)</text>
+<line x1="665" y1="372" x2="1005" y2="525" stroke="#555555" stroke-width="2"/>
+<rect x="811" y="439.5" width="48" height="18" fill="#ffffff"/>
+<text x="835" y="448.5" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#333333">Wi-Fi</text>
+<rect x="895" y="525" width="220" height="76" rx="10" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="1005" y="553.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333" font-weight="bold">Staff</text>
+<text x="1005" y="573.0" text-anchor="middle" dominant-baseline="central" font-size="13" fill="#333333">(Mobile Phone)</text>
+<rect x="228" y="655" width="694" height="88" rx="10" fill="#f7f7f7" stroke="#aaaaaa" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="250" y="679.0" text-anchor="start" dominant-baseline="central" font-size="12.5" fill="#444444">All devices connect to the same local area network (LAN). Users open EMO Tracker in a web browser at the server</text>
+<text x="250" y="699.0" text-anchor="start" dominant-baseline="central" font-size="12.5" fill="#444444">laptop's address (for example, http://192.168.1.5:5173); nothing is installed on their devices. No internet or cloud</text>
+<text x="250" y="719.0" text-anchor="start" dominant-baseline="central" font-size="12.5" fill="#444444">connection is required. Any role can use any device: the four devices shown are examples.</text>
 </svg>
