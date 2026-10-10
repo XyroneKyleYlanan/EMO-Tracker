@@ -1,35 +1,46 @@
 ---
 config:
   gantt:
-    useWidth: 1250
+    useWidth: 1600
     barHeight: 24
-    barGap: 8
-    fontSize: 14
-    sectionFontSize: 14
-    leftPadding: 210
+    barGap: 7
+    fontSize: 15
+    sectionFontSize: 15
+    leftPadding: 215
 ---
 gantt
-    title EMO Tracker - Capstone 2 Project Timeline
+    title EMO Tracker - Capstone Project Timeline (Capstone 1 and Capstone 2)
     dateFormat YYYY-MM-DD
-    axisFormat %b %d
+    axisFormat %b %Y
+    tickInterval 1month
     todayMarker off
+    %% Capstone 1 rows are from the Capstone 1 paper's Gantt chart; Capstone 2 rows continue it.
     section Planning and Analysis
-    Capstone 2 Planning and System Review       :p1, 2026-09-01, 2026-09-28
-    Requirements Gathering with the EMO         :p2, 2026-09-28, 2026-10-07
+    Project Planning and Title Proposal              :c1p1, 2026-02-16, 2026-03-02
+    Requirements Gathering and Analysis              :c1p2, 2026-03-02, 2026-03-16
+    Capstone 2 Planning and System Review            :c2p1, 2026-09-01, 2026-09-28
+    Requirements Gathering with the EMO              :c2p2, 2026-09-28, 2026-10-07
     section System Design
-    Database and UI/UX Design Updates           :d1, 2026-10-01, 2026-10-08
+    Database and UI/UX Design                        :c1d1, 2026-03-16, 2026-04-06
+    Database and UI/UX Design Updates                :c2d1, 2026-10-01, 2026-10-08
     section Development
-    Security Hardening and Automated Testing    :v1, 2026-09-28, 2026-10-02
-    Prototype Refinement (Schedule and Venues)  :v2, 2026-10-02, 2026-10-06
-    Prototype Refinement (Statuses and Overlaps):v3, 2026-10-06, 2026-10-08
-    Pre-Defense Audit and UI Polish             :v4, 2026-10-07, 2026-10-12
+    Initial System Development                       :c1v1, 2026-04-06, 2026-05-11
+    Pre-Oral Defense Preparation                     :c1v2, 2026-05-11, 2026-05-14
+    Security Hardening and Automated Testing         :c2v1, 2026-09-28, 2026-10-02
+    Prototype Refinement (Schedule and Venues)       :c2v2, 2026-10-02, 2026-10-06
+    Prototype Refinement (Statuses and Overlaps)     :c2v3, 2026-10-06, 2026-10-08
+    Pre-Defense Audit and UI Polish                  :c2v4, 2026-10-07, 2026-10-12
+    Final Defense Preparation                        :c2v5, 2026-10-26, 2026-11-05
     section Defense and Revision
-    Final Defense Preparation                   :f1, 2026-10-26, 2026-11-05
-    Capstone 2 Final Defense                    :milestone, f2, 2026-11-05, 0d
-    Revisions Based on Panel Feedback           :f3, 2026-11-05, 2026-11-19
+    Pre-Oral Defense                                 :milestone, c1f1, 2026-05-14, 0d
+    Revisions Based on Panel Feedback                :c1f2, 2026-05-14, 2026-05-28
+    Capstone 2 Final Defense                         :milestone, c2f1, 2026-11-05, 0d
+    Revisions Based on Panel Feedback (Capstone 2)   :c2f2, 2026-11-05, 2026-11-19
     section Documentation and Finalization
-    Documentation and Manuscript Writing        :w1, 2026-10-07, 2026-11-05
-    Final Checking by Panel                     :w2, 2026-11-19, 2026-11-26
+    Documentation and Manuscript Writing             :c1w1, 2026-03-16, 2026-05-30
+    Final Checking by Panel                          :c1w2, 2026-05-28, 2026-06-04
+    Documentation and Manuscript Writing (Capstone 2):c2w1, 2026-10-07, 2026-11-05
+    Final Checking by Panel (Capstone 2)             :c2w2, 2026-11-19, 2026-11-26
     section Implementation and Evaluation
-    Installation at the EMO and Pilot Testing   :i1, 2026-11-09, 2026-11-23
-    User Evaluation (Survey)                    :i2, 2026-11-23, 2026-11-28
+    Installation at the EMO and Pilot Testing        :c2i1, 2026-11-09, 2026-11-23
+    User Evaluation (Survey)                         :c2i2, 2026-11-23, 2026-11-28

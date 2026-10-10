@@ -473,15 +473,17 @@ Four phone screens, because Staff often update their tasks from a phone:
 
 **File:** [diagrams/gantt-chart.png](diagrams/gantt-chart.png) (source: [diagrams/src/gantt-chart.mmd](diagrams/src/gantt-chart.mmd))
 
-The Gantt chart shows the Capstone 2 project timeline from September to November 2026, continuing the Capstone 1 timeline (February to June 2026). It uses the same phases as the Capstone 1 chart, plus implementation and evaluation:
+The Gantt chart shows the whole capstone project, from the title proposal in February 2026 to the evaluation in November 2026. It keeps every row of the Capstone 1 chart, with the same names, dates and phases, and adds the Capstone 2 activities to the same phases. The empty stretch from June to August is the break between Capstone 1 and Capstone 2.
 
-| Phase | Activities |
-|---|---|
-| Planning and Analysis | Capstone 2 planning and system review (September 1 to 28); requirements gathering with the EMO (September 28 to October 7) |
-| System Design | Database and UI/UX design updates for the Schedule, venues and statuses (October 1 to 8) |
-| Development | Security hardening and automated testing (September 28 to October 2); prototype refinement for the Schedule and venues (October 2 to 6), then for statuses and overlaps (October 6 to 8); pre-defense audit and UI polish (October 7 to 12) |
-| Defense and Revision | Final defense preparation (October 26 to November 5); the Capstone 2 final defense in the first week of November (shown as a milestone); revisions based on the panel's feedback (November 5 to 19) |
-| Documentation and Finalization | Documentation and manuscript writing (October 7 to November 5); final checking by the panel (November 19 to 26) |
-| Implementation and Evaluation | Installation at the EMO and pilot testing (November 9 to 23); user evaluation by survey (November 23 to 28) |
+| Phase | Capstone 1 (February to June 2026) | Capstone 2 (September to November 2026) |
+|---|---|---|
+| Planning and Analysis | Project planning and title proposal (February 16 to March 2); requirements gathering and analysis (March 2 to 16) | Capstone 2 planning and system review (September 1 to 28); requirements gathering with the EMO (September 28 to October 7) |
+| System Design | Database and UI/UX design (March 16 to April 6) | Database and UI/UX design updates for the Schedule, venues and statuses (October 1 to 8) |
+| Development | Initial system development (April 6 to May 11); pre-oral defense preparation (May 11 to 14) | Security hardening and automated testing (September 28 to October 2); prototype refinement for the Schedule and venues (October 2 to 6), then for statuses and overlaps (October 6 to 8); pre-defense audit and UI polish (October 7 to 12); final defense preparation (October 26 to November 5) |
+| Defense and Revision | Pre-oral defense (May 14, a milestone); revisions based on the panel's feedback (May 14 to 28) | Capstone 2 final defense (first week of November, a milestone); revisions based on the panel's feedback (November 5 to 19) |
+| Documentation and Finalization | Documentation and manuscript writing (March 16 to May 30); final checking by the panel (May 28 to June 4) | Documentation and manuscript writing (October 7 to November 5); final checking by the panel (November 19 to 26) |
+| Implementation and Evaluation | — | Installation at the EMO and pilot testing (November 9 to 23); user evaluation by survey (November 23 to 28) |
 
-Bars are activities and the diamond is the defense milestone. Development overlaps with requirements and design because the system was built with the Prototyping Model: each consultation with the EMO led directly to a new round of refinement.
+Bars are activities and the diamonds are the two defenses. In Capstone 2, development overlaps with requirements and design because the system was built with the Prototyping Model: each consultation with the EMO led directly to a new round of refinement.
+
+The chart is wide because it covers ten months; it reads best on a landscape page, or across the full width of a portrait page.
