@@ -305,7 +305,7 @@ This sequence diagram shows what happens when a Staff member marks a task as don
 
 ## Site maps
 
-The three site maps show how the screens of EMO Tracker are organized for each role, as an indented tree with plain connecting lines, in the same neutral grays as the other figures. They are drawn from one source file, [site-maps/src/site-maps.html](site-maps/src/site-maps.html), which opens in a browser.
+The three site maps show how the screens of EMO Tracker are organized for each role, as an indented tree with plain connecting lines, in the same neutral grays as the other figures. To fit a portrait page, the role's menu pages are split into two columns, joined by a line under the role; read the left column first, then the right. They are drawn from one source file, [site-maps/src/site-maps.html](site-maps/src/site-maps.html), which opens in a browser.
 - **Dark gray boxes:** the system, and the role that logs in.
 - **Outlined white box:** the login page.
 - **Light gray boxes:** the pages in the role's menu.
