@@ -1,6 +1,6 @@
 # Diagram Descriptions
 
-Descriptions of the diagrams for the EMO Tracker Capstone 2 paper, organized like the Capstone 1 paper. Part 1 has the figures for **Chapter 3 (Methodology and System Design)**, and Part 2 has the figures for the **appendices**. The images are in the [`diagrams/`](diagrams/), [`flowcharts/`](flowcharts/), [`site-maps/`](site-maps/), [`journey-maps/`](journey-maps/) and [`wireframes/`](wireframes/) folders.
+Descriptions of the diagrams for the EMO Tracker Capstone 2 paper, organized like the Capstone 1 paper. Part 1 has the figures for **Chapter 3 (Methodology and System Design)**, and Part 2 has the figures for the **appendices**. The images are in the [`diagrams/`](diagrams/) (with the sequence diagrams in [`diagrams/sequence-diagrams/`](diagrams/sequence-diagrams/)), [`flowcharts/`](flowcharts/), [`site-maps/`](site-maps/), [`journey-maps/`](journey-maps/) and [`wireframes/`](wireframes/) folders.
 
 - **Figure numbers:** Chapter 3 figures are numbered 3.1 to 3.9; renumber them if other figures come first, such as a conceptual framework. Appendix figures are numbered by their appendix letter, as in Capstone 1 (for example, Figure G.2 for the Gantt chart), so they have no numbers here.
 - **Accuracy:** every description was checked against the system's code as of October 10, 2026. It uses the system's own terms: Administrator, Officer, Staff; On Track, At Risk, Critical; Upcoming, Ongoing, Completed, Cancelled.
@@ -268,7 +268,7 @@ The UML class diagram shows the main classes of the backend, with their attribut
 
 ### Sequence Diagram: Login and a Typical Request
 
-**File:** [diagrams/login-sequence.png](diagrams/login-sequence.png)
+**File:** [diagrams/sequence-diagrams/1-login.png](diagrams/sequence-diagrams/1-login.png) (source: Mermaid code in E.8.4 of [CAPSTONE_PAPER_REFERENCE.md](CAPSTONE_PAPER_REFERENCE.md))
 
 The sequence diagram traces a login and one authenticated request through five participants: the user, the browser running the React application, the Vite frontend server, the Laravel API and the MySQL database.
 
@@ -282,7 +282,7 @@ The sequence diagram traces a login and one authenticated request through five p
 
 ### Sequence Diagram: Adding an Event With the Overlap Check
 
-**File:** [diagrams/sequence-add-event.png](diagrams/sequence-add-event.png) (source: [diagrams/src/sequence-add-event.mmd](diagrams/src/sequence-add-event.mmd))
+**File:** [diagrams/sequence-diagrams/2-add-event.png](diagrams/sequence-diagrams/2-add-event.png) (source: [diagrams/sequence-diagrams/src/2-add-event.mmd](diagrams/sequence-diagrams/src/2-add-event.mmd))
 
 This sequence diagram shows how the overlap check works while an Administrator adds an event.
 
@@ -293,7 +293,7 @@ This sequence diagram shows how the overlap check works while an Administrator a
 
 ### Sequence Diagram: Updating a Task's Status
 
-**File:** [diagrams/sequence-task-update.png](diagrams/sequence-task-update.png) (source: [diagrams/src/sequence-task-update.mmd](diagrams/src/sequence-task-update.mmd))
+**File:** [diagrams/sequence-diagrams/3-task-status-update.png](diagrams/sequence-diagrams/3-task-status-update.png) (source: [diagrams/sequence-diagrams/src/3-task-status-update.mmd](diagrams/sequence-diagrams/src/3-task-status-update.mmd))
 
 This sequence diagram shows what happens when a Staff member marks a task as done.
 
