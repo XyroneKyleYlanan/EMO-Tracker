@@ -88,18 +88,17 @@ This listing follows the layout of Appendix D in the Capstone 1 paper.
 
 The modules are those of the current system. Modules 1 to 7 keep the order of the Capstone 1 appendix, all with their current code. For example, the login token is now named `emo-tracker`, the login is rate-limited, and deactivated accounts lose their sessions at once. Module 3 is renamed "Task Assignment and Tracking", because any office member, not only Staff, can now own a task. Modules 8 to 10 cover the parts added in Capstone 2.
 
-### Database Schema (SQL Script)
+### Database Schema / SQL Scripts
 
-**File:** [appendices/database-schema.sql](appendices/database-schema.sql)
+**Files:** [appendices/database-schema.html](appendices/database-schema.html) (copy-ready, in the Capstone 1 layout) and [appendices/database-schema.sql](appendices/database-schema.sql) (the full script)
 
-The SQL script contains the structure of all 16 tables of the EMO Tracker database (MySQL 8.4), without any data.
-- **Application tables:** `users`, `buildings`, `venues`, `events`, `tasks`, `documents` and `settings`, in the order they depend on each other.
-- **Laravel's own tables:** for login tokens, sessions and housekeeping.
-- **What it defines:** every column with its data type and default, the primary keys, the indexes, and the foreign keys with their delete rules. For example:
-  - deleting an event also deletes its tasks and documents
-  - deleting a venue leaves its events without a venue
+This appendix gives the SQL that creates the EMO Tracker database (MySQL 8.4), in the Capstone 1 layout: a title bar for each table, then its CREATE TABLE statement.
+- **Tables shown:** the seven application tables (`users`, `buildings`, `venues`, `events`, `tasks`, `documents`, `settings`) and `personal_access_tokens`, which holds the login tokens. They appear in the order they depend on each other.
+- **The full script** also creates Laravel's housekeeping tables (sessions, cache, jobs and the migrations list), 16 tables in all.
+- **What each statement defines:** every column with its data type and default, the primary key, the indexes, and the foreign keys with their delete rules. For example, deleting an event also deletes its tasks and documents, and deleting a venue leaves its events without a venue.
+- **Changes since Capstone 1:** the `event_staff` table was removed (an event's people are now its task owners), the event budget was removed, and the `buildings` and `venues` tables were added.
 
-The script was exported from the database that the system's migrations build. It was tested by loading it into an empty database and comparing the result with the original: every column and foreign key matched. In practice the system creates its database with `php artisan migrate`; this script documents the same structure in SQL.
+The script was exported from the database that the system's migrations build. It was tested by building an empty database from it and comparing the result with the original: every column (including its collation), index and foreign key matched. In practice the system creates its database with `php artisan migrate`; this script documents the same structure in SQL.
 
 ### API Endpoint Documentation
 

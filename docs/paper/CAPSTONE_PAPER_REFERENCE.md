@@ -1554,7 +1554,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 | File | What it is | Use in |
 |---|---|---|
 | [source-code.html](appendices/source-code.html) ([.md](appendices/source-code.md)) | The key code of the system's 10 modules in the Capstone 1 layout (summary table, then code with explanations) | Appendix D, source code (key modules) |
-| [database-schema.sql](appendices/database-schema.sql) | The SQL that creates all 16 tables (structure only, tested on an empty database) | Appendix, database schema / SQL scripts |
+| [database-schema.html](appendices/database-schema.html) ([.sql](appendices/database-schema.sql)) | The CREATE TABLE statement of each table in the Capstone 1 layout; the .sql file creates all 16 tables (structure only, tested on an empty database) | Appendix D, database schema / SQL scripts |
 
 ---
 

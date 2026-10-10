@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker — Database Schema / SQL Scripts</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 20px; color: #111; }
+  h2 { font-size: 18px; margin: 24px 0 12px; }
+  p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; }
+  table.bar { margin-top: 22px; }
+  table.bar td { background: #1f3864; color: #fff; font-weight: bold; padding: 9px 12px; font-size: 17px; border: 1px solid #1f3864; }
+  table.code td { border: 1px solid #999; padding: 10px 12px; background: #fff; }
+  pre { margin: 0; font-family: "Courier New", Courier, monospace; font-size: 12px; line-height: 1.45; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<p class="note"><strong>How to use:</strong> Open this file in a browser, select a part, copy (Ctrl+C), and paste into Google Docs or Word. Same layout as the Capstone 1 appendix: a title bar for each table, then its CREATE TABLE statement. These are the 7 application tables and the login token table, in the order they depend on each other. The full script, with Laravel's housekeeping tables too, is <a href="database-schema.sql">database-schema.sql</a>; it was tested by building an empty database from it. Exported October 10, 2026.</p>
+
+<h2>Database Schema / SQL Scripts</h2>
+<table class="bar"><tr><td>Users Table &nbsp;|&nbsp; CREATE TABLE users</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum(&#x27;admin&#x27;,&#x27;officer&#x27;,&#x27;staff&#x27;) NOT NULL DEFAULT &#x27;staff&#x27;,
+  `is_active` tinyint(1) NOT NULL DEFAULT &#x27;1&#x27;,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Buildings Table &nbsp;|&nbsp; CREATE TABLE buildings</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `buildings` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `color` varchar(7) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `buildings_name_unique` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Venues Table &nbsp;|&nbsp; CREATE TABLE venues</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `venues` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `building_id` bigint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `venues_name_unique` (`name`),
+  KEY `venues_building_id_foreign` (`building_id`),
+  CONSTRAINT `venues_building_id_foreign` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Events Table &nbsp;|&nbsp; CREATE TABLE events</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `events` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `department` varchar(255) DEFAULT NULL,
+  `event_type` enum(&#x27;internal&#x27;,&#x27;external&#x27;) NOT NULL DEFAULT &#x27;internal&#x27;,
+  `venue_id` bigint unsigned DEFAULT NULL,
+  `venue_details` varchar(255) DEFAULT NULL,
+  `event_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
+  `event_time` time DEFAULT NULL,
+  `end_time` time DEFAULT NULL,
+  `original_date` date DEFAULT NULL,
+  `original_time` time DEFAULT NULL,
+  `control_number` varchar(255) DEFAULT NULL,
+  `remarks` text,
+  `needs_preparation` tinyint(1) NOT NULL DEFAULT &#x27;0&#x27;,
+  `status` enum(&#x27;upcoming&#x27;,&#x27;completed&#x27;,&#x27;cancelled&#x27;) NOT NULL DEFAULT &#x27;upcoming&#x27;,
+  `created_by` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `events_created_by_foreign` (`created_by`),
+  KEY `events_event_date_index` (`event_date`),
+  KEY `events_status_index` (`status`),
+  KEY `events_venue_id_foreign` (`venue_id`),
+  CONSTRAINT `events_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `events_venue_id_foreign` FOREIGN KEY (`venue_id`) REFERENCES `venues` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Tasks Table &nbsp;|&nbsp; CREATE TABLE tasks</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `tasks` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` bigint unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `due_date` date NOT NULL,
+  `status` enum(&#x27;pending&#x27;,&#x27;in_progress&#x27;,&#x27;done&#x27;) NOT NULL DEFAULT &#x27;pending&#x27;,
+  `priority` enum(&#x27;low&#x27;,&#x27;medium&#x27;,&#x27;high&#x27;) NOT NULL DEFAULT &#x27;medium&#x27;,
+  `assigned_to` bigint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tasks_event_id_foreign` (`event_id`),
+  KEY `tasks_assigned_to_foreign` (`assigned_to`),
+  KEY `tasks_status_index` (`status`),
+  KEY `tasks_due_date_index` (`due_date`),
+  CONSTRAINT `tasks_assigned_to_foreign` FOREIGN KEY (`assigned_to`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `tasks_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Documents Table &nbsp;|&nbsp; CREATE TABLE documents</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `documents` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `event_id` bigint unsigned NOT NULL,
+  `uploaded_by` bigint unsigned NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `file_size` bigint unsigned NOT NULL,
+  `mime_type` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `documents_event_id_foreign` (`event_id`),
+  KEY `documents_uploaded_by_foreign` (`uploaded_by`),
+  CONSTRAINT `documents_event_id_foreign` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `documents_uploaded_by_foreign` FOREIGN KEY (`uploaded_by`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Settings Table &nbsp;|&nbsp; CREATE TABLE settings</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `settings` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(255) NOT NULL,
+  `value` text,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `settings_key_unique` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+<table class="bar"><tr><td>Personal Access Tokens Table &nbsp;|&nbsp; CREATE TABLE personal_access_tokens</td></tr></table>
+<table class="code"><tr><td><pre>CREATE TABLE `personal_access_tokens` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint unsigned NOT NULL,
+  `name` text NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`),
+  KEY `personal_access_tokens_expires_at_index` (`expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;</pre></td></tr></table>
+</body>
+</html>
