@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="448" viewBox="0 0 1060 448" font-family="Arial, Helvetica, sans-serif">
+<title>EMO organizational chart</title>
+<rect width="1060" height="448" fill="#ffffff"/>
+<text x="530" y="38" text-anchor="middle" dominant-baseline="central" font-size="20" fill="#333333" font-weight="bold">Organizational Chart — Events Management Office (EMO)</text>
+<line x1="380" y1="141" x2="380" y2="190" stroke="#555555" stroke-width="1.8"/>
+<line x1="530" y1="222" x2="630" y2="222" stroke="#555555" stroke-width="1.8"/>
+<line x1="740" y1="254" x2="740" y2="318" stroke="#555555" stroke-width="1.8"/>
+<line x1="146" y1="318" x2="914" y2="318" stroke="#555555" stroke-width="1.8"/>
+<line x1="146" y1="318" x2="146" y2="361" stroke="#555555" stroke-width="1.8"/>
+<line x1="338" y1="318" x2="338" y2="361" stroke="#555555" stroke-width="1.8"/>
+<line x1="530" y1="318" x2="530" y2="361" stroke="#555555" stroke-width="1.8"/>
+<line x1="722" y1="318" x2="722" y2="361" stroke="#555555" stroke-width="1.8"/>
+<line x1="914" y1="318" x2="914" y2="361" stroke="#555555" stroke-width="1.8"/>
+<rect x="250" y="83" width="260" height="58" rx="12" fill="#555555" stroke="#444444" stroke-width="1.5"/>
+<text x="380" y="112" text-anchor="middle" dominant-baseline="central" font-size="17" fill="#ffffff" font-weight="bold">Director</text>
+<rect x="230" y="190" width="300" height="64" rx="12" fill="#ececec" stroke="#999999" stroke-width="1.5"/>
+<text x="380" y="222" text-anchor="middle" dominant-baseline="central" font-size="16" fill="#222222" font-weight="bold">Ministrong Tagasubaybay</text>
+<rect x="630" y="190" width="220" height="64" rx="12" fill="#ececec" stroke="#999999" stroke-width="1.5"/>
+<text x="740" y="222" text-anchor="middle" dominant-baseline="central" font-size="16" fill="#222222" font-weight="bold">Secretary</text>
+<rect x="61" y="361" width="170" height="58" rx="12" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="146" y="390" text-anchor="middle" dominant-baseline="central" font-size="14.5" fill="#333333" font-weight="bold">Tech Support 1</text>
+<rect x="253" y="361" width="170" height="58" rx="12" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="338" y="390" text-anchor="middle" dominant-baseline="central" font-size="14.5" fill="#333333" font-weight="bold">Tech Support 2</text>
+<rect x="445" y="361" width="170" height="58" rx="12" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="530" y="390" text-anchor="middle" dominant-baseline="central" font-size="14.5" fill="#333333" font-weight="bold">Tech Support 3</text>
+<rect x="637" y="361" width="170" height="58" rx="12" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="722" y="390" text-anchor="middle" dominant-baseline="central" font-size="14.5" fill="#333333" font-weight="bold">Tech Support 4</text>
+<rect x="829" y="361" width="170" height="58" rx="12" fill="#ffffff" stroke="#999999" stroke-width="1.5"/>
+<text x="914" y="390" text-anchor="middle" dominant-baseline="central" font-size="14.5" fill="#333333" font-weight="bold">Tech Support 5</text>
+</svg>

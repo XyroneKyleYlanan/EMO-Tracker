@@ -6,7 +6,7 @@
 | [paper/tables/](paper/tables/) | Copy-ready tables for Word: data dictionary, compatibility table, risk assessment, user journey map, API endpoints (open in a browser, copy, paste) |
 | [paper/screenshots/](paper/screenshots/) | 26 screenshots of the system, one folder per role (demo data only) |
 | [paper/Screenshot_Descriptions.md](paper/Screenshot_Descriptions.md) | A caption and description for each screenshot, for the appendices |
-| [paper/diagrams/](paper/diagrams/) | 15 diagrams: prototyping model, architecture, network topology, context diagram, use cases, ERD, readiness flowchart, overlap check, status lifecycle, DFD level 1, class diagram, Gantt chart, and the 3 sequence diagrams in their own folder (`sequence-diagrams/`) |
+| [paper/diagrams/](paper/diagrams/) | 16 diagrams: the EMO's organizational chart, prototyping model, architecture, network topology, context diagram, use cases, ERD, readiness flowchart, overlap check, status lifecycle, DFD level 1, class diagram, Gantt chart, and the 3 sequence diagrams in their own folder (`sequence-diagrams/`) |
 | [paper/flowcharts/](paper/flowcharts/), [paper/site-maps/](paper/site-maps/), [paper/wireframes/](paper/wireframes/) | System flowcharts, site maps and UI wireframes, one per role |
 | [paper/appendices/](paper/appendices/) | Source code of the system's 10 key modules in the Capstone 1 layout, and the database schema (SQL) |
 | [paper/journey-maps/](paper/journey-maps/) | 4 user journey maps: the current process (As-Is) and each role with EMO Tracker (To-Be) |

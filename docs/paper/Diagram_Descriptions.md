@@ -163,6 +163,12 @@ The state diagram shows the statuses an event passes through and what causes eac
 
 Completion is applied automatically at the start of every request to the system, so a finished event's tasks are locked even if no one opens the event. A reschedule is recorded as a mark on the event (its original date and time), not as a separate status.
 
+### Organizational Chart of the Events Management Office
+
+**File:** [diagrams/org-chart.png](diagrams/org-chart.png) (source: [diagrams/src/org-chart.svg](diagrams/src/org-chart.svg))
+
+The organizational chart shows the structure of the Events Management Office (EMO), the client of EMO Tracker. The Director heads the office, with the Ministrong Tagasubaybay below. The Secretary works alongside the Ministrong Tagasubaybay and oversees five Tech Support members. Number this figure where it appears in the paper (it is usually placed in Chapter 1, with the description of the client, or in Chapter 3).
+
 ---
 
 # Part 2. Appendix figures
