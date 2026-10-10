@@ -305,53 +305,55 @@ This sequence diagram shows what happens when a Staff member marks a task as don
 
 ## Site maps
 
-The three site maps show how the screens of EMO Tracker are organized for each role, from the login page down to the dialogs and files each screen leads to.
-- **Rectangles:** pages.
-- **Rounded shapes:** panels and dialogs that open on top of a page.
-- **Wavy-bottomed shapes:** generated files.
-- **Repeated screens:** a screen reachable from more than one page, such as the event panel, appears under each page and is marked "same as under ..." rather than drawn with crossing lines.
+The three site maps show how the screens of EMO Tracker are organized for each role, in the same style as the Capstone 1 site maps: an indented tree with plain connecting lines. They are drawn from one source file, [site-maps/src/site-maps.html](site-maps/src/site-maps.html), which opens in a browser.
+- **Dark green boxes:** the system, and the role that logs in.
+- **Yellow box:** the login page.
+- **Medium green boxes:** the pages in the role's menu.
+- **Light boxes:** what each page contains: its sections, filters, panels and dialogs. Bold light boxes group the items under them.
+- **Repeated screens:** the event panel opens from more than one page; it is shown in full once and marked "same as under ..." elsewhere.
 
 ### Site Map: Administrator
 
-**File:** [site-maps/admin.png](site-maps/admin.png) (source: [site-maps/src/admin.mmd](site-maps/src/admin.mmd))
+**File:** [site-maps/admin.png](site-maps/admin.png)
 
-After logging in, the Administrator's Home leads to six areas:
-- **My tasks.**
-- **Events** (calendar and list), with the add event form, and an event panel that leads to:
-  - the edit event form (including cancel and reschedule) and deleting the event
-  - the task form
+After the login page, the Administrator's menu has seven entries:
+- **Home:** the summary, the events that need attention (with reasons), the next 7 days, the user's open tasks and the backup status.
+- **My Tasks:** task counts and filters, a status menu on each task, and a task details dialog.
+- **Events:** calendar and list views, the EMO-prepared or all events filter, the add event dialog (with the overlap warning and the option to add a new venue), and the event panel. The panel shows the details, readiness and reason, people and overlapping bookings, and leads to:
+  - the tasks, with the add, edit and delete dialog, the status menu (which asks for confirmation on a completed event) and the task details
   - documents (upload, download, delete)
   - the PDF report
-- **Schedule**, which also has the add event form, the Excel export, and the Venues page, with its venue and building forms and venue merging. The add event form can also create a new venue on the spot.
-- **Analytics.**
-- **Accounts**, with the account form (add, edit, deactivate).
-- **The user menu**, with change password and log out.
+  - the edit event dialog, which also cancels or restores an event and asks whether a date change is a reschedule
+  - deleting the event
+- **Schedule:** the year tabs, search and rows colored by building, the add event dialog, the Excel export, the event panel, and the Venues page, with its buildings and venues, their add, edit and delete dialogs, and venue merging.
+- **Analytics:** the period filter, the event statistics and the EMO preparation statistics.
+- **Accounts:** filters and the accounts list, the add and edit account dialog, and deactivating or reactivating accounts.
+- **User Menu:** change password and log out.
 
 ### Site Map: Officer
 
-**File:** [site-maps/officer.png](site-maps/officer.png) (source: [site-maps/src/officer.mmd](site-maps/src/officer.mmd))
+**File:** [site-maps/officer.png](site-maps/officer.png)
 
-The Officer's Home leads to five areas:
-- **My tasks.**
-- **Events**, whose event panel shows event details as view only and leads to:
-  - the task form (add, edit, delete, assign)
-  - documents (upload, download)
-  - the PDF report
-- **The Schedule** (view only), with the Excel export.
-- **Analytics.**
-- **The user menu.**
+The Officer's menu has six entries:
+- **Home:** the same sections as the Administrator's, without the backup status.
+- **My Tasks:** as for the Administrator.
+- **Events:** calendar and list views, the events filter, and the event panel. In the panel the event's own details are view only, but the Officer can add, edit and delete tasks, change task status, upload and download documents, and download the PDF report.
+- **Schedule (view only):** the year view with the Excel export and the event panel.
+- **Analytics:** as for the Administrator.
+- **User Menu:** change password and log out.
 
-There are no Accounts or Venues pages, and no event form, because those belong to the Administrator.
+There is no Accounts page, no Venues page and no event form, because those belong to the Administrator.
 
 ### Site Map: Staff
 
-**File:** [site-maps/staff.png](site-maps/staff.png) (source: [site-maps/src/staff.mmd](site-maps/src/staff.mmd))
+**File:** [site-maps/staff.png](site-maps/staff.png)
 
-The Staff Home leads to four areas:
-- **My tasks.**
-- **My events**, whose event panel is view only except for the status of the user's own tasks, and leads to document downloads and the PDF report.
-- **The Schedule** (view only).
-- **The user menu.**
+The Staff menu has five entries:
+- **Home:** the summary, the user's open tasks with a status menu, and their upcoming events.
+- **My Tasks:** as for the other roles.
+- **My Events:** calendar and list views of the events where the user has tasks, and a view-only event panel. In the panel, only the user's own tasks have a status menu, documents can only be downloaded, and the PDF report is available.
+- **Schedule (view only):** the year view and the event panel.
+- **User Menu:** change password and log out.
 
 This is the smallest site map, because Staff only follow and update their own work.
 

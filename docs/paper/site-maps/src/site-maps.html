@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EMO Tracker site maps</title>
+<!-- Site maps of EMO Tracker, one per role, in the style of the Capstone 1 site maps. Open in a browser to view or print. -->
+<style>
+  body { margin: 0; background: #ffffff; font-family: Arial, Helvetica, sans-serif; color: #222; }
+  .map { padding: 26px 30px 30px; width: 720px; box-sizing: border-box; background: #fff; }
+  .map + .map { margin-top: 40px; }
+  .title { color: #2f6b45; font-weight: bold; font-size: 15px; margin: 0 0 10px 14px; }
+  ul { list-style: none; margin: 0; padding: 0 0 0 30px; }
+  ul.root { padding-left: 0; }
+  li { position: relative; padding-top: 9px; }
+  /* Elbow from the parent's line into each box, and the parent's line running on to the next sibling. */
+  ul:not(.root) > li::before { content: ''; position: absolute; left: -16px; top: 0; width: 16px; height: 28px; border-left: 1.5px solid #7d8f83; border-bottom: 1.5px solid #7d8f83; }
+  ul:not(.root) > li::after { content: ''; position: absolute; left: -16px; top: 28px; bottom: 0; border-left: 1.5px solid #7d8f83; }
+  ul:not(.root) > li:last-child::after { display: none; }
+  .box { display: inline-block; box-sizing: border-box; min-width: 250px; max-width: 520px; min-height: 38px; padding: 10px 14px; font-size: 13px; line-height: 1.35; border: 1.5px solid; vertical-align: top; }
+  .dark { background: #2c5e3f; border-color: #234c33; color: #fff; font-weight: bold; text-align: center; min-width: 280px; }
+  .login { background: #fdf6dc; border-color: #e3d6a2; text-align: center; font-weight: bold; color: #333; min-width: 280px; }
+  .page { background: #dcebe0; border-color: #3f6e4f; font-weight: bold; color: #1f3326; }
+  .item { background: #f2f8f4; border-color: #c4d8ca; color: #333; }
+  .item.group { font-weight: bold; color: #1f3326; }
+  .root > li > ul { padding-left: 46px; }
+</style>
+</head>
+<body>
+
+<section class="map" id="admin">
+  <div class="title">Site Map — EMO Tracker (Administrator)</div>
+  <ul class="tree root"><li><div class="box dark">EMO Tracker</div>
+    <ul><li><div class="box login">Login Page</div>
+      <ul><li><div class="box dark">Administrator</div><ul><li><div class="box page">Home</div><ul><li><div class="box item">Summary · Needs attention (with reasons) · Next 7 days · My open tasks · Backup status</div></li></ul></li><li><div class="box page">My Tasks</div><ul><li><div class="box item">Task counts · Filters (Open, All, Pending, In progress, Done)</div></li><li><div class="box item">Status menu on each task</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box page">Events</div><ul><li><div class="box item">Calendar View</div></li><li><div class="box item">List View (upcoming first, then past events)</div></li><li><div class="box item">EMO-prepared / All events filter</div></li><li><div class="box item">Add Event — dialog (overlap warning; can add a new venue)</div></li><li><div class="box item group">Event Panel</div><ul><li><div class="box item">Details · Readiness and reason · People · Overlapping bookings</div></li><li><div class="box item group">Tasks</div><ul><li><div class="box item">Add / Edit / Delete Task — dialog</div></li><li><div class="box item">Status menu (asks to confirm on a completed event)</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box item">Documents — upload / download / delete</div></li><li><div class="box item">Download PDF Report</div></li><li><div class="box item">Edit Event — dialog (cancel or restore; "Was it rescheduled?")</div></li><li><div class="box item">Delete Event</div></li></ul></li></ul></li><li><div class="box page">Schedule</div><ul><li><div class="box item">Year tabs · Search · Rows by month, colored by building</div></li><li><div class="box item">Add Event — dialog</div></li><li><div class="box item">Export to Excel</div></li><li><div class="box item">Event Panel (same as under Events)</div></li><li><div class="box item group">Venues (Manage venues)</div><ul><li><div class="box item">Buildings and their venues</div></li><li><div class="box item">Add / Edit / Remove Building — dialog (name and color)</div></li><li><div class="box item">Add / Edit / Delete Venue — dialog</div></li><li><div class="box item">Merge Venues — dialog</div></li></ul></li></ul></li><li><div class="box page">Analytics</div><ul><li><div class="box item">Period filter (This week, This month, This year, All time)</div></li><li><div class="box item">Event counts · Internal vs external · Busiest venues</div></li><li><div class="box item">EMO preparation · Readiness distribution · Top 5 most urgent events</div></li></ul></li><li><div class="box page">Accounts</div><ul><li><div class="box item">Filters (role, status) · Accounts list</div></li><li><div class="box item">Add / Edit Account — dialog</div></li><li><div class="box item">Deactivate / Reactivate Account</div></li></ul></li><li><div class="box page">User Menu</div><ul><li><div class="box item">Change Password — dialog</div></li><li><div class="box item">Log Out</div></li></ul></li></ul></li></ul>
+    </li></ul>
+  </li></ul>
+</section>
+
+<section class="map" id="officer">
+  <div class="title">Site Map — EMO Tracker (Officer)</div>
+  <ul class="tree root"><li><div class="box dark">EMO Tracker</div>
+    <ul><li><div class="box login">Login Page</div>
+      <ul><li><div class="box dark">Officer</div><ul><li><div class="box page">Home</div><ul><li><div class="box item">Summary · Needs attention (with reasons) · Next 7 days · My open tasks</div></li></ul></li><li><div class="box page">My Tasks</div><ul><li><div class="box item">Task counts · Filters (Open, All, Pending, In progress, Done)</div></li><li><div class="box item">Status menu on each task</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box page">Events</div><ul><li><div class="box item">Calendar View</div></li><li><div class="box item">List View (upcoming first, then past events)</div></li><li><div class="box item">EMO-prepared / All events filter</div></li><li><div class="box item group">Event Panel (event details view only)</div><ul><li><div class="box item">Details · Readiness and reason · People · Overlapping bookings</div></li><li><div class="box item group">Tasks</div><ul><li><div class="box item">Add / Edit / Delete Task — dialog</div></li><li><div class="box item">Status menu</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box item">Documents — upload / download</div></li><li><div class="box item">Download PDF Report</div></li></ul></li></ul></li><li><div class="box page">Schedule (view only)</div><ul><li><div class="box item">Year tabs · Search · Rows by month, colored by building</div></li><li><div class="box item">Export to Excel</div></li><li><div class="box item">Event Panel (same as under Events)</div></li></ul></li><li><div class="box page">Analytics</div><ul><li><div class="box item">Period filter (This week, This month, This year, All time)</div></li><li><div class="box item">Event counts · Internal vs external · Busiest venues</div></li><li><div class="box item">EMO preparation · Readiness distribution · Top 5 most urgent events</div></li></ul></li><li><div class="box page">User Menu</div><ul><li><div class="box item">Change Password — dialog</div></li><li><div class="box item">Log Out</div></li></ul></li></ul></li></ul>
+    </li></ul>
+  </li></ul>
+</section>
+
+<section class="map" id="staff">
+  <div class="title">Site Map — EMO Tracker (Staff)</div>
+  <ul class="tree root"><li><div class="box dark">EMO Tracker</div>
+    <ul><li><div class="box login">Login Page</div>
+      <ul><li><div class="box dark">Staff</div><ul><li><div class="box page">Home</div><ul><li><div class="box item">Summary · My open tasks (status menu) · My upcoming events</div></li></ul></li><li><div class="box page">My Tasks</div><ul><li><div class="box item">Task counts · Filters (Open, All, Pending, In progress, Done)</div></li><li><div class="box item">Status menu on each task</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box page">My Events</div><ul><li><div class="box item">Calendar View</div></li><li><div class="box item">List View (upcoming first, then past events)</div></li><li><div class="box item group">Event Panel (view only)</div><ul><li><div class="box item">Details · Readiness and reason · People · Overlapping bookings</div></li><li><div class="box item group">Tasks</div><ul><li><div class="box item">Status menu on own tasks only</div></li><li><div class="box item">Task details — dialog</div></li></ul></li><li><div class="box item">Documents — download</div></li><li><div class="box item">Download PDF Report</div></li></ul></li></ul></li><li><div class="box page">Schedule (view only)</div><ul><li><div class="box item">Year tabs · Search · Rows by month, colored by building</div></li><li><div class="box item">Event Panel (same as under My Events)</div></li></ul></li><li><div class="box page">User Menu</div><ul><li><div class="box item">Change Password — dialog</div></li><li><div class="box item">Log Out</div></li></ul></li></ul></li></ul>
+    </li></ul>
+  </li></ul>
+</section>
+</body>
+</html>
