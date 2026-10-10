@@ -1,5 +1,7 @@
 # Diagram Descriptions
 
+> **To copy into the paper, use [Paper_Descriptions.html](Paper_Descriptions.html)** (open it in a browser): it follows the paper's figure and table numbers and has a Copy button per item. This file keeps the longer reference descriptions, with this file's own numbering.
+
 Descriptions of the diagrams for the EMO Tracker Capstone 2 paper, organized like the Capstone 1 paper. Part 1 has the figures for **Chapter 3 (Methodology and System Design)**, and Part 2 has the figures for the **appendices**. The images are in the [`diagrams/`](diagrams/) (with the sequence diagrams in [`diagrams/sequence-diagrams/`](diagrams/sequence-diagrams/)), [`flowcharts/`](flowcharts/), [`site-maps/`](site-maps/), [`journey-maps/`](journey-maps/) and [`wireframes/`](wireframes/) folders.
 
 - **Figure numbers:** Chapter 3 figures are numbered 3.1 to 3.9; renumber them if other figures come first, such as a conceptual framework. Appendix figures are numbered by their appendix letter, as in Capstone 1 (for example, Figure G.2 for the Gantt chart), so they have no numbers here.

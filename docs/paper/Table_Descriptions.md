@@ -1,5 +1,7 @@
 # Table Descriptions
 
+> **To copy into the paper, use [Paper_Descriptions.html](Paper_Descriptions.html)** (open it in a browser): it follows the paper's figure and table numbers and has a Copy button per item. This file keeps the longer reference descriptions, with this file's own numbering.
+
 Descriptions of the tables and listings for the EMO Tracker Capstone 2 paper, organized like the Capstone 1 paper. Part 1 has the tables for **Chapter 3**, and Part 2 has the tables and listings for the **appendices**.
 
 - **Where the tables are:** in the [`tables/`](tables/) folder, as web pages that paste into Word or Google Docs as editable tables (open the file in a browser, select the table, copy, paste). The database schema and the source code are in the [`appendices/`](appendices/) folder.

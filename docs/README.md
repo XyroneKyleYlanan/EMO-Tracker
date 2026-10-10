@@ -10,6 +10,7 @@
 | [paper/flowcharts/](paper/flowcharts/), [paper/site-maps/](paper/site-maps/), [paper/wireframes/](paper/wireframes/) | System flowcharts, site maps and UI wireframes, one per role |
 | [paper/appendices/](paper/appendices/) | Source code of the system's 10 key modules in the Capstone 1 layout, and the database schema (SQL) |
 | [paper/journey-maps/](paper/journey-maps/) | 4 user journey maps: the current process (As-Is) and each role with EMO Tracker (To-Be) |
+| [paper/Paper_Descriptions.html](paper/Paper_Descriptions.html) | **The descriptions to copy into the paper**, in the paper's order and numbering, with a Copy button per item ([.md version](paper/Paper_Descriptions.md)) |
 | [paper/Diagram_Descriptions.md](paper/Diagram_Descriptions.md) | A caption and description for every figure: Chapter 3 figures, then appendix figures |
 | [paper/Table_Descriptions.md](paper/Table_Descriptions.md) | A description for every table and appendix listing |
 | [OVERVIEW.md](OVERVIEW.md) | Technical overview of the code |
