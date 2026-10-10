@@ -1,6 +1,6 @@
 # Table Descriptions
 
-> **To copy into the paper, use [Paper_Descriptions.html](Paper_Descriptions.html)** (open it in a browser): it follows the paper's figure and table numbers and has a Copy button per item. This file keeps the longer reference descriptions, with this file's own numbering.
+> **This file is AI-written reference material. Don't paste it into the paper:** the paper must pass Turnitin at 90–94% human. To write the descriptions, use [Description_Notes.md](Description_Notes.md), which has the checked facts for each item in the paper's numbering.
 
 Descriptions of the tables and listings for the EMO Tracker Capstone 2 paper, organized like the Capstone 1 paper. Part 1 has the tables for **Chapter 3**, and Part 2 has the tables and listings for the **appendices**.
 

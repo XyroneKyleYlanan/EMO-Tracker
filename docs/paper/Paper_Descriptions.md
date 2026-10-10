@@ -1,6 +1,8 @@
 # Descriptions for the Paper
 
-Each item matches the paper's figure and table numbers. A copy-ready version with a Copy button per item is [Paper_Descriptions.html](Paper_Descriptions.html) (open it in a browser). The source code explanations (Modules 1 to 10) are in [appendices/source-code.html](appendices/source-code.html). Checked against the system on October 10, 2026.
+> **AI-written reference. Don't paste into the paper** (it must pass Turnitin at 90–94% human). Write the descriptions in your own words from [Description_Notes.md](Description_Notes.md).
+
+Each item matches the paper's figure and table numbers. A version with a Copy button per item is [Paper_Descriptions.html](Paper_Descriptions.html) (open it in a browser). The source code explanations (Modules 1 to 10) are in [appendices/source-code.html](appendices/source-code.html). Checked against the system on October 10, 2026.
 
 ---
 
