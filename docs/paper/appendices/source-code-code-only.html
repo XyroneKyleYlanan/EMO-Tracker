@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>EMO Tracker — Source Code (Key Modules)</title>
+<title>EMO Tracker — Source Code (Key Modules), code only</title>
 <style>
   body { font-family: Arial, Helvetica, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 20px; color: #111; }
   h1 { font-size: 20px; margin: 0 0 6px; }
@@ -23,8 +23,7 @@
 </style>
 </head>
 <body>
-<p class="note" style="background:#fdecec;border-color:#e8b4b4"><strong>The "Explanation:" paragraphs here are AI-written. Don't paste them into the paper</strong> (it must pass Turnitin at 90–94% human). For the paper, use <code>source-code-code-only.html</code>, or write your own explanations from <code>Description_Notes.md</code>.</p>
-<p class="note"><strong>How to use:</strong> Open this file in a browser, select a part, copy (Ctrl+C), and paste into Google Docs or Word. Same layout as the Capstone 1 appendix: the summary table, then each block with a title bar, the code and an explanation. The modules are those of the current system: the Capstone 1 modules with their current code, plus the Schedule and venues, the double-booking warning and data protection added in Capstone 2. Code copied from the repository on October 10, 2026, with file names and line numbers.</p>
+<p class="note"><strong>How to use:</strong> Open this file in a browser, select a part, copy (Ctrl+C), and paste into Google Docs or Word. This is the code-only version: the summary table, then each block with its title bar and code, without the AI-written explanations (the paper must pass Turnitin at 90–94% human). Code copied from the repository on October 10, 2026, with file names and line numbers.</p>
 
 <h1>Appendix D - Technical Documentation</h1>
 <h2>Source Code (Key Modules)</h2>
@@ -80,7 +79,6 @@ Frontend: ManagerDashboard.jsx (backup status)</td></tr>
         &#x27;user&#x27; =&gt; $user-&gt;only([&#x27;id&#x27;, &#x27;name&#x27;, &#x27;email&#x27;, &#x27;role&#x27;, &#x27;is_active&#x27;]),
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> The login() method validates that an email and password were supplied, then looks up the user by email. It verifies the password against the stored bcrypt hash using Laravel&#x27;s Hash::check(); the plain password is never compared directly or stored. The same message is returned whether the email or the password is wrong, so the response does not reveal which accounts exist. Accounts flagged is_active = false are rejected. On success, a Laravel Sanctum bearer token valid for 30 days is issued and returned together with the user&#x27;s basic profile.</p>
 <table class="bar"><tr><td>Module 1 — Login and Authentication | AppServiceProvider.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Providers/AppServiceProvider.php, lines 22–43</div><pre>/**
  * Bootstrap any application services.
@@ -104,7 +102,6 @@ public function boot(): void
             ], 429, $headers));
     });
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> Two protections added in Capstone 2 are registered when the application starts. First, a token is accepted only while its account is active, so deactivating an account cuts off its sessions at once. Second, the login route is limited to 10 attempts per minute for each combination of email address and device; further attempts receive HTTP 429 with the message &quot;Too many login attempts. Wait a minute, then try again.&quot; Keying the limit by both email and device means one person&#x27;s typing mistakes never lock out the rest of the office.</p>
 <table class="bar"><tr><td>Module 1 — Login and Authentication | AuthController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/AuthController.php, lines 57–78</div><pre>public function changePassword(Request $request): JsonResponse
 {
@@ -128,7 +125,6 @@ public function boot(): void
 
     return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;Password changed. Your other devices have been signed out.&#x27;]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> Any signed-in user can change their own password. The current password must be correct, and the new one must have at least 8 characters and be typed twice (the confirmed rule). The new password is stored as a bcrypt hash, and every other session of the account is signed out, so anyone still using the old password elsewhere loses access.</p>
 <table class="bar"><tr><td>Module 1 — Login and Authentication | AuthContext.jsx</td></tr></table>
 <table class="code"><tr><td><div class="where">frontend/src/contexts/AuthContext.jsx, lines 31–37</div><pre>async function login(email, password) {
   const res = await api.post(&#x27;/login&#x27;, { email, password })
@@ -137,7 +133,6 @@ public function boot(): void
   setUser(res.data.user)
   return res.data.user
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> On the frontend, login() sends the credentials to the API and keeps the returned token and user profile in the browser&#x27;s local storage, so a page reload keeps the user signed in. The shared API client (api.js) attaches the token to every request as an Authorization: Bearer header, and if the server ever answers 401 (an expired or revoked token), it clears the stored session and returns the user to the login page.</p>
 <table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | EventController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 74–87</div><pre>public function store(Request $request): JsonResponse
 {
@@ -153,7 +148,6 @@ public function boot(): void
 
     return response()-&gt;json([&#x27;event&#x27; =&gt; $this-&gt;withSummary($event)], 201);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> store() adds an event after validating its details (name, type, department, venue or place, dates and times, control number and remarks). Events are internal unless marked external, and are schedule-only unless the EMO prepares them. The status is not chosen by the user: it is worked out from the event&#x27;s date and time, so an event entered with a past date is stored as completed. The creating Administrator is recorded in created_by.</p>
 <table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | EventController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 89–116</div><pre>public function update(Request $request, Event $event): JsonResponse
 {
@@ -183,7 +177,6 @@ public function boot(): void
 
     return response()-&gt;json([&#x27;event&#x27; =&gt; $this-&gt;withSummary($event)]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> update() edits an event and handles two Capstone 2 rules. When the start date or time changes and the Administrator answers that the event was moved (a reschedule rather than a correction), the original date and time are kept, so the system can show &quot;Rescheduled from ...&quot;; moving the event back to its original slot removes the mark. The status is then recalculated from the new date, so a completed event moved to the future reopens, while a cancelled event stays cancelled until it is explicitly restored.</p>
 <table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | Event.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Models/Event.php, lines 126–132, lines 134–137, lines 139–145, lines 153–170</div><pre>// The end time on the last day, or the end of that day.
 public static function endsAt($date, $endDate = null, $endTime = null): Carbon
@@ -224,7 +217,6 @@ public static function completePastEvents(): void
                 -&gt;where($lastDay)))
         -&gt;update([&#x27;status&#x27; =&gt; &#x27;completed&#x27;]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> These methods implement the event status lifecycle. Only upcoming, completed and cancelled are stored. endsAt() finds when an event ends (its end time on the last day, or the end of that day), and statusForDate() uses it to decide between upcoming and completed. Ongoing is not stored: getOngoingAttribute() computes it for an upcoming event that has started but not ended. completePastEvents() runs at the start of every API request and marks every finished event completed in one database update, so a past event&#x27;s tasks are locked even if nobody opens it.</p>
 <table class="bar"><tr><td>Module 3 — Task Assignment and Tracking | TaskController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/TaskController.php, lines 50–90</div><pre>public function store(Request $request, Event $event): JsonResponse
 {
@@ -267,7 +259,6 @@ public static function completePastEvents(): void
 
     return response()-&gt;json([&#x27;task&#x27; =&gt; $task], 201);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> store() adds a task to an event. Tasks cannot be added to a cancelled event, and only the Administrator can add them to a completed one. Each task has a name, an optional description, a due date, a status, a priority and at most one owner; the AssignableMember rule accepts only active members as owners (any role, since every office member can take tasks). Adding the first task to an event marks it as one the EMO prepares, which turns on its readiness tracking.</p>
 <table class="bar"><tr><td>Module 3 — Task Assignment and Tracking | TaskController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/TaskController.php, lines 115–139</div><pre>public function updateStatus(Request $request, Task $task): JsonResponse
 {
@@ -294,7 +285,6 @@ public static function completePastEvents(): void
 
     return response()-&gt;json([&#x27;task&#x27; =&gt; $task]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> updateStatus() changes a task&#x27;s status (pending, in progress or done). Staff may change only the tasks they own, while Officers and the Administrator may change any task. When an event is completed its tasks become a record, so only the Administrator can still change them. These checks run on the server, so they hold even for requests that do not come from the user interface.</p>
 <table class="bar"><tr><td>Module 4 — Rule-Based Event Readiness Classification | EventClassifier.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Services/EventClassifier.php, lines 28–90</div><pre>/**
  * @return array{0: string, 1: ?string}
@@ -359,7 +349,6 @@ private static function assess(Event $event): array
 
     return [&#x27;green&#x27;, &quot;{$done}, nothing overdue&quot;];
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> assess() is the rule-based classifier. It checks a fixed list of rules in order, and the first rule that matches decides both the label and the reason shown to users. Cancelled, completed and schedule-only events are not classified. An event with no tasks is At Risk, and one whose tasks are all done is On Track. Otherwise it is Critical if a task is overdue, if it is two days away or less, or if it is seven days away or less with under 40% of its tasks done or with more than half of its open tasks unassigned. It is At Risk if it is fourteen days away or less with under 70% done, or if any open task has no owner; in every other case it is On Track. The classifier uses no machine learning or outside service, and its thresholds can be adjusted in this one class.</p>
 <table class="bar"><tr><td>Module 4 — Rule-Based Event Readiness Classification | AnalyticsController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/AnalyticsController.php, lines 14–38</div><pre>public function index(Request $request): JsonResponse
 {
@@ -386,7 +375,6 @@ private static function assess(Event $event): array
             -&gt;get()),
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, busiest venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.</p>
 <table class="bar"><tr><td>Module 5 — Reports and Document Management | DocumentController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/DocumentController.php, lines 26–60, lines 62–67</div><pre>public function store(Request $request, Event $event): JsonResponse
 {
@@ -430,7 +418,6 @@ public function download(Document $document): StreamedResponse
 
     return Storage::disk(&#x27;local&#x27;)-&gt;download($document-&gt;file_path, $document-&gt;file_name);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> store() accepts an uploaded file only if it is a PDF, Word, Excel, JPG or PNG file of up to 10 MB, and explains the reason when a file is refused (including files PHP turns away for size before the application sees them). Accepted files are saved in private storage, in a folder for their event, never in a public folder, and their name, size, type and uploader are recorded. download() serves a file only through this authenticated route. Uploading is limited to Officers and the Administrator, and deleting to the Administrator, so documents stay part of the event&#x27;s record.</p>
 <table class="bar"><tr><td>Module 5 — Reports and Document Management | ReportController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ReportController.php, lines 13–43</div><pre>public function event(Event $event): Response
 {
@@ -463,7 +450,6 @@ public function download(Document $document): StreamedResponse
 
     return $pdf-&gt;download($filename);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> event() generates an event&#x27;s PDF report on the server with dompdf. It loads the event with its tasks and their owners, creator, documents and venue, computes the task summary (total, done, in progress, pending and the completion percentage), and renders the event-report template, which also shows the readiness label and its reason. Because the PDF is built on the server, it looks the same whichever device downloads it.</p>
 <table class="bar"><tr><td>Module 6 — User Account Management | UserController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/UserController.php, lines 25–46, lines 55–90, lines 92–102</div><pre>public function store(Request $request): JsonResponse
 {
@@ -536,7 +522,6 @@ public function destroy(User $user, Request $request): JsonResponse
 
     return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;User deactivated.&#x27;]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> Only the Administrator manages accounts; there is no public registration. store() creates an account with a unique email, a password of at least 8 characters (stored as a bcrypt hash) and a role. update() edits the name, email, role or status, or sets a new password, but stops the Administrator from deactivating themselves or removing their own administrator role, so the office always keeps an administrator. destroy() does not delete the account: it deactivates it, so the events, tasks and documents the person created keep their author. A deactivated account, or one given a new password, is signed out on every device.</p>
 <table class="bar"><tr><td>Module 6 — User Account Management | User.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Models/User.php, lines 55–63</div><pre>/**
  * Signs the account out on every device, optionally keeping the one in use.
@@ -547,7 +532,6 @@ public function signOutEverywhere(mixed $except = null): void
         -&gt;when($except instanceof PersonalAccessToken, fn ($tokens) =&gt; $tokens-&gt;whereKeyNot($except-&gt;getKey()))
         -&gt;delete();
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> signOutEverywhere() deletes the account&#x27;s login tokens, optionally keeping the one in use, so the current device stays signed in when a user changes their own password. It is used when users change their own password, and when the Administrator sets a new password or turns an account off in the edit form. (The Deactivate button signs an account out the same way, by deleting all of its tokens.)</p>
 <table class="bar"><tr><td>Module 7 — Role-Based Access Control | EnsureUserHasRole.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Middleware/EnsureUserHasRole.php, lines 11–28</div><pre>public function handle(Request $request, Closure $next, string ...$roles): Response
 {
@@ -567,7 +551,6 @@ public function signOutEverywhere(mixed $except = null): void
 
     return $next($request);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> This middleware guards every role-restricted route. It rejects requests without a valid login (401) and from deactivated accounts (403), then allows the request only if the user&#x27;s role is one of the roles the route lists; otherwise it answers 403 with &quot;You do not have permission to access this resource.&quot;</p>
 <table class="bar"><tr><td>Module 7 — Role-Based Access Control | api.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/routes/api.php, lines 24–83</div><pre>Route::post(&#x27;/login&#x27;, [AuthController::class, &#x27;login&#x27;])-&gt;middleware(&#x27;throttle:login&#x27;);
 
@@ -629,7 +612,6 @@ Route::middleware(&#x27;auth:sanctum&#x27;)-&gt;group(function () {
         Route::delete(&#x27;/users/{user}&#x27;, [UserController::class, &#x27;destroy&#x27;]);
     });
 });</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> The routes file applies the rules above to every endpoint. Login is public but rate-limited. Everything else requires a valid token (auth:sanctum). Within that, routes are grouped by role: any signed-in user can view events, the Schedule, tasks and documents and update their own task status; Officers and the Administrator can manage tasks, upload documents, view Analytics and export the Schedule; and only the Administrator can change events, venues, buildings and accounts, or delete documents.</p>
 <table class="bar"><tr><td>Module 7 — Role-Based Access Control | ProtectedRoute.jsx</td></tr></table>
 <table class="code"><tr><td><div class="where">frontend/src/components/ProtectedRoute.jsx, lines 1–24</div><pre>import { Navigate } from &#x27;react-router-dom&#x27;
 import { useAuth } from &#x27;../contexts/auth&#x27;
@@ -655,7 +637,6 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
   return children
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> On the frontend, ProtectedRoute wraps each role&#x27;s pages. It waits while a saved session is being checked, sends a signed-out visitor to the login page, and sends a signed-in user who opens another role&#x27;s address back to their own Home page. This keeps the interface tidy, but the real protection is the server-side check above, which cannot be bypassed from the browser.</p>
 <table class="bar"><tr><td>Module 8 — Schedule and Venue Management | ScheduleController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ScheduleController.php, lines 18–55, lines 57–65</div><pre>public function index(Request $request): JsonResponse
 {
@@ -705,7 +686,6 @@ public function export(Request $request): Response
         &#x27;Content-Disposition&#x27; =&gt; &quot;attachment; filename=\&quot;emo-schedule-{$year}.xlsx\&quot;&quot;,
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> index() returns one year of the Schedule, laid out like the EMO&#x27;s own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue&#x27;s building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as an Excel file built by the ScheduleExport service, in the spreadsheet&#x27;s familiar format.</p>
 <table class="bar"><tr><td>Module 8 — Schedule and Venue Management | VenueController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/VenueController.php, lines 74–94</div><pre>/**
  * Fix duplicates such as &quot;UHALL&quot; and &quot;University Hall&quot;: move every event to
@@ -728,7 +708,6 @@ public function merge(Request $request, Venue $venue): JsonResponse
 
     return response()-&gt;json([&#x27;message&#x27; =&gt; &quot;Merged. {$moved} event(s) moved.&quot;, &#x27;moved&#x27; =&gt; $moved]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> merge() combines a duplicate venue (for example, &quot;UHALL&quot; and &quot;University Hall&quot;) into another one: inside a database transaction, it moves all of the duplicate&#x27;s events to the other venue and then deletes the duplicate. Keeping one name per place is what lets the Schedule colors, the double-booking check and the venue statistics work.</p>
 <table class="bar"><tr><td>Module 9 — Venue Double-Booking Warning | VenueClashes.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Services/VenueClashes.php, lines 20–36, lines 110–116, lines 118–129</div><pre>public static function between(Event $a, Event $b): bool
 {
@@ -768,7 +747,6 @@ private static function hours(Event $event): array
 
     return $to &gt; $from ? [$from, $to] : self::ALL_DAY;
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> between() decides whether two bookings clash. They must use the same venue from the list (places typed as free text are not compared), neither may be cancelled, they must be in the same room or one must take the whole venue (sameRoom(), which ignores capital letters and extra spaces), and their days and hours must overlap. hours() treats a booking with no start time, or one that runs past midnight, as all day, and one with no end time as lasting until midnight; bookings that only touch, such as 8 to 10 and 10 to 12, do not overlap.</p>
 <table class="bar"><tr><td>Module 9 — Venue Double-Booking Warning | EventController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 50–72</div><pre>/**
  * Bookings that would clash with an event before it&#x27;s saved, so the form
@@ -793,7 +771,6 @@ public function clashes(Request $request): JsonResponse
         &#x27;clashes&#x27; =&gt; VenueClashes::for($event, $data[&#x27;ignore&#x27;] ?? null)-&gt;map(fn (Event $other) =&gt; VenueClashes::summary($other)),
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> clashes() is called by the event form while the Administrator fills it in, before anything is saved. It builds an unsaved event from the venue, dates and times entered so far and returns the existing bookings it clashes with, leaving out the event being edited. The form shows these as a warning but still allows saving, because some overlaps are intended, such as a rehearsal right before its own event.</p>
 <table class="bar"><tr><td>Module 10 — Data Protection and Migration | DailyBackup.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Middleware/DailyBackup.php, lines 22–39</div><pre>public function handle(Request $request, Closure $next): Response
 {
@@ -813,7 +790,6 @@ public function clashes(Request $request): JsonResponse
 
     return $response;
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> handle() makes the daily backup without delaying anyone: after a response is sent, the first request of each day starts the backup. A cache key ensures it runs only once a day; if the backup fails, the error is logged and another attempt is allowed an hour later.</p>
 <table class="bar"><tr><td>Module 10 — Data Protection and Migration | Backup.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Services/Backup.php, lines 31–46, lines 63–91, lines 168–174</div><pre>/**
  * A named snapshot (e.g. &quot;fresh-import&quot;) is kept until someone deletes it;
@@ -869,6 +845,5 @@ private static function prune(): void
         @unlink($old);
     }
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> create() records a failure so the Administrator&#x27;s Home page can show a warning, and clears it after a success. write() saves the whole database and every uploaded document into one .zip file in the backup folder (a USB drive when BACKUP_PATH points to one). prune() then keeps only the newest 14 daily backups; named snapshots, saved before database updates or by hand, are never deleted automatically. The ScheduleImport service (not shown because of its length) was used once at installation to bring the EMO&#x27;s existing spreadsheet into the database, with a list of rows for a person to review.</p>
 </body>
 </html>
