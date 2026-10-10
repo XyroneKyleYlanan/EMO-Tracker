@@ -1521,7 +1521,7 @@ Mark each scenario Passed or Failed, and write notes.
 | Data flow diagram, level 1 | [diagrams/dfd-level-1.png](diagrams/dfd-level-1.png) |
 | Class diagram | [diagrams/class-diagram.png](diagrams/class-diagram.png) |
 | Sequence diagrams | in [diagrams/sequence-diagrams/](diagrams/sequence-diagrams/): [1-login.png](diagrams/sequence-diagrams/1-login.png), [2-add-event.png](diagrams/sequence-diagrams/2-add-event.png), [3-task-status-update.png](diagrams/sequence-diagrams/3-task-status-update.png) |
-| Site maps | [site-maps/admin.png](site-maps/admin.png), [site-maps/officer.png](site-maps/officer.png), [site-maps/staff.png](site-maps/staff.png) (Capstone 1 style; source: [site-maps/src/site-maps.html](site-maps/src/site-maps.html)) |
+| Site maps | [site-maps/admin.png](site-maps/admin.png), [site-maps/officer.png](site-maps/officer.png), [site-maps/staff.png](site-maps/staff.png) (indented tree; source: [site-maps/src/site-maps.html](site-maps/src/site-maps.html)) |
 | User journey maps | the four maps in the `journey-maps/` folder (below) |
 | UI wireframes | [wireframes/1-administrator.png](wireframes/1-administrator.png), [wireframes/2-officer.png](wireframes/2-officer.png), [wireframes/3-staff.png](wireframes/3-staff.png) |
 | Gantt chart | [diagrams/gantt-chart.png](diagrams/gantt-chart.png) |

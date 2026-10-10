@@ -305,11 +305,11 @@ This sequence diagram shows what happens when a Staff member marks a task as don
 
 ## Site maps
 
-The three site maps show how the screens of EMO Tracker are organized for each role, in the same style as the Capstone 1 site maps: an indented tree with plain connecting lines. They are drawn from one source file, [site-maps/src/site-maps.html](site-maps/src/site-maps.html), which opens in a browser.
-- **Dark green boxes:** the system, and the role that logs in.
-- **Yellow box:** the login page.
-- **Medium green boxes:** the pages in the role's menu.
-- **Light boxes:** what each page contains: its sections, filters, panels and dialogs. Bold light boxes group the items under them.
+The three site maps show how the screens of EMO Tracker are organized for each role, as an indented tree with plain connecting lines, in the same neutral grays as the other figures. They are drawn from one source file, [site-maps/src/site-maps.html](site-maps/src/site-maps.html), which opens in a browser.
+- **Dark gray boxes:** the system, and the role that logs in.
+- **Outlined white box:** the login page.
+- **Light gray boxes:** the pages in the role's menu.
+- **White boxes:** what each page contains: its sections, filters, panels and dialogs. Bold white boxes group the items under them.
 - **Repeated screens:** the event panel opens from more than one page; it is shown in full once and marked "same as under ..." elsewhere.
 
 ### Site Map: Administrator
