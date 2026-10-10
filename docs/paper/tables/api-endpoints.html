@@ -4,75 +4,118 @@
 <meta charset="UTF-8">
 <title>EMO Tracker — API Endpoint Documentation</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1150px; margin: 24px auto; padding: 0 20px; color: #111827; }
-  h1 { color: #0a5c3a; }
+  body { font-family: Arial, Helvetica, sans-serif; max-width: 1000px; margin: 24px auto; padding: 0 20px; color: #111; }
+  h2 { font-size: 18px; margin: 24px 0 10px; }
   p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
-  table { border-collapse: collapse; width: 100%; margin: 10px 0 26px; }
-  th, td { border: 1px solid #888; padding: 6px 9px; text-align: left; vertical-align: top; font-size: 13px; }
-  th { background: #0a5c3a; color: #ffffff; }
-  tr.group td { background: #dfeee6; font-weight: 700; }
-  td.method { font-weight: 600; white-space: nowrap; }
-  td.path { font-family: Consolas, 'Courier New', monospace; font-size: 12.5px; white-space: nowrap; }
+  table { border-collapse: collapse; width: 100%; margin: 0 0 22px; table-layout: fixed; }
+  th { background: #1f3864; color: #fff; padding: 9px 8px; border: 1px solid #999; font-size: 14.5px; }
+  td { border: 1px solid #d0d0d0; padding: 8px; vertical-align: middle; font-size: 13.5px; line-height: 1.4; }
+  tr.group td { background: #f2f2f2; font-weight: bold; font-size: 15px; }
+  td.path { font-family: "Courier New", Courier, monospace; font-size: 12px; word-break: break-word; }
+  td.method { font-weight: bold; text-align: center; }
+  td.auth { text-align: center; }
 </style>
 </head>
 <body>
+<p class="note"><strong>How to use:</strong> Select a table, copy (Ctrl+C), and paste into Google Docs or Word. Same layout as the Capstone 1 appendix. All 42 endpoints of the system (45 route registrations; "PUT / PATCH" rows accept either method), checked against the system's route list on October 10, 2026; parameters and responses were read from the code.<br>
+<strong>For every endpoint:</strong> all paths start with <code>/api</code> (for example, <code>/api/login</code>); requests and responses are JSON, except file downloads; "Yes" in the Auth column means the request must carry the login token (<code>Authorization: Bearer &lt;token&gt;</code>). <b>401</b> means a missing, expired or revoked token (including a deactivated account's); <b>403</b> means the user's role may not use the endpoint; <b>404</b> means the item no longer exists; <b>422</b> responses include the reason for each invalid field.</p>
 
-<h1>API Endpoint Documentation — EMO Tracker</h1>
-<p class="note"><strong>How to use:</strong> Select the table, copy (Ctrl+C), and paste into Word or Google Docs. It pastes as an editable table. Generated from the system's route list on October 10, 2026: 42 endpoints (45 route registrations; "PUT / PATCH" rows accept either method).<br>
-<strong>For every endpoint:</strong> requests and responses are JSON (except file downloads); every endpoint except login and ping needs the login token (<code>Authorization: Bearer &lt;token&gt;</code>); a missing or expired token returns 401, a role that isn't allowed returns 403, and invalid input returns 422 with the reason. The server also refuses non-admin changes to a completed event's tasks (403).</p>
+<h2>API Endpoint Documentation</h2>
 
 <table>
-<tr><th>#</th><th>Method</th><th>Endpoint</th><th>Who can use it</th><th>What it does</th></tr>
-<tr class="group"><td colspan="5">Login and account</td></tr>
-<tr><td>1</td><td class="method">POST</td><td class="path">/api/login</td><td>Public (limited to 10 tries a minute per email and device)</td><td>Sign in with email and password. Returns a login token (valid for 30 days) with the user's name and role.</td></tr>
-<tr><td>2</td><td class="method">POST</td><td class="path">/api/logout</td><td>Any signed-in user</td><td>Sign out on this device (deletes its token).</td></tr>
-<tr><td>3</td><td class="method">GET</td><td class="path">/api/me</td><td>Any signed-in user</td><td>The signed-in user's name, email and role.</td></tr>
-<tr><td>4</td><td class="method">POST</td><td class="path">/api/change-password</td><td>Any signed-in user</td><td>Change one's own password; signs out the user's other devices.</td></tr>
-<tr><td>5</td><td class="method">GET</td><td class="path">/api/ping</td><td>Public</td><td>Check that the server is running.</td></tr>
-<tr class="group"><td colspan="5">Home pages</td></tr>
-<tr><td>6</td><td class="method">GET</td><td class="path">/api/dashboard/admin</td><td>Administrator</td><td>The Administrator's Home: summary, events that need attention, the next 7 days and the backup status.</td></tr>
-<tr><td>7</td><td class="method">GET</td><td class="path">/api/dashboard/officer</td><td>Administrator, Officer</td><td>The Officer's Home: summary, events that need attention and the next 7 days.</td></tr>
-<tr><td>8</td><td class="method">GET</td><td class="path">/api/dashboard/staff</td><td>Staff</td><td>The Staff Home: the user's open tasks, upcoming events and summary.</td></tr>
-<tr class="group"><td colspan="5">Events and Schedule</td></tr>
-<tr><td>9</td><td class="method">GET</td><td class="path">/api/events</td><td>Any signed-in user</td><td>List events with their readiness. Options: status, prepared (EMO-prepared only), mine (only events where the user has tasks).</td></tr>
-<tr><td>10</td><td class="method">GET</td><td class="path">/api/events/{event}</td><td>Any signed-in user</td><td>One event with its tasks, documents, creator, venue and any overlapping bookings.</td></tr>
-<tr><td>11</td><td class="method">POST</td><td class="path">/api/events</td><td>Administrator</td><td>Add an event. Its status is set from its date.</td></tr>
-<tr><td>12</td><td class="method">PUT / PATCH</td><td class="path">/api/events/{event}</td><td>Administrator</td><td>Edit an event: details, cancel or restore, and mark a date change as a reschedule.</td></tr>
-<tr><td>13</td><td class="method">DELETE</td><td class="path">/api/events/{event}</td><td>Administrator</td><td>Delete an event with its tasks and documents.</td></tr>
-<tr><td>14</td><td class="method">GET</td><td class="path">/api/event-clashes</td><td>Administrator</td><td>Check a venue, date and time for overlapping bookings (used by the event form while it is filled in).</td></tr>
-<tr><td>15</td><td class="method">GET</td><td class="path">/api/departments</td><td>Administrator</td><td>Department names already in use, as suggestions for the event form.</td></tr>
-<tr><td>16</td><td class="method">GET</td><td class="path">/api/schedule</td><td>Any signed-in user</td><td>One year of the Schedule (option: year), with overlaps marked.</td></tr>
-<tr><td>17</td><td class="method">GET</td><td class="path">/api/schedule/export</td><td>Administrator, Officer</td><td>Download one year of the Schedule as an Excel file (option: year).</td></tr>
-<tr class="group"><td colspan="5">Venues and buildings</td></tr>
-<tr><td>18</td><td class="method">GET</td><td class="path">/api/venues</td><td>Any signed-in user</td><td>All venues and buildings, with how many events use each venue.</td></tr>
-<tr><td>19</td><td class="method">POST</td><td class="path">/api/venues</td><td>Administrator</td><td>Add a venue.</td></tr>
-<tr><td>20</td><td class="method">PUT</td><td class="path">/api/venues/{venue}</td><td>Administrator</td><td>Rename a venue or change its building.</td></tr>
-<tr><td>21</td><td class="method">DELETE</td><td class="path">/api/venues/{venue}</td><td>Administrator</td><td>Delete a venue. Refused if events use it (merge it instead).</td></tr>
-<tr><td>22</td><td class="method">POST</td><td class="path">/api/venues/{venue}/merge</td><td>Administrator</td><td>Merge a duplicate venue into another: its events move to the other venue.</td></tr>
-<tr><td>23</td><td class="method">POST</td><td class="path">/api/buildings</td><td>Administrator</td><td>Add a building with a color.</td></tr>
-<tr><td>24</td><td class="method">PUT</td><td class="path">/api/buildings/{building}</td><td>Administrator</td><td>Rename a building or change its color.</td></tr>
-<tr><td>25</td><td class="method">DELETE</td><td class="path">/api/buildings/{building}</td><td>Administrator</td><td>Delete a building. Its venues stay, without a building.</td></tr>
-<tr class="group"><td colspan="5">Tasks</td></tr>
-<tr><td>26</td><td class="method">GET</td><td class="path">/api/events/{event}/tasks</td><td>Any signed-in user</td><td>An event's tasks.</td></tr>
-<tr><td>27</td><td class="method">POST</td><td class="path">/api/events/{event}/tasks</td><td>Administrator, Officer</td><td>Add a task with an owner, due date and priority.</td></tr>
-<tr><td>28</td><td class="method">PUT / PATCH</td><td class="path">/api/tasks/{task}</td><td>Administrator, Officer</td><td>Edit a task. On a completed event, only the Administrator can.</td></tr>
-<tr><td>29</td><td class="method">DELETE</td><td class="path">/api/tasks/{task}</td><td>Administrator, Officer</td><td>Delete a task. On a completed event, only the Administrator can.</td></tr>
-<tr><td>30</td><td class="method">PATCH</td><td class="path">/api/tasks/{task}/status</td><td>Any signed-in user (Staff: own tasks only)</td><td>Change a task's status (Pending, In progress or Done).</td></tr>
-<tr><td>31</td><td class="method">GET</td><td class="path">/api/my-tasks</td><td>Any signed-in user</td><td>The tasks assigned to the signed-in user.</td></tr>
-<tr class="group"><td colspan="5">Documents and reports</td></tr>
-<tr><td>32</td><td class="method">GET</td><td class="path">/api/events/{event}/documents</td><td>Any signed-in user</td><td>An event's documents.</td></tr>
-<tr><td>33</td><td class="method">POST</td><td class="path">/api/events/{event}/documents</td><td>Administrator, Officer</td><td>Upload a document (PDF, Word, Excel, JPG or PNG, up to 10 MB) to private storage.</td></tr>
-<tr><td>34</td><td class="method">GET</td><td class="path">/api/documents/{document}/download</td><td>Any signed-in user</td><td>Download a document.</td></tr>
-<tr><td>35</td><td class="method">DELETE</td><td class="path">/api/documents/{document}</td><td>Administrator</td><td>Delete a document and its file.</td></tr>
-<tr><td>36</td><td class="method">GET</td><td class="path">/api/events/{event}/report</td><td>Any signed-in user</td><td>Download the event's PDF report.</td></tr>
-<tr class="group"><td colspan="5">Analytics</td></tr>
-<tr><td>37</td><td class="method">GET</td><td class="path">/api/analytics</td><td>Administrator, Officer</td><td>Schedule and preparation statistics for a period (option: period = week, month, year or all).</td></tr>
-<tr class="group"><td colspan="5">Accounts</td></tr>
-<tr><td>38</td><td class="method">GET</td><td class="path">/api/users</td><td>Administrator, Officer</td><td>List accounts (options: role, is_active). Officers use it to choose task owners.</td></tr>
-<tr><td>39</td><td class="method">POST</td><td class="path">/api/users</td><td>Administrator</td><td>Create an account with a name, email, password and role.</td></tr>
-<tr><td>40</td><td class="method">GET</td><td class="path">/api/users/{user}</td><td>Administrator</td><td>One account.</td></tr>
-<tr><td>41</td><td class="method">PUT / PATCH</td><td class="path">/api/users/{user}</td><td>Administrator</td><td>Edit an account: name, email, role, new password, or reactivate it.</td></tr>
-<tr><td>42</td><td class="method">DELETE</td><td class="path">/api/users/{user}</td><td>Administrator</td><td>Deactivate an account and sign it out everywhere. Accounts are never deleted.</td></tr>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Authentication</td></tr>
+<tr><td class="path">/login</td><td class="method">POST</td><td class="auth">No</td><td>email (string, required)<br>password (string, required)</td><td><b>200</b> — bearer token (valid 30 days) + user (id, name, email, role, is_active)</td><td><b>422</b> Invalid credentials, deactivated account, or missing fields<br><b>429</b> More than 10 attempts in a minute (per email and device)</td></tr>
+<tr><td class="path">/me</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — current user (id, name, email, role, is_active)</td><td><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/logout</td><td class="method">POST</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — confirmation message (current token revoked)</td><td><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/change-password</td><td class="method">POST</td><td class="auth">Yes — All roles</td><td>current_password (string, required)<br>new_password (string, required, min 8)<br>new_password_confirmation (string, required)</td><td><b>200</b> — confirmation message (other devices signed out)</td><td><b>422</b> Wrong current password or invalid input<br><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/ping</td><td class="method">GET</td><td class="auth">No</td><td>None</td><td><b>200</b> — "pong", app name and server time</td><td>—</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Home (dashboards)</td></tr>
+<tr><td class="path">/dashboard/admin</td><td class="method">GET</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — summary counts, events that need attention (with reasons), the next 7 days, own open tasks, backup status</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/dashboard/officer</td><td class="method">GET</td><td class="auth">Yes — Administrator, Officer</td><td>None</td><td><b>200</b> — summary counts, events that need attention (with reasons), the next 7 days, own open tasks</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/dashboard/staff</td><td class="method">GET</td><td class="auth">Yes — Staff</td><td>None</td><td><b>200</b> — own open tasks, own upcoming events, summary counts</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Events</td></tr>
+<tr><td class="path">/events</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>status (upcoming, completed or cancelled, optional)<br>prepared (boolean, optional: EMO-prepared only)<br>mine (boolean, optional: only events where the user has tasks)</td><td><b>200</b> — list of events with readiness, creator, venue and task summary</td><td><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/events/{event}</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — the event with its tasks and owners, creator, documents, venue and building, readiness and reason, and overlapping bookings</td><td><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/events</td><td class="method">POST</td><td class="auth">Yes — Administrator</td><td>name (string, required, max 255)<br>event_date (date, required)<br>venue_id (integer, optional) or venue_details (string, required when there is no venue)<br>event_type (internal or external, optional; default internal)<br>end_date (date, optional, not before event_date)<br>event_time, end_time (HH:MM, optional; on a one-day event the end must be after the start)<br>department, description, control_number (string, optional)<br>remarks (string, optional, max 2,000)<br>needs_preparation (boolean, optional)</td><td><b>201</b> — the new event (status set from its date)</td><td><b>422</b> Invalid input (for example, no venue or place, or the end before the start)<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/events/{event}</td><td class="method">PUT / PATCH</td><td class="auth">Yes — Administrator</td><td>any field of POST /events (all optional)<br>cancelled (boolean: cancel or restore)<br>rescheduled (boolean: a date or time change is a reschedule)</td><td><b>200</b> — the updated event (status recalculated from its date)</td><td><b>422</b> Invalid input<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/events/{event}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — confirmation message (the event's tasks, documents and files are deleted too)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/event-clashes</td><td class="method">GET</td><td class="auth">Yes — Administrator</td><td>event_date (date, required)<br>venue_id, venue_details, end_date, event_time, end_time (optional)<br>ignore (event id to leave out, optional)</td><td><b>200</b> — list of clashing bookings (name, dates, times, location)</td><td><b>422</b> Missing or invalid date<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/departments</td><td class="method">GET</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — department names already in use</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Schedule</td></tr>
+<tr><td class="path">/schedule</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>year (optional; default this year)</td><td><b>200</b> — the year's events (date, time, type, department, location, building color, control number, remarks, status, readiness, overlaps) and the years that have events</td><td><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/schedule/export</td><td class="method">GET</td><td class="auth">Yes — Administrator, Officer</td><td>year (optional; default this year)</td><td><b>200</b> — Excel file (emo-schedule-YEAR.xlsx)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Venues and buildings</td></tr>
+<tr><td class="path">/venues</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — venues (with building and number of events), buildings (with number of venues) and the color palette</td><td><b>401</b> Not authenticated</td></tr>
+<tr><td class="path">/venues</td><td class="method">POST</td><td class="auth">Yes — Administrator</td><td>name (string, required, unique, max 255)<br>building_id (integer, optional)</td><td><b>201</b> — the new venue</td><td><b>422</b> Name already in the list or invalid input<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/venues/{venue}</td><td class="method">PUT</td><td class="auth">Yes — Administrator</td><td>name (string, required, unique, max 255)<br>building_id (integer, optional)</td><td><b>200</b> — the updated venue</td><td><b>422</b> Name already in the list (merge instead) or invalid input<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/venues/{venue}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — confirmation message</td><td><b>422</b> Venue used by events (merge it instead)<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/venues/{venue}/merge</td><td class="method">POST</td><td class="auth">Yes — Administrator</td><td>into_id (integer, required: another existing venue)</td><td><b>200</b> — confirmation message with the number of events moved</td><td><b>422</b> Missing venue, or the same venue<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/buildings</td><td class="method">POST</td><td class="auth">Yes — Administrator</td><td>name (string, required, unique, max 255)<br>color (required: one of the palette colors)</td><td><b>201</b> — the new building</td><td><b>422</b> Name already used or color not in the palette<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/buildings/{building}</td><td class="method">PUT</td><td class="auth">Yes — Administrator</td><td>name (string, required, unique, max 255)<br>color (required: one of the palette colors)</td><td><b>200</b> — the updated building</td><td><b>422</b> Name already used or color not in the palette<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/buildings/{building}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — confirmation message (its venues remain, without a building)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Tasks</td></tr>
+<tr><td class="path">/events/{event}/tasks</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — the event's tasks with their owners, by due date</td><td><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/events/{event}/tasks</td><td class="method">POST</td><td class="auth">Yes — Administrator, Officer</td><td>name (string, required, max 255)<br>due_date (date, required)<br>description (string, optional)<br>status (pending, in_progress or done, optional; default pending)<br>priority (low, medium or high, optional; default medium)<br>assigned_to (user id, optional: an active member)</td><td><b>201</b> — the new task (the event becomes EMO-prepared)</td><td><b>422</b> Invalid input, inactive owner, or a cancelled event<br><b>403</b> Role not allowed, or the event is completed (non-administrators)<br><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/tasks/{task}</td><td class="method">PUT / PATCH</td><td class="auth">Yes — Administrator, Officer</td><td>any task field (all optional)</td><td><b>200</b> — the updated task</td><td><b>422</b> Invalid input or inactive owner<br><b>403</b> Role not allowed, or the event is completed (non-administrators)<br><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/tasks/{task}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator, Officer</td><td>None</td><td><b>200</b> — confirmation message</td><td><b>403</b> Role not allowed, or the event is completed (non-administrators)<br><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/tasks/{task}/status</td><td class="method">PATCH</td><td class="auth">Yes — All roles (Staff: own tasks only)</td><td>status (pending, in_progress or done, required)</td><td><b>200</b> — the updated task</td><td><b>403</b> Not the task's owner, or the event is completed (non-administrators)<br><b>422</b> Invalid status<br><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/my-tasks</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — own tasks with their events, and counts (pending, in progress, done, total; cancelled events not counted)</td><td><b>401</b> Not authenticated</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Documents and reports</td></tr>
+<tr><td class="path">/events/{event}/documents</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — the event's documents with uploader, newest first</td><td><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/events/{event}/documents</td><td class="method">POST</td><td class="auth">Yes — Administrator, Officer</td><td>file (required: PDF, Word, Excel, JPG or PNG, up to 10 MB; sent as form data)</td><td><b>201</b> — the document record (name, size, type, uploader)</td><td><b>422</b> File type not accepted, over 10 MB, or incomplete upload<br><b>413</b> Request too large<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/documents/{document}/download</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — the file, with its original name</td><td><b>401</b> Not authenticated<br><b>404</b> Item or file not found</td></tr>
+<tr><td class="path">/documents/{document}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — confirmation message (the file is deleted too)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/events/{event}/report</td><td class="method">GET</td><td class="auth">Yes — All roles</td><td>None</td><td><b>200</b> — PDF report (event-report-NAME.pdf)</td><td><b>401</b> Not authenticated<br><b>404</b> Item not found</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Analytics</td></tr>
+<tr><td class="path">/analytics</td><td class="method">GET</td><td class="auth">Yes — Administrator, Officer</td><td>period (week, month, year or all, optional; default all)</td><td><b>200</b> — schedule statistics (counts by status, rescheduled, internal and external, busiest venues) and preparation statistics (totals, tasks done, active members, readiness distribution, most urgent events)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+</table>
+
+<table>
+<colgroup><col style="width:17%"><col style="width:9%"><col style="width:13%"><col style="width:24%"><col style="width:20%"><col style="width:17%"></colgroup>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Parameters</th><th>Success Response</th><th>Error Codes</th></tr>
+<tr class="group"><td colspan="6">Accounts</td></tr>
+<tr><td class="path">/users</td><td class="method">GET</td><td class="auth">Yes — Administrator, Officer</td><td>role, is_active (optional filters)</td><td><b>200</b> — accounts (id, name, email, role, is_active, created_at)</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/users</td><td class="method">POST</td><td class="auth">Yes — Administrator</td><td>name (string, required, max 255)<br>email (required, unique)<br>password (string, required, min 8)<br>role (admin, officer or staff, required)</td><td><b>201</b> — the new account (active)</td><td><b>422</b> Email already used or invalid input<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed</td></tr>
+<tr><td class="path">/users/{user}</td><td class="method">GET</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — the account</td><td><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/users/{user}</td><td class="method">PUT / PATCH</td><td class="auth">Yes — Administrator</td><td>name, email (unique), role, is_active (boolean), password (min 8): all optional</td><td><b>200</b> — the updated account (signed out everywhere if deactivated or given a new password)</td><td><b>422</b> Invalid input, or deactivating oneself or removing one's own administrator role<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
+<tr><td class="path">/users/{user}</td><td class="method">DELETE</td><td class="auth">Yes — Administrator</td><td>None</td><td><b>200</b> — confirmation message (the account is deactivated, not deleted, and signed out everywhere)</td><td><b>422</b> Deactivating oneself<br><b>401</b> Not authenticated<br><b>403</b> Role not allowed<br><b>404</b> Item not found</td></tr>
 </table>
 
 </body>

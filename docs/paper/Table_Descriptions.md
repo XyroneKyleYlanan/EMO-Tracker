@@ -104,14 +104,16 @@ The script was exported from the database that the system's migrations build. It
 
 **File:** [tables/api-endpoints.html](tables/api-endpoints.html)
 
-The API endpoint table documents all 42 endpoints of the EMO Tracker REST API (45 route registrations, since four endpoints accept both PUT and PATCH). For each endpoint it gives the HTTP method, the path, who can use it and what it does.
-- **Groups:** login and account, Home pages, events and Schedule, venues and buildings, tasks, documents and reports, analytics, and accounts.
+The API endpoint documentation describes all 42 endpoints of the EMO Tracker REST API (45 route registrations, since four endpoints accept both PUT and PATCH), in the Capstone 1 layout.
+- **Columns:** the endpoint, its HTTP method, whether it needs a login and for which roles, its parameters (with type and whether each is required), the success response, and the error codes with their meaning.
+- **Groups:** authentication, Home pages, events, the Schedule, venues and buildings, tasks, documents and reports, analytics, and accounts.
 - **Shared rules:**
-  - requests and responses use JSON
+  - every path starts with `/api`
+  - requests and responses use JSON, except file downloads
   - every endpoint except login and the server check needs the login token
-  - a missing or expired token returns 401, a role that is not allowed returns 403, and invalid input returns 422 with the reason
+  - 401 means a missing, expired or revoked token; 403 means the user's role may not use the endpoint; 404 means the item no longer exists; and 422 responses give the reason for each invalid field
 
-The table was generated from the system's own route list and checked against it, so no endpoint is missing or invented. It shows how the rules of the use case diagram are enforced: changes to the schedule, venues and accounts are limited to the Administrator, while task and document management is open to Officers too.
+The endpoints were checked against the system's own route list, so none is missing or invented, and each parameter, response and error was read from the code. The table also shows how the rules of the use case diagram are enforced: changes to the schedule, venues and accounts are limited to the Administrator, while task and document management is open to Officers too.
 
 ### Data Dictionary
 

@@ -1547,7 +1547,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 | [compatibility-table.html](tables/compatibility-table.html) | Software and hardware the system needs, with versions | Chapter 3, technical requirements |
 | [risk-assessment.html](tables/risk-assessment.html) | 16 risks with likelihood, impact, level and how each is mitigated | Chapter 3, risk analysis |
 | [user-journey-map.html](tables/user-journey-map.html) | The four user journey maps as tables: the current process (As-Is) and each role with EMO Tracker (To-Be) | Appendix, user journey maps (confirm the expected emotions during the pilot) |
-| [api-endpoints.html](tables/api-endpoints.html) | All 42 API endpoints: method, path, who can use it, what it does (generated from the route list) | Appendix, API endpoint documentation |
+| [api-endpoints.html](tables/api-endpoints.html) | All 42 API endpoints in the Capstone 1 layout: endpoint, method, auth, parameters, success response and error codes (checked against the route list) | Appendix D, API endpoint documentation |
 
 **Appendix listings** (in the `appendices/` folder next to this file):
 
