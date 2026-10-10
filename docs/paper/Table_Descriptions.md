@@ -65,39 +65,28 @@ The assessment shows that every risk has a mitigation built into the system or i
 
 In the order of the Capstone 1 appendices.
 
-### Source Code: Key Modules
+### Source Code (Key Modules)
 
-**File:** [appendices/source-code.md](appendices/source-code.md)
+**Files:** [appendices/source-code.html](appendices/source-code.html) (copy-ready for Google Docs or Word) and [appendices/source-code.md](appendices/source-code.md) (the same content, readable on GitHub)
 
-This listing presents the key code of EMO Tracker's seven modules, copied from the repository with each file's name and line numbers. Each module starts with a short explanation and the list of files it is made of.
+This listing follows the layout of Appendix D in the Capstone 1 paper.
+- **Summary table:** each module's number, name and primary files.
+- **Each code block:** a title bar with the module and file, the code (copied from the repository with its file name and line numbers), and an explanation.
 
-| Module | Key code shown |
-|---|---|
-| 1. Event Planning and Scheduling | How an event's start, end and status are worked out, how finished events are completed automatically, and how events are added and edited |
-| 2. Task Assignment and Tracking | Adding a task, and the status update with its ownership check and completed-event lock |
-| 3. Rule-Based Readiness Classification | The whole `EventClassifier` class: the rules checked in order and the reason shown with each label |
-| 4. Reports and Document Management | The document upload with its file checks, the private download, and the PDF report |
-| 5. Schedule Management | The Schedule for a year, the Excel export, and merging duplicate venues |
-| 6. Venue Double-Booking Warning | The whole `VenueClashes` class: same venue and room, overlapping days and hours |
-| 7. Data Protection and Migration | The daily backup that runs after the response, the .zip backup of the database and documents, and the cleanup that keeps the newest 14 |
-
-It ends with the supporting code that every module relies on: the login request with its attempt limit, and the role check on every protected request.
-
-### Modules 1 to 7
-
-The seven modules correspond to the system's seven features:
-
-| Module | What it does for the EMO | Who uses it |
+| # | Module | Key code shown |
 |---|---|---|
-| 1. Event Planning and Scheduling | Keeps every event and venue booking, with its type (internal or external), its status (Upcoming, Ongoing, Completed or Cancelled) and a "Rescheduled from" note when it moves; shown as a calendar and a list | Everyone views; the Administrator adds and edits |
-| 2. Task Assignment and Tracking | Breaks each prepared event into tasks with one owner, a due date and a priority; every user has a My tasks page | Administrator and Officers manage; owners update their status |
-| 3. Rule-Based Readiness Classification | Labels each prepared event On Track, At Risk or Critical with a reason, and summarizes the schedule and preparation on the Analytics page | Everyone sees labels; Administrator and Officers use Analytics |
-| 4. Reports and Document Management | Stores event documents privately and generates a PDF report for each event | Administrator and Officers upload; everyone downloads; only the Administrator deletes |
-| 5. Schedule Management | Shows each year's bookings laid out like the EMO's spreadsheet, colored by building, with a managed list of venues and buildings and an Excel export | Everyone views; the Administrator manages venues; Administrator and Officers export |
-| 6. Venue Double-Booking Warning | Warns when an event overlaps another booking at the same venue and time, in the form, the event panel and the Schedule | The Administrator sees it while booking; everyone sees the labels |
-| 7. Data Protection and Migration | Backs up the database and documents daily, restores them when needed, and imported the EMO's existing spreadsheet once | Automatic; the Administrator sees the backup status |
+| 1 | Login and Authentication | The login with its password check and 30-day token; the login attempt limit and the rejection of deactivated accounts' tokens; changing one's own password; the frontend login and token handling |
+| 2 | Event Planning and Scheduling | Adding and editing events, including the reschedule mark; the status lifecycle (upcoming, ongoing, completed) and the automatic completion of finished events |
+| 3 | Task Assignment and Tracking | Adding tasks with one active owner; the status update with its ownership check and completed-event lock |
+| 4 | Rule-Based Event Readiness Classification | The classifier's rules, checked in order; the Analytics statistics by period |
+| 5 | Reports and Document Management | The document upload with its file checks and private storage; the protected download; the PDF report |
+| 6 | User Account Management | Creating, editing and deactivating accounts, with the safeguard that keeps an administrator; signing an account out everywhere |
+| 7 | Role-Based Access Control | The role-checking middleware; the route groups for each role; the frontend route guard |
+| 8 | Schedule and Venue Management | One year of the Schedule and its Excel export; merging duplicate venues |
+| 9 | Venue Double-Booking Warning | The rules that decide whether two bookings clash; the check the event form calls while it is filled in |
+| 10 | Data Protection and Migration | The daily backup after the response; the .zip backup of the database and documents; keeping the newest 14 |
 
-Use this table to introduce the source code listing, or rewrite each row as a short paragraph with the matching screenshots.
+The modules are those of the current system. Modules 1 to 7 keep the order of the Capstone 1 appendix, all with their current code. For example, the login token is now named `emo-tracker`, the login is rate-limited, and deactivated accounts lose their sessions at once. Module 3 is renamed "Task Assignment and Tracking", because any office member, not only Staff, can now own a task. Modules 8 to 10 cover the parts added in Capstone 2.
 
 ### Database Schema (SQL Script)
 

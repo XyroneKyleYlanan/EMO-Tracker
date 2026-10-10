@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker — Source Code (Key Modules)</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 20px; color: #111; }
+  h1 { font-size: 20px; margin: 0 0 6px; }
+  h2 { font-size: 17px; margin: 30px 0 10px; }
+  p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; }
+  table.summary th { background: #1f3864; color: #fff; padding: 9px 10px; border: 1px solid #999; font-size: 15px; }
+  table.summary td { border: 1px solid #bbb; padding: 9px 10px; vertical-align: middle; font-size: 15px; }
+  table.summary td.num { text-align: center; width: 44px; }
+  table.summary td.files { font-family: "Courier New", Courier, monospace; font-size: 12.5px; line-height: 1.55; white-space: pre-line; }
+  table.summary tr.added td { background: #f3f6fb; }
+  table.bar { margin-top: 22px; }
+  table.bar td { background: #1f3864; color: #fff; font-weight: bold; padding: 7px 10px; font-size: 14.5px; border: 1px solid #1f3864; }
+  table.code td { border: 1px solid #999; padding: 8px 10px; background: #fff; }
+  table.code .where { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #666; margin-bottom: 6px; }
+  pre { margin: 0; font-family: "Courier New", Courier, monospace; font-size: 11px; line-height: 1.4; white-space: pre-wrap; }
+  p.expl { font-size: 14.5px; line-height: 1.55; margin: 10px 0 0; }
+</style>
+</head>
+<body>
+<p class="note"><strong>How to use:</strong> Open this file in a browser, select a part, copy (Ctrl+C), and paste into Google Docs or Word. Same layout as the Capstone 1 appendix: the summary table, then each block with a title bar, the code and an explanation. The modules are those of the current system: the Capstone 1 modules with their current code, plus the Schedule and venues, the double-booking warning and data protection added in Capstone 2. Code copied from the repository on October 10, 2026, with file names and line numbers.</p>
+
+<h1>Appendix D - Technical Documentation</h1>
+<h2>Source Code (Key Modules)</h2>
+<table class="summary">
+<tr><th>#</th><th>Module</th><th>Primary File</th></tr>
+<tr><td class="num">1</td><td>Login and Authentication</td><td class="files">Backend: AuthController.php, AppServiceProvider.php
+Frontend: LoginPage.jsx, AuthContext.jsx, api.js</td></tr>
+<tr><td class="num">2</td><td>Event Planning and Scheduling</td><td class="files">Backend: EventController.php, Event.php (model)
+Frontend: EventsPage.jsx, EventCalendarView.jsx, EventListView.jsx, EventFormDialog.jsx</td></tr>
+<tr><td class="num">3</td><td>Task Assignment and Tracking</td><td class="files">Backend: TaskController.php, AssignableMember.php (validation rule)
+Frontend: TaskRow.jsx, TaskFormDialog.jsx, StaffTasksPage.jsx</td></tr>
+<tr><td class="num">4</td><td>Rule-Based Event Readiness Classification</td><td class="files">Backend: EventClassifier.php (service), AnalyticsController.php
+Frontend: AnalyticsPage.jsx, ReadinessDonut.jsx, ReadinessBadge.jsx</td></tr>
+<tr><td class="num">5</td><td>Reports and Document Management</td><td class="files">Backend: ReportController.php, DocumentController.php, event-report.blade.php
+Frontend: EventDetailDrawer.jsx</td></tr>
+<tr><td class="num">6</td><td>User Account Management</td><td class="files">Backend: UserController.php, User.php (model)
+Frontend: StaffManagementPage.jsx, UserFormDialog.jsx, ChangePasswordDialog.jsx</td></tr>
+<tr><td class="num">7</td><td>Role-Based Access Control</td><td class="files">Backend: EnsureUserHasRole.php (middleware), routes/api.php
+Frontend: ProtectedRoute.jsx, App.jsx</td></tr>
+<tr><td class="num">8</td><td>Schedule and Venue Management</td><td class="files">Backend: ScheduleController.php, ScheduleExport.php (service), VenueController.php, BuildingController.php
+Frontend: SchedulePage.jsx, VenuesPage.jsx</td></tr>
+<tr><td class="num">9</td><td>Venue Double-Booking Warning</td><td class="files">Backend: VenueClashes.php (service), EventController.php
+Frontend: ClashWarning.jsx, EventFormDialog.jsx</td></tr>
+<tr><td class="num">10</td><td>Data Protection and Migration</td><td class="files">Backend: Backup.php (service), DailyBackup.php (middleware), ScheduleImport.php (service), routes/console.php
+Frontend: ManagerDashboard.jsx (backup status)</td></tr>
+</table>
+<table class="bar"><tr><td>Module 1 — Login and Authentication | AuthController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/AuthController.php, lines 14–41</div><pre>public function login(Request $request): JsonResponse
+{
+    $credentials = $request-&gt;validate([
+        &#x27;email&#x27; =&gt; [&#x27;required&#x27;, &#x27;email&#x27;],
+        &#x27;password&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;],
+    ]);
+
+    $user = User::where(&#x27;email&#x27;, $credentials[&#x27;email&#x27;])-&gt;first();
+
+    if (! $user || ! Hash::check($credentials[&#x27;password&#x27;], $user-&gt;password)) {
+        throw ValidationException::withMessages([
+            &#x27;email&#x27; =&gt; [&#x27;The provided credentials are incorrect.&#x27;],
+        ]);
+    }
+
+    if (! $user-&gt;is_active) {
+        throw ValidationException::withMessages([
+            &#x27;email&#x27; =&gt; [&#x27;This account has been deactivated.&#x27;],
+        ]);
+    }
+
+    $token = $user-&gt;createToken(&#x27;emo-tracker&#x27;, [&#x27;*&#x27;], now()-&gt;addDays(30))-&gt;plainTextToken;
+
+    return response()-&gt;json([
+        &#x27;token&#x27; =&gt; $token,
+        &#x27;user&#x27; =&gt; $user-&gt;only([&#x27;id&#x27;, &#x27;name&#x27;, &#x27;email&#x27;, &#x27;role&#x27;, &#x27;is_active&#x27;]),
+    ]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> The login() method validates that an email and password were supplied, then looks up the user by email. It verifies the password against the stored bcrypt hash using Laravel&#x27;s Hash::check(); the plain password is never compared directly or stored. The same message is returned whether the email or the password is wrong, so the response does not reveal which accounts exist. Accounts flagged is_active = false are rejected. On success, a Laravel Sanctum bearer token valid for 30 days is issued and returned together with the user&#x27;s basic profile.</p>
+<table class="bar"><tr><td>Module 1 — Login and Authentication | AppServiceProvider.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Providers/AppServiceProvider.php, lines 22–43</div><pre>/**
+ * Bootstrap any application services.
+ */
+public function boot(): void
+{
+    // Tokens belonging to deactivated accounts are rejected on every route.
+    Sanctum::authenticateAccessTokensUsing(
+        fn ($accessToken, bool $isValid) =&gt; $isValid &amp;&amp; $accessToken-&gt;tokenable?-&gt;is_active
+    );
+
+    // Ten tries a minute for each account on each device, so one person&#x27;s
+    // typos (or someone guessing one password) never lock everyone else out.
+    RateLimiter::for(&#x27;login&#x27;, function (Request $request) {
+        $email = $request-&gt;input(&#x27;email&#x27;);
+
+        return Limit::perMinute(10)
+            -&gt;by(Str::lower(is_string($email) ? $email : &#x27;&#x27;).&#x27;|&#x27;.$request-&gt;ip())
+            -&gt;response(fn (Request $request, array $headers) =&gt; response()-&gt;json([
+                &#x27;message&#x27; =&gt; &#x27;Too many login attempts. Wait a minute, then try again.&#x27;,
+            ], 429, $headers));
+    });
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> Two protections added in Capstone 2 are registered when the application starts. First, a token is accepted only while its account is active, so deactivating an account cuts off its sessions at once. Second, the login route is limited to 10 attempts per minute for each combination of email address and device; further attempts receive HTTP 429 with the message &quot;Too many login attempts. Wait a minute, then try again.&quot; Keying the limit by both email and device means one person&#x27;s typing mistakes never lock out the rest of the office.</p>
+<table class="bar"><tr><td>Module 1 — Login and Authentication | AuthController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/AuthController.php, lines 57–78</div><pre>public function changePassword(Request $request): JsonResponse
+{
+    $data = $request-&gt;validate([
+        &#x27;current_password&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;],
+        &#x27;new_password&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;, &#x27;min:8&#x27;, &#x27;confirmed&#x27;],
+    ]);
+
+    $user = $request-&gt;user();
+
+    if (! Hash::check($data[&#x27;current_password&#x27;], $user-&gt;password)) {
+        throw ValidationException::withMessages([
+            &#x27;current_password&#x27; =&gt; [&#x27;The current password is incorrect.&#x27;],
+        ]);
+    }
+
+    $user-&gt;update([&#x27;password&#x27; =&gt; Hash::make($data[&#x27;new_password&#x27;])]);
+
+    // Anyone still signed in elsewhere with the old password is signed out.
+    $user-&gt;signOutEverywhere(except: $user-&gt;currentAccessToken());
+
+    return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;Password changed. Your other devices have been signed out.&#x27;]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> Any signed-in user can change their own password. The current password must be correct, and the new one must have at least 8 characters and be typed twice (the confirmed rule). The new password is stored as a bcrypt hash, and every other session of the account is signed out, so anyone still using the old password elsewhere loses access.</p>
+<table class="bar"><tr><td>Module 1 — Login and Authentication | AuthContext.jsx</td></tr></table>
+<table class="code"><tr><td><div class="where">frontend/src/contexts/AuthContext.jsx, lines 31–37</div><pre>async function login(email, password) {
+  const res = await api.post(&#x27;/login&#x27;, { email, password })
+  localStorage.setItem(&#x27;emo_token&#x27;, res.data.token)
+  localStorage.setItem(&#x27;emo_user&#x27;, JSON.stringify(res.data.user))
+  setUser(res.data.user)
+  return res.data.user
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> On the frontend, login() sends the credentials to the API and keeps the returned token and user profile in the browser&#x27;s local storage, so a page reload keeps the user signed in. The shared API client (api.js) attaches the token to every request as an Authorization: Bearer header, and if the server ever answers 401 (an expired or revoked token), it clears the stored session and returns the user to the login page.</p>
+<table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | EventController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 74–87</div><pre>public function store(Request $request): JsonResponse
+{
+    $data = $this-&gt;validateDetails($request);
+
+    $event = Event::create([
+        ...$data,
+        &#x27;event_type&#x27; =&gt; $data[&#x27;event_type&#x27;] ?? &#x27;internal&#x27;,
+        &#x27;needs_preparation&#x27; =&gt; $data[&#x27;needs_preparation&#x27;] ?? false,
+        &#x27;status&#x27; =&gt; Event::statusForDate($data[&#x27;event_date&#x27;], $data[&#x27;end_date&#x27;] ?? null, $data[&#x27;end_time&#x27;] ?? null),
+        &#x27;created_by&#x27; =&gt; $request-&gt;user()-&gt;id,
+    ]);
+
+    return response()-&gt;json([&#x27;event&#x27; =&gt; $this-&gt;withSummary($event)], 201);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> store() adds an event after validating its details (name, type, department, venue or place, dates and times, control number and remarks). Events are internal unless marked external, and are schedule-only unless the EMO prepares them. The status is not chosen by the user: it is worked out from the event&#x27;s date and time, so an event entered with a past date is stored as completed. The creating Administrator is recorded in created_by.</p>
+<table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | EventController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 89–116</div><pre>public function update(Request $request, Event $event): JsonResponse
+{
+    $data = $this-&gt;validateDetails($request, $event);
+
+    $from = [$event-&gt;event_date-&gt;toDateString(), self::time($event-&gt;event_time)];
+    $event-&gt;fill(collect($data)-&gt;except([&#x27;cancelled&#x27;, &#x27;rescheduled&#x27;])-&gt;all());
+    $to = [$event-&gt;event_date-&gt;toDateString(), self::time($event-&gt;event_time)];
+
+    // A reschedule (rather than a correction) keeps where the event was
+    // first scheduled. Moving it back there means it&#x27;s no longer rescheduled.
+    if ($to !== $from &amp;&amp; $request-&gt;boolean(&#x27;rescheduled&#x27;) &amp;&amp; ! $event-&gt;original_date) {
+        $event-&gt;original_date = $from[0];
+        $event-&gt;original_time = $from[1] ? &quot;{$from[1]}:00&quot; : null;
+    }
+    if ($event-&gt;original_date &amp;&amp; $to === [$event-&gt;original_date-&gt;toDateString(), self::time($event-&gt;original_time)]) {
+        $event-&gt;original_date = null;
+        $event-&gt;original_time = null;
+    }
+
+    // Status follows the date and time, so moving a past event into the
+    // future reopens it and moving one into the past closes it. A cancelled
+    // event stays cancelled until it&#x27;s explicitly restored.
+    $cancelled = $data[&#x27;cancelled&#x27;] ?? $event-&gt;status === &#x27;cancelled&#x27;;
+    $event-&gt;status = $cancelled ? &#x27;cancelled&#x27; : Event::statusForDate($event-&gt;event_date, $event-&gt;end_date, $event-&gt;end_time);
+    $event-&gt;save();
+
+    return response()-&gt;json([&#x27;event&#x27; =&gt; $this-&gt;withSummary($event)]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> update() edits an event and handles two Capstone 2 rules. When the start date or time changes and the Administrator answers that the event was moved (a reschedule rather than a correction), the original date and time are kept, so the system can show &quot;Rescheduled from ...&quot;; moving the event back to its original slot removes the mark. The status is then recalculated from the new date, so a completed event moved to the future reopens, while a cancelled event stays cancelled until it is explicitly restored.</p>
+<table class="bar"><tr><td>Module 2 — Event Planning and Scheduling | Event.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Models/Event.php, lines 126–132, lines 134–137, lines 139–145, lines 153–170</div><pre>// The end time on the last day, or the end of that day.
+public static function endsAt($date, $endDate = null, $endTime = null): Carbon
+{
+    $day = Carbon::parse($endDate ?? $date);
+
+    return $endTime ? $day-&gt;startOfDay()-&gt;setTimeFromTimeString($endTime) : $day-&gt;endOfDay();
+}
+
+public static function statusForDate($date, $endDate = null, $endTime = null): string
+{
+    return self::endsAt($date, $endDate, $endTime)-&gt;isFuture() ? &#x27;upcoming&#x27; : &#x27;completed&#x27;;
+}
+
+public function getOngoingAttribute(): bool
+{
+    return $this-&gt;status === &#x27;upcoming&#x27;
+        &amp;&amp; $this-&gt;event_date !== null
+        &amp;&amp; ! self::startsAt($this-&gt;event_date, $this-&gt;event_time)-&gt;isFuture()
+        &amp;&amp; self::endsAt($this-&gt;event_date, $this-&gt;end_date, $this-&gt;end_time)-&gt;isFuture();
+}
+
+public static function completePastEvents(): void
+{
+    $today = today()-&gt;toDateString();
+    $lastDay = fn ($q) =&gt; $q
+        -&gt;where(fn ($single) =&gt; $single-&gt;whereNull(&#x27;end_date&#x27;)-&gt;whereDate(&#x27;event_date&#x27;, $today))
+        -&gt;orWhereDate(&#x27;end_date&#x27;, $today);
+
+    static::where(&#x27;status&#x27;, &#x27;upcoming&#x27;)
+        -&gt;where(fn ($q) =&gt; $q
+            -&gt;where(fn ($single) =&gt; $single-&gt;whereNull(&#x27;end_date&#x27;)-&gt;whereDate(&#x27;event_date&#x27;, &#x27;&lt;&#x27;, $today))
+            -&gt;orWhereDate(&#x27;end_date&#x27;, &#x27;&lt;&#x27;, $today)
+            // Ended earlier today.
+            -&gt;orWhere(fn ($endedToday) =&gt; $endedToday
+                -&gt;whereNotNull(&#x27;end_time&#x27;)
+                -&gt;whereTime(&#x27;end_time&#x27;, &#x27;&lt;=&#x27;, now()-&gt;format(&#x27;H:i:s&#x27;))
+                -&gt;where($lastDay)))
+        -&gt;update([&#x27;status&#x27; =&gt; &#x27;completed&#x27;]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> These methods implement the event status lifecycle. Only upcoming, completed and cancelled are stored. endsAt() finds when an event ends (its end time on the last day, or the end of that day), and statusForDate() uses it to decide between upcoming and completed. Ongoing is not stored: getOngoingAttribute() computes it for an upcoming event that has started but not ended. completePastEvents() runs at the start of every API request and marks every finished event completed in one database update, so a past event&#x27;s tasks are locked even if nobody opens it.</p>
+<table class="bar"><tr><td>Module 3 — Task Assignment and Tracking | TaskController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/TaskController.php, lines 50–90</div><pre>public function store(Request $request, Event $event): JsonResponse
+{
+    if ($event-&gt;status === &#x27;cancelled&#x27;) {
+        return response()-&gt;json([
+            &#x27;message&#x27; =&gt; &#x27;This event is cancelled. Restore it before adding tasks.&#x27;,
+        ], 422);
+    }
+
+    if ($event-&gt;status === &#x27;completed&#x27; &amp;&amp; $request-&gt;user()-&gt;role !== &#x27;admin&#x27;) {
+        return response()-&gt;json([
+            &#x27;message&#x27; =&gt; &#x27;This event is completed. Only an administrator can add tasks to it.&#x27;,
+        ], 403);
+    }
+
+    $data = $request-&gt;validate([
+        &#x27;name&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;, &#x27;max:255&#x27;],
+        &#x27;description&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;string&#x27;],
+        &#x27;due_date&#x27; =&gt; [&#x27;required&#x27;, &#x27;date&#x27;],
+        &#x27;status&#x27; =&gt; [&#x27;nullable&#x27;, Rule::in([&#x27;pending&#x27;, &#x27;in_progress&#x27;, &#x27;done&#x27;])],
+        &#x27;priority&#x27; =&gt; [&#x27;nullable&#x27;, Rule::in([&#x27;low&#x27;, &#x27;medium&#x27;, &#x27;high&#x27;])],
+        &#x27;assigned_to&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;integer&#x27;, new AssignableMember],
+    ]);
+
+    $task = $event-&gt;tasks()-&gt;create([
+        &#x27;name&#x27; =&gt; $data[&#x27;name&#x27;],
+        &#x27;description&#x27; =&gt; $data[&#x27;description&#x27;] ?? null,
+        &#x27;due_date&#x27; =&gt; $data[&#x27;due_date&#x27;],
+        &#x27;status&#x27; =&gt; $data[&#x27;status&#x27;] ?? &#x27;pending&#x27;,
+        &#x27;priority&#x27; =&gt; $data[&#x27;priority&#x27;] ?? &#x27;medium&#x27;,
+        &#x27;assigned_to&#x27; =&gt; $data[&#x27;assigned_to&#x27;] ?? null,
+    ]);
+
+    // Planning tasks for an event means the EMO is preparing it.
+    if (! $event-&gt;needs_preparation) {
+        $event-&gt;update([&#x27;needs_preparation&#x27; =&gt; true]);
+    }
+
+    $task-&gt;load(&#x27;assignee:id,name,email,role&#x27;);
+
+    return response()-&gt;json([&#x27;task&#x27; =&gt; $task], 201);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> store() adds a task to an event. Tasks cannot be added to a cancelled event, and only the Administrator can add them to a completed one. Each task has a name, an optional description, a due date, a status, a priority and at most one owner; the AssignableMember rule accepts only active members as owners (any role, since every office member can take tasks). Adding the first task to an event marks it as one the EMO prepares, which turns on its readiness tracking.</p>
+<table class="bar"><tr><td>Module 3 — Task Assignment and Tracking | TaskController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/TaskController.php, lines 115–139</div><pre>public function updateStatus(Request $request, Task $task): JsonResponse
+{
+    $user = $request-&gt;user();
+    $isOwner = $task-&gt;assigned_to === $user-&gt;id;
+    $canManage = in_array($user-&gt;role, [&#x27;admin&#x27;, &#x27;officer&#x27;], true);
+
+    if (! $isOwner &amp;&amp; ! $canManage) {
+        return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;You can only update your own tasks.&#x27;], 403);
+    }
+
+    if ($task-&gt;event-&gt;status === &#x27;completed&#x27; &amp;&amp; $user-&gt;role !== &#x27;admin&#x27;) {
+        return response()-&gt;json([
+            &#x27;message&#x27; =&gt; &#x27;This event is completed. Only an administrator can modify its tasks.&#x27;,
+        ], 403);
+    }
+
+    $data = $request-&gt;validate([
+        &#x27;status&#x27; =&gt; [&#x27;required&#x27;, Rule::in([&#x27;pending&#x27;, &#x27;in_progress&#x27;, &#x27;done&#x27;])],
+    ]);
+
+    $task-&gt;update($data);
+    $task-&gt;load(&#x27;assignee:id,name,email,role&#x27;);
+
+    return response()-&gt;json([&#x27;task&#x27; =&gt; $task]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> updateStatus() changes a task&#x27;s status (pending, in progress or done). Staff may change only the tasks they own, while Officers and the Administrator may change any task. When an event is completed its tasks become a record, so only the Administrator can still change them. These checks run on the server, so they hold even for requests that do not come from the user interface.</p>
+<table class="bar"><tr><td>Module 4 — Rule-Based Event Readiness Classification | EventClassifier.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Services/EventClassifier.php, lines 28–90</div><pre>/**
+ * @return array{0: string, 1: ?string}
+ */
+private static function assess(Event $event): array
+{
+    if ($event-&gt;status === &#x27;cancelled&#x27;) {
+        return [&#x27;cancelled&#x27;, null];
+    }
+
+    if ($event-&gt;status === &#x27;completed&#x27;) {
+        return [&#x27;completed&#x27;, null];
+    }
+
+    // Events the EMO only schedules (not prepares) aren&#x27;t classified.
+    if (! $event-&gt;needs_preparation) {
+        return [&#x27;scheduled&#x27;, null];
+    }
+
+    $tasks = $event-&gt;relationLoaded(&#x27;tasks&#x27;) ? $event-&gt;tasks : $event-&gt;tasks()-&gt;get();
+
+    if ($tasks-&gt;isEmpty()) {
+        return [&#x27;yellow&#x27;, &#x27;No tasks yet&#x27;];
+    }
+
+    $open = $tasks-&gt;where(&#x27;status&#x27;, &#x27;!=&#x27;, &#x27;done&#x27;);
+
+    // Nothing left to do: the event is ready no matter how close it is.
+    if ($open-&gt;isEmpty()) {
+        return [&#x27;green&#x27;, &#x27;All tasks done&#x27;];
+    }
+
+    $today = Carbon::today();
+    $days = (int) $today-&gt;diffInDays(Carbon::parse($event-&gt;event_date), false);
+    $donePct = ($tasks-&gt;count() - $open-&gt;count()) / $tasks-&gt;count() * 100;
+    $done = (int) floor($donePct).&#x27;% done&#x27;;
+    $toGo = &quot;{$days} days to go&quot;;
+    $overdue = $open-&gt;filter(fn ($task) =&gt; $task-&gt;due_date?-&gt;lt($today))-&gt;count();
+    $ownerless = $open-&gt;whereNull(&#x27;assigned_to&#x27;)-&gt;count();
+
+    // Critical
+    if ($overdue &gt; 0) {
+        return [&#x27;red&#x27;, $overdue === 1 ? &#x27;1 task is overdue&#x27; : &quot;{$overdue} tasks are overdue&quot;];
+    }
+    if ($days &lt;= 2) {
+        return [&#x27;red&#x27;, self::count($open-&gt;count(), &#x27;task&#x27;).&#x27; still open, &#x27;.self::when($days)];
+    }
+    if ($days &lt;= 7 &amp;&amp; $donePct &lt; 40) {
+        return [&#x27;red&#x27;, &quot;Only {$done}, {$toGo}&quot;];
+    }
+    if ($days &lt;= 7 &amp;&amp; $ownerless * 2 &gt; $open-&gt;count()) {
+        return [&#x27;red&#x27;, &quot;{$ownerless} of {$open-&gt;count()} open tasks have no owner, {$toGo}&quot;];
+    }
+
+    // At Risk
+    if ($days &lt;= 14 &amp;&amp; $donePct &lt; 70) {
+        return [&#x27;yellow&#x27;, &quot;{$done}, {$toGo}&quot;];
+    }
+    if ($ownerless &gt; 0) {
+        return [&#x27;yellow&#x27;, self::count($ownerless, &#x27;open task&#x27;).($ownerless === 1 ? &#x27; has&#x27; : &#x27; have&#x27;).&#x27; no owner&#x27;];
+    }
+
+    return [&#x27;green&#x27;, &quot;{$done}, nothing overdue&quot;];
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> assess() is the rule-based classifier. It checks a fixed list of rules in order, and the first rule that matches decides both the label and the reason shown to users. Cancelled, completed and schedule-only events are not classified. An event with no tasks is At Risk, and one whose tasks are all done is On Track. Otherwise it is Critical if a task is overdue, if it is two days away or less, or if it is seven days away or less with under 40% of its tasks done or with more than half of its open tasks unassigned. It is At Risk if it is fourteen days away or less with under 70% done, or if any open task has no owner; in every other case it is On Track. The classifier uses no machine learning or outside service, and its thresholds can be adjusted in this one class.</p>
+<table class="bar"><tr><td>Module 4 — Rule-Based Event Readiness Classification | AnalyticsController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/AnalyticsController.php, lines 14–38</div><pre>public function index(Request $request): JsonResponse
+{
+    $period = $request-&gt;input(&#x27;period&#x27;, &#x27;all&#x27;);
+
+    // Calendar periods, like a report: this week (Sunday to Saturday, as on
+    // the calendar), this month, this year. Events count by their start date.
+    $range = match ($period) {
+        &#x27;week&#x27; =&gt; [today()-&gt;startOfWeek(CarbonInterface::SUNDAY), today()-&gt;endOfWeek(CarbonInterface::SATURDAY)],
+        &#x27;month&#x27; =&gt; [today()-&gt;startOfMonth(), today()-&gt;endOfMonth()],
+        &#x27;year&#x27; =&gt; [today()-&gt;startOfYear(), today()-&gt;endOfYear()],
+        default =&gt; null,
+    };
+    $inPeriod = fn ($query) =&gt; $range
+        ? $query-&gt;whereDate(&#x27;event_date&#x27;, &#x27;&gt;=&#x27;, $range[0])-&gt;whereDate(&#x27;event_date&#x27;, &#x27;&lt;=&#x27;, $range[1])
+        : $query;
+
+    return response()-&gt;json([
+        &#x27;period&#x27; =&gt; $period,
+        &#x27;schedule&#x27; =&gt; $this-&gt;schedule($inPeriod(Event::with(&#x27;venue:id,name&#x27;))-&gt;get()),
+        ...$this-&gt;preparation($inPeriod(Event::with([Event::READINESS_TASKS, &#x27;venue:id,name&#x27;]))
+            -&gt;where(&#x27;needs_preparation&#x27;, true)
+            -&gt;where(&#x27;status&#x27;, &#x27;!=&#x27;, &#x27;cancelled&#x27;)
+            -&gt;get()),
+    ]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, busiest venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.</p>
+<table class="bar"><tr><td>Module 5 — Reports and Document Management | DocumentController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/DocumentController.php, lines 26–60, lines 62–67</div><pre>public function store(Request $request, Event $event): JsonResponse
+{
+    // PHP turns away a file over its own limit before the app sees it.
+    $upload = $request-&gt;file(&#x27;file&#x27;);
+    $overLimit = $upload instanceof UploadedFile
+        &amp;&amp; in_array($upload-&gt;getError(), [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true);
+
+    $request-&gt;validate([
+        &#x27;file&#x27; =&gt; [
+            &#x27;required&#x27;,
+            &#x27;file&#x27;,
+            &#x27;mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png&#x27;,
+            &#x27;max:&#x27;.Document::MAX_UPLOAD_KB,
+        ],
+    ], [
+        &#x27;file.uploaded&#x27; =&gt; $overLimit ? Document::tooLargeMessage() : &quot;The file didn&#x27;t upload completely. Please try again.&quot;,
+        &#x27;file.max&#x27; =&gt; Document::tooLargeMessage(),
+        &#x27;file.mimes&#x27; =&gt; &quot;This kind of file isn&#x27;t accepted. Use a PDF, Word, Excel, JPG or PNG file.&quot;,
+    ]);
+
+    $file = $request-&gt;file(&#x27;file&#x27;);
+    $path = $file-&gt;store($event-&gt;documentsFolder(), &#x27;local&#x27;);
+
+    $doc = $event-&gt;documents()-&gt;create([
+        &#x27;uploaded_by&#x27; =&gt; $request-&gt;user()-&gt;id,
+        &#x27;file_name&#x27; =&gt; $file-&gt;getClientOriginalName(),
+        &#x27;file_path&#x27; =&gt; $path,
+        &#x27;file_size&#x27; =&gt; $file-&gt;getSize(),
+        &#x27;mime_type&#x27; =&gt; $file-&gt;getMimeType(),
+    ]);
+
+    $doc-&gt;load(&#x27;uploader:id,name&#x27;);
+
+    return response()-&gt;json([&#x27;document&#x27; =&gt; $doc], 201);
+}
+
+public function download(Document $document): StreamedResponse
+{
+    abort_unless(Storage::disk(&#x27;local&#x27;)-&gt;exists($document-&gt;file_path), 404);
+
+    return Storage::disk(&#x27;local&#x27;)-&gt;download($document-&gt;file_path, $document-&gt;file_name);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> store() accepts an uploaded file only if it is a PDF, Word, Excel, JPG or PNG file of up to 10 MB, and explains the reason when a file is refused (including files PHP turns away for size before the application sees them). Accepted files are saved in private storage, in a folder for their event, never in a public folder, and their name, size, type and uploader are recorded. download() serves a file only through this authenticated route. Uploading is limited to Officers and the Administrator, and deleting to the Administrator, so documents stay part of the event&#x27;s record.</p>
+<table class="bar"><tr><td>Module 5 — Reports and Document Management | ReportController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ReportController.php, lines 13–43</div><pre>public function event(Event $event): Response
+{
+    $event-&gt;load([
+        &#x27;tasks.assignee:id,name,email,role&#x27;,
+        &#x27;creator:id,name&#x27;,
+        &#x27;documents.uploader:id,name&#x27;,
+        &#x27;venue&#x27;,
+    ]);
+
+    $taskSummary = [
+        &#x27;total&#x27; =&gt; $event-&gt;tasks-&gt;count(),
+        &#x27;done&#x27; =&gt; $event-&gt;tasks-&gt;where(&#x27;status&#x27;, &#x27;done&#x27;)-&gt;count(),
+        &#x27;in_progress&#x27; =&gt; $event-&gt;tasks-&gt;where(&#x27;status&#x27;, &#x27;in_progress&#x27;)-&gt;count(),
+        &#x27;pending&#x27; =&gt; $event-&gt;tasks-&gt;where(&#x27;status&#x27;, &#x27;pending&#x27;)-&gt;count(),
+    ];
+    $taskSummary[&#x27;percent&#x27;] = $taskSummary[&#x27;total&#x27;] &gt; 0
+        ? round(($taskSummary[&#x27;done&#x27;] / $taskSummary[&#x27;total&#x27;]) * 100)
+        : 0;
+
+    $pdf = Pdf::loadView(&#x27;pdf.event-report&#x27;, [
+        &#x27;event&#x27; =&gt; $event,
+        &#x27;taskSummary&#x27; =&gt; $taskSummary,
+        // The people on an event are everyone with a task on it.
+        &#x27;people&#x27; =&gt; $event-&gt;tasks-&gt;pluck(&#x27;assignee&#x27;)-&gt;filter()-&gt;unique(&#x27;id&#x27;)-&gt;sortBy(&#x27;name&#x27;)-&gt;values(),
+        &#x27;generatedAt&#x27; =&gt; now(),
+    ])-&gt;setPaper(&#x27;a4&#x27;);
+
+    $filename = &#x27;event-report-&#x27;.Str::slug($event-&gt;name).&#x27;.pdf&#x27;;
+
+    return $pdf-&gt;download($filename);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> event() generates an event&#x27;s PDF report on the server with dompdf. It loads the event with its tasks and their owners, creator, documents and venue, computes the task summary (total, done, in progress, pending and the completion percentage), and renders the event-report template, which also shows the readiness label and its reason. Because the PDF is built on the server, it looks the same whichever device downloads it.</p>
+<table class="bar"><tr><td>Module 6 — User Account Management | UserController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/UserController.php, lines 25–46, lines 55–90, lines 92–102</div><pre>public function store(Request $request): JsonResponse
+{
+    $data = $request-&gt;validate([
+        &#x27;name&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;, &#x27;max:255&#x27;],
+        &#x27;email&#x27; =&gt; [&#x27;required&#x27;, &#x27;email&#x27;, &#x27;unique:users,email&#x27;],
+        &#x27;password&#x27; =&gt; [&#x27;required&#x27;, &#x27;string&#x27;, &#x27;min:8&#x27;],
+        &#x27;role&#x27; =&gt; [&#x27;required&#x27;, Rule::in([&#x27;admin&#x27;, &#x27;officer&#x27;, &#x27;staff&#x27;])],
+    ]);
+
+    $user = User::create([
+        &#x27;name&#x27; =&gt; $data[&#x27;name&#x27;],
+        &#x27;email&#x27; =&gt; $data[&#x27;email&#x27;],
+        &#x27;password&#x27; =&gt; Hash::make($data[&#x27;password&#x27;]),
+        &#x27;role&#x27; =&gt; $data[&#x27;role&#x27;],
+        &#x27;is_active&#x27; =&gt; true,
+        &#x27;email_verified_at&#x27; =&gt; now(),
+    ]);
+
+    return response()-&gt;json([
+        &#x27;user&#x27; =&gt; $user-&gt;only([&#x27;id&#x27;, &#x27;name&#x27;, &#x27;email&#x27;, &#x27;role&#x27;, &#x27;is_active&#x27;]),
+    ], 201);
+}
+
+public function update(Request $request, User $user): JsonResponse
+{
+    $data = $request-&gt;validate([
+        &#x27;name&#x27; =&gt; [&#x27;sometimes&#x27;, &#x27;string&#x27;, &#x27;max:255&#x27;],
+        &#x27;email&#x27; =&gt; [&#x27;sometimes&#x27;, &#x27;email&#x27;, Rule::unique(&#x27;users&#x27;, &#x27;email&#x27;)-&gt;ignore($user-&gt;id)],
+        &#x27;role&#x27; =&gt; [&#x27;sometimes&#x27;, Rule::in([&#x27;admin&#x27;, &#x27;officer&#x27;, &#x27;staff&#x27;])],
+        &#x27;is_active&#x27; =&gt; [&#x27;sometimes&#x27;, &#x27;boolean&#x27;],
+        &#x27;password&#x27; =&gt; [&#x27;sometimes&#x27;, &#x27;string&#x27;, &#x27;min:8&#x27;],
+    ]);
+
+    // Keeps at least one active admin: the acting admin can&#x27;t lock themselves out.
+    if ($user-&gt;id === $request-&gt;user()-&gt;id) {
+        if (array_key_exists(&#x27;is_active&#x27;, $data) &amp;&amp; ! $data[&#x27;is_active&#x27;]) {
+            return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;You cannot deactivate yourself.&#x27;], 422);
+        }
+        if (array_key_exists(&#x27;role&#x27;, $data) &amp;&amp; $data[&#x27;role&#x27;] !== &#x27;admin&#x27;) {
+            return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;You cannot remove your own administrator role.&#x27;], 422);
+        }
+    }
+
+    if (isset($data[&#x27;password&#x27;])) {
+        $data[&#x27;password&#x27;] = Hash::make($data[&#x27;password&#x27;]);
+    }
+
+    $user-&gt;update($data);
+
+    // A deactivated account, or one given a new password, is signed out
+    // everywhere (an admin resetting their own stays signed in here).
+    if (! $user-&gt;is_active || isset($data[&#x27;password&#x27;])) {
+        $user-&gt;signOutEverywhere(except: $user-&gt;is($request-&gt;user()) ? $request-&gt;user()-&gt;currentAccessToken() : null);
+    }
+
+    return response()-&gt;json([
+        &#x27;user&#x27; =&gt; $user-&gt;fresh()-&gt;only([&#x27;id&#x27;, &#x27;name&#x27;, &#x27;email&#x27;, &#x27;role&#x27;, &#x27;is_active&#x27;]),
+    ]);
+}
+
+public function destroy(User $user, Request $request): JsonResponse
+{
+    if ($user-&gt;id === $request-&gt;user()-&gt;id) {
+        return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;You cannot deactivate yourself.&#x27;], 422);
+    }
+
+    $user-&gt;update([&#x27;is_active&#x27; =&gt; false]);
+    $user-&gt;tokens()-&gt;delete();
+
+    return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;User deactivated.&#x27;]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> Only the Administrator manages accounts; there is no public registration. store() creates an account with a unique email, a password of at least 8 characters (stored as a bcrypt hash) and a role. update() edits the name, email, role or status, or sets a new password, but stops the Administrator from deactivating themselves or removing their own administrator role, so the office always keeps an administrator. destroy() does not delete the account: it deactivates it, so the events, tasks and documents the person created keep their author. A deactivated account, or one given a new password, is signed out on every device.</p>
+<table class="bar"><tr><td>Module 6 — User Account Management | User.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Models/User.php, lines 55–63</div><pre>/**
+ * Signs the account out on every device, optionally keeping the one in use.
+ */
+public function signOutEverywhere(mixed $except = null): void
+{
+    $this-&gt;tokens()
+        -&gt;when($except instanceof PersonalAccessToken, fn ($tokens) =&gt; $tokens-&gt;whereKeyNot($except-&gt;getKey()))
+        -&gt;delete();
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> signOutEverywhere() deletes the account&#x27;s login tokens, optionally keeping the one in use, so the current device stays signed in when a user changes their own password. It is used when users change their own password, and when the Administrator sets a new password or turns an account off in the edit form. (The Deactivate button signs an account out the same way, by deleting all of its tokens.)</p>
+<table class="bar"><tr><td>Module 7 — Role-Based Access Control | EnsureUserHasRole.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Middleware/EnsureUserHasRole.php, lines 11–28</div><pre>public function handle(Request $request, Closure $next, string ...$roles): Response
+{
+    $user = $request-&gt;user();
+
+    if (! $user) {
+        return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;Unauthenticated.&#x27;], 401);
+    }
+
+    if (! $user-&gt;is_active) {
+        return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;Account is deactivated.&#x27;], 403);
+    }
+
+    if (! in_array($user-&gt;role, $roles, true)) {
+        return response()-&gt;json([&#x27;message&#x27; =&gt; &#x27;You do not have permission to access this resource.&#x27;], 403);
+    }
+
+    return $next($request);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> This middleware guards every role-restricted route. It rejects requests without a valid login (401) and from deactivated accounts (403), then allows the request only if the user&#x27;s role is one of the roles the route lists; otherwise it answers 403 with &quot;You do not have permission to access this resource.&quot;</p>
+<table class="bar"><tr><td>Module 7 — Role-Based Access Control | api.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/routes/api.php, lines 24–83</div><pre>Route::post(&#x27;/login&#x27;, [AuthController::class, &#x27;login&#x27;])-&gt;middleware(&#x27;throttle:login&#x27;);
+
+Route::middleware(&#x27;auth:sanctum&#x27;)-&gt;group(function () {
+    Route::get(&#x27;/me&#x27;, [AuthController::class, &#x27;me&#x27;]);
+    Route::post(&#x27;/logout&#x27;, [AuthController::class, &#x27;logout&#x27;]);
+    Route::post(&#x27;/change-password&#x27;, [AuthController::class, &#x27;changePassword&#x27;]);
+
+    Route::middleware(&#x27;role:admin&#x27;)-&gt;get(&#x27;/dashboard/admin&#x27;, [DashboardController::class, &#x27;admin&#x27;]);
+    Route::middleware(&#x27;role:admin,officer&#x27;)-&gt;get(&#x27;/dashboard/officer&#x27;, [DashboardController::class, &#x27;officer&#x27;]);
+    Route::middleware(&#x27;role:staff&#x27;)-&gt;get(&#x27;/dashboard/staff&#x27;, [DashboardController::class, &#x27;staff&#x27;]);
+
+    Route::get(&#x27;/events&#x27;, [EventController::class, &#x27;index&#x27;]);
+    Route::get(&#x27;/events/{event}&#x27;, [EventController::class, &#x27;show&#x27;]);
+    Route::get(&#x27;/events/{event}/tasks&#x27;, [TaskController::class, &#x27;index&#x27;]);
+    Route::get(&#x27;/events/{event}/documents&#x27;, [DocumentController::class, &#x27;index&#x27;]);
+    Route::get(&#x27;/events/{event}/report&#x27;, [ReportController::class, &#x27;event&#x27;]);
+    Route::get(&#x27;/documents/{document}/download&#x27;, [DocumentController::class, &#x27;download&#x27;]);
+
+    Route::get(&#x27;/schedule&#x27;, [ScheduleController::class, &#x27;index&#x27;]);
+    Route::get(&#x27;/venues&#x27;, [VenueController::class, &#x27;index&#x27;]);
+
+    Route::get(&#x27;/my-tasks&#x27;, [TaskController::class, &#x27;myTasks&#x27;]);
+    Route::patch(&#x27;/tasks/{task}/status&#x27;, [TaskController::class, &#x27;updateStatus&#x27;]);
+
+    Route::middleware(&#x27;role:admin,officer&#x27;)-&gt;group(function () {
+        Route::get(&#x27;/analytics&#x27;, [AnalyticsController::class, &#x27;index&#x27;]);
+        Route::get(&#x27;/schedule/export&#x27;, [ScheduleController::class, &#x27;export&#x27;]);
+        Route::post(&#x27;/events/{event}/tasks&#x27;, [TaskController::class, &#x27;store&#x27;]);
+        Route::put(&#x27;/tasks/{task}&#x27;, [TaskController::class, &#x27;update&#x27;]);
+        Route::patch(&#x27;/tasks/{task}&#x27;, [TaskController::class, &#x27;update&#x27;]);
+        Route::delete(&#x27;/tasks/{task}&#x27;, [TaskController::class, &#x27;destroy&#x27;]);
+        Route::post(&#x27;/events/{event}/documents&#x27;, [DocumentController::class, &#x27;store&#x27;]);
+        Route::get(&#x27;/users&#x27;, [UserController::class, &#x27;index&#x27;]);
+    });
+
+    // The admin owns the schedule: event details (date, time, venue, ...) are admin-only.
+    // Officers handle preparation: tasks, documents and reports. Documents are
+    // records, so once uploaded only the admin can delete them.
+    Route::middleware(&#x27;role:admin&#x27;)-&gt;group(function () {
+        Route::delete(&#x27;/documents/{document}&#x27;, [DocumentController::class, &#x27;destroy&#x27;]);
+        Route::post(&#x27;/events&#x27;, [EventController::class, &#x27;store&#x27;]);
+        Route::put(&#x27;/events/{event}&#x27;, [EventController::class, &#x27;update&#x27;]);
+        Route::patch(&#x27;/events/{event}&#x27;, [EventController::class, &#x27;update&#x27;]);
+        Route::delete(&#x27;/events/{event}&#x27;, [EventController::class, &#x27;destroy&#x27;]);
+        Route::get(&#x27;/departments&#x27;, [EventController::class, &#x27;departments&#x27;]);
+        Route::get(&#x27;/event-clashes&#x27;, [EventController::class, &#x27;clashes&#x27;]);
+        Route::post(&#x27;/venues&#x27;, [VenueController::class, &#x27;store&#x27;]);
+        Route::put(&#x27;/venues/{venue}&#x27;, [VenueController::class, &#x27;update&#x27;]);
+        Route::delete(&#x27;/venues/{venue}&#x27;, [VenueController::class, &#x27;destroy&#x27;]);
+        Route::post(&#x27;/venues/{venue}/merge&#x27;, [VenueController::class, &#x27;merge&#x27;]);
+        Route::post(&#x27;/buildings&#x27;, [BuildingController::class, &#x27;store&#x27;]);
+        Route::put(&#x27;/buildings/{building}&#x27;, [BuildingController::class, &#x27;update&#x27;]);
+        Route::delete(&#x27;/buildings/{building}&#x27;, [BuildingController::class, &#x27;destroy&#x27;]);
+        Route::post(&#x27;/users&#x27;, [UserController::class, &#x27;store&#x27;]);
+        Route::get(&#x27;/users/{user}&#x27;, [UserController::class, &#x27;show&#x27;]);
+        Route::put(&#x27;/users/{user}&#x27;, [UserController::class, &#x27;update&#x27;]);
+        Route::patch(&#x27;/users/{user}&#x27;, [UserController::class, &#x27;update&#x27;]);
+        Route::delete(&#x27;/users/{user}&#x27;, [UserController::class, &#x27;destroy&#x27;]);
+    });
+});</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> The routes file applies the rules above to every endpoint. Login is public but rate-limited. Everything else requires a valid token (auth:sanctum). Within that, routes are grouped by role: any signed-in user can view events, the Schedule, tasks and documents and update their own task status; Officers and the Administrator can manage tasks, upload documents, view Analytics and export the Schedule; and only the Administrator can change events, venues, buildings and accounts, or delete documents.</p>
+<table class="bar"><tr><td>Module 7 — Role-Based Access Control | ProtectedRoute.jsx</td></tr></table>
+<table class="code"><tr><td><div class="where">frontend/src/components/ProtectedRoute.jsx, lines 1–24</div><pre>import { Navigate } from &#x27;react-router-dom&#x27;
+import { useAuth } from &#x27;../contexts/auth&#x27;
+
+export default function ProtectedRoute({ children, allowedRoles }) {
+  const { user, loading } = useAuth()
+
+  if (loading) {
+    return (
+      &lt;div className=&quot;min-h-screen flex items-center justify-center bg-gray-50&quot;&gt;
+        &lt;div className=&quot;text-gray-500 text-sm&quot;&gt;Loading...&lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+
+  if (!user) {
+    return &lt;Navigate to=&quot;/login&quot; replace /&gt;
+  }
+
+  if (allowedRoles &amp;&amp; !allowedRoles.includes(user.role)) {
+    return &lt;Navigate to={`/${user.role}`} replace /&gt;
+  }
+
+  return children
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> On the frontend, ProtectedRoute wraps each role&#x27;s pages. It waits while a saved session is being checked, sends a signed-out visitor to the login page, and sends a signed-in user who opens another role&#x27;s address back to their own Home page. This keeps the interface tidy, but the real protection is the server-side check above, which cannot be bypassed from the browser.</p>
+<table class="bar"><tr><td>Module 8 — Schedule and Venue Management | ScheduleController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ScheduleController.php, lines 18–55, lines 57–65</div><pre>public function index(Request $request): JsonResponse
+{
+    $years = Event::pluck(&#x27;event_date&#x27;)-&gt;map-&gt;year-&gt;push(today()-&gt;year)-&gt;unique()-&gt;sort()-&gt;values();
+    $year = (int) $request-&gt;input(&#x27;year&#x27;, today()-&gt;year);
+
+    $events = Event::with([&#x27;venue.building&#x27;, Event::READINESS_TASKS])
+        -&gt;whereYear(&#x27;event_date&#x27;, $year)
+        -&gt;orderBy(&#x27;event_date&#x27;)
+        -&gt;orderBy(&#x27;event_time&#x27;)
+        -&gt;get();
+
+    // Double bookings matter for events still to come; past ones can&#x27;t be fixed.
+    $clashes = VenueClashes::within($events);
+
+    $rows = $events-&gt;map(fn (Event $e) =&gt; [
+        &#x27;id&#x27; =&gt; $e-&gt;id,
+        &#x27;name&#x27; =&gt; $e-&gt;name,
+        &#x27;event_type&#x27; =&gt; $e-&gt;event_type,
+        &#x27;department&#x27; =&gt; $e-&gt;department,
+        &#x27;event_date&#x27; =&gt; $e-&gt;event_date-&gt;toDateString(),
+        &#x27;end_date&#x27; =&gt; $e-&gt;end_date?-&gt;toDateString(),
+        &#x27;event_time&#x27; =&gt; $e-&gt;event_time,
+        &#x27;end_time&#x27; =&gt; $e-&gt;end_time,
+        &#x27;original_date&#x27; =&gt; $e-&gt;original_date?-&gt;toDateString(),
+        &#x27;original_time&#x27; =&gt; $e-&gt;original_time,
+        &#x27;location&#x27; =&gt; $e-&gt;location,
+        &#x27;building&#x27; =&gt; $e-&gt;venue?-&gt;building?-&gt;only([&#x27;id&#x27;, &#x27;name&#x27;, &#x27;color&#x27;]),
+        &#x27;control_number&#x27; =&gt; $e-&gt;control_number,
+        &#x27;remarks&#x27; =&gt; $e-&gt;remarks,
+        &#x27;status&#x27; =&gt; $e-&gt;status,
+        &#x27;ongoing&#x27; =&gt; $e-&gt;ongoing,
+        &#x27;clashes&#x27; =&gt; $e-&gt;status === &#x27;upcoming&#x27; ? collect($clashes[$e-&gt;id] ?? [])-&gt;pluck(&#x27;name&#x27;)-&gt;values() : [],
+        &#x27;readiness&#x27; =&gt; $e-&gt;readiness,
+        &#x27;needs_preparation&#x27; =&gt; $e-&gt;needs_preparation,
+    ]);
+
+    return response()-&gt;json([&#x27;year&#x27; =&gt; $year, &#x27;current_year&#x27; =&gt; today()-&gt;year, &#x27;years&#x27; =&gt; $years, &#x27;events&#x27; =&gt; $rows]);
+}
+
+public function export(Request $request): Response
+{
+    $year = (int) $request-&gt;input(&#x27;year&#x27;, today()-&gt;year);
+
+    return response(ScheduleExport::build($year), 200, [
+        &#x27;Content-Type&#x27; =&gt; &#x27;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&#x27;,
+        &#x27;Content-Disposition&#x27; =&gt; &quot;attachment; filename=\&quot;emo-schedule-{$year}.xlsx\&quot;&quot;,
+    ]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> index() returns one year of the Schedule, laid out like the EMO&#x27;s own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue&#x27;s building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as an Excel file built by the ScheduleExport service, in the spreadsheet&#x27;s familiar format.</p>
+<table class="bar"><tr><td>Module 8 — Schedule and Venue Management | VenueController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/VenueController.php, lines 74–94</div><pre>/**
+ * Fix duplicates such as &quot;UHALL&quot; and &quot;University Hall&quot;: move every event to
+ * the other venue, then remove this one.
+ */
+public function merge(Request $request, Venue $venue): JsonResponse
+{
+    $data = $request-&gt;validate([
+        &#x27;into_id&#x27; =&gt; [&#x27;required&#x27;, &#x27;integer&#x27;, &#x27;exists:venues,id&#x27;, Rule::notIn([$venue-&gt;id])],
+    ], [
+        &#x27;into_id.not_in&#x27; =&gt; &#x27;Choose a different venue to merge into.&#x27;,
+    ]);
+
+    $moved = DB::transaction(function () use ($venue, $data) {
+        $moved = Event::where(&#x27;venue_id&#x27;, $venue-&gt;id)-&gt;update([&#x27;venue_id&#x27; =&gt; $data[&#x27;into_id&#x27;]]);
+        $venue-&gt;delete();
+
+        return $moved;
+    });
+
+    return response()-&gt;json([&#x27;message&#x27; =&gt; &quot;Merged. {$moved} event(s) moved.&quot;, &#x27;moved&#x27; =&gt; $moved]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> merge() combines a duplicate venue (for example, &quot;UHALL&quot; and &quot;University Hall&quot;) into another one: inside a database transaction, it moves all of the duplicate&#x27;s events to the other venue and then deletes the duplicate. Keeping one name per place is what lets the Schedule colors, the double-booking check and the venue statistics work.</p>
+<table class="bar"><tr><td>Module 9 — Venue Double-Booking Warning | VenueClashes.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Services/VenueClashes.php, lines 20–36, lines 110–116, lines 118–129</div><pre>public static function between(Event $a, Event $b): bool
+{
+    // Venue ids from the form arrive as text, so compare them as numbers.
+    if ($a-&gt;is($b) || ! $a-&gt;venue_id || (int) $a-&gt;venue_id !== (int) $b-&gt;venue_id) {
+        return false;
+    }
+    if ($a-&gt;status === &#x27;cancelled&#x27; || $b-&gt;status === &#x27;cancelled&#x27; || ! self::sameRoom($a-&gt;venue_details, $b-&gt;venue_details)) {
+        return false;
+    }
+    if ($a-&gt;event_date-&gt;gt($b-&gt;end_date ?? $b-&gt;event_date) || $b-&gt;event_date-&gt;gt($a-&gt;end_date ?? $a-&gt;event_date)) {
+        return false;
+    }
+    [$aFrom, $aTo] = self::hours($a);
+    [$bFrom, $bTo] = self::hours($b);
+
+    return $aFrom &lt; $bTo &amp;&amp; $bFrom &lt; $aTo;
+}
+
+// An empty room means the whole venue; otherwise the same room text (ignoring case and spaces).
+private static function sameRoom(?string $a, ?string $b): bool
+{
+    $normal = fn (?string $room) =&gt; mb_strtolower(trim(preg_replace(&#x27;/\s+/&#x27;, &#x27; &#x27;, (string) $room)));
+
+    return $normal($a) === &#x27;&#x27; || $normal($b) === &#x27;&#x27; || $normal($a) === $normal($b);
+}
+
+// Daily hours in minutes. No time, or hours that run past midnight, count as
+// all day; no end time runs to the end of the day.
+private static function hours(Event $event): array
+{
+    if (! $event-&gt;event_time) {
+        return self::ALL_DAY;
+    }
+    $from = self::minutes($event-&gt;event_time);
+    $to = $event-&gt;end_time ? self::minutes($event-&gt;end_time) : 24 * 60;
+
+    return $to &gt; $from ? [$from, $to] : self::ALL_DAY;
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> between() decides whether two bookings clash. They must use the same venue from the list (places typed as free text are not compared), neither may be cancelled, they must be in the same room or one must take the whole venue (sameRoom(), which ignores capital letters and extra spaces), and their days and hours must overlap. hours() treats a booking with no start time, or one that runs past midnight, as all day, and one with no end time as lasting until midnight; bookings that only touch, such as 8 to 10 and 10 to 12, do not overlap.</p>
+<table class="bar"><tr><td>Module 9 — Venue Double-Booking Warning | EventController.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/EventController.php, lines 50–72</div><pre>/**
+ * Bookings that would clash with an event before it&#x27;s saved, so the form
+ * can warn while the date, time and venue are being chosen.
+ */
+public function clashes(Request $request): JsonResponse
+{
+    $data = $request-&gt;validate([
+        &#x27;venue_id&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;integer&#x27;],
+        &#x27;venue_details&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;string&#x27;, &#x27;max:255&#x27;],
+        &#x27;event_date&#x27; =&gt; [&#x27;required&#x27;, &#x27;date&#x27;],
+        &#x27;end_date&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;date&#x27;],
+        &#x27;event_time&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;date_format:H:i&#x27;],
+        &#x27;end_time&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;date_format:H:i&#x27;],
+        &#x27;ignore&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;integer&#x27;],
+    ]);
+
+    $event = new Event(collect($data)-&gt;except(&#x27;ignore&#x27;)-&gt;all());
+    $event-&gt;status = &#x27;upcoming&#x27;;
+
+    return response()-&gt;json([
+        &#x27;clashes&#x27; =&gt; VenueClashes::for($event, $data[&#x27;ignore&#x27;] ?? null)-&gt;map(fn (Event $other) =&gt; VenueClashes::summary($other)),
+    ]);
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> clashes() is called by the event form while the Administrator fills it in, before anything is saved. It builds an unsaved event from the venue, dates and times entered so far and returns the existing bookings it clashes with, leaving out the event being edited. The form shows these as a warning but still allows saving, because some overlaps are intended, such as a rehearsal right before its own event.</p>
+<table class="bar"><tr><td>Module 10 — Data Protection and Migration | DailyBackup.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Http/Middleware/DailyBackup.php, lines 22–39</div><pre>public function handle(Request $request, Closure $next): Response
+{
+    $response = $next($request);
+
+    $key = &#x27;backup:daily:&#x27;.today()-&gt;toDateString();
+    if (config(&#x27;backup.daily&#x27;) &amp;&amp; Cache::add($key, true, now()-&gt;addDays(2))) {
+        defer(function () use ($key) {
+            try {
+                Backup::create();
+            } catch (Throwable $e) {
+                report($e);
+                Cache::put($key, true, now()-&gt;addHour());
+            }
+        });
+    }
+
+    return $response;
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> handle() makes the daily backup without delaying anyone: after a response is sent, the first request of each day starts the backup. A cache key ensures it runs only once a day; if the backup fails, the error is logged and another attempt is allowed an hour later.</p>
+<table class="bar"><tr><td>Module 10 — Data Protection and Migration | Backup.php</td></tr></table>
+<table class="code"><tr><td><div class="where">backend/app/Services/Backup.php, lines 31–46, lines 63–91, lines 168–174</div><pre>/**
+ * A named snapshot (e.g. &quot;fresh-import&quot;) is kept until someone deletes it;
+ * plain daily backups are cleaned up after the newest 14.
+ */
+public static function create(?string $name = null): string
+{
+    try {
+        $path = self::write($name);
+    } catch (Throwable $e) {
+        Cache::put(self::FAILED, [&#x27;at&#x27; =&gt; now()-&gt;toIso8601String(), &#x27;message&#x27; =&gt; $e-&gt;getMessage()], now()-&gt;addDays(30));
+        throw $e;
+    }
+    Cache::forget(self::FAILED);
+
+    return $path;
+}
+
+private static function write(?string $name): string
+{
+    $dir = config(&#x27;backup.path&#x27;);
+    // @: report which folder failed, not PHP&#x27;s bare &quot;mkdir(): Not a directory&quot;.
+    if (! is_dir($dir) &amp;&amp; ! @mkdir($dir, 0755, true) &amp;&amp; ! is_dir($dir)) {
+        throw new RuntimeException(&quot;Can&#x27;t create the backup folder: {$dir}&quot;);
+    }
+
+    $label = $name ? preg_replace(&#x27;/[^A-Za-z0-9_-]+/&#x27;, &#x27;-&#x27;, trim($name)) : null;
+    $path = $dir.DIRECTORY_SEPARATOR.($label
+        ? &#x27;emo-snapshot-&#x27;.self::database().&#x27;-&#x27;.$label.&#x27;.zip&#x27;
+        : self::prefix().now()-&gt;format(&#x27;Y-m-d_His&#x27;).&#x27;.zip&#x27;);
+    $zip = new ZipArchive;
+    if ($zip-&gt;open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        throw new RuntimeException(&quot;Can&#x27;t write the backup file: {$path}&quot;);
+    }
+
+    $zip-&gt;addFromString(&#x27;database.json&#x27;, json_encode(self::dumpDatabase(), JSON_UNESCAPED_UNICODE));
+
+    $disk = Storage::disk(&#x27;local&#x27;);
+    foreach ($disk-&gt;allFiles(self::DOCUMENTS) as $file) {
+        $zip-&gt;addFile($disk-&gt;path($file), $file);
+    }
+
+    $zip-&gt;close();
+    self::prune();
+
+    return $path;
+}
+
+// Each database keeps its own newest backups, so one can&#x27;t crowd out another.
+private static function prune(): void
+{
+    foreach (array_slice(self::mine(), max(1, config(&#x27;backup.keep&#x27;))) as $old) {
+        @unlink($old);
+    }
+}</pre></td></tr></table>
+<p class="expl"><strong>Explanation:</strong> create() records a failure so the Administrator&#x27;s Home page can show a warning, and clears it after a success. write() saves the whole database and every uploaded document into one .zip file in the backup folder (a USB drive when BACKUP_PATH points to one). prune() then keeps only the newest 14 daily backups; named snapshots, saved before database updates or by hand, are never deleted automatically. The ScheduleImport service (not shown because of its length) was used once at installation to bring the EMO&#x27;s existing spreadsheet into the database, with a list of rows for a person to review.</p>
+</body>
+</html>

@@ -1553,7 +1553,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 
 | File | What it is | Use in |
 |---|---|---|
-| [source-code.md](appendices/source-code.md) | The key code of the 7 modules, copied from the repository with file names and line numbers | Appendix, source code (7 key modules) |
+| [source-code.html](appendices/source-code.html) ([.md](appendices/source-code.md)) | The key code of the system's 10 modules in the Capstone 1 layout (summary table, then code with explanations) | Appendix D, source code (key modules) |
 | [database-schema.sql](appendices/database-schema.sql) | The SQL that creates all 16 tables (structure only, tested on an empty database) | Appendix, database schema / SQL scripts |
 
 ---

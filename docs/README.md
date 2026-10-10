@@ -8,7 +8,7 @@
 | [paper/Screenshot_Descriptions.md](paper/Screenshot_Descriptions.md) | A caption and description for each screenshot, for the appendices |
 | [paper/diagrams/](paper/diagrams/) | 15 diagrams: prototyping model, architecture, network topology, context diagram, use cases, ERD, readiness flowchart, overlap check, status lifecycle, DFD level 1, class diagram, 3 sequence diagrams, Gantt chart |
 | [paper/flowcharts/](paper/flowcharts/), [paper/site-maps/](paper/site-maps/), [paper/wireframes/](paper/wireframes/) | System flowcharts, site maps and UI wireframes, one per role |
-| [paper/appendices/](paper/appendices/) | Source code of the 7 key modules, and the database schema (SQL) |
+| [paper/appendices/](paper/appendices/) | Source code of the system's 10 key modules in the Capstone 1 layout, and the database schema (SQL) |
 | [paper/journey-maps/](paper/journey-maps/) | 4 user journey maps: the current process (As-Is) and each role with EMO Tracker (To-Be) |
 | [paper/Diagram_Descriptions.md](paper/Diagram_Descriptions.md) | A caption and description for every figure: Chapter 3 figures, then appendix figures |
 | [paper/Table_Descriptions.md](paper/Table_Descriptions.md) | A description for every table and appendix listing |
