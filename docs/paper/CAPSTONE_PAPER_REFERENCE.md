@@ -68,7 +68,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 - **Stage:**
   - **Capstone 1 (2026):** built the first version, with four core features.
   - **Capstone 2:** reworked the system around the EMO's real schedule and client feedback. It added several features, 110 automated tests and a pre-defense audit.
-  - **Next:** user testing with the EMO is planned after the defense **[TO CONFIRM dates]**.
+  - **Next:** the system is installed at the EMO office and tested by its staff before the defense (planned October 13 to 31, 2026) **[TO CONFIRM dates]**.
 
 ---
 
@@ -272,8 +272,8 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 | Oct 2, 2026 | Phase 10, client consultation 1 **[TO CONFIRM format]** | Client clarified the office's name (EMO) and showed the schedule sheet. Built the Schedule page, the venue list with buildings, the "EMO prepares this event" switch, the import of the real 2026 sheet and the text cleanup |
 | Oct 6, 2026 | Phase 10, client consultation 2 **[TO CONFIRM format]** | Client asked to remove budget, to show cancelled/ongoing/rescheduled events, to classify Internal/External (visible on the Schedule) and for status analytics. The professor allowed more than 4 features. Built the status lifecycle, the reschedule mark, the event types, the new analytics and the double-booking warning |
 | Oct 7, 2026 | Pre-defense audit | Reviewed the whole system for anything that could fail, confuse a user or look unfinished; fixed the findings (see G.6) |
+| Oct 13 to 31, 2026 | Installation, pilot and evaluation **[TO CONFIRM dates]** | Install on the EMO's Windows laptop with their latest data (Oct 13 to 15); about 2 weeks of real use by the office (Oct 15 to 27); survey (Oct 27 to 31) |
 | Early Nov 2026 | Capstone 2 defense | Presented on a MacBook with the EMO's shared data |
-| After the defense | Pilot and evaluation **[TO CONFIRM]** | Install on the EMO's Windows laptop with their latest data; 1 to 2 weeks of real use; survey |
 
 - **Requirements gathering:**
   - consultations with the EMO (above)
@@ -887,7 +887,7 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
 - **Updating:** `git pull`, `composer install`, `npm install`, then start the app as usual; the start file applies database changes itself.
 - **No internet needed** after installation; everything runs on the LAN.
 - **Network topology:** a star. Every device connects through one Wi-Fi access point (the university Wi-Fi or an office router) to the server laptop, with a USB drive on the server for backups (network topology diagram, Appendix G).
-- **After the defense:** install it on the EMO's Windows laptop with their latest data, point `BACKUP_PATH` to a USB drive, and run a pilot of 1 to 2 weeks. **[TO CONFIRM dates]**
+- **Before the defense:** install it on the EMO's Windows laptop with their latest data, point `BACKUP_PATH` to a USB drive, and run a pilot of about 2 weeks, so the evaluation results are ready for the defense (planned October 13 to 31). **[TO CONFIRM dates]**
 
 ## E.11 Testing and evaluation plan
 
@@ -1208,7 +1208,7 @@ EMO Tracker was developed for the EMO in two stages.
 - **Capstone 1** built event planning, task tracking, rule-based readiness classification and reports.
 - **Capstone 2** reworked the system around the office's real schedule and feedback. It added a sheet-style Schedule, managed venues with an overlap warning, automatic event statuses, internal and external events, schedule analytics, data import and export, and automatic backups.
 - The system was checked with 110 automated tests, browser walkthroughs, a load check and a pre-defense audit.
-- It will be evaluated by the EMO's users after the defense.
+- It was installed at the EMO office and evaluated by the office's users before the defense **[TO FILL IN the results after the pilot]**.
 
 ## H.2 Conclusions (draft: finalize after the evaluation)
 

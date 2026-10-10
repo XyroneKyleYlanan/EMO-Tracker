@@ -295,7 +295,7 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
 - [ ] Optional: auto-refresh on Home and the event panel (every minute and when the tab is opened again), so other screens catch up without pressing refresh
 - [ ] One-page guide for the EMO: how to open it, the address for other devices, keep the laptop on and plugged in, the USB backup, who to contact (group-mate task)
 
-**Pilot and user testing**
+**Pilot and user testing (before the defense: planned Oct 13–15 install, Oct 15–27 pilot, Oct 27–31 survey, per the Gantt chart)**
 - [ ] Install on the EMO's Windows laptop with their latest data, and point `BACKUP_PATH` at a USB drive or second disk. Try `start.bat` there first: finding Laragon's PHP and applying database changes are new and haven't run on Windows yet. Also check uploads up to 10 MB
 - [ ] Let the EMO use it for 1–2 weeks, then run the survey (test scenarios and questionnaire once the format is confirmed)
 

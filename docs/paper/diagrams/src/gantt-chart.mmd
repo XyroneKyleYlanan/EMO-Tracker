@@ -1,46 +1,39 @@
 ---
 config:
-  gantt:
-    useWidth: 1600
-    barHeight: 24
-    barGap: 7
-    fontSize: 15
-    sectionFontSize: 15
-    leftPadding: 215
+  theme: default
 ---
 gantt
-    title EMO Tracker - Capstone Project Timeline (Capstone 1 and Capstone 2)
+    title EMO Tracker - Capstone Project Timeline
     dateFormat YYYY-MM-DD
     axisFormat %b %Y
-    tickInterval 1month
     todayMarker off
-    %% Capstone 1 rows are from the Capstone 1 paper's Gantt chart; Capstone 2 rows continue it.
     section Planning and Analysis
-    Project Planning and Title Proposal              :c1p1, 2026-02-16, 2026-03-02
-    Requirements Gathering and Analysis              :c1p2, 2026-03-02, 2026-03-16
-    Capstone 2 Planning and System Review            :c2p1, 2026-09-01, 2026-09-28
-    Requirements Gathering with the EMO              :c2p2, 2026-09-28, 2026-10-07
+        Project Planning and Title Proposal        :done, c1plan, 2026-02-16, 14d
+        Requirements Gathering and Analysis        :done, c1reqs, after c1plan, 14d
+        Capstone 2 Planning and System Review      :done, c2plan, 2026-09-01, 27d
+        Requirements Gathering with the EMO        :done, c2reqs, after c2plan, 9d
     section System Design
-    Database and UI/UX Design                        :c1d1, 2026-03-16, 2026-04-06
-    Database and UI/UX Design Updates                :c2d1, 2026-10-01, 2026-10-08
+        Database and UI/UX Design                  :done, c1design, after c1reqs, 21d
+        Database and UI/UX Design Updates          :done, c2design, 2026-10-01, 7d
     section Development
-    Initial System Development                       :c1v1, 2026-04-06, 2026-05-11
-    Pre-Oral Defense Preparation                     :c1v2, 2026-05-11, 2026-05-14
-    Security Hardening and Automated Testing         :c2v1, 2026-09-28, 2026-10-02
-    Prototype Refinement (Schedule and Venues)       :c2v2, 2026-10-02, 2026-10-06
-    Prototype Refinement (Statuses and Overlaps)     :c2v3, 2026-10-06, 2026-10-08
-    Pre-Defense Audit and UI Polish                  :c2v4, 2026-10-07, 2026-10-12
-    Final Defense Preparation                        :c2v5, 2026-10-26, 2026-11-05
-    section Defense and Revision
-    Pre-Oral Defense                                 :milestone, c1f1, 2026-05-14, 0d
-    Revisions Based on Panel Feedback                :c1f2, 2026-05-14, 2026-05-28
-    Capstone 2 Final Defense                         :milestone, c2f1, 2026-11-05, 0d
-    Revisions Based on Panel Feedback (Capstone 2)   :c2f2, 2026-11-05, 2026-11-19
-    section Documentation and Finalization
-    Documentation and Manuscript Writing             :c1w1, 2026-03-16, 2026-05-30
-    Final Checking by Panel                          :c1w2, 2026-05-28, 2026-06-04
-    Documentation and Manuscript Writing (Capstone 2):c2w1, 2026-10-07, 2026-11-05
-    Final Checking by Panel (Capstone 2)             :c2w2, 2026-11-19, 2026-11-26
+        Initial System Development                 :done, c1dev, after c1design, 35d
+        Pre-Oral Defense Preparation               :done, c1prep, after c1dev, 3d
+        Security Hardening and Automated Testing   :done, c2sec, 2026-09-28, 4d
+        Prototype Refinement (Schedule and Venues) :done, c2round1, after c2sec, 4d
+        Prototype Refinement (Statuses, Overlaps)  :done, c2round2, after c2round1, 2d
+        Pre-Defense Audit and UI Polish            :active, c2audit, 2026-10-07, 5d
+        Final Defense Preparation                  :c2prep, 2026-10-26, 10d
     section Implementation and Evaluation
-    Installation at the EMO and Pilot Testing        :c2i1, 2026-11-09, 2026-11-23
-    User Evaluation (Survey)                         :c2i2, 2026-11-23, 2026-11-28
+        Installation at the EMO Office             :c2install, 2026-10-13, 2d
+        Pilot Testing by the EMO                   :c2pilot, after c2install, 12d
+        User Evaluation (Survey)                   :c2survey, after c2pilot, 4d
+    section Defense and Revision
+        Pre-Oral Defense                           :done, milestone, c1defense, after c1prep, 0d
+        Revisions Based on Panel Feedback          :done, c1rev, after c1prep, 14d
+        Capstone 2 Final Defense                   :milestone, c2defense, after c2prep, 0d
+        Revisions Based on Panel Feedback (C2)     :c2rev, after c2prep, 14d
+    section Documentation and Finalization
+        Documentation and Manuscript Writing       :done, c1docs, 2026-03-16, 75d
+        Final Checking by Panel                    :done, c1check, after c1rev, 7d
+        Documentation and Manuscript Writing (C2)  :active, c2docs, 2026-10-07, 29d
+        Final Checking by Panel (C2)               :c2check, after c2rev, 7d

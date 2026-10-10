@@ -25,7 +25,7 @@ EMO Tracker was developed with the Prototyping Model, an iterative software deve
    - the Schedule, the venue list, the spreadsheet import and the backups
    - event statuses, event types and the double-booking warning
    - the audit fixes and UI polish
-6. **Implementation and maintenance:** once the system meets the EMO's needs, it is presented at the Capstone 2 defense (November 2026), installed on the EMO's laptop, piloted and evaluated.
+6. **Implementation and maintenance:** once the system meets the EMO's needs, it is installed on the EMO's laptop, piloted by the office and evaluated (October 2026), then presented at the Capstone 2 defense (November 2026).
 
 The model suited the project because the EMO's needs became clear only as its members saw working versions; for example, the Schedule page and the venue list came from the October consultations.
 
@@ -473,7 +473,7 @@ Four phone screens, because Staff often update their tasks from a phone:
 
 **File:** [diagrams/gantt-chart.png](diagrams/gantt-chart.png) (source: [diagrams/src/gantt-chart.mmd](diagrams/src/gantt-chart.mmd))
 
-The Gantt chart shows the whole capstone project, from the title proposal in February 2026 to the evaluation in November 2026. It keeps every row of the Capstone 1 chart, with the same names, dates and phases, and adds the Capstone 2 activities to the same phases. The empty stretch from June to August is the break between Capstone 1 and Capstone 2.
+The Gantt chart shows the whole capstone project, from the title proposal in February 2026 to the evaluation in November 2026. It keeps every row of the Capstone 1 chart, with the same names, dates and phases, and adds the Capstone 2 activities to the same phases, plus an Implementation and Evaluation phase: the system is installed at the EMO office and tested by its staff before the Capstone 2 defense. The empty stretch from June to August is the break between Capstone 1 and Capstone 2.
 
 | Phase | Capstone 1 (February to June 2026) | Capstone 2 (September to November 2026) |
 |---|---|---|
@@ -482,8 +482,8 @@ The Gantt chart shows the whole capstone project, from the title proposal in Feb
 | Development | Initial system development (April 6 to May 11); pre-oral defense preparation (May 11 to 14) | Security hardening and automated testing (September 28 to October 2); prototype refinement for the Schedule and venues (October 2 to 6), then for statuses and overlaps (October 6 to 8); pre-defense audit and UI polish (October 7 to 12); final defense preparation (October 26 to November 5) |
 | Defense and Revision | Pre-oral defense (May 14, a milestone); revisions based on the panel's feedback (May 14 to 28) | Capstone 2 final defense (first week of November, a milestone); revisions based on the panel's feedback (November 5 to 19) |
 | Documentation and Finalization | Documentation and manuscript writing (March 16 to May 30); final checking by the panel (May 28 to June 4) | Documentation and manuscript writing (October 7 to November 5); final checking by the panel (November 19 to 26) |
-| Implementation and Evaluation | — | Installation at the EMO and pilot testing (November 9 to 23); user evaluation by survey (November 23 to 28) |
+| Implementation and Evaluation | — | Installation at the EMO office (October 13 to 15); pilot testing by the EMO (October 15 to 27); user evaluation by survey (October 27 to 31), so the results are ready before the defense |
 
-Bars are activities and the diamonds are the two defenses. In Capstone 2, development overlaps with requirements and design because the system was built with the Prototyping Model: each consultation with the EMO led directly to a new round of refinement.
+Bars are activities and the diamonds are the two defenses. Gray bars are finished, light blue bars are in progress (as of October 10, 2026), and purple bars are planned; rows marked "(C2)" are the Capstone 2 round of an activity that also appears in Capstone 1. In Capstone 2, development overlaps with requirements and design because the system was built with the Prototyping Model: each consultation with the EMO led directly to a new round of refinement.
 
 The chart is wide because it covers ten months; it reads best on a landscape page, or across the full width of a portrait page.
