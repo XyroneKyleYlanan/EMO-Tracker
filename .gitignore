@@ -31,5 +31,9 @@ backend/storage/app/public/documents/
 # Data backups made for the office laptop (the EMO's real data: never commit)
 office/data/
 
+# Installers (Laragon is about 240 MB; GitHub refuses files over 100 MB)
+*.exe
+*.msi
+
 # Logs
 *.log

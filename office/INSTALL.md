@@ -8,9 +8,10 @@ Office mode: EMO Tracker starts by itself when the laptop turns on, and a deskto
    ```
    office/make-usb-copy.command --with-data
    ```
-   It makes **Desktop › EMO Tracker USB › EMOTracker** (about 64 MB), with a backup of the Mac's data in `office/data`. Copy that **EMOTracker** folder to the USB drive.
-2. **Download Laragon** (Full, 64-bit) from [laragon.org/download](https://laragon.org/download) onto the USB too, so you don't depend on the office Wi-Fi.
-3. **Bring:** the USB drive, the MacBook and its charger (the backup plan), a phone, and a list of the EMO staff who will use it: name, email, and role (Administrator, Officer or Staff).
+   It makes **Desktop › EMO Tracker USB › EMOTracker** (about 64 MB), with a backup of the Mac's data in `office/data`.
+2. **Download Laragon** (Full, 64-bit, `laragon-wamp.exe`) from [laragon.org/download](https://laragon.org/download) into **Desktop › EMO Tracker USB**, next to the EMOTracker folder (not inside the project: GitHub can't hold it). Running the script again replaces only the EMOTracker folder, so the installer stays.
+3. **Copy both** (the EMOTracker folder and `laragon-wamp.exe`) to the USB drive, so you don't depend on the office Wi-Fi.
+4. **Bring:** the USB drive, the MacBook and its charger (the backup plan), a phone, and a list of the EMO staff who will use it: name, email, and role (Administrator, Officer or Staff).
 
 ## At the office
 
