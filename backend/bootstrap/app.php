@@ -22,8 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Browsers reach Laravel through the frontend server on this computer,
-        // which passes on each device's own address (used by the login limit).
+        // In development, browsers reach Laravel through the frontend server on
+        // this computer, which passes on each device's own address (used by the
+        // login limit). In office mode they reach Laravel directly.
         $middleware->trustProxies(at: ['127.0.0.1', '::1'], headers: Request::HEADER_X_FORWARDED_FOR);
 
         $middleware->api(prepend: [

@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center gap-3 mb-8">
-          <img src="/neu-logo.png" alt="New Era University" className="w-20 h-20 object-contain" />
+          <img src={`${import.meta.env.BASE_URL}neu-logo.png`} alt="New Era University" className="w-20 h-20 object-contain" />
           <div className="text-center">
             <h1 className="text-2xl font-semibold text-gray-900">EMO Tracker</h1>
             <p className="text-sm text-gray-500">Events Management Office</p>

@@ -28,5 +28,8 @@ backend/public/storage
 # Uploaded documents (runtime/demo files, not source code)
 backend/storage/app/public/documents/
 
+# Data backups made for the office laptop (the EMO's real data: never commit)
+office/data/
+
 # Logs
 *.log

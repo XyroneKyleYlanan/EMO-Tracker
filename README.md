@@ -94,6 +94,8 @@ npm install
 
 ## Running the App
 
+> **At the EMO office, use office mode instead:** EMO Tracker starts with Windows and opens from a desktop icon, with no terminal windows and no Node.js on the laptop. See **[office/INSTALL.md](office/INSTALL.md)**. The launchers below are for development.
+
 First make sure **Laragon is running** (open Laragon → "Start All").
 
 ### Easy way — one-click launcher (recommended)
@@ -260,8 +262,9 @@ C:\laragon\www\EMOTracker\
 ├── ROADMAP.md                Phased build log
 ├── docs/                     Architectural overview (OVERVIEW.md), demo accounts
 │   └── paper/                Capstone paper reference, copy-ready tables, screenshots, diagrams
-├── start.bat                 One-click launcher (Windows)
-├── start.command             Double-click launcher (Mac)
+├── start.bat                 One-click launcher (Windows, development)
+├── start.command             Double-click launcher (Mac, development)
+├── office/                   Office mode for the EMO's laptop: setup, launcher, install guide (INSTALL.md)
 ├── backend/                  Laravel app
 │   ├── app/
 │   │   ├── Http/Controllers/Api/   API endpoints

@@ -94,7 +94,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 | Existing data | None | A **one-time import** of the EMO's spreadsheet, with a list of rows to review, plus automatic text cleanup | To bring in the real 2026 schedule |
 | Backups | None | **Automatic daily backups** (database and documents), named snapshots, a restore command, and backup status on the Administrator's Home | The system runs on a single laptop |
 | Security | Token login and roles | Adds **private file storage**, a **login limit for each account on each device**, sign-out of other devices on a password change, and **no technical error details** shown to users | Capstone 2 reviews and the pre-defense audit |
-| Testing | Manual testing | **112 automated tests** (517 checks), browser walkthroughs, a load test and a pre-defense audit | Reliability |
+| Testing | Manual testing | **112 automated tests** (530 checks), browser walkthroughs, a load test and a pre-defense audit | Reliability |
 | Starting the app | `start.bat` (Windows) | `start.bat` (now finds Laragon's PHP and applies database updates) and **`start.command` (Mac)** | Defense on a Mac, daily use on Windows |
 | Number of features | Exactly 4 (per the briefing) | 4 core features (expanded) plus features added in Capstone 2 **[TO CONFIRM how to present them]** | The professor allowed more than 4 features if they fit the client's needs |
 
@@ -1103,7 +1103,7 @@ Use the screenshots in Appendix G as figures. They were taken from the **demo da
 
 ## G.2 Automated test results
 
-All **112 test cases (517 checks) pass** (October 19, 2026). The tests run on a temporary in-memory database.
+All **112 test cases (530 checks) pass** (October 19, 2026). The tests run on a temporary in-memory database.
 
 | Test file | Cases | What it checks |
 |---|--:|---|
@@ -1121,7 +1121,8 @@ All **112 test cases (517 checks) pass** (October 19, 2026). The tests run on a 
 | AnalyticsTest | 3 | Status counts cover every event and add up to the total; calendar periods; Staff can't see analytics |
 | ScheduleTidyTest | 3 | Titles keep acronyms, brand names and Filipino particles; rooms and remarks; safe to run again |
 | ScheduleExportTest | 4 | The Excel export looks like the EMO's sheet; the CSV has the same columns; the file has only the rows shown; Staff can't export |
-| ExampleTest (×2) | 2 | Laravel's default tests |
+| ExampleTest | 1 | Laravel's default unit test |
+| AppPageTest | 1 | Every page address gets the app (office mode), but the API and the health check don't; a plain message if the app isn't built |
 
 ## G.3 Code quality and security checks (October 7, 2026)
 
@@ -1571,7 +1572,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 |---|---|
 | Backend PHP code (app and routes) | about 3,400 lines |
 | Database code (migrations, seeders, factories) | about 960 lines |
-| Automated tests (code) | about 1,950 lines; 112 test cases, 517 checks |
+| Automated tests (code) | about 1,950 lines; 112 test cases, 530 checks |
 | PDF template | about 460 lines |
 | Frontend code (JSX, JS, CSS) | about 5,100 lines |
 | Application tables | 7 (plus 9 Laravel tables) |

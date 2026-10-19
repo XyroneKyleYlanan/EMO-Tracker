@@ -3,8 +3,16 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react(), tailwindcss()],
+  // Office mode: `npm run build` puts the finished app in backend/public/app,
+  // where Laravel serves it, so the office computer needs no Node.js and runs
+  // one server instead of two. `npm run dev` is unchanged.
+  base: command === 'build' ? '/app/' : '/',
+  build: {
+    outDir: '../backend/public/app',
+    emptyOutDir: true,
+  },
   server: {
     host: true,
     port: 5173,
@@ -22,4 +30,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

@@ -1,0 +1,3 @@
+# Windows files keep Windows line endings, which batch files need.
+*.bat text eol=crlf
+*.vbs text eol=crlf

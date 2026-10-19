@@ -78,7 +78,7 @@ export default function AppLayout() {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
         <div className="px-4 md:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/neu-logo.png" alt="NEU" className="w-10 h-10 object-contain" />
+            <img src={`${import.meta.env.BASE_URL}neu-logo.png`} alt="NEU" className="w-10 h-10 object-contain" />
             <div className="hidden sm:block">
               <div className="text-sm font-semibold text-gray-900 leading-tight">EMO Tracker</div>
               <div className="text-xs text-gray-500 leading-tight">Events Management Office · New Era University</div>
