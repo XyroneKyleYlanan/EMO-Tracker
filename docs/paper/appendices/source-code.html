@@ -657,7 +657,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 }</pre></td></tr></table>
 <p class="expl"><strong>Explanation:</strong> On the frontend, ProtectedRoute wraps each role&#x27;s pages. It waits while a saved session is being checked, sends a signed-out visitor to the login page, and sends a signed-in user who opens another role&#x27;s address back to their own Home page. This keeps the interface tidy, but the real protection is the server-side check above, which cannot be bypassed from the browser.</p>
 <table class="bar"><tr><td>Module 8 — Schedule and Venue Management | ScheduleController.php</td></tr></table>
-<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ScheduleController.php, lines 18–55, lines 57–65</div><pre>public function index(Request $request): JsonResponse
+<table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/ScheduleController.php, lines 19–56, lines 58–90</div><pre>public function index(Request $request): JsonResponse
 {
     $years = Event::pluck(&#x27;event_date&#x27;)-&gt;map-&gt;year-&gt;push(today()-&gt;year)-&gt;unique()-&gt;sort()-&gt;values();
     $year = (int) $request-&gt;input(&#x27;year&#x27;, today()-&gt;year);
@@ -696,16 +696,42 @@ export default function ProtectedRoute({ children, allowedRoles }) {
     return response()-&gt;json([&#x27;year&#x27; =&gt; $year, &#x27;current_year&#x27; =&gt; today()-&gt;year, &#x27;years&#x27; =&gt; $years, &#x27;events&#x27; =&gt; $rows]);
 }
 
+/**
+ * The year as an Excel (.xlsx, the default) or CSV file, with only the rows
+ * the page shows when its type filter or search is in use.
+ */
 public function export(Request $request): Response
 {
+    $request-&gt;validate([
+        &#x27;format&#x27; =&gt; [&#x27;nullable&#x27;, Rule::in([&#x27;xlsx&#x27;, &#x27;csv&#x27;])],
+        &#x27;type&#x27; =&gt; [&#x27;nullable&#x27;, Rule::in([&#x27;internal&#x27;, &#x27;external&#x27;])],
+        &#x27;search&#x27; =&gt; [&#x27;nullable&#x27;, &#x27;string&#x27;, &#x27;max:255&#x27;],
+    ]);
     $year = (int) $request-&gt;input(&#x27;year&#x27;, today()-&gt;year);
+    $format = $request-&gt;input(&#x27;format&#x27;, &#x27;xlsx&#x27;);
+    $type = $request-&gt;input(&#x27;type&#x27;);
+    $search = trim((string) $request-&gt;input(&#x27;search&#x27;));
 
-    return response(ScheduleExport::build($year), 200, [
-        &#x27;Content-Type&#x27; =&gt; &#x27;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&#x27;,
-        &#x27;Content-Disposition&#x27; =&gt; &quot;attachment; filename=\&quot;emo-schedule-{$year}.xlsx\&quot;&quot;,
+    $events = ScheduleExport::events($year, $type, $search);
+    $note = implode(&#x27; · &#x27;, array_filter([
+        $type ? ucfirst($type).&#x27; events&#x27; : null,
+        $search !== &#x27;&#x27; ? &quot;Search: \&quot;{$search}\&quot;&quot; : null,
+    ]));
+    $name = implode(&#x27;-&#x27;, array_filter([&#x27;emo-schedule&#x27;, $year, $type, $search !== &#x27;&#x27; ? &#x27;filtered&#x27; : null]));
+
+    return $format === &#x27;csv&#x27;
+        ? response(ScheduleExport::csv($events), 200, [
+            &#x27;Content-Type&#x27; =&gt; &#x27;text/csv; charset=UTF-8&#x27;,
+            &#x27;Content-Disposition&#x27; =&gt; &quot;attachment; filename=\&quot;{$name}.csv\&quot;&quot;,
+        ])
+        : response(ScheduleExport::xlsx($year, $events, $note ?: null), 200, [
+            &#x27;Content-Type&#x27; =&gt; &#x27;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&#x27;,
+            &#x27;Content-Disposition&#x27; =&gt; &quot;attachment; filename=\&quot;{$name}.xlsx\&quot;&quot;,
+        ]);
+}.xlsx\&quot;&quot;,
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> index() returns one year of the Schedule, laid out like the EMO&#x27;s own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue&#x27;s building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as an Excel file built by the ScheduleExport service, in the spreadsheet&#x27;s familiar format.</p>
+<p class="expl"><strong>Explanation:</strong> index() returns one year of the Schedule, laid out like the EMO&#x27;s own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue&#x27;s building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as a file built by the ScheduleExport service: an Excel file (the default) in the spreadsheet&#x27;s familiar format, or a plain CSV file that opens in any app. When the page&#x27;s type filter or search is in use, the file has only the rows shown, and its name and title say so.</p>
 <table class="bar"><tr><td>Module 8 — Schedule and Venue Management | VenueController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/VenueController.php, lines 74–94</div><pre>/**
  * Fix duplicates such as &quot;UHALL&quot; and &quot;University Hall&quot;: move every event to

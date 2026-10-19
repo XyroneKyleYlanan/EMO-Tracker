@@ -61,13 +61,13 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
   - **Tasks:** assigned to one owner each, with status tracking.
   - **Rule-based readiness classification:** the project's "AI" feature.
   - **Analytics:** statistics on the schedule and on event preparation.
-  - **Records:** PDF event reports, an Excel export of the Schedule, and uploaded documents.
+  - **Records:** PDF event reports, an Excel or CSV export of the Schedule, and uploaded documents.
   - **Upkeep:** account management, automatic daily backups, and a one-time import of the EMO's spreadsheet.
 - **Technology:** React 19, Vite and Tailwind CSS (frontend); a Laravel 13 (PHP 8.3) REST API using Sanctum tokens (backend); MySQL 8.4 (database). It uses no external services and no AI APIs.
 - **Deployment:** the system runs on one laptop on the office's local network (LAN). Other devices on the same WiFi open it in a web browser. Daily use will be on the EMO's Windows laptop (with Laragon); the defense is presented on a MacBook.
 - **Stage:**
   - **Capstone 1 (2026):** built the first version, with four core features.
-  - **Capstone 2:** reworked the system around the EMO's real schedule and client feedback. It added several features, 110 automated tests and a pre-defense audit.
+  - **Capstone 2:** reworked the system around the EMO's real schedule and client feedback. It added several features, 112 automated tests and a pre-defense audit.
   - **Next:** the system is installed at the EMO office and tested by its staff before the defense (planned October 13 to 31, 2026) **[TO CONFIRM dates]**.
 
 ---
@@ -78,7 +78,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 |---|---|---|---|
 | Client's name | "EMD" | **Events Management Office (EMO)**; the app was renamed EMO Tracker | The client clarified the office's name (Oct 2, 2026) |
 | What the system holds | Only the events the EMO prepares | **Every NEU event and venue booking** (the whole schedule). A switch marks the events the EMO prepares | The EMO keeps a schedule of about 50 bookings a month, and most of them need no preparation |
-| Ways to view events | Calendar and list | Also a **Schedule page** like the EMO's sheet: one tab per year, grouped by month, colored by building, searchable | The client showed their Google Sheets schedule |
+| Ways to view events | Calendar and list | Also a **Schedule page** like the EMO's sheet: one tab per year, grouped by month, colored by building, filterable by type and searchable | The client showed their Google Sheets schedule |
 | Venues | Typed as free text | A **managed list of venues** inside buildings, each building with a color. Duplicates can be merged, and a room can be added as free text | The sheet had about 80 spellings for about 25 places |
 | Event details | Name, description, venue, date, time, budget | Adds department or organizer, **Internal or External type**, end date, end time, control number, remarks and room. **Budget was removed** | Client: remove budget, classify internal and external events |
 | Event statuses | Upcoming and Completed, by date | **Upcoming, Ongoing and Completed** by date and time, **Cancelled** (can be undone), and a **Rescheduled** mark | Client: show whether an event is cancelled, ongoing or rescheduled |
@@ -89,12 +89,12 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 | Readiness rules | Critical if under 40% done, 2 days or less away, or most tasks unassigned. At Risk if under 70% done, 6 days or less away, or any task unassigned | **Time-aware rules** (Part E.8.1). Each label also states its reason, e.g. "1 task is overdue" | When tested on the real schedule, an event 14 days away was labeled Critical at 0% done |
 | Analytics | Readiness statistics, a donut chart, the 5 most urgent events | Adds **schedule statistics** for a chosen period: statuses, rescheduled events, internal vs external, busiest venues | The client asked for analytics on event statuses |
 | Home pages | Statistics cards and shortcut links | Built around **"what needs my attention"**: a one-sentence summary, a needs-attention list, the next 7 days, my open tasks, and the backup status (Administrator) | The shortcut links repeated the menu, and the cards competed with the list that matters most |
-| Reports | PDF event report | Adds an **Excel export** of a year's Schedule, laid out like the EMO's sheet | For year-end records |
+| Reports | PDF event report | Adds an **Excel export** of a year's Schedule, laid out like the EMO's sheet, or a plain CSV file | For year-end records |
 | Documents | Officers and Administrators could delete them | **Only the Administrator deletes documents**; deleting an event also deletes its files | Documents are records |
 | Existing data | None | A **one-time import** of the EMO's spreadsheet, with a list of rows to review, plus automatic text cleanup | To bring in the real 2026 schedule |
 | Backups | None | **Automatic daily backups** (database and documents), named snapshots, a restore command, and backup status on the Administrator's Home | The system runs on a single laptop |
 | Security | Token login and roles | Adds **private file storage**, a **login limit for each account on each device**, sign-out of other devices on a password change, and **no technical error details** shown to users | Capstone 2 reviews and the pre-defense audit |
-| Testing | Manual testing | **110 automated tests** (483 checks), browser walkthroughs, a load test and a pre-defense audit | Reliability |
+| Testing | Manual testing | **112 automated tests** (517 checks), browser walkthroughs, a load test and a pre-defense audit | Reliability |
 | Starting the app | `start.bat` (Windows) | `start.bat` (now finds Laragon's PHP and applies database updates) and **`start.command` (Mac)** | Defense on a Mac, daily use on Windows |
 | Number of features | Exactly 4 (per the briefing) | 4 core features (expanded) plus features added in Capstone 2 **[TO CONFIRM how to present them]** | The professor allowed more than 4 features if they fit the client's needs |
 
@@ -272,6 +272,7 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 | Oct 2, 2026 | Phase 10, client consultation 1 **[TO CONFIRM format]** | Client clarified the office's name (EMO) and showed the schedule sheet. Built the Schedule page, the venue list with buildings, the "EMO prepares this event" switch, the import of the real 2026 sheet and the text cleanup |
 | Oct 6, 2026 | Phase 10, client consultation 2 **[TO CONFIRM format]** | Client asked to remove budget, to show cancelled/ongoing/rescheduled events, to classify Internal/External (visible on the Schedule) and for status analytics. The professor allowed more than 4 features. Built the status lifecycle, the reschedule mark, the event types, the new analytics and the double-booking warning |
 | Oct 7, 2026 | Pre-defense audit | Reviewed the whole system for anything that could fail, confuse a user or look unfinished; fixed the findings (see G.6) |
+| Oct 19, 2026 | Consultation **[TO CONFIRM with whom]** | Suggested shorter remarks on the Schedule, colors for Internal and External, a type filter, and a CSV option for the export (the professor). All four were added, and the paper figures were updated |
 | Oct 13 to 31, 2026 | Installation, pilot and evaluation **[TO CONFIRM dates]** | Install on the EMO's Windows laptop with their latest data (Oct 13 to 15); about 2 weeks of real use by the office (Oct 15 to 27); survey (Oct 27 to 31) |
 | Early Nov 2026 | Capstone 2 defense | Presented on a MacBook with the EMO's shared data |
 
@@ -365,7 +366,7 @@ flowchart LR
 | `VenueClashes` | Double-booking check |
 | `ScheduleImport` | One-time spreadsheet import |
 | `TextTidy` / `ScheduleTidy` | Text cleanup |
-| `ScheduleExport` | Excel export |
+| `ScheduleExport` | Excel and CSV export |
 | `Backup` | Backups and restore |
 
 ## E.4 Database design
@@ -516,7 +517,7 @@ Every table also has `created_at` and `updated_at` timestamps.
 | event_time / end_time | time | optional; on a one-day event the end must be after the start | No time means all day |
 | original_date / original_time | date / time | optional | Where a rescheduled event was first scheduled |
 | control_number | varchar(255) | optional | The EMO's control number |
-| remarks | text | optional, up to 2,000 characters | |
+| remarks | text | optional, up to 255 characters | |
 | needs_preparation | boolean | default false | "The EMO prepares this event": turns on readiness tracking |
 | status | enum(upcoming, completed, cancelled) | default upcoming | Stored status. "Ongoing" is worked out from the date and time |
 | created_by | bigint | required, → users.id | Who added it |
@@ -1011,11 +1012,14 @@ Sample statements for EMO Tracker (rate 1 to 5):
 - **Labels:**
   - Ongoing, and the readiness label for prepared events
   - Cancelled (struck through)
-  - Overlap and External
+  - Overlap
+  - the type, as a pill in the Type column: Internal in white, External in orange
   - "Rescheduled from …"
+- **Type filter:** All, Internal or External.
 - **Search** covers names, types, departments, venues, control numbers, remarks and "overlap".
+- **Remarks** show at most two lines; the full text is on hover and in the event panel.
 - **On phones,** months are shown as cards.
-- **Actions:** the Administrator can add events and manage venues. The Administrator and Officers can export to Excel. For Staff it's view-only.
+- **Actions:** the Administrator can add events and manage venues. The Administrator and Officers can export to Excel or CSV. For Staff it's view-only.
 
 ### Venues and buildings (F5; Administrator)
 - **Buildings:** a name and a color from a 24-color light palette. Each color is checked to keep the Schedule's text readable (contrast of 4.5:1 or more), and the picker shows which colors other buildings already use.
@@ -1055,7 +1059,10 @@ Sample statements for EMO Tracker (rate 1 to 5):
   - a task summary (total, done, in progress, % complete), the people, and a task table (task, owner, due date, priority, status)
   - the attached documents, and when the report was generated
   - It's generated on the server (dompdf) and saved as `event-report-<event-name>.pdf`.
-- **Excel export (Administrator and Officer):** one year of the Schedule, laid out like the EMO's sheet. It has a year title, the columns DATE, TIME, EVENT, TYPE, DEPARTMENT, VENUE, CONTROL # and REMARKS, rows colored by building, cancelled events struck through, and the reschedule note in the remarks. It's generated on the server (PhpSpreadsheet).
+- **Export (Administrator and Officer):** one year of the Schedule as an Excel file (the default) or a CSV file.
+  - **Excel:** laid out like the EMO's sheet. It has a year title, the columns DATE, TIME, EVENT, TYPE, DEPARTMENT, VENUE, CONTROL # and REMARKS, rows colored by building, cancelled events struck through, and the reschedule note in the remarks. It's generated on the server (PhpSpreadsheet).
+  - **CSV:** the same columns as plain text, with the year in each date; it opens in any spreadsheet or text app.
+  - **Filtered exports:** when the Schedule's type filter or search is in use, the file has only the rows shown; its name (and the Excel title) says so.
 - **Documents:**
   - **Upload:** Administrators and Officers, to any event, including completed ones (for example post-event reports).
   - **Download:** everyone.
@@ -1096,7 +1103,7 @@ Use the screenshots in Appendix G as figures. They were taken from the **demo da
 
 ## G.2 Automated test results
 
-All **110 test cases (483 checks) pass** (October 7, 2026). The tests run on a temporary in-memory database.
+All **112 test cases (517 checks) pass** (October 19, 2026). The tests run on a temporary in-memory database.
 
 | Test file | Cases | What it checks |
 |---|--:|---|
@@ -1113,7 +1120,7 @@ All **110 test cases (483 checks) pass** (October 7, 2026). The tests run on a t
 | DashboardTest | 4 | Home shows what needs attention and the next 7 days; Staff Home lists only open tasks; admins and officers see their own open tasks; counting the people with tasks |
 | AnalyticsTest | 3 | Status counts cover every event and add up to the total; calendar periods; Staff can't see analytics |
 | ScheduleTidyTest | 3 | Titles keep acronyms, brand names and Filipino particles; rooms and remarks; safe to run again |
-| ScheduleExportTest | 2 | The export looks like the EMO's sheet; Staff can't export |
+| ScheduleExportTest | 4 | The Excel export looks like the EMO's sheet; the CSV has the same columns; the file has only the rows shown; Staff can't export |
 | ExampleTest (×2) | 2 | Laravel's default tests |
 
 ## G.3 Code quality and security checks (October 7, 2026)
@@ -1207,7 +1214,7 @@ Don't let an AI write this section before the real data exists. Templates:
 EMO Tracker was developed for the EMO in two stages.
 - **Capstone 1** built event planning, task tracking, rule-based readiness classification and reports.
 - **Capstone 2** reworked the system around the office's real schedule and feedback. It added a sheet-style Schedule, managed venues with an overlap warning, automatic event statuses, internal and external events, schedule analytics, data import and export, and automatic backups.
-- The system was checked with 110 automated tests, browser walkthroughs, a load check and a pre-defense audit.
+- The system was checked with 112 automated tests, browser walkthroughs, a load check and a pre-defense audit.
 - It was installed at the EMO office and evaluated by the office's users before the defense **[TO FILL IN the results after the pilot]**.
 
 ## H.2 Conclusions (draft: finalize after the evaluation)
@@ -1283,7 +1290,7 @@ The data stays safe on the server laptop. The app tells the user it can't reach 
 It was built for an office of about 10 people. In a check with 438 events, responses took under 90 ms. Many more users would need a dedicated server and a production build.
 
 **Q: How did you test it?**
-- 110 automated tests (all passing)
+- 112 automated tests (all passing)
 - browser walkthroughs of every page for each role, on desktop and phone sizes
 - a load check
 - a pre-defense audit, whose findings were all fixed
@@ -1415,7 +1422,7 @@ Use the screenshots in Appendix G.
 1. Open an event → **+ Add task**: name, due date, priority, owner.
 2. **+ Upload file** to attach documents; **Download report** for a PDF.
 3. **Analytics:** choose This week, This month, This year or All time.
-4. **Schedule → Export to Excel.**
+4. **Schedule → Export → Excel (.xlsx) or CSV (.csv).**
 
 **Administrator** (everything above, plus)
 1. **Schedule → + Add event:**
@@ -1564,7 +1571,7 @@ To change a map, edit the text at the top of [journey-maps/src/journey-maps.html
 |---|---|
 | Backend PHP code (app and routes) | about 3,400 lines |
 | Database code (migrations, seeders, factories) | about 960 lines |
-| Automated tests (code) | about 1,900 lines; 110 test cases, 483 checks |
+| Automated tests (code) | about 1,950 lines; 112 test cases, 517 checks |
 | PDF template | about 460 lines |
 | Frontend code (JSX, JS, CSS) | about 5,100 lines |
 | Application tables | 7 (plus 9 Laravel tables) |

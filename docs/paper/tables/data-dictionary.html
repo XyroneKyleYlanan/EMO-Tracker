@@ -55,7 +55,7 @@ Checked against the database on October 7, 2026. These are the system's 7 applic
 <tr><td>original_date</td><td>date</td><td>Nullable</td><td>First scheduled date of a rescheduled event; empty if it was never moved</td></tr>
 <tr><td>original_time</td><td>time</td><td>Nullable</td><td>First scheduled start time of a rescheduled event</td></tr>
 <tr><td>control_number</td><td>varchar(255)</td><td>Nullable</td><td>The EMO's control number for the booking</td></tr>
-<tr><td>remarks</td><td>text</td><td>Nullable; up to 2,000 characters</td><td>Free-text notes</td></tr>
+<tr><td>remarks</td><td>text</td><td>Nullable; up to 255 characters</td><td>Free-text notes</td></tr>
 <tr><td>needs_preparation</td><td>tinyint(1)</td><td>NOT NULL, Default 0</td><td>Whether the EMO prepares the event (turns on readiness tracking; switched on automatically when a task is added)</td></tr>
 <tr><td>status</td><td>enum('upcoming','completed','cancelled')</td><td>NOT NULL, Default 'upcoming'</td><td>Upcoming until the event ends, then completed (automatic); cancelled is set by an administrator and can be undone. "Ongoing" isn't stored: it's an upcoming event that has started</td></tr>
 <tr><td>created_by</td><td>bigint unsigned</td><td>Foreign Key &#8594; users(id), NOT NULL, cascade on delete</td><td>The user who created the event (users are deactivated, never deleted)</td></tr>

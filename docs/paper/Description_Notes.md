@@ -215,7 +215,7 @@ The explanations you already pasted were AI-written, so rewrite each one from th
 - **ProtectedRoute.jsx:** the browser-side guard (sends you to login, or to your own Home); the real protection is the server check
 
 ### Module 8 - Schedule and Venue Management
-- **ScheduleController index() / export():** one year of bookings laid out like the EMO's spreadsheet, with building colors, status, readiness and overlaps; the year tabs; export gives the same year as an Excel file
+- **ScheduleController index() / export():** one year of bookings laid out like the EMO's spreadsheet, with building colors, status, readiness and overlaps; the year tabs; export gives the same year as an Excel file (the default) or a CSV file; with the type filter or search on, only the rows shown
 - **VenueController merge():** moves all events from a duplicate venue to another one, then deletes the duplicate (all in one step); keeps one name per place, which the colors, the overlap check and the statistics depend on
 
 ### Module 9 - Venue Double-Booking Warning

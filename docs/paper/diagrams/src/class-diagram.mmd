@@ -86,7 +86,9 @@ classDiagram
     }
     class ScheduleExport {
         <<service>>
-        +build(year)$ string
+        +events(year, type, search)$ Collection
+        +xlsx(year, events, note)$ string
+        +csv(events)$ string
     }
     class Backup {
         <<service>>

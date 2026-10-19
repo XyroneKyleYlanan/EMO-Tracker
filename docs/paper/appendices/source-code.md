@@ -744,7 +744,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
 ## Module 8 — Schedule and Venue Management
 
-**ScheduleController.php** (`backend/app/Http/Controllers/Api/ScheduleController.php`, lines 18–55, lines 57–65)
+**ScheduleController.php** (`backend/app/Http/Controllers/Api/ScheduleController.php`, lines 19–56, lines 58–90)
 
 ```php
 public function index(Request $request): JsonResponse
@@ -786,18 +786,44 @@ public function index(Request $request): JsonResponse
     return response()->json(['year' => $year, 'current_year' => today()->year, 'years' => $years, 'events' => $rows]);
 }
 
+/**
+ * The year as an Excel (.xlsx, the default) or CSV file, with only the rows
+ * the page shows when its type filter or search is in use.
+ */
 public function export(Request $request): Response
 {
+    $request->validate([
+        'format' => ['nullable', Rule::in(['xlsx', 'csv'])],
+        'type' => ['nullable', Rule::in(['internal', 'external'])],
+        'search' => ['nullable', 'string', 'max:255'],
+    ]);
     $year = (int) $request->input('year', today()->year);
+    $format = $request->input('format', 'xlsx');
+    $type = $request->input('type');
+    $search = trim((string) $request->input('search'));
 
-    return response(ScheduleExport::build($year), 200, [
-        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition' => "attachment; filename=\"emo-schedule-{$year}.xlsx\"",
+    $events = ScheduleExport::events($year, $type, $search);
+    $note = implode(' · ', array_filter([
+        $type ? ucfirst($type).' events' : null,
+        $search !== '' ? "Search: \"{$search}\"" : null,
+    ]));
+    $name = implode('-', array_filter(['emo-schedule', $year, $type, $search !== '' ? 'filtered' : null]));
+
+    return $format === 'csv'
+        ? response(ScheduleExport::csv($events), 200, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$name}.csv\"",
+        ])
+        : response(ScheduleExport::xlsx($year, $events, $note ?: null), 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename=\"{$name}.xlsx\"",
+        ]);
+}.xlsx\"",
     ]);
 }
 ```
 
-**Explanation:** index() returns one year of the Schedule, laid out like the EMO's own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue's building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as an Excel file built by the ScheduleExport service, in the spreadsheet's familiar format.
+**Explanation:** index() returns one year of the Schedule, laid out like the EMO's own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue's building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as a file built by the ScheduleExport service: an Excel file (the default) in the spreadsheet's familiar format, or a plain CSV file that opens in any app. When the page's type filter or search is in use, the file has only the rows shown, and its name and title say so.
 
 **VenueController.php** (`backend/app/Http/Controllers/Api/VenueController.php`, lines 74–94)
 
