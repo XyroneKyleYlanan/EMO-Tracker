@@ -6,6 +6,8 @@ import { formatDayMonth, formatTime } from '../lib/format'
 import { useEscapeKey } from '../lib/useEscapeKey'
 
 const NEW_VENUE = '__new'
+// Remarks are short notes; the server allows the same length.
+const REMARKS_MAX = 255
 
 const EVENT_TYPES = [
   { value: 'internal', label: 'Internal', hint: 'An NEU event' },
@@ -375,8 +377,14 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
             <input id="event-control" type="text" value={form.control_number} onChange={(e) => update('control_number', e.target.value)} className={input} />
           </Field>
 
-          <Field label="Remarks" htmlFor="event-remarks" error={errors.remarks?.[0]} optional>
-            <textarea id="event-remarks" rows={2} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
+          <Field
+            label="Remarks"
+            htmlFor="event-remarks"
+            error={errors.remarks?.[0]}
+            optional
+            action={<span className="text-xs text-gray-500">{form.remarks.length}/{REMARKS_MAX}</span>}
+          >
+            <textarea id="event-remarks" rows={2} maxLength={REMARKS_MAX} value={form.remarks} onChange={(e) => update('remarks', e.target.value)} className={input} />
           </Field>
 
           {event && (

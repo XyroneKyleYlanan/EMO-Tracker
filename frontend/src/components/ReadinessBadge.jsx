@@ -6,9 +6,11 @@ const CONFIG = {
   completed: { label: 'Completed', classes: 'bg-slate-100 text-slate-700 border-slate-200' },
   scheduled: { label: 'Scheduled', classes: 'bg-cyan-50 text-cyan-800 border-cyan-200' },
   cancelled: { label: 'Cancelled', classes: 'bg-gray-100 text-gray-500 border-gray-200' },
-  // Not statuses, but shown with the same pill: a double booking, and an outside organizer.
+  // Not statuses, but shown with the same pill: a double booking, and the event type
+  // (an outside organizer in orange, a color no status uses).
   overlap: { label: 'Overlap', classes: 'bg-violet-100 text-violet-800 border-violet-200' },
-  external: { label: 'External', classes: 'bg-white text-gray-800 border-gray-300' },
+  internal: { label: 'Internal', classes: 'bg-white text-gray-700 border-gray-300' },
+  external: { label: 'External', classes: 'bg-orange-100 text-orange-800 border-orange-300' },
 }
 
 const REASON_COLORS = { green: 'text-emerald-700', yellow: 'text-amber-700', red: 'text-rose-700' }

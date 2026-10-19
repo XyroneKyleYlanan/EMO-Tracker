@@ -128,6 +128,9 @@ class ScheduleTest extends TestCase
             ->assertStatus(422)->assertJsonValidationErrors('end_date');
         $this->postJson('/api/events', [...$base, 'venue_details' => null])
             ->assertStatus(422)->assertJsonValidationErrors('venue_details');
+        // Remarks are short notes: up to 255 characters.
+        $this->postJson('/api/events', [...$base, 'remarks' => str_repeat('a', 256)])
+            ->assertStatus(422)->assertJsonValidationErrors('remarks');
 
         // Overnight across days is fine, and time can be left out entirely.
         $this->postJson('/api/events', [...$base, 'end_date' => today()->addDays(4)->toDateString(), 'event_time' => '20:00', 'end_time' => '02:00'])

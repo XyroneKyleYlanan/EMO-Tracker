@@ -252,6 +252,13 @@ All 8 phases done. All 4 required features delivered. Full stack working end-to-
   - Font: Apple devices keep their San Francisco font (the original look); Windows and Android use Inter, its closest free match, bundled with the app so it works without internet. Apple's license doesn't allow San Francisco on other devices. (Atkinson Hyperlegible Next was tried first; the team preferred the original look)
   - Consistent corner rounding (panels, buttons, badges) and no repeated card shadows; motion turns off for people who ask their device for less of it
   - Paper screenshots retaken; paper reference, tables and overview updated to the new labels
+- [x] Consultation feedback (2026-10-19), shown as before/after screenshots and approved first:
+  - Remarks: the Schedule shows at most 2 lines (full text on hover and in the event panel); the form allows up to 255 characters, with a counter (was 2,000; the longest real remark is 39)
+  - Type column: every row gets a pill, Internal in white and External in orange (a color no status uses); building colors unchanged
+  - Type filter (All / Internal / External) next to the year tabs; sortable column headers left out on purpose, since sorting would break the month groups
+  - Export menu instead of "Export to Excel": Excel (.xlsx, the default) or CSV (.csv, UTF-8 so "ñ" shows in Excel). The file has only the rows on screen when the type filter or search is in use; its name and the Excel title say so
+  - Paper: Schedule screenshots (06–10, 15), the admin wireframe, the site maps, the class diagram, the API table, the data dictionary and the Module 8 code updated
+- [x] 2 new tests (112 total)
 
 ### Next up
 

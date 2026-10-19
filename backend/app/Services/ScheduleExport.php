@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -11,15 +12,21 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
- * One year of the Schedule as an Excel file laid out like the EMO's own
- * sheet: year title, the same seven columns, rows colored by building.
- * Generated locally (no external service), like the PDF reports.
+ * One year of the Schedule as a file: an Excel file laid out like the EMO's
+ * own sheet (year title, the same columns, rows colored by building), or a
+ * plain CSV file that opens in any spreadsheet or text app. Generated locally
+ * (no external service), like the PDF reports.
  */
 class ScheduleExport
 {
     public const HEADERS = ['DATE', 'TIME', 'EVENT', 'TYPE', 'DEPARTMENT', 'VENUE', 'CONTROL #', 'REMARKS'];
 
-    public static function build(int $year): string
+    /**
+     * The year's events in Schedule order, narrowed the way the Schedule page
+     * narrows them, so the file has exactly the rows on screen: by type, and by
+     * the search box (the same fields the page searches, "overlap" included).
+     */
+    public static function events(int $year, ?string $type = null, ?string $search = null): Collection
     {
         $events = Event::with('venue.building')
             ->whereYear('event_date', $year)
@@ -27,12 +34,28 @@ class ScheduleExport
             ->orderBy('event_time')
             ->get();
 
+        // Overlaps are found among the whole year, as on the page, before any filter.
+        $search = mb_strtolower(trim((string) $search));
+        $clashes = $search === '' ? [] : VenueClashes::within($events);
+
+        return $events
+            ->filter(fn (Event $e) => ! $type || $e->event_type === $type)
+            ->filter(fn (Event $e) => $search === '' || collect([
+                $e->name, $e->event_type, $e->department, $e->location, $e->control_number, $e->remarks,
+                $e->status === 'upcoming' && ! empty($clashes[$e->id]) ? 'overlap' : null,
+            ])->contains(fn ($value) => $value !== null && str_contains(mb_strtolower($value), $search)))
+            ->values();
+    }
+
+    /** @param  string|null  $note  what the rows were narrowed to, shown after the year */
+    public static function xlsx(int $year, Collection $events, ?string $note = null): string
+    {
         $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle((string) $year);
 
         $sheet->mergeCells('A1:H1');
-        $sheet->setCellValue('A1', (string) $year);
+        $sheet->setCellValue('A1', $note ? "{$year} · {$note}" : (string) $year);
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
@@ -43,16 +66,7 @@ class ScheduleExport
         $row = 3;
         foreach ($events as $event) {
             $cancelled = $event->status === 'cancelled';
-            $sheet->fromArray([
-                self::dateLabel($event->event_date, $event->end_date),
-                self::timeLabel($event->event_time, $event->end_time),
-                $cancelled ? "{$event->name} (Cancelled)" : $event->name,
-                ucfirst($event->event_type),
-                $event->department,
-                $event->location,
-                $event->control_number,
-                implode(' · ', array_filter([self::rescheduledLabel($event), $event->remarks])),
-            ], null, "A{$row}");
+            $sheet->fromArray(self::row($event), null, "A{$row}");
 
             $sheet->getStyle("A{$row}")->getFont()->setBold(true);
             if ($color = $event->venue?->building?->color) {
@@ -76,6 +90,43 @@ class ScheduleExport
         (new Xlsx($spreadsheet))->save('php://output');
 
         return ob_get_clean();
+    }
+
+    /**
+     * The same rows as plain text: no colors or title, and each date carries
+     * its year, since there is no year title above it.
+     */
+    public static function csv(Collection $events): string
+    {
+        $file = fopen('php://temp', 'r+');
+        // The byte-order mark makes Excel read the file as UTF-8, so "ñ", "–" and "·" show correctly.
+        fwrite($file, "\xEF\xBB\xBF");
+        fputcsv($file, self::HEADERS, ',', '"', '', "\r\n");
+        foreach ($events as $event) {
+            fputcsv($file, self::row($event, withYear: true), ',', '"', '', "\r\n");
+        }
+        rewind($file);
+        $csv = stream_get_contents($file);
+        fclose($file);
+
+        return $csv;
+    }
+
+    // One event's cells, in the order of HEADERS.
+    private static function row(Event $event, bool $withYear = false): array
+    {
+        $date = self::dateLabel($event->event_date, $event->end_date);
+
+        return [
+            $withYear ? $date.', '.($event->end_date ?? $event->event_date)->year : $date,
+            self::timeLabel($event->event_time, $event->end_time),
+            $event->status === 'cancelled' ? "{$event->name} (Cancelled)" : $event->name,
+            ucfirst($event->event_type),
+            $event->department,
+            $event->location,
+            $event->control_number,
+            implode(' · ', array_filter([self::rescheduledLabel($event), $event->remarks])),
+        ];
     }
 
     // "October 2", "October 11–13", or "October 30 – November 1", like the EMO's sheet.

@@ -23,7 +23,7 @@ A web application for event planning and task management with rule-based event r
 1. **Event Planning & Scheduling** — Calendar and list views, plus a Schedule page laid out like the EMO's sheet (one tab per year, colored by building). Every event is Internal or External, shows its status (Upcoming, Ongoing, Completed, Cancelled), and notes when it was rescheduled
 2. **Task Assignment & Tracking** — Tasks per event, each with an owner, due date, priority and status; everyone has a My tasks page
 3. **Rule-Based Event Readiness Classification** — Hardcoded On Track / At Risk / Critical rules that also say why, plus an Analytics page
-4. **Reports & Document Management** — PDF event reports, Excel export of the Schedule, and file upload and download (PDF, Word, Excel, JPG, PNG, up to 10 MB)
+4. **Reports & Document Management** — PDF event reports, Excel or CSV export of the Schedule, and file upload and download (PDF, Word, Excel, JPG, PNG, up to 10 MB)
 5. **Venue Double-Booking Warning** — Warns when an event overlaps another booking at the same venue and time
 
 Also included: automatic daily backups (database and documents), and a one-time import of the EMO's schedule spreadsheet.
@@ -248,7 +248,7 @@ cd C:\laragon\www\EMOTracker\backend
 php artisan test
 ```
 
-The tests use a temporary in-memory database, so they never touch your demo data. The 110 tests cover the readiness rules, event statuses, the double-booking check, roles and access, the completed-event lock, backups, the schedule import and export, documents and PDF reports.
+The tests use a temporary in-memory database, so they never touch your demo data. The 112 tests cover the readiness rules, event statuses, the double-booking check, roles and access, the completed-event lock, backups, the schedule import and export, documents and PDF reports.
 
 ---
 

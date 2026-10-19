@@ -13,6 +13,7 @@ import { ChevronDownIcon, SearchIcon } from '../components/icons'
 import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } from '../lib/format'
 
 const OTHER_COLOR = '#E5E7EB'
+const TYPE_FILTERS = [['all', 'All'], ['internal', 'Internal'], ['external', 'External']]
 
 // The EMO's schedule sheet: every NEU event, one tab per year, colored by
 // building. Everyone can view it; only the admin adds and edits events.
@@ -27,6 +28,7 @@ export default function SchedulePage() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const [search, setSearch] = useState('')
+  const [type, setType] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
@@ -58,9 +60,14 @@ export default function SchedulePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  async function handleExport() {
+  // The file has the rows on screen: the whole year, or only what the type filter and search show.
+  async function handleExport(format) {
+    const params = new URLSearchParams({ year, format })
+    if (type !== 'all') params.set('type', type)
+    if (query) params.set('search', search.trim())
+    const name = ['emo-schedule', year, type !== 'all' && type, query && 'filtered'].filter(Boolean).join('-')
     try {
-      await downloadFile(`/schedule/export?year=${year}`, `emo-schedule-${year}.xlsx`)
+      await downloadFile(`/schedule/export?${params}`, `${name}.${format}`)
     } catch {
       toast.error('Failed to export the schedule.')
     }
@@ -101,9 +108,11 @@ export default function SchedulePage() {
 
   const query = search.trim().toLowerCase()
   const rows = (data?.events || []).filter((e) =>
-    !query || [e.name, e.event_type, e.department, e.location, e.control_number, e.remarks, e.clashes?.length ? 'overlap' : null]
-      .some((v) => v && v.toLowerCase().includes(query))
+    (type === 'all' || e.event_type === type) &&
+    (!query || [e.name, e.event_type, e.department, e.location, e.control_number, e.remarks, e.clashes?.length ? 'overlap' : null]
+      .some((v) => v && v.toLowerCase().includes(query)))
   )
+  const filtered = type !== 'all' || !!query
   const months = []
   for (const row of rows) {
     const label = formatMonthYear(row.event_date)
@@ -122,12 +131,7 @@ export default function SchedulePage() {
         </div>
         {canExport && (
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={handleExport}
-              className="border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
-            >
-              Export to Excel
-            </button>
+            <ExportMenu onExport={handleExport} shown={filtered ? rows.length : null} />
             {isAdmin && (
               <Link
                 to="/admin/venues"
@@ -185,6 +189,21 @@ export default function SchedulePage() {
           ))}
         </div>
 
+        <div role="group" aria-label="Event type" className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+          {TYPE_FILTERS.map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setType(value)}
+              aria-pressed={type === value}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${
+                type === value ? 'bg-neu-green text-white' : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         <div className="relative w-full sm:w-72 sm:ml-auto">
           <SearchIcon width={16} height={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
@@ -207,7 +226,7 @@ export default function SchedulePage() {
         </div>
       ) : rows.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
-          {query ? 'No events match your search.' : `No events scheduled for ${year}.`}
+          {query ? 'No events match your search.' : type !== 'all' ? `No ${type} events in ${year}.` : `No events scheduled for ${year}.`}
         </div>
       ) : (
         <div className={loading ? 'opacity-60' : ''}>
@@ -302,7 +321,7 @@ function MonthRows({ month, onOpen }) {
           <Td>{row.department}</Td>
           <Td>{row.location || <Muted>TBA</Muted>}</Td>
           <Td className="break-words">{row.control_number}</Td>
-          <Td>{row.remarks}</Td>
+          <Td><Remarks text={row.remarks} /></Td>
         </tr>
       ))}
     </>
@@ -330,9 +349,73 @@ function EventName({ row }) {
   )
 }
 
-// Every row says its type; outside bookings stand out so they can be spotted at a glance.
+// Every row says its type with a pill; outside bookings are orange so they can be spotted at a glance.
 function EventType({ type }) {
-  return type === 'external' ? <ReadinessBadge readiness="external" size="sm" /> : <span>Internal</span>
+  return <ReadinessBadge readiness={type === 'external' ? 'external' : 'internal'} size="sm" />
+}
+
+// Long notes stop at two lines so one row can't stretch the table; the full
+// text shows on hover and in the event panel.
+function Remarks({ text }) {
+  return text ? <span title={text} className="line-clamp-2 break-words">{text}</span> : null
+}
+
+// "Export" with a choice of file: Excel keeps the building colors, CSV is plain
+// text that opens in any app. `shown` is the row count when a filter is in use.
+function ExportMenu({ onExport, shown }) {
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const closeOutside = (e) => { if (!menuRef.current?.contains(e.target)) setOpen(false) }
+    const closeOnEscape = (e) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', closeOutside)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('mousedown', closeOutside)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [open])
+
+  function choose(format) {
+    setOpen(false)
+    onExport(format)
+  }
+
+  return (
+    <div ref={menuRef} className="relative">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
+      >
+        Export
+        <ChevronDownIcon width={14} height={14} className="text-gray-500" />
+      </button>
+      {open && (
+        <div role="menu" className="absolute left-0 mt-1 w-60 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
+          <ExportOption label="Excel (.xlsx)" hint="With the building colors" onClick={() => choose('xlsx')} />
+          <ExportOption label="CSV (.csv)" hint="Plain text, opens in any app" onClick={() => choose('csv')} />
+          {shown !== null && (
+            <p className="border-t border-gray-100 mt-1 px-3 pt-2 pb-1 text-xs text-gray-500">
+              Only the {shown} event{shown === 1 ? '' : 's'} shown
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ExportOption({ label, hint, onClick }) {
+  return (
+    <button role="menuitem" onClick={onClick} className="block w-full text-left px-3 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none">
+      <span className="block text-sm font-medium text-gray-900">{label}</span>
+      <span className="block text-xs text-gray-500">{hint}</span>
+    </button>
+  )
 }
 
 // Small notes on a building-colored row stay gray-800 so they're readable on every color.
@@ -366,7 +449,7 @@ function MonthCards({ month, onOpen }) {
                 {row.location || 'Venue TBA'}{row.department ? ` · ${row.department}` : ''}
               </div>
               <div className="text-xs mt-1"><EventType type={row.event_type} /></div>
-              {row.remarks && <div className="text-xs mt-1 italic">{row.remarks}</div>}
+              {row.remarks && <div className="text-xs mt-1 italic line-clamp-2 break-words">{row.remarks}</div>}
             </button>
           )
         })}

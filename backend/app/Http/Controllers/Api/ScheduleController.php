@@ -8,6 +8,7 @@ use App\Services\ScheduleExport;
 use App\Services\VenueClashes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -54,13 +55,37 @@ class ScheduleController extends Controller
         return response()->json(['year' => $year, 'current_year' => today()->year, 'years' => $years, 'events' => $rows]);
     }
 
+    /**
+     * The year as an Excel (.xlsx, the default) or CSV file, with only the rows
+     * the page shows when its type filter or search is in use.
+     */
     public function export(Request $request): Response
     {
-        $year = (int) $request->input('year', today()->year);
-
-        return response(ScheduleExport::build($year), 200, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => "attachment; filename=\"emo-schedule-{$year}.xlsx\"",
+        $request->validate([
+            'format' => ['nullable', Rule::in(['xlsx', 'csv'])],
+            'type' => ['nullable', Rule::in(['internal', 'external'])],
+            'search' => ['nullable', 'string', 'max:255'],
         ]);
+        $year = (int) $request->input('year', today()->year);
+        $format = $request->input('format', 'xlsx');
+        $type = $request->input('type');
+        $search = trim((string) $request->input('search'));
+
+        $events = ScheduleExport::events($year, $type, $search);
+        $note = implode(' · ', array_filter([
+            $type ? ucfirst($type).' events' : null,
+            $search !== '' ? "Search: \"{$search}\"" : null,
+        ]));
+        $name = implode('-', array_filter(['emo-schedule', $year, $type, $search !== '' ? 'filtered' : null]));
+
+        return $format === 'csv'
+            ? response(ScheduleExport::csv($events), 200, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => "attachment; filename=\"{$name}.csv\"",
+            ])
+            : response(ScheduleExport::xlsx($year, $events, $note ?: null), 200, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => "attachment; filename=\"{$name}.xlsx\"",
+            ]);
     }
 }

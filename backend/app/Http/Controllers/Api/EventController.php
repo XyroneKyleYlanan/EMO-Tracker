@@ -163,7 +163,7 @@ class EventController extends Controller
             'event_time' => ['nullable', 'date_format:H:i'],
             'end_time' => ['nullable', 'date_format:H:i', Rule::when($singleDay && $request->filled('event_time'), 'after:event_time')],
             'control_number' => ['nullable', 'string', 'max:255'],
-            'remarks' => ['nullable', 'string', 'max:2000'],
+            'remarks' => ['nullable', 'string', 'max:255'],
             'needs_preparation' => ['sometimes', 'boolean'],
             'cancelled' => [$creating ? 'prohibited' : 'sometimes', 'boolean'],
             // When the date or time changes: true for a reschedule, false for a correction.
