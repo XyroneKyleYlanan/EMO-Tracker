@@ -57,7 +57,10 @@
     <table style="width: 100%; border: none;">
         <tr>
             <td style="width: 60px; vertical-align: middle; border: none;">
+                {{-- PDFs need PHP's gd module for PNG images; without it (the temporary Vercel test), the logo is left out. --}}
+                @if (extension_loaded('gd'))
                 <img src="{{ public_path('images/neu-logo.png') }}" alt="NEU" style="width: 50px; height: 50px;">
+                @endif
             </td>
             <td style="vertical-align: middle; border: none; padding-left: 4px;">
                 <div class="brand">EMO Tracker · Events Management Office</div>

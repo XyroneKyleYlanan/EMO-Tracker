@@ -1,0 +1,13 @@
+# Vercel (the EMO's temporary online test): left out of the upload.
+# The libraries are installed by Vercel; storage holds this computer's logs,
+# backups and uploads (real data); .env holds this computer's settings.
+/vendor
+/node_modules
+/storage
+/.env
+/.env.*
+!/.env.example
+/tests
+/.phpunit.cache
+/public/storage
+/public/hot

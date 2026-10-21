@@ -17,7 +17,9 @@ call "%OFFICE%find-php.bat"
 if errorlevel 1 goto failed
 set "MISSING="
 for %%M in (pdo_mysql mbstring openssl fileinfo zip gd) do (
-  php -m | findstr /i /x "%%M" >NUL
+  REM Asked of PHP directly: "php -m | findstr /x" misses every module, because
+  REM PHP ends its lines in a way findstr's exact-line match doesn't accept.
+  php -r "exit(extension_loaded('%%M') ? 0 : 1);"
   if errorlevel 1 set "MISSING=!MISSING! %%M"
 )
 if defined MISSING (
