@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker — Chapter 4, Objective 2 tables</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 1150px; margin: 24px auto; padding: 0 20px; color: #111827; }
+  h1 { color: #0a5c3a; }
+  h2 { color: #0a5c3a; margin-top: 36px; font-size: 18px; }
+  p.note { font-size: 13px; color: #555; background: #fff8e1; border: 1px solid #e6d9a8; padding: 10px 14px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { border: 1px solid #888; padding: 6px 9px; text-align: left; vertical-align: top; font-size: 13px; }
+  th { background: #0a5c3a; color: #ffffff; }
+  td.center { text-align: center; white-space: nowrap; }
+  .red { background: #fee2e2; color: #991b1b; font-weight: bold; }
+  .amber { background: #fef3c7; color: #92400e; font-weight: bold; }
+  .green { background: #d1fae5; color: #065f46; font-weight: bold; }
+  .none { background: #f3f4f6; color: #374151; font-weight: bold; }
+  .pass { color: #065f46; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>Chapter 4, Objective 2 — tables</h1>
+<p class="note"><strong>How to use:</strong> select a table, copy (Ctrl+C), and paste into Google Docs or Word; it pastes as a real table. Number each table in the order it appears in Chapter 4 (the "Table __" captions). The test results are from the system's automated tests, run on October 23, 2026: all passed. The last table uses the EMO's real schedule (totals only, as of October 23, 2026).</p>
+
+<h2>Readiness classification test cases</h2>
+<table>
+<tr><th>No.</th><th>Situation tested</th><th>Expected label</th><th>Reason shown</th><th>Result</th></tr>
+<tr><td class="center">1</td><td>Prepared event 30 days away, with no tasks yet</td><td class="center amber">At Risk</td><td>No tasks yet</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">2</td><td>All tasks done, event tomorrow</td><td class="center green">On Track</td><td>All tasks done</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">3</td><td>All tasks done, event today</td><td class="center green">On Track</td><td>All tasks done</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">4</td><td>One task past its due date, event still 30 days away</td><td class="center red">Critical</td><td>1 task is overdue</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">5</td><td>One task still open, event tomorrow</td><td class="center red">Critical</td><td>1 task still open, event is tomorrow</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">6</td><td>Multi-day event already started, two tasks still open</td><td class="center red">Critical</td><td>2 tasks still open, event has started</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">7</td><td>25% of tasks done, event in 5 days</td><td class="center red">Critical</td><td>Only 25% done, 5 days to go</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">8</td><td>Most open tasks have no owner, event in 5 days</td><td class="center red">Critical</td><td>2 of 3 open tasks have no owner, 5 days to go</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">9</td><td>One task in progress, event in 14 days</td><td class="center amber">At Risk</td><td>0% done, 14 days to go</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">10</td><td>50% of tasks done, event in 5 days</td><td class="center amber">At Risk</td><td>50% done, 5 days to go</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">11</td><td>One open task has no owner, event in 20 days</td><td class="center amber">At Risk</td><td>1 open task has no owner</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">12</td><td>No task started yet, event in 15 days</td><td class="center green">On Track</td><td>0% done, nothing overdue</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">13</td><td>80% of tasks done, event in 5 days</td><td class="center green">On Track</td><td>80% done, nothing overdue</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">14</td><td>A finished task with no owner (finished tasks need none)</td><td class="center green">On Track</td><td>50% done, nothing overdue</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">15</td><td>A task due today (not yet overdue), event in 10 days</td><td class="center green">On Track</td><td>75% done, nothing overdue</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">16</td><td>An event the EMO only schedules (not prepared by the EMO)</td><td class="center none">No label</td><td>— (shown as Scheduled)</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">17</td><td>A cancelled event with an open task</td><td class="center none">No label</td><td>— (shown as Cancelled)</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">18</td><td>A completed event with an open task</td><td class="center none">No label</td><td>— (shown as Completed)</td><td class="center pass">Passed</td></tr>
+</table>
+<p style="font-size:13px">Table __. Readiness Classification Test Cases</p>
+
+<h2>Analytics and Home page tests</h2>
+<table>
+<tr><th>No.</th><th>What was tested</th><th>Expected result</th><th>Result</th></tr>
+<tr><td class="center">1</td><td>Event counts by status</td><td>Upcoming, ongoing, completed and cancelled cover every event and add up to the total</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">2</td><td>Period filter</td><td>This week, this month and this year follow the calendar (a week runs Sunday to Saturday); all time covers every event</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">3</td><td>Who can open Analytics</td><td>The Administrator and Officers can; Staff are refused</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">4</td><td>Preparation statistics</td><td>The number of people with tasks counts every member who owns a task</td><td class="center pass">Passed</td></tr>
+<tr><td class="center">5</td><td>Home page "Needs attention"</td><td>Lists the prepared events labeled Critical or At Risk, with their reasons, and the schedule for the next 7 days</td><td class="center pass">Passed</td></tr>
+</table>
+<p style="font-size:13px">Table __. Analytics and Home Page Test Results</p>
+
+<h2>Analytics on the EMO's real schedule (This year, 2026)</h2>
+<table>
+<tr><th>Measure</th><th>Count</th></tr>
+<tr><td>Events on the 2026 schedule</td><td class="center">372</td></tr>
+<tr><td>Upcoming</td><td class="center">89</td></tr>
+<tr><td>Ongoing</td><td class="center">0</td></tr>
+<tr><td>Completed</td><td class="center">281</td></tr>
+<tr><td>Cancelled</td><td class="center">2</td></tr>
+<tr><td>Rescheduled (moved to a new date)</td><td class="center">10</td></tr>
+<tr><td>Internal / External</td><td class="center">372 / 0</td></tr>
+<tr><td>Busiest venue: University Hall</td><td class="center">108</td></tr>
+<tr><td>IS MPH</td><td class="center">47</td></tr>
+<tr><td>PSB MPH</td><td class="center">46</td></tr>
+<tr><td>SOM Building</td><td class="center">43</td></tr>
+<tr><td>NEU Open Field</td><td class="center">16</td></tr>
+</table>
+<p style="font-size:13px">Table __. Analytics of the EMO's 2026 Schedule (as of October 23, 2026)</p>
+
+</body>
+</html>

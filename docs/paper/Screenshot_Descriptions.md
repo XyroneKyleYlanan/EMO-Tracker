@@ -1,11 +1,11 @@
 # Screenshot Descriptions
 
-Descriptions of the 26 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
+Descriptions of the 29 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** every screenshot was taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data.
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only.
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
-- **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution.
+- **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
 
 ---
@@ -255,3 +255,34 @@ The server generates the report, so it looks the same on every device.
 **File:** [screenshots/5-reports/26-excel-export.png](screenshots/5-reports/26-excel-export.png)
 
 The Administrator and Officers can export the Schedule as an Excel file in the same layout as the spreadsheet the EMO used before the system: a year title, then columns for date, time, event, type, department, venue, control number and remarks. Rows are colored by building, cancelled events are struck through, and reschedules are noted in the remarks. The office can therefore keep sharing the schedule in its familiar format. The file is shown in a file preview; Arial is used in place of Excel's default font, Calibri, which the preview computer does not have.
+
+---
+
+## 6. Data protection
+
+Outputs that show how the system protects and brings in the office's data. Taken on October 25, 2026.
+
+### 27. Spreadsheet Import Check (Dry Run)
+
+**File:** [screenshots/6-data-protection/27-import-check.png](screenshots/6-data-protection/27-import-check.png)
+
+The EMO's existing schedule is imported once, by a command on the server laptop. With `--dry-run`, the command reads the whole file and reports what it would do, without saving anything. The screenshot checks the EMO's sheet of October 20, 2026 against a copy of the database that has the office's venue list and no events:
+- 401 rows read from the 2026 and 2027 tabs, and all 401 would be imported
+- 10 rescheduled events: each old-date row is merged into its new date, so the 401 rows become 391 events
+- 3 rows not imported (rows that are not events, or that have no readable date)
+- 3 new venue spellings for the Administrator to sort on the Venues page
+- 64 rows listed for a person to check, saved to a file in private storage
+
+Only totals and venue names appear; the list of rows to check, which has event names, stays in private storage.
+
+### 28. Automatic Daily Backups
+
+**File:** [screenshots/6-data-protection/28-backup-files.png](screenshots/6-data-protection/28-backup-files.png)
+
+The system saves a backup on the first use of each day: one ZIP file with the database and the uploaded documents. The `backup:list` command shows the backups newest first, with the database name and the size. The screenshot lists the daily backups of the development MacBook from October 2 to October 23, 2026, one for each day the system was used; named snapshots (saved before updates and imports) are left out of this view. The newest 14 daily backups are kept, and a restore command brings back any of them.
+
+### 29. Login Limit Message
+
+**File:** [screenshots/6-data-protection/29-login-limit.png](screenshots/6-data-protection/29-login-limit.png)
+
+After 10 failed sign-ins within a minute for the same account on the same device, the server refuses further attempts until the minute passes, and the form shows "Too many login attempts. Wait a minute, then try again." The screenshot was taken with the demo Administrator account: the first 10 wrong passwords were refused as incorrect, and the 11th showed this message. Other accounts and other devices are not affected.

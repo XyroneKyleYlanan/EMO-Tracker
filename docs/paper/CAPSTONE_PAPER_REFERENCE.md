@@ -273,7 +273,7 @@ Compare EMO Tracker with the tools the EMO could otherwise use. **Check every cl
 | Oct 6, 2026 | Phase 10, client consultation 2 **[TO CONFIRM format]** | Client asked to remove budget, to show cancelled/ongoing/rescheduled events, to classify Internal/External (visible on the Schedule) and for status analytics. The professor allowed more than 4 features. Built the status lifecycle, the reschedule mark, the event types, the new analytics and the double-booking warning |
 | Oct 7, 2026 | Pre-defense audit | Reviewed the whole system for anything that could fail, confuse a user or look unfinished; fixed the findings (see G.6) |
 | Oct 19, 2026 | Consultation **[TO CONFIRM with whom]** | Suggested shorter remarks on the Schedule, colors for Internal and External, a type filter, and a CSV option for the export (the professor). All four were added, and the paper figures were updated |
-| Oct 13 to 31, 2026 | Installation, pilot and evaluation **[TO CONFIRM dates]** | Install on the EMO's Windows laptop with their latest data (Oct 13 to 15); about 2 weeks of real use by the office (Oct 15 to 27); survey (Oct 27 to 31) |
+| Oct 20 onward, 2026 | Installation, pilot and evaluation **[TO CONFIRM end date and survey date]** | Installed on the EMO's Windows laptop on Oct 20 (office mode, with the EMO's latest sheet and real accounts). Because some NEU PCs are on a different network, the EMO's testing started on Oct 21 through a temporary online version, approved by the adviser and professor for testing only. Survey after the testing |
 | Early Nov 2026 | Capstone 2 defense | Presented on a MacBook with the EMO's shared data |
 
 - **Requirements gathering:**
@@ -1103,7 +1103,7 @@ Use the screenshots in Appendix G as figures. They were taken from the **demo da
 
 ## G.2 Automated test results
 
-All **112 test cases (530 checks) pass** (October 19, 2026). The tests run on a temporary in-memory database.
+All **112 test cases (530 checks) pass** (last run October 23, 2026). The tests run on a temporary in-memory database.
 
 | Test file | Cases | What it checks |
 |---|--:|---|
@@ -1170,11 +1170,20 @@ This ran during the audit on October 7, 2026: a MacBook (Apple silicon) running 
 
 ## G.7 Results with the EMO's real data (totals only)
 
-- **Import:** the 2026 schedule (329 events) was imported on October 2, 2026.
+**First import (October 2, 2026):**
+- **Import:** the 2026 schedule (329 events) was imported.
 - **Venues:** about 80 spellings were reduced to about 25 venues in the managed list.
 - **Text cleanup:** 221 values were made consistent (capitalization, typos, rooms, remarks).
 - **Overlaps:** the double-booking check found 13 pairs of overlapping bookings at the same venue, 9 of them still upcoming (October 6, 2026).
-- **Still to do:** 11 old-style reschedule rows remain in the current copy. The final import, with the EMO's latest sheet, will merge them.
+
+**Final import, with the EMO's latest sheet (October 20, 2026; the data installed at the EMO):**
+- **Import:** 401 rows read from the 2026 and 2027 tabs: 391 events (372 in 2026, 19 in 2027).
+- **Reschedules:** 10 "Resched to / Resched from" pairs merged into single events, so no old-style reschedule rows remain.
+- **Review:** 64 rows listed for a person to check (for example 7 times before 6 AM and 5 rows with no event name); text was already consistent.
+- **Venues:** 29 venues; 3 new spellings were merged into existing venues ("U Hall" into University Hall, for example), and 12 events use a typed place.
+- **Overlaps (October 23, 2026):** 14 pairs of overlapping bookings in 2026, 6 of them still upcoming.
+- **Analytics, This year 2026 (October 23, 2026):** 372 events: 89 upcoming, 0 ongoing, 281 completed, 2 cancelled; 10 rescheduled; all 372 internal (the sheet has no type column). Busiest venues: University Hall 108, IS MPH 47, PSB MPH 46, SOM Building 43, NEU Open Field 16.
+- **Readiness:** no real event is marked "EMO prepares this event" yet, so there are no real readiness labels yet; they can come from the pilot.
 
 ## G.8 User evaluation results **[TO FILL IN after the pilot]**
 
@@ -1202,8 +1211,8 @@ Don't let an AI write this section before the real data exists. Templates:
 | 5. Readiness | EventClassifier | Screenshots 04, 09, 16, 20; EventClassifierTest (18 cases) |
 | 6. Analytics | Analytics page | Screenshot 20; AnalyticsTest |
 | 7. Records | PDF report, Excel export, documents | Screenshots 18, 25, 26; DocumentAndReportTest, ScheduleExportTest |
-| 8. Security and backups | Roles, tokens, login limit, backups | E.9; screenshots 02, 03, 13, 24; AccessControlTest, BackupTest |
-| 9. Existing data | Spreadsheet import, text cleanup | G.7; ScheduleImportTest, ScheduleTidyTest |
+| 8. Security and backups | Roles, tokens, login limit, backups | E.9; screenshots 02, 03, 13, 24, 28, 29; AccessControlTest, BackupTest |
+| 9. Existing data | Spreadsheet import, text cleanup | G.7; screenshot 27; ScheduleImportTest, ScheduleTidyTest |
 | 10. Evaluation | Pilot and survey | G.8 **[TO FILL IN]** |
 
 ---
@@ -1506,6 +1515,10 @@ Mark each scenario Passed or Failed, and write notes.
 | **5-reports/** | |
 | [25-pdf-report.png](screenshots/5-reports/25-pdf-report.png) | PDF event report (both pages) |
 | [26-excel-export.png](screenshots/5-reports/26-excel-export.png) | Schedule exported to Excel (file preview) |
+| **6-data-protection/** | |
+| [27-import-check.png](screenshots/6-data-protection/27-import-check.png) | Import check (dry run) of the EMO's October 20 sheet: totals only |
+| [28-backup-files.png](screenshots/6-data-protection/28-backup-files.png) | Automatic daily backups (backup:list) |
+| [29-login-limit.png](screenshots/6-data-protection/29-login-limit.png) | Login form after 10 failed tries: the login limit message |
 
 **Chapter 3 figures** (Figures 3.1 to 3.9 in [Diagram_Descriptions.md](Diagram_Descriptions.md), in the `diagrams/` folder next to this file):
 
