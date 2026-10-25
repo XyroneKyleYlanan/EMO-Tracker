@@ -26,23 +26,27 @@
   .frame i { color: #333; }
   code { font-family: Consolas, Menlo, monospace; font-size: 9pt; background: #eef1f6; padding: 0 3px; }
   .num { text-align: center; white-space: nowrap; }
+  .done { color: #1e7b3c; font-weight: bold; }
+  .open { color: #b3261e; font-weight: bold; }
+  .formula { font-family: "Times New Roman", serif; font-size: 12pt; margin: 6px 0 6px 18px; }
   .pb { break-before: page; }
 </style>
 </head>
 <body>
 
 <h1>Guide for Making Chapters 4 and 5</h1>
-<p class="subtitle">EMO Tracker (Capstone 2). Updated October 23, 2026: checked against the system, a new test run and the newest reference file.</p>
+<p class="subtitle">EMO Tracker (Capstone 2). Updated October 26, 2026: checked against the paper (version 8), the repository and a new test run.</p>
 
 <div class="new">
 <b class="t">What changed in this version</b>
 <ul>
-<li>All test numbers were checked again: <b>112 test cases, 530 checks, all passed on October 23, 2026</b>.</li>
-<li>Real-data numbers now come from the <b>EMO's latest sheet</b> (loaded October 20). The old "11 reschedule rows remain" no longer applies.</li>
-<li>Pilot dates now follow what happened: <b>installed October 20</b>, the EMO's testing <b>from October 21</b>.</li>
-<li>Objective 2: "three" (not "3"), Analytics stays in the objective, and the <b>readiness flowchart</b> replaces the code screenshot.</li>
-<li>New: ready-made tables for the readiness tests and the real-data Analytics (<code>docs/paper/chapter-4/objective-2-tables.html</code>).</li>
-<li>Section 6 now lists every fix found in the October 23 review of the paper.</li>
+<li>Checked against <b>paper version 8</b>. Most of the October 23 fixes are done; Section 8 lists what is still open, page by page.</li>
+<li>New test run on <b>October 26, 2026: 112 test cases, 530 checks, all passed</b>.</li>
+<li>New screenshots: <b>30</b> (the Export menu, full page and close-up) and <b>31</b> (the CSV export). <b>Figure 3.5</b> was redrawn with port 8000.</li>
+<li>Objective 3's figures are renumbered to add the CSV export: <b>Figures 4.16 to 4.25</b> (Section 4).</li>
+<li>New: <b>how to run the user evaluation</b> and compute the results (Section 5), and the <b>evaluation method section</b> the paper is missing (Section 6).</li>
+<li><b>Correction:</b> copy each objective word for word and drop only "To" (Section 3). Some earlier fix lists said to keep "To"; follow this guide.</li>
+<li>The EMO has <b>four main members</b>: the Director, the Ministrong Tagasubaybay and two others (positions to confirm at the office).</li>
 </ul>
 </div>
 
@@ -51,276 +55,392 @@
 <ul>
 <li>The <b>order</b> of the parts follows the ZALIN sample. Everything inside the parts (screens, tests, numbers, features) is <b>EMO Tracker</b>.</li>
 <li>Codes like <b>G.2</b> and <b>G.7</b> point to the <b>reference file</b> (<code>docs/paper/CAPSTONE_PAPER_REFERENCE.md</code>), not to your paper. Open it in Notepad or VS Code and press <b>Ctrl + F</b> to search for the code.</li>
-<li>Use the <b>newest</b> reference file: G.2 says <b>112 test cases (530 checks), last run October 23, 2026</b>, and G.7 has two parts (first import, final import).</li>
-<li>Copy every number from the reference file or from a new test run. <b>Never guess a number.</b></li>
-<li>Write every paragraph in your own words (the paper must pass Turnitin at 90 to 94% human). Do not paste the reference file into your paper.</li>
+<li>Copy every number from the reference file, a new test run or your own forms. <b>Never guess a number.</b></li>
+<li>Write every paragraph in your own words (the paper must pass Turnitin at 90 to 94% human). Do not paste the reference file or this guide into your paper.</li>
+<li>Page numbers in this guide are from <b>paper version 8</b>. They move as you edit, so search for the words instead (<b>Ctrl + F</b>).</li>
 </ul>
 </div>
 
-<h2>1. Outline of Your Chapter 4</h2>
+<h2>1. Where the Paper Stands (Version 8)</h2>
+<table>
+<tr><th style="width:22%">Part</th><th style="width:33%">Done</th><th>Still open</th></tr>
+<tr><td>Title page</td><td class="done">Title fixed ("Task Management")</td><td>Date "May 2026": ask the adviser (the defense is in November)</td></tr>
+<tr><td>Front pages</td><td></td><td>Table of contents, List of Figures and List of Tables are outdated. Do them last (Section 8).</td></tr>
+<tr><td>Chapter 1</td><td class="done">Introduction, Objectives 1 to 3, Scope, Limitations, Definition of Terms</td><td>Office size (pp. 8, 11), the May 14 date (p. 8), "Excel or CSV" (pp. 9, 11), Objective 4 (p. 11)</td></tr>
+<tr><td>Chapter 2</td><td class="done">Citations, typos, Synthesis indents</td><td>Instrument and dates (p. 23); double spaces (pp. 18 to 20)</td></tr>
+<tr><td>Chapter 3</td><td class="done">Input, Process, Output, Control, Table 1 page break, Table 2</td><td>Office size (pp. 29, 36, 53), org chart (p. 30), pp. 38 to 39 and 57, Figure 3.5 image (p. 56), the evaluation method section (Section 6)</td></tr>
+<tr><td>Chapter 4: Overview, Objectives 1 and 2</td><td class="done">All figures and paragraphs</td><td>Objective sentences (pp. 65, 67), Export menu image (p. 70), Figure 4.15 caption (p. 82)</td></tr>
+<tr><td>Chapter 4: Objective 3</td><td class="done">Figures and paragraphs for the reports, exports, uploads, accounts, login, import, backups and login limit</td><td>Objective sentence, figure order, the CSV figure, two facts, the closing paragraph</td></tr>
+<tr><td>Chapter 4: Objective 4</td><td class="done">Tables 4.1 and 4.3</td><td>Objective sentence; Table 4.1 (header, four cells, paragraph); Tables 4.2, 4.4 and 4.5; <b>the user evaluation</b></td></tr>
+<tr><td>Chapter 4: opening</td><td></td><td>Write it last</td></tr>
+<tr><td>Chapter 5</td><td></td><td>Section 7</td></tr>
+<tr><td>References</td><td></td><td>Five entries (Section 8)</td></tr>
+</table>
+
+<h2>2. Outline of Your Chapter 4</h2>
 <table>
 <tr><th style="width:9%">Order</th><th style="width:24%">Part</th><th>What it shows for EMO Tracker</th></tr>
 <tr><td class="num">1</td><td>Opening paragraph</td><td>What the chapter covers, and that the objectives from Chapter 1 were addressed. Write it last.</td></tr>
 <tr><td class="num">2</td><td>Overview</td><td>The General Objective sentence, then the main screens of the whole system</td></tr>
 <tr><td class="num">3</td><td>Objective 1</td><td>Events, Schedule, statuses, venues, double-booking warning, tasks</td></tr>
 <tr><td class="num">4</td><td>Objective 2</td><td>Readiness labels with their reasons, and Analytics</td></tr>
-<tr><td class="num">5</td><td>Objective 3</td><td>PDF report, Excel or CSV export, uploads, import, backups, login protection, roles</td></tr>
-<tr><td class="num">6</td><td>Objective 4</td><td>Test results (tables), then the pilot and user evaluation</td></tr>
+<tr><td class="num">5</td><td>Objective 3</td><td>PDF report, Excel and CSV export, uploads, roles, login protection, import, backups</td></tr>
+<tr><td class="num">6</td><td>Objective 4</td><td>Test results (tables), then the pilot and the user evaluation</td></tr>
 </table>
 
 <div class="box">
 <b class="t">Figure and table numbers</b>
-This guide numbers everything in order of appearance: <b>Figure 4.1, 4.2, 4.3...</b> and <b>Table 4.1, 4.2, 4.3...</b>. Your Chapter 3 uses Figures 3.1 to 3.5 (the other diagrams are appendix figures D.1 to D.8, E.1 to E.8, G.1 and G.2). Use <b>one pattern</b> for the whole paper, put captions in the <b>same place</b> every time, and ask your adviser if she wants a different pattern.
+Number everything in order of appearance: <b>Figure 4.1, 4.2, 4.3...</b> and <b>Table 4.1, 4.2, 4.3...</b>. Your Chapter 3 uses Figures 3.1 to 3.5 (the other diagrams are appendix figures D.1 to D.8, E.1 to E.8, G.1 and G.2). Chapter 3's tables are "Table 1" and "Table 2" with the caption below, while Chapter 4's are "Table 4.1" with the caption above. Ask your adviser which pattern she wants, then use it everywhere.
 </div>
 
-<div class="warn">
-<b class="t">Decide this first, as a group</b>
-Your current Chapter 4 draft numbers the calendar as Figure 4.1 and puts test evidence inside each objective. This guide puts the calendar at <b>Figure 4.3</b> and <b>all the test tables in Objective 4</b>. Choose one structure before writing more, so the figure and table numbers don't change later.
-</div>
-
-<h2>2. The Routine for Each Part</h2>
-<p>Use these steps inside Parts 2 to 5 (the Overview and Objectives 1 to 3).</p>
+<h2>3. The Routine for Each Objective</h2>
 
 <h3>Step 1: Write the bold objective sentence</h3>
 <ol>
-<li>Take the objective from Chapter 1.</li>
-<li>Copy it <b>word for word</b> and <b>drop the opening word "To"</b>.</li>
+<li>Copy the objective from Chapter 1 <b>word for word</b> (copy-paste, don't retype) and <b>drop only the opening word "To"</b>.</li>
 <li>Put it in <b>bold</b>, on its own line, right before the first figure of that part.</li>
-<li>For the Overview, use your <b>General Objective</b> in the same way.</li>
+<li>Do the same with the <b>General Objective</b> for the Overview.</li>
 </ol>
-<div class="frame">
-<b class="t">Example with Objective 2 (word for word)</b>
-<i>Chapter 1: "To develop a readiness classification feature that uses three rule-based readiness labels: On Track, At Risk, Critical and shows the reason for each label..."<br>
-Chapter 4 (bold): "Develop a readiness classification feature that uses three rule-based readiness labels: On Track, At Risk, Critical and shows the reason for each label..."</i>
-</div>
+<table>
+<tr><th style="width:15%">Part</th><th style="width:43%">Starts with (Chapter 1's words, without "To")</th><th>In paper version 8</th></tr>
+<tr><td>Overview</td><td>"Develop and evaluate EMO Tracker, a responsive web-based application..."</td><td class="open">p. 65 starts "An EMO Tracker..."</td></tr>
+<tr><td>Objective 1</td><td>"Design an event planning, task tracking and scheduling feature..."</td><td class="open">p. 67 starts "An event planning..." It also says "Venue booking" (Chapter 1: "venue booking") and lists the task items in a different order.</td></tr>
+<tr><td>Objective 2</td><td>"Develop a readiness classification feature..."</td><td>p. 78 is right, except "which venues" should be "which Venues", as in Chapter 1</td></tr>
+<tr><td>Objective 3</td><td>"Implement a records and data protection feature..."</td><td class="open">Missing: add it before Figure 4.16 (p. 83)</td></tr>
+<tr><td>Objective 4</td><td>"Evaluate EMO Tracker with three users from the EMO..."</td><td class="open">p. 91 starts "To evaluate... the three users", isn't bold, and still has the "[restate objective 4]" label</td></tr>
+</table>
 <div class="box">
-<b class="t">Your objectives are too long to copy</b>
-A bold sentence works best when it is <b>one sentence</b>. Objective 1 has 8 sentences, and Objectives 2 and 3 have 3 each. In Chapter 1, you can keep one sentence as the objective and move the details (the fields, the statuses, the lists) to the Scope. That one sentence must still <b>name every feature that its part shows</b>: Objective 2's first sentence covers readiness only, and <b>Analytics is in its second sentence</b>, so the shortened sentence needs both. In the General Objective, "Schedule" can be lowercase, since it means the office's schedule in general, not the Schedule page.
+<b class="t">Two notes</b>
+If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, Objectives 1 to 3 are not bold but Objective 4 is: remove the bold there, so all four look the same.
 </div>
 
 <h3>Step 2: Show each feature, one at a time</h3>
 <ol>
-<li>Insert the screenshot.</li>
-<li>Add the caption, for example <b>Figure 4.5: Schedule page</b>.</li>
+<li>Insert the screenshot, then the caption, for example <b>Figure 4.5: Schedule page</b>.</li>
 <li>Write a paragraph after it that starts with <b>"Figure 4.5 shows..."</b></li>
-<li>In the paragraph, say what the screen is, what the user can do, and <b>one detail that matters</b> (a rule, a color, or a warning).</li>
-<li>Keep each paragraph to 3 to 5 sentences.</li>
+<li>Say what the screen is, what the user can do, and <b>one detail that matters</b> (a rule, a color or a warning). Keep it to 3 to 5 sentences.</li>
+<li>Check every claim against the screenshot and the role rules: only the <b>Administrator</b> adds, edits, cancels and deletes events, manages venues and accounts, and deletes documents. <b>Officers</b> manage tasks, upload documents, export the Schedule and see Analytics. <b>Staff</b> view and update their own tasks.</li>
 </ol>
+
+<h3>Step 3: Close each objective</h3>
+<p>End each objective with a short paragraph that starts <b>"Overall, Objective __ was met."</b> and says which figures show which part. Objectives 1 and 2 have one. <b>Objective 3 needs one</b> after its last figure. Facts for it:</p>
+<ul>
+<li>Figures 4.16 to 4.18: the PDF event report and the Schedule export as Excel and CSV.</li>
+<li>Figure 4.19: document uploads up to 10 MB, which only the Administrator can delete.</li>
+<li>Figures 4.20 to 4.22: accounts and roles, the login check, and the Staff view.</li>
+<li>Figures 4.23 to 4.25: the spreadsheet import check, the daily backups and the login limit.</li>
+</ul>
+
+<h3>Step 4 (optional, after the survey): add user results to a part</h3>
+<p>Only if your questionnaire has statements about that part's features: add the mean scores for those statements and say where they fall on your interpretation scale (Section 5).</p>
+
+<div class="box">
+<b class="t">Optional: real data from the EMO's schedule (G.7), totals only</b>
+<ul>
+<li><b>Objective 1</b> (already on pp. 77 to 78): first check, 13 overlapping pairs (9 still upcoming on October 6) and about 80 spellings for about 25 venues; latest sheet, 14 overlapping pairs in 2026 (6 still upcoming on October 23) and 29 venues.</li>
+<li><b>Objective 2:</b> Analytics, This year 2026: 372 events (89 upcoming, 281 completed, 2 cancelled), 10 rescheduled, busiest venue University Hall (108). No real event is marked "EMO prepares this event" yet.</li>
+<li><b>Objective 3:</b> first import (October 2): 329 events, 221 values made consistent. Final import (October 20): 391 events from 401 rows, 10 reschedule pairs merged, 64 rows listed for a person to review.</li>
+<li>Never include names or other details of the EMO's real events.</li>
+</ul>
+</div>
+
+<h2>4. What Goes in Each Part</h2>
+<p>The screenshots are in <code>docs/paper/screenshots</code>, in folders by role. They show the <b>demo data</b> on October 9, 2026, never the EMO's real data. Screenshots 30 and 31 were made on October 26 from the same demo data, with the clock set to October 9, so they match the others.</p>
+
+<h3>Overview, Objective 1 and Objective 2</h3>
+<table>
+<tr><th style="width:13%">Figure</th><th style="width:30%">Screenshot (folder)</th><th style="width:32%">Caption idea</th><th>Status</th></tr>
+<tr><td>4.1</td><td>04 (2-administrator)</td><td>Administrator Home</td><td class="done">Done</td></tr>
+<tr><td>4.2</td><td>21 (4-staff)</td><td>Staff Home on a phone</td><td class="done">Done</td></tr>
+<tr><td>4.3</td><td>05 (2-administrator)</td><td>Events page, calendar view</td><td class="done">Done</td></tr>
+<tr><td>4.4</td><td>14 (2-administrator)</td><td>Events list on a phone</td><td class="done">Done</td></tr>
+<tr><td>4.5</td><td><b>30-export-menu</b> (5-reports)</td><td>Schedule page</td><td class="open">Replace the old image with this one (same page, with the Export menu open), and delete "[Add export pop up ]"</td></tr>
+<tr><td>4.6</td><td>08 (2-administrator)</td><td>Edit event form with the reschedule question</td><td class="done">Done</td></tr>
+<tr><td>4.7</td><td>07 (2-administrator)</td><td>New event form with the double-booking warning</td><td class="done">Done</td></tr>
+<tr><td>4.8</td><td>10 (2-administrator)</td><td>A cancelled event</td><td class="done">Done</td></tr>
+<tr><td>4.9</td><td>11 (2-administrator)</td><td>Venues page</td><td class="done">Done</td></tr>
+<tr><td>4.10</td><td>17 (3-officer)</td><td>Adding a task</td><td class="done">Done</td></tr>
+<tr><td>4.11</td><td>22 (4-staff)</td><td>My tasks</td><td class="done">Done</td></tr>
+<tr><td>4.12</td><td>19 (3-officer)</td><td>Completed event panel with locked tasks</td><td class="done">Done</td></tr>
+<tr><td>4.13</td><td>09 (2-administrator)</td><td>Event panel with the readiness label</td><td class="done">Done</td></tr>
+<tr><td>4.14</td><td>20 (3-officer)</td><td>Analytics page</td><td class="done">Done</td></tr>
+<tr><td>4.15</td><td><code>diagrams/readiness-flowchart.png</code></td><td>Readiness classification rules</td><td class="open">Caption is alone on the next page: shrink the image a little</td></tr>
+</table>
+<p>To replace an image in Google Docs: right-click it, <b>Replace image</b>, <b>Upload from computer</b>. It keeps the size and position. Use the full-page <code>30-export-menu.png</code>; the close-up is a spare.</p>
+
+<h3>Objective 3 (new numbering, with the CSV export)</h3>
+<table>
+<tr><th style="width:12%">Figure</th><th style="width:18%">Screenshot</th><th style="width:34%">Caption idea</th><th>In paper version 8</th></tr>
+<tr><td>4.16</td><td>25 (5-reports)</td><td>PDF event report</td><td class="done">4.16, done</td></tr>
+<tr><td>4.17</td><td>26 (5-reports)</td><td>Schedule exported to Excel</td><td class="done">4.17, done</td></tr>
+<tr><td><b>4.18</b></td><td><b>31 (5-reports)</b></td><td><b>Schedule exported to CSV</b></td><td class="open">New: add it here</td></tr>
+<tr><td>4.19</td><td>18 (3-officer)</td><td>Uploading a document to an event</td><td class="open">Now 4.18, and it sits after 4.21 on p. 88: move it here</td></tr>
+<tr><td>4.20</td><td>12 (2-administrator)</td><td>Accounts page</td><td>Now 4.19</td></tr>
+<tr><td>4.21</td><td>02 (1-all-roles)</td><td>Login page after a wrong password</td><td>Now 4.20</td></tr>
+<tr><td>4.22</td><td>24 (4-staff)</td><td>Event panel for Staff</td><td>Now 4.21</td></tr>
+<tr><td>4.23</td><td>27 (6-data-protection)</td><td>Spreadsheet import check (dry run)</td><td>Now 4.22</td></tr>
+<tr><td>4.24</td><td>28 (6-data-protection)</td><td>Automatic daily backups</td><td>Now 4.23</td></tr>
+<tr><td>4.25</td><td>29 (6-data-protection)</td><td>Login limit message</td><td>Now 4.24</td></tr>
+</table>
+<div class="box">
+<b class="t">How to renumber without mixing them up</b>
+Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24 shows" line), then 4.23 to 4.24, and so on. If you'd rather not add the CSV figure, keep the old numbers, move the upload figure so it comes right after Figure 4.17, and mention the CSV in Figure 4.17's paragraph.
+</div>
 <div class="frame">
-<b class="t">Example frame with the double-booking warning</b>
-<i>Figure 4.7 shows the new event form after a booking that overlaps another one was entered. [What the user can do here.] The warning appears when two bookings are at the same venue and room at overlapping times, and saving is still allowed.</i>
+<b class="t">Facts for the CSV figure's paragraph</b>
+<i>Same 38 demo events as the Excel export. The first line holds the column names (date, time, event, type, department, venue, control number, remarks), then one line per event, with the values separated by commas. Each date includes its year, a cancelled event ends with "(Cancelled)", and reschedules are written in the remarks. It has no colors or formatting, so Excel, Google Sheets or a text editor can open it.</i>
 </div>
+<p><b>Screenshots for a user manual instead</b> (they don't prove an objective by themselves): 01 Login page, 03 Change password, 13 Adding an account, 15 Schedule on a phone, 16 Officer Home, 23 My events. Ask your adviser if the paper has a user manual appendix.</p>
 
-<h3>Step 3: Add the user results for this part (after the survey, only if you can)</h3>
+<h2>5. Objective 4: Testing and the User Evaluation</h2>
+<p>Write the bold objective sentence first, then the testing tables, then the pilot and the user evaluation. After every table, write a paragraph (see 5.4).</p>
+
+<h3>5.1 Tables from our own testing (you can write these now)</h3>
+<table>
+<tr><th style="width:11%">Table</th><th style="width:45%">What it shows</th><th style="width:16%">Facts</th><th>Status</th></tr>
+<tr><td>4.1</td><td>Automated tests: 112 test cases in 16 files (530 checks), all passed. Last run October 26, 2026; run them again before the defense and use that date.</td><td>G.2</td><td class="open">Header, four cells and the paragraph left (below)</td></tr>
+<tr><td>4.2</td><td>Code quality and security checks</td><td>G.3 and the October 26 run (below)</td><td class="open">Caption only</td></tr>
+<tr><td>4.3</td><td>Browser checks</td><td>G.4</td><td class="done">Done</td></tr>
+<tr><td>4.4</td><td>Load check</td><td>G.5</td><td class="open">Not started</td></tr>
+<tr><td>4.5</td><td>Pre-defense audit: what was found and what was fixed</td><td>G.6 (copy its table)</td><td class="open">Not started</td></tr>
+</table>
+
+<p><b>Table 4.1, what's left:</b></p>
+<ul>
+<li>Rename the column header "Case s" to <b>Tests</b>.</li>
+<li>Fill the four empty "What it checks" cells, in the same "Checks if..." style as the other rows:
+  <ul>
+  <li><b>VenueManagementTest:</b> only the Administrator can manage venues and buildings; a venue in use can't be deleted; merging venues moves their events.</li>
+  <li><b>EventClassifierTest:</b> each readiness rule gives the right label and reason in 15 situations; cancelled, completed and not-prepared events get no label (15 + 3 = 18 tests).</li>
+  <li><b>AnalyticsTest:</b> the status counts add up to the total; the time periods work; Staff can't open Analytics.</li>
+  <li><b>DashboardTest:</b> Home shows the events that need attention and the next 7 days; Staff see only their own open tasks.</li>
+  </ul></li>
+<li>Replace "[ADD SENTENCE AFTER EXPLAINING ABOUT THE TABLE]" with your own paragraph. Facts: 45 tests for Objective 1, 25 for Objective 2, 40 for Objective 3 and 2 general; the rules behind the schedule, readiness, records, roles and backups work as designed; these tests check the server, so the screens were checked separately in Table 4.3.</li>
+</ul>
+
+<p><b>Table 4.2 facts</b> (checks run again on October 26, 2026):</p>
+<table>
+<tr><th style="width:38%">Check</th><th>Result</th></tr>
+<tr><td>Laravel Pint (PHP code style)</td><td>Passes</td></tr>
+<tr><td>ESLint (JavaScript code checks)</td><td>0 problems</td></tr>
+<tr><td>Frontend build</td><td>Passes</td></tr>
+<tr><td>composer audit (PHP packages)</td><td>0 advisories</td></tr>
+<tr><td>npm audit (JavaScript packages)</td><td class="open">3 high advisories, new since October 7 (follow-redirects, vite and zod). All three are in development tools or in code the browser build leaves out. A fix is available; update the packages and run the audit again before filling this row, so the table can show the final result.</td></tr>
+</table>
+<p>Earlier in Capstone 2, package updates took Composer from 44 advisories to 0 and npm from 11 vulnerabilities to 0 (G.3).</p>
+
+<p><b>Table 4.4 facts</b> (G.5, October 7, 2026): a MacBook (Apple silicon) running <code>php artisan serve</code> and MySQL 8.4, with a test database of 438 events. API responses took 17 to 87 ms, and 8 requests sent at the same time all finished within 537 ms. Phones over Wi-Fi were not measured: say so, or measure them at the office.</p>
+
+<h3>5.2 The user evaluation: what to make</h3>
+<p>No questionnaire has been given to the EMO yet. Make two forms and have <b>three EMO users</b>, one per role, complete both. Both forms go in Appendix B (Research Instruments). An interview is optional: the questionnaire's written questions already collect comments.</p>
+
+<p><b>Form 1: test checklist (user acceptance test).</b> Use the 17 tasks in the reference file (search "Appendix F"). Each user does only their role's tasks. Give the form five columns: #, Task, Expected result, Passed or Failed, Notes. The results become <b>Table 4.6</b>.</p>
+<table>
+<tr><th style="width:20%">Role</th><th>Tasks</th></tr>
+<tr><td>Administrator</td><td>1 to 7: log in, add an event, overlap warning, reschedule, cancel and restore, venues, accounts</td></tr>
+<tr><td>Officer</td><td>8 to 12 and 17: add tasks, upload a file, PDF report, Analytics, locked task, Excel export</td></tr>
+<tr><td>Staff</td><td>13 to 15: phone login, update own task, search the Schedule</td></tr>
+<tr><td>Any role</td><td>16: change own password</td></tr>
+</table>
+
+<p><b>Form 2: questionnaire.</b> Add a short consent note at the top: answering is voluntary, and the answers are used only for this study, without names.</p>
+<table>
+<tr><th style="width:27%">Part</th><th style="width:43%">What it asks</th><th style="width:12%">Items</th><th>Answer</th></tr>
+<tr><td>I. Respondent profile</td><td>Role in EMO Tracker, and how many days they used it</td><td>2</td><td>Tick box, number</td></tr>
+<tr><td>II. Software quality (ISO/IEC 25010)</td><td>2 or 3 statements for each characteristic below</td><td>12 to 18</td><td>1 to 5</td></tr>
+<tr><td>III. Usability (SUS)</td><td>The 10 standard SUS statements, word for word</td><td>10</td><td>1 to 5</td></tr>
+<tr><td>IV. Comments</td><td>What they liked, what problems they met, what they would change</td><td>3</td><td>Written</td></tr>
+</table>
+<table>
+<tr><th style="width:36%">Characteristic (2023 name)</th><th>What its statements ask</th></tr>
+<tr><td>Functional suitability</td><td>Does it do the EMO's work correctly and completely?</td></tr>
+<tr><td>Performance efficiency</td><td>Is it fast enough on their device?</td></tr>
+<tr><td>Compatibility</td><td>Does it work on phones and laptops, with several users at once?</td></tr>
+<tr><td>Interaction capability (Usability)</td><td>Is it easy to learn and use without help?</td></tr>
+<tr><td>Reliability</td><td>Did it work without errors during the pilot?</td></tr>
+<tr><td>Security</td><td>Does each role see only what it should? Are records protected?</td></tr>
+</table>
+<ul>
+<li>Leave out Maintainability, Flexibility (Portability) and Safety: only IT experts can judge them. If the adviser wants IT experts too, give them a separate form.</li>
+<li>Write the Part II statements yourselves (the samples in the reference file, "E.11", are ideas only). Make each one positive, so 5 is always the best answer, with one idea each, about EMO Tracker.</li>
+<li>Keep Part III exactly as published. It mixes positive and negative statements on purpose. If you use it, cite its source: Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, &amp; I. L. McClelland (Eds.), <i>Usability evaluation in industry</i> (pp. 189&ndash;194). Taylor &amp; Francis.</li>
+<li>The instructor's slides teach <b>ISO 9126</b>; the paper uses <b>ISO/IEC 25010</b>, which replaced 9126 in 2011. Ask the adviser which one she wants before printing.</li>
+</ul>
+
+<h3>5.3 Running it and computing the results</h3>
 <ol>
-<li>Do this only if your questionnaire has items about the features of this part.</li>
-<li>Add a bar chart or table of the mean scores for those features.</li>
-<li>Write a paragraph that gives the mean, says where it falls on your interpretation scale from Chapter 3, and says what it means.</li>
+<li><b>Before the visit:</b> send the adviser the questions in Section 9 and ask her to check the forms. Print one questionnaire per respondent plus two spares, and the checklist for each role.</li>
+<li><b>At the office:</b> confirm the real pilot dates and each user's role. Each user does their role's tasks on the real system while you mark Passed or Failed and note problems (about 30 minutes each). Right after, each answers the questionnaire alone; explain the scale, but don't suggest answers. Write the date on every form.</li>
+<li><b>After:</b> encode the answers in a spreadsheet, one row per respondent and one column per item. Keep the paper forms for Appendix C, with the names covered.</li>
 </ol>
+<p><b>Rating scale:</b> 5 = Strongly agree, 4 = Agree, 3 = Neutral, 2 = Disagree, 1 = Strongly disagree. Use frequency, percentage and the weighted mean (slide 16). With three respondents, don't use other statistical tests.</p>
+<p class="formula">Percentage: <i>P</i> = <i>f</i> &divide; <i>n</i> &times; 100</p>
+<p class="formula">Weighted mean: <i>x&#772;</i> = &Sigma;<i>fx</i> &divide; <i>n</i></p>
+<p>Here <i>f</i> is how many gave a rating, <i>x</i> is the rating and <i>n</i> is the number of respondents. Example: ratings of 5, 4 and 5 give 14 &divide; 3 = 4.67, Strongly agree. A characteristic's mean is the average of its statements' means; the overall mean is the average of the characteristic means.</p>
+<table>
+<tr><th style="width:25%">Mean</th><th style="width:35%">Description</th><th>Interpretation</th></tr>
+<tr><td>4.21 to 5.00</td><td>Strongly agree</td><td>Excellent</td></tr>
+<tr><td>3.41 to 4.20</td><td>Agree</td><td>Very good</td></tr>
+<tr><td>2.61 to 3.40</td><td>Neutral</td><td>Good</td></tr>
+<tr><td>1.81 to 2.60</td><td>Disagree</td><td>Fair</td></tr>
+<tr><td>1.00 to 1.80</td><td>Strongly disagree</td><td>Poor</td></tr>
+</table>
+<p>Ask the adviser which labels she wants.</p>
+<p class="formula">SUS score = 2.5 &times; [ &Sigma;(odd-statement rating &minus; 1) + &Sigma;(5 &minus; even-statement rating) ]</p>
+<p>Compute it for each respondent (0 to 100), then average the three. A score of <b>68</b> is the usual average, already cited in Chapter 2 (Hyzy et al., 2022). <b>Comments:</b> read them all, make categories (for example ease of use, speed, missing features, problems), label each comment and write the patterns. Don't turn comments into numbers (slide 15).</p>
+
+<h3>5.4 What goes in Objective 4, in order</h3>
+<ol>
+<li>The bold objective sentence (Section 3).</li>
+<li>Tables 4.1 to 4.5, each followed by its paragraph.</li>
+<li><b>The pilot:</b> who took part (three users and their roles, no names), where, the real dates, and what they did.</li>
+<li><b>Table 4.6:</b> test checklist results: how many of the 17 tasks passed, and why any failed.</li>
+<li><b>Table 4.7:</b> ISO/IEC 25010 results, and <b>Figure 4.26</b>, a bar chart of the six characteristic means.</li>
+<li><b>Table 4.8:</b> SUS results: each respondent's score, the average, and how it compares with 68.</li>
+<li><b>Comments:</b> one paragraph on the categories and patterns.</li>
+<li><b>Problems found</b> during the pilot and what you did about each one.</li>
+<li><b>Limits:</b> three users, a few days, one office, so the results describe the EMO only (slide 17).</li>
+<li><b>"Overall, Objective 4 was met."</b> Only if the results support it; if a characteristic scored low, say so.</li>
+</ol>
+<table>
+<tr><th style="width:50%">Table 4.7 layout</th><th style="width:20%">Mean</th><th>Interpretation</th></tr>
+<tr><td><b>Functional suitability</b> (the characteristic's mean, in bold)</td><td><b>__</b></td><td><b>__</b></td></tr>
+<tr><td>Statement 1</td><td>__</td><td>__</td></tr>
+<tr><td>Statement 2</td><td>__</td><td>__</td></tr>
+<tr><td>(the other five characteristics the same way)</td><td></td><td></td></tr>
+<tr><td><b>Overall mean</b></td><td><b>__</b></td><td><b>__</b></td></tr>
+</table>
+<table>
+<tr><th style="width:70%">Table 4.8 layout: Respondent</th><th>SUS score</th></tr>
+<tr><td>Respondent 1 (Administrator)</td><td>__</td></tr>
+<tr><td>Respondent 2 (Officer)</td><td>__</td></tr>
+<tr><td>Respondent 3 (Staff)</td><td>__</td></tr>
+<tr><td><b>Average</b></td><td><b>__</b></td></tr>
+</table>
 <div class="frame">
-<b class="t">Sentence frame</b>
-<i>Figure 4.__ shows the mean score for [the feature]. The mean of [number] falls within [range], which is interpreted as [meaning]. This means that [what it says about the feature].</i>
+<b class="t">The paragraph after each table has three parts</b>
+<i>1. Presentation: what the table shows ("Table 4.7 shows..."). 2. Analysis: the numbers that matter, such as the highest, the lowest and the overall result; comparing says more than one number alone (slide 14). 3. Interpretation: what it means for the EMO and, where it fits, how it relates to a Chapter 2 study (Sancho and Melendres, 2021, also used ISO/IEC 25010).</i>
 </div>
 
-<div class="box">
-<b class="t">Optional: real data from the EMO's schedule (G.7)</b>
-Use <b>totals only</b>, in one short paragraph at the end of the part. The numbers below are from October 23, 2026; ask Xyrone for the final numbers after the pilot.
+<h2>6. The Evaluation Method Section (Missing From the Paper)</h2>
+<p>Chapter 4 only reports results, so the paper must first say how the evaluation was done: who answered, with what form, in what steps, and how the answers were computed. No chapter does this yet.</p>
+<p><b>Where:</b> following the ZALIN sample, at the end of Chapter 3, after Technical Feasibility. The instructor's slides call Chapter 4 "Methodology, Results and Discussion", so the adviser may want it at the start of Chapter 4 instead. Ask her; the content is the same either way.</p>
+<table>
+<tr><th style="width:22%">Heading</th><th style="width:33%">What to write</th><th>Facts to use</th></tr>
+<tr><td>Testing and Evaluation</td><td>2 or 3 sentences: the proponents tested the system, then EMO users evaluated it</td><td></td></tr>
+<tr><td>Testing Procedure</td><td>The kinds of testing whose results are Tables 4.1 to 4.5</td><td>112 automated tests (<code>php artisan test</code>); code quality and security checks; browser checks in Chrome at desktop and phone sizes; load check; pre-defense audit</td></tr>
+<tr><td>Respondents</td><td>Who answered, how many, how they were chosen</td><td>3 EMO users, one per role, chosen on purpose because they use the system (purposive sampling); if all four members answer, it is total enumeration</td></tr>
+<tr><td>Research Instrument</td><td>The two forms and their parts</td><td>Test checklist (17 tasks by role); questionnaire Parts I to IV; 5-point scale; ISO/IEC 25010 and SUS; both in Appendix B</td></tr>
+<tr><td>Data Gathering Procedure</td><td>Numbered steps in the order they happened, with dates</td><td>Adviser checked the forms; consent; short orientation; tasks; questionnaire; forms collected</td></tr>
+<tr><td>Statistical Treatment of Data</td><td>How the answers were computed and read</td><td>Percentage and weighted mean formulas; the interpretation scale; the SUS formula; comments grouped into categories</td></tr>
+</table>
+<p>The "Population of the Study" part already in Chapter 3 stays where it is: fix it to the EMO's four main members, and have "Respondents" refer to it. If the adviser wants the questionnaire validated, say who checked it before it was used.</p>
+
+<h2>7. Chapter 5: Conclusions and Recommendations</h2>
+<p>Use the headings your adviser wants, written in paragraphs with no bullet lists. Do not claim user satisfaction before the survey is done.</p>
 <ul>
-<li><b>Objective 1:</b> Chapter 1's first check found 13 pairs of overlapping bookings (9 still upcoming on October 6, 2026) and about 80 spellings for about 25 venues. In the EMO's latest sheet: <b>14 overlapping pairs in 2026, 6 still upcoming</b> (October 23), and <b>29 venues</b>.</li>
-<li><b>Objective 2:</b> Analytics, This year 2026: <b>372 events</b> (89 upcoming, 281 completed, 2 cancelled), <b>10 rescheduled</b>, busiest venue University Hall (108). No real event is marked "EMO prepares this event" yet, so real readiness labels can only come from the pilot.</li>
-<li><b>Objective 3:</b> first import (October 2): 329 events, 221 values made consistent. Final import of the EMO's latest sheet (October 20): <b>391 events</b> from 401 rows, <b>10 reschedule pairs merged</b> (none left), <b>64 rows listed for a person to review</b>.</li>
-<li>Do not include names or other details of the EMO's events.</li>
+<li><b>Summary of Findings</b> (only if the adviser wants it; slides 18 to 23): one short statement of the purpose, respondents, period, method, instrument, sampling and statistics used, then the findings for each objective, with numbers only, no explanations and no new data.</li>
+<li><b>Conclusion</b> (about 4 paragraphs): (1) what EMO Tracker is and that it achieved its objectives; (2) Objective 1: the three views, automatic statuses, venues, double-booking warning, tasks with one owner and the lock, the overlaps found in the real schedule (13 pairs, then 14), and the 45 passing tests; (3) Objectives 2 and 3: readiness with reasons and Analytics (25 tests), then the PDF report, Excel and CSV export, uploads, the import (391 events), daily backups, login and role protection (40 tests); (4) Objective 4: what the EMO's users said, after the survey. Say whether the results met your expectations and how they relate to the Chapter 2 studies. Don't write "In conclusion" or add new information (slides 24 to 26).</li>
+<li><b>Recommendation</b> (about 5 or 6 paragraphs, one idea each; slides 27 to 28): start with what your results or limitations showed, then what to improve. Pick from email or SMS notifications, an activity log, recurring events and templates, restoring a backup inside the app, readiness thresholds tuned after the pilot, hosting beyond one laptop, and testing with more users over a longer time (more ideas: H.3 in the reference file).</li>
 </ul>
-</div>
 
-<h2 class="pb">3. What Goes in Each Part</h2>
-<p>The screenshots are in <code>docs/paper/screenshots</code>, in folders by role. They show the <b>demo data</b> on October 9, 2026, never the EMO's real data. Six Schedule screenshots (06, 07, 08, 09, 10 and 15) were retaken on October 19 with the same demo data, so they show the new Export menu and type filter. If you add or remove a screenshot, renumber the figures and update your list of figures.</p>
-
-<h3>Part 2: Overview (General Objective sentence)</h3>
+<h2>8. Fixes Still Open in Paper Version 8</h2>
+<p>Use <b>Ctrl + H</b> (Find and replace) with the words in the "Find" column. Items marked <b>After the visit</b> need facts from the office.</p>
 <table>
-<tr><th style="width:16%">Figure</th><th style="width:24%">Screenshot (folder)</th><th>Caption idea</th></tr>
-<tr><td>Figure 4.1</td><td>04 (2-administrator)</td><td>Administrator Home with the needs-attention list</td></tr>
-<tr><td>Figure 4.2</td><td>21 (4-staff)</td><td>Staff Home on a phone</td></tr>
+<tr><th style="width:8%">Page</th><th style="width:34%">Find</th><th style="width:34%">Replace with, or do</th><th>Why</th></tr>
+<tr><td>1</td><td>May 2026</td><td>Ask the adviser</td><td>The defense is in November</td></tr>
+<tr><td>8</td><td>which has approximately 5 main members</td><td>which has four main members</td><td>Office size</td></tr>
+<tr><td>8</td><td>schedule spreadsheet on May 14, 2026.</td><td>schedule spreadsheet. (or the real date from Appendix C)</td><td>May 14 was the pre-oral defense</td></tr>
+<tr><td>9</td><td>a PDF report and Excel export of the Schedule</td><td>a PDF report and an Excel or CSV export of the Schedule</td><td>CSV was added</td></tr>
+<tr><td>11</td><td>exporting the Excel file of the Schedule</td><td>exporting the Schedule as an Excel or CSV file</td><td>Same; then copy it into the Objective 3 sentence</td></tr>
+<tr><td>11</td><td>Objective 4</td><td>Remove the bold; fill in the instrument and the real dates (<b>after the visit</b>)</td><td>If the forms are answered after October 24, it can't say "during the 3-day pilot"</td></tr>
+<tr><td>11</td><td>approximately 5 EMO members</td><td>the EMO's four main members</td><td>Office size</td></tr>
+<tr><td>18 to 20</td><td>(two spaces)</td><td>(one space), then <b>Replace all</b></td><td>Double spaces left in Chapter 2</td></tr>
+<tr><td>23</td><td>[TO CONFIRM: SUS] ISO/IEC 25010 / (October 22 to 24, 2026)</td><td>The instrument and the real dates (<b>after the visit</b>)</td><td>Must match Objective 4</td></tr>
+<tr><td>29</td><td>comprising approximately eight (8) to ten (10) personnel, which includes the Director, a Monitoring Minister (Ministrong Taga-subaybay), a Secretary, and the Tech Support staff.</td><td>of four (4) main members, including the Director and a Monitoring Minister (Ministrong Taga-subaybay). Add the other two positions <b>after the visit</b>.</td><td>Office size</td></tr>
+<tr><td>30</td><td>Organizational Chart paragraph and Figure G.1</td><td>Rewrite <b>after the visit</b>; Xyrone redraws Figure G.1</td><td>They show a Secretary and five Tech Support</td></tr>
+<tr><td>36</td><td>the projected user base of approximately ten (10) concurrent users</td><td>the EMO's four (4) main members using it at the same time</td><td>Office size</td></tr>
+<tr><td>38 to 39</td><td>the Director, the Monitoring Minister, the Secretary, and the Tech Support staff</td><td>The real positions (<b>after the visit</b>). Also tone down claims nothing backs up: "expressed a strong willingness", "fully equipped", "absolutely no restructuring".</td><td>Accuracy</td></tr>
+<tr><td>40</td><td>the 3-day pilot testing from October 22 to 24</td><td>The real dates (<b>after the visit</b>); Xyrone redraws Figure G.2</td><td>Gantt chart</td></tr>
+<tr><td>53</td><td>(about 5–10 members)</td><td>(four main members)</td><td>Office size</td></tr>
+<tr><td>56</td><td>Figure 3.5 image</td><td>Replace it with <code>docs/paper/diagrams/network-topology.png</code></td><td>The old image says port 5173</td></tr>
+<tr><td>57</td><td>Tech Support staff are restricted... / only the Director, functioning as the System Administrator</td><td>The real positions (<b>after the visit</b>)</td><td>Accuracy</td></tr>
+<tr><td>65, 67, 78, 91</td><td>The objective sentences</td><td>Section 3</td><td>Must match Chapter 1</td></tr>
+<tr><td>70</td><td>Figure 4.5 image; "[Add export pop up ]"</td><td>Replace the image with <code>30-export-menu.png</code>; delete the placeholder</td><td>The adviser asked for the Export menu</td></tr>
+<tr><td>81 to 82</td><td>Figure 4.15</td><td>Shrink the flowchart until its caption fits on p. 81</td><td>Caption separated from its figure</td></tr>
+<tr><td>83 to 90</td><td>Objective 3 figures</td><td>Add the Objective 3 sentence before Figure 4.16; renumber and move figures (Section 4); add the closing paragraph (Section 3)</td><td>Missing parts and order</td></tr>
+<tr><td>88</td><td>Users can attach supporting files</td><td>Officers and the Administrator can attach supporting files</td><td>Staff can't upload</td></tr>
+<tr><td>87</td><td>While administrators and officers can modify the event's core details</td><td>While only the Administrator can edit the event's details</td><td>Officers can't edit events</td></tr>
+<tr><td>87</td><td>and the full task list to monitor the event's progress.</td><td>and the full task list, and they can update the status of their own tasks.</td><td>The screenshot shows their own tasks' status menus</td></tr>
+<tr><td>83 to 88</td><td>Figures 4.16 to 4.21 paragraphs</td><td>Reword phrases like "maintain a complete, printable record", "strict deletion rules ensure" and "dictates their permissions and access levels" in your own words</td><td>Turnitin's AI check flags this style</td></tr>
+<tr><td>91 to 93</td><td>Table 4.1</td><td>Header, four cells and the paragraph (Section 5.1)</td><td>Unfinished</td></tr>
+<tr><td>94</td><td>Table 4.2</td><td>Fill it (Section 5.1), then add Tables 4.4 and 4.5 after Table 4.3</td><td>Unfinished</td></tr>
+<tr><td>96</td><td>[Close the objective...]</td><td>After the evaluation (Section 5.4)</td><td>Unfinished</td></tr>
 </table>
 
-<h3>Part 3: Objective 1 (Event planning, scheduling, and task tracking)</h3>
+<p><b>References</b> (details confirmed online on October 26):</p>
 <table>
-<tr><th style="width:16%">Figure</th><th style="width:24%">Screenshot (folder)</th><th>Caption idea</th></tr>
-<tr><td>Figure 4.3</td><td>05 (2-administrator)</td><td>Events page, calendar view</td></tr>
-<tr><td>Figure 4.4</td><td>14 (2-administrator)</td><td>Events list on a phone</td></tr>
-<tr><td>Figure 4.5</td><td>06 (2-administrator)</td><td>Schedule page (with the type filter and the Export menu)</td></tr>
-<tr><td>Figure 4.6</td><td>08 (2-administrator)</td><td>Reschedule question</td></tr>
-<tr><td>Figure 4.7</td><td>07 (2-administrator)</td><td>New event form with the double-booking warning</td></tr>
-<tr><td>Figure 4.8</td><td>10 (2-administrator)</td><td>A cancelled event</td></tr>
-<tr><td>Figure 4.9</td><td>11 (2-administrator)</td><td>Venues page</td></tr>
-<tr><td>Figure 4.10</td><td>17 (3-officer)</td><td>Adding a task</td></tr>
-<tr><td>Figure 4.11</td><td>22 (4-staff)</td><td>My tasks</td></tr>
-<tr><td>Figure 4.12</td><td>19 (3-officer)</td><td>Completed event, tasks locked</td></tr>
+<tr><th style="width:18%">Entry</th><th style="width:38%">Find</th><th>Replace with</th></tr>
+<tr><td>Canlas et al.</td><td>(pp. [TO CONFIRM])</td><td>(pp. 238&ndash;242)</td></tr>
+<tr><td>&#272;or&#273;evi&#263; Milutinovi&#263; et al.</td><td>In [Editors TO CONFIRM] (Eds.),</td><td>In M. Mihi&#263;, S. Jednak, &amp; G. Savi&#263; (Eds.),</td></tr>
+<tr><td>JosephNg et al.</td><td>2022(pp.</td><td>2022 (pp.</td></tr>
+<tr><td>Kamil and Amer</td><td>[Thesis TO CONFIRM type, Halmstad University]</td><td>[Bachelor's thesis, Halmstad University]</td></tr>
+<tr><td>Williams et al.</td><td>, [volume, issue, and article number TO CONFIRM].</td><td>, <i>30</i>(3), Article 48. https://doi.org/10.1145/3582429 (check the author order on that page once)</td></tr>
 </table>
 
-<h3>Part 4: Objective 2 (Readiness and analytics)</h3>
-<table>
-<tr><th style="width:16%">Figure</th><th style="width:24%">File</th><th>Caption idea</th></tr>
-<tr><td>Figure 4.13</td><td>09 (2-administrator)</td><td>Event panel with the readiness label and its reason</td></tr>
-<tr><td>Figure 4.14</td><td>20 (3-officer)</td><td>Analytics page</td></tr>
-<tr><td>Figure 4.15 (optional)</td><td><code>diagrams/readiness-flowchart.png</code></td><td>The readiness rules, in the order they are checked (it matches the code; clearer than a code screenshot)</td></tr>
-</table>
-<p>The "Needs attention" list on Home is already Figure 4.1, so refer to it ("as shown in Figure 4.1...") instead of inserting it again.</p>
-
-<h3>Part 5: Objective 3 (Records, data protection, and security)</h3>
-<table>
-<tr><th style="width:16%">Figure</th><th style="width:24%">Screenshot (folder)</th><th>Caption idea</th></tr>
-<tr><td>Figure 4.16</td><td>25 (5-reports)</td><td>PDF event report</td></tr>
-<tr><td>Figure 4.17</td><td>26 (5-reports)</td><td>Schedule exported to Excel (the Export menu also offers CSV; see Figure 4.5)</td></tr>
-<tr><td>Figure 4.18</td><td>18 (3-officer)</td><td>Uploading a document to an event</td></tr>
-<tr><td>Figure 4.19</td><td>12 (2-administrator)</td><td>Accounts page</td></tr>
-<tr><td>Figure 4.20</td><td>02 (1-all-roles)</td><td>Login page after a wrong password</td></tr>
-<tr><td>Figure 4.21</td><td>24 (4-staff)</td><td>Event panel for Staff: view only</td></tr>
-<tr><td>Figures 4.22 to 4.24</td><td>Take now</td><td>Spreadsheet import result, backup files, login limit message</td></tr>
-</table>
-
-<div class="box">
-<b class="t">Screenshots still to take</b>
-These three are missing. The system has an output for each, and they can be taken from the demo data (ask Xyrone):
+<p><b>Front pages (do these last):</b></p>
 <ul>
-<li>The result of the spreadsheet import (the dry-run summary: rows read, would be imported, rows to review)</li>
-<li>The automatic backup files (the backup folder)</li>
-<li>The login limit message ("Too many login attempts" on the login form)</li>
+<li>The "LIST OF FIGURES" page holds a second, automatic table of contents, not a list of figures, and the real table of contents (pp. 2 to 3) is typed by hand with wrong page numbers. Delete the typed one, move the automatic one under TABLE OF CONTENTS, and click its refresh button.</li>
+<li>Figure titles show up inside the table of contents ("Prototyping Model Diagram of EMO Tracker" and others) because they are styled as headings. Set each to <b>Normal text</b>, then make it bold and centered again. Give "Chapter 4 / RESULTS AND DISCUSSION" the same heading style as the other chapter titles.</li>
+<li>Type the List of Figures by hand at the end (Figures 3.1 to 3.5 and 4.1 to 4.26), and update the List of Tables (Table 1 is on p. 54, Table 2 on p. 64, plus Chapter 4's tables).</li>
 </ul>
-</div>
-<div class="box">
-<b class="t">Screenshots for the user manual instead</b>
-These do not prove an objective by themselves, so keep them out of Chapter 4 and use them in a user manual appendix, if your paper has one (ask your adviser): 01 Login page, 03 Change password, 13 Adding an account, 15 Schedule on a phone, 16 Officer Home, 23 My events.
-</div>
 
-<h2 class="pb">4. Part 6: Objective 4 (Testing and User Evaluation)</h2>
-<p>Write the bold objective sentence first. Then show the tables, then the pilot results. After every table, write a paragraph that says what it shows, how many passed, and what it means.</p>
-
-<h3>Tables you can write now</h3>
+<h2>9. Questions Before the Office Visit</h2>
 <table>
-<tr><th style="width:15%">Table</th><th>What it shows</th><th style="width:16%">Where</th></tr>
-<tr><td>Table 4.1</td><td>Automated tests: <b>112 test cases (530 checks), all passed, last run October 23, 2026</b>. One table with the columns Test file, Objective, Cases, Result (list below). Run them again before the defense and use that date.</td><td>G.2</td></tr>
-<tr><td>Optional, after 4.1</td><td>The 18 readiness test cases in detail (situation, expected label, reason shown, result), and the 5 Analytics and Home page checks. Ready to paste.</td><td><code>chapter-4/ objective-2-tables.html</code></td></tr>
-<tr><td>Table 4.2</td><td>Code quality and security checks (G.3 is dated October 7, 2026, so run them again before the defense)</td><td>G.3</td></tr>
-<tr><td>Table 4.3</td><td>Browser checks</td><td>G.4</td></tr>
-<tr><td>Table 4.4</td><td>Load check</td><td>G.5</td></tr>
-<tr><td>Table 4.5</td><td>Pre-defense audit: what was found and what was fixed</td><td>G.6</td></tr>
-</table>
-<p style="font-size:9.5pt">If you include the optional tables, number all tables in order of appearance (the optional ones become 4.2 and 4.3, and the rest move down).</p>
-
-<h3>Test files for Table 4.1 (G.2, checked October 23, 2026)</h3>
-<table>
-<tr><th>Test file</th><th style="width:30%">Objective</th><th style="width:12%">Cases</th></tr>
-<tr><td>ScheduleTest</td><td>1</td><td class="num">10</td></tr>
-<tr><td>EventStatusTest</td><td>1</td><td class="num">9</td></tr>
-<tr><td>EventLifecycleTest</td><td>1</td><td class="num">7</td></tr>
-<tr><td>VenueClashTest</td><td>1</td><td class="num">11</td></tr>
-<tr><td>VenueManagementTest</td><td>1</td><td class="num">8</td></tr>
-<tr><td>EventClassifierTest</td><td>2</td><td class="num">18</td></tr>
-<tr><td>AnalyticsTest</td><td>2</td><td class="num">3</td></tr>
-<tr><td>DashboardTest</td><td>2</td><td class="num">4</td></tr>
-<tr><td>DocumentAndReportTest</td><td>3</td><td class="num">6</td></tr>
-<tr><td>ScheduleExportTest</td><td>3</td><td class="num">4</td></tr>
-<tr><td>ScheduleImportTest</td><td>3</td><td class="num">5</td></tr>
-<tr><td>ScheduleTidyTest</td><td>3</td><td class="num">3</td></tr>
-<tr><td>BackupTest</td><td>3</td><td class="num">10</td></tr>
-<tr><td>AccessControlTest</td><td>3</td><td class="num">12</td></tr>
-<tr><td>ExampleTest and AppPageTest</td><td>Not tied to an objective</td><td class="num">2</td></tr>
-<tr><td><b>All</b> (Objective 1: 45, Objective 2: 25, Objective 3: 40)</td><td></td><td class="num"><b>112</b></td></tr>
-</table>
-
-<h3>Pilot results (after the survey)</h3>
-<div class="warn">
-<b class="t">Use the real pilot dates</b>
-What happened: EMO Tracker was <b>installed on the EMO's laptop on October 20, 2026</b>. Because some NEU PCs are on a different network, the EMO's testing <b>started on October 21</b> through a temporary online version, which the adviser and professor approved for testing only. [TO CONFIRM: the last day of testing and the survey date.] Chapter 1 says a 3-day pilot; use the real length and dates in Chapter 1, Chapter 2, Chapter 4 and the questionnaire, so they all match. Ask your adviser how to describe the testing setup in the paper.
-</div>
-<ol>
-<li><b>Describe the pilot:</b> who took part (how many, and their roles), when, for how long, and what they did. This comes from the user acceptance procedure in your Chapter 3.</li>
-<li><b>Table 4.6:</b> the results of the 17 test scenarios (Passed or Failed, with notes). The scenarios are in the reference file, Appendix F.</li>
-<li><b>Table 4.7 and Figure 4.25:</b> the questionnaire results (SUS and/or ISO/IEC 25010) with the mean for each item and where it falls on your interpretation scale.</li>
-<li><b>Figure 4.26:</b> the overall mean score, with a paragraph that says what it means.</li>
-<li><b>Comments:</b> read them all, make categories, and write the patterns in one paragraph.</li>
-<li><b>Problems found:</b> a short paragraph from the issue log, with what you did about each one.</li>
-<li><b>Limits of the pilot:</b> one or two sentences that say how long it was, that the group was small, and that the results apply to the EMO only. Do not claim more than that.</li>
-</ol>
-<div class="box">
-<b class="t">What to gather during the pilot</b>
+<tr><th style="width:50%">Ask the adviser</th><th>Confirm at the office</th></tr>
+<tr><td>
 <ul>
-<li>The completed test scenarios (Passed or Failed, with notes)</li>
-<li>The questionnaire answers, and who answered (count by role)</li>
-<li>User comments, and the issue log with dates (for example: some NEU PCs could not reach the laptop on the office network)</li>
-<li>Phone access and response checks (the reference marks these [TO MEASURE])</li>
-<li>Backups: the online test version does not make the app's daily backup (it is turned off there), so show the daily backups from the office laptop or the Mac instead</li>
-<li>The final real-data numbers (Analytics and any readiness labels), pulled after the pilot (ask Xyrone)</li>
-<li>Photos or screenshots from the pilot (only with permission)</li>
+<li>ISO/IEC 25010 (the paper) or ISO 9126 (the slides)?</li>
+<li>Both ISO/IEC 25010 and SUS, or only one?</li>
+<li>Which interpretation labels?</li>
+<li>Evaluation method section: end of Chapter 3, or start of Chapter 4? Chapter 4's title?</li>
+<li>IT experts as extra evaluators?</li>
+<li>Interview needed, or open-ended questions enough?</li>
+<li>Summary of Findings in Chapter 5?</li>
+<li>Table numbering pattern (Table 1 or Table 3.1), and the title page date?</li>
+<li>Can she check the forms before the EMO answers them?</li>
 </ul>
-</div>
-
-<h3>Part 1: Opening paragraph (write it last)</h3>
-<p>Write 3 or 4 sentences that say the chapter presents the results and discussion of EMO Tracker, that the objectives from Chapter 1 were addressed, and in what order you show the results.</p>
-
-<h2>5. Chapter 5: Conclusions and Recommendations</h2>
-<p>Use two headings, <b>Conclusion</b> and <b>Recommendation</b>, both written in <b>paragraphs</b> with no bullet lists. Do not claim user satisfaction before the survey is done.</p>
-<h3>Conclusion (about 4 paragraphs)</h3>
-<ol>
-<li><b>Paragraph 1:</b> what EMO Tracker is (a responsive web application for the Events Management Office of New Era University), what it does, and that it achieved its objectives.</li>
-<li><b>Paragraph 2 (Objective 1):</b> the three views, the automatic statuses, the venues, the double-booking warning, and the tasks with one owner and the lock. Add the overlapping bookings found in the real schedule (13 pairs in the first check, 14 in the latest sheet) and the 45 passing test cases.</li>
-<li><b>Paragraph 3 (Objectives 2 and 3):</b> the readiness labels with their reasons and the Analytics (25 passing test cases), then the PDF report, the Excel or CSV export, the uploads, the import of the EMO's sheet (391 events in the final import), the daily backups, and the login and role protection (40 passing test cases).</li>
-<li><b>Paragraph 4 (Objective 4):</b> what the EMO's users said in the pilot (after the survey), and a closing sentence on what the system gives the EMO.</li>
-</ol>
-<h3>Recommendation (about 5 or 6 paragraphs)</h3>
-<ol>
-<li>Write one paragraph for each idea. Start with what your results or limitations showed, then say what to improve.</li>
-<li>Pick 5 or 6 from these: email or SMS notifications (the client asked for them, and they need internet), an activity log, recurring events and event templates, restoring a backup inside the app, adjustable readiness thresholds tuned after the pilot, and hosting beyond one laptop (the pilot showed that some NEU PCs are on a different network and could not reach the office laptop).</li>
-<li>Add one paragraph on testing with more users over a longer time.</li>
-<li>Check H.3 in the reference file for the full list of ideas.</li>
-</ol>
-<p style="font-size:9.5pt">Your instructor's slides also describe a Summary of Findings. Ask your adviser if she wants it in Chapter 5.</p>
-
-<h2 class="pb">6. Fix These in Your Other Chapters</h2>
-<p>From the October 23 review of the paper (pages 1 to 71). Fix the facts in your own words.</p>
-<table>
-<tr><th style="width:27%">Where</th><th>What to fix</th></tr>
-<tr><td>Whole paper</td><td><b>"EMD" and "Events Management Department"</b> become <b>"EMO", "Events Management Office" and "EMO Tracker"</b>: the title, the lists of figures and tables, most of Chapter 3, and the captions of Figures 3.2 to 3.4 and Tables 1 and 2. The title page also says "Task <b>Office</b>" (probably "Task Tracking") and "May 2026".</td></tr>
-<tr><td>List of Figures</td><td>Outdated: it lists 15 sequence diagrams (D.6 to D.20) but the paper has 3 (D.6 to D.8); the As-Is journey map is missing (E.4 to E.7 are the four journey maps); the wireframes are E.7 in the list but E.8 in the text; Figure 3.1's title differs from its caption. Rebuild the list after Chapter 4.</td></tr>
-<tr><td>Chapter 1, Introduction and Objective 3</td><td>The export is now <b>Excel or CSV</b>.</td></tr>
-<tr><td>Chapter 1, Objective 4</td><td>The pilot length and dates must match what happened. "...from EMO. Using [TO CONFIRM]..." is a fragment; make it one sentence.</td></tr>
-<tr><td>Chapters 1 and 3, number of members</td><td>"Approximately 5" (Chapter 1), "8 to 10" (Population), "5 to 10" (Table 1), and the organizational chart shows 8. Use one number everywhere.</td></tr>
-<tr><td>Chapter 1 and Chapter 4, At Risk color</td><td>"At Risk (yellow)" in the Definition of Terms but "Orange" in the Figure 4.1 text. Use one color word everywhere.</td></tr>
-<tr><td>Chapter 2</td><td>"Barredo Arrieta et al. (2022)" should be <b>2020</b> (as in the references). The shadow IT review is <b>Raković, Sakal, Matković, and Marić (2020)</b>, not Raković, Sakal, Dakić, and Đurković (2022). "acountability" should be "accountability". "112 automated tests (<b>517</b> checks)" should be <b>530</b>. The evaluation happens during the pilot, <b>before</b> the defense, not after.</td></tr>
-<tr><td>Chapter 3, Requirements Modeling (Input, Process, Output, Performance, Control), Operational Feasibility, Security</td><td>These still describe the <b>Capstone 1 system</b>: the event budget and event_staff table (both removed), "four readiness labels ... or Completed", Officers editing events and deleting documents, a "Calendly-inspired" calendar, "This Week, This Month or All Time" (This year is missing), a PDF report "through the analytics dashboard", "active staff count", and changes "in real time". They also read as AI-written, which is a <b>Turnitin risk</b>. Rewrite them in your own words; ask Xyrone for the facts of each section.</td></tr>
-<tr><td>Chapter 3, Data and Process Modeling</td><td>"The six database tables" should be the <b>seven main tables</b> (16 in all).</td></tr>
-<tr><td>Chapter 3, Gantt Chart paragraph</td><td>"In Appendix G Figure 2" should be "Figure G.2". The dates should match the real installation (October 20).</td></tr>
-<tr><td>Chapter 3, Table 2</td><td>Composer, the fonts and Recharts are marked <b>Hardware</b>; they are <b>Software</b>. "All of the software is free" needs "except the operating system".</td></tr>
-<tr><td>Chapter 3, evaluation</td><td>Add the user acceptance procedure, the checklist and criteria, and the interpretation scale, because Chapter 4 only reports the results.</td></tr>
-<tr><td>Chapter 4, Objective 1 restatement</td><td>"Tracks task status: On Track, At Risk, Critical" is wrong. Task statuses are <b>Pending, In progress and Done</b>; On Track, At Risk and Critical are readiness labels (Objective 2).</td></tr>
-<tr><td>Chapter 4, Figure 4.1 text</td><td>The colors depend on <b>readiness</b>, not on "when it will commence".</td></tr>
-<tr><td>Grammar, Chapters 1 and 2</td><td>"A need for a digital system is needed"; "(2021). as well as"; "successful event. ."; "used i8t"; "Rakovic" should be "Raković"; "It now also include" should be "includes"; "around Sheet-style Schedule page" should be "around a sheet-style Schedule page"; "managed venues and building" should be "buildings".</td></tr>
-<tr><td>Done (Oct 26)</td><td>Figure 3.5 was redrawn with port 8000 (docs/paper/diagrams/network-topology.png). Replace the old image in the paper; the Network Topology text already says port 8000.</td></tr>
+</td><td>
+<ul>
+<li>The positions of the two other main members, and each user's role in the system</li>
+<li>The real pilot dates (installed October 20; testing from October 21)</li>
+<li>When the EMO can do the checklist and questionnaire</li>
+<li>Whether they used phones, and which browsers</li>
+<li>Where the backups are saved on their laptop (p. 55 says a USB drive)</li>
+<li>The interview and observation date, if Appendix C doesn't have it</li>
+</ul>
+</td></tr>
 </table>
 
-<h2>7. Checklist</h2>
-<h3>Start now (does not need the survey)</h3>
+<h2>10. Checklist</h2>
+<h3>Start now (doesn't need the survey)</h3>
 <ul>
-<li>[ ] Choose one Chapter 4 structure as a group (this guide, or the current draft)</li>
-<li>[ ] Confirm the real pilot dates and length, and fix Chapters 1 and 2 so they match</li>
-<li>[ ] Decide the figure numbering pattern with your adviser</li>
-<li>[ ] Get the questionnaire and the printed 17 test scenarios ready before the survey</li>
-<li>[ ] Take the 3 missing screenshots</li>
-<li>[ ] Write Parts 2 to 5: the bold sentence, then each figure and its paragraph</li>
-<li>[ ] Write Tables 4.1 to 4.5 (and the optional readiness tables) and their paragraphs</li>
-<li>[ ] Make the empty tables and charts for the pilot results</li>
-<li>[ ] Draft the Chapter 5 paragraphs that do not need the survey</li>
-<li>[ ] Fix the items in Section 6</li>
+<li>[ ] Fix the objective sentences (Section 3) and the Chapter 1, 2 and 3 items in Section 8 that don't need the visit</li>
+<li>[ ] Replace the Figure 4.5 and Figure 3.5 images</li>
+<li>[ ] Add the Objective 3 sentence, the CSV figure, the new order and numbers, the two fact fixes and the closing paragraph</li>
+<li>[ ] Finish Table 4.1, and write Tables 4.2, 4.4 and 4.5 with their paragraphs</li>
+<li>[ ] Send the adviser the questions in Section 9</li>
+<li>[ ] Make and print the test checklist and the questionnaire</li>
+<li>[ ] Draft the evaluation method section (everything except the dates)</li>
+<li>[ ] Fix the five references</li>
 </ul>
-<h3>After the survey</h3>
+<h3>After the visit and the survey</h3>
 <ul>
-<li>[ ] Encode the answers and compute the means</li>
-<li>[ ] Get the final real-data numbers from the pilot (ask Xyrone)</li>
-<li>[ ] Write the pilot results in Part 6, and the user result charts in Parts 3 to 5 if you use them</li>
-<li>[ ] Finish Conclusion paragraph 4 and the Recommendation</li>
-<li>[ ] Write the opening paragraph of Chapter 4</li>
-<li>[ ] Update your list of figures and list of tables</li>
+<li>[ ] Fill in the office size, positions, instrument and real dates (Chapters 1 to 3); Xyrone redraws Figures G.1 and G.2</li>
+<li>[ ] Encode the answers and compute the means and SUS scores</li>
+<li>[ ] Write Tables 4.6 to 4.8, Figure 4.26 and the rest of Objective 4 (Section 5.4)</li>
+<li>[ ] Write Chapter 5 and the opening paragraph of Chapter 4</li>
+<li>[ ] Rebuild the table of contents, List of Figures and List of Tables</li>
 <li>[ ] Run the tests again, check every number and date, then do the Turnitin check as your school requires</li>
 </ul>
 

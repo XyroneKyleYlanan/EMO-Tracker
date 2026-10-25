@@ -1102,7 +1102,7 @@ Use the screenshots in Appendix G as figures. They were taken from the **demo da
 
 ## G.2 Automated test results
 
-All **112 test cases (530 checks) pass** (last run October 23, 2026). The tests run on a temporary in-memory database.
+All **112 test cases (530 checks) pass** (last run October 26, 2026). The tests run on a temporary in-memory database.
 
 | Test file | Cases | What it checks |
 |---|--:|---|
@@ -1132,6 +1132,7 @@ All **112 test cases (530 checks) pass** (last run October 23, 2026). The tests 
   - `npm audit`: 0 vulnerabilities.
   - `composer audit`: 0 advisories.
   - Earlier in Capstone 2, updates took Composer from 44 advisories to 0 and npm from 11 vulnerabilities to 0.
+- **Run again on October 26, 2026:** Pint passes, ESLint 0 problems, the build passes, `composer audit` 0 advisories. `npm audit` shows **3 high advisories** published after October 7 (follow-redirects through axios, vite, and zod through eslint-plugin-react-hooks). They are in development tools or in code the browser build leaves out; `npm audit fix` updates them. **[TO DO before Table 4.2: update, then run the audit again]**
 
 ## G.4 Browser checks
 
