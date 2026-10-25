@@ -1,9 +1,9 @@
 # Screenshot Descriptions
 
-Descriptions of the 30 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
+Descriptions of the 31 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshot 30 was taken on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so it matches screenshot 06.
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26.
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
 - **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
@@ -261,6 +261,12 @@ The Administrator and Officers can export the Schedule as an Excel file in the s
 **File:** [screenshots/5-reports/30-export-menu.png](screenshots/5-reports/30-export-menu.png) (close-up: [30-export-menu-closeup.png](screenshots/5-reports/30-export-menu-closeup.png))
 
 The Schedule page (the same view as screenshot 06) with the **Export** menu open. It offers two files: **Excel (.xlsx)**, "With the building colors", and **CSV (.csv)**, "Plain text, opens in any app". The Administrator and Officers see this button; Staff don't. The close-up shows only the buttons and the menu, at 2× resolution.
+
+### 31. Schedule Exported to CSV
+
+**File:** [screenshots/5-reports/31-csv-export.png](screenshots/5-reports/31-csv-export.png)
+
+The same 38 demo events as the Excel export (screenshot 26), saved as a CSV file and shown as its actual text in a plain text window. The first line holds the column names (date, time, event, type, department, venue, control number and remarks), then there is one line per event with the values separated by commas. Each date includes its year, a cancelled event ends with "(Cancelled)", and reschedules are written in the remarks. A CSV has no colors or formatting, which is why the menu calls it "Plain text, opens in any app": Excel, Google Sheets or a text editor can open it.
 
 ---
 

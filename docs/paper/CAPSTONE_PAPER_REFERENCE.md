@@ -1515,6 +1515,7 @@ Mark each scenario Passed or Failed, and write notes.
 | [25-pdf-report.png](screenshots/5-reports/25-pdf-report.png) | PDF event report (both pages) |
 | [26-excel-export.png](screenshots/5-reports/26-excel-export.png) | Schedule exported to Excel (file preview) |
 | [30-export-menu.png](screenshots/5-reports/30-export-menu.png) | Schedule with the Export menu open (Excel or CSV); close-up in 30-export-menu-closeup.png |
+| [31-csv-export.png](screenshots/5-reports/31-csv-export.png) | Schedule exported to CSV (the file's text) |
 | **6-data-protection/** | |
 | [27-import-check.png](screenshots/6-data-protection/27-import-check.png) | Import check (dry run) of the EMO's October 20 sheet: totals only |
 | [28-backup-files.png](screenshots/6-data-protection/28-backup-files.png) | Automatic daily backups (backup:list) |
