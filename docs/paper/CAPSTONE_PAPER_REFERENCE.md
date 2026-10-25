@@ -1132,7 +1132,7 @@ All **112 test cases (530 checks) pass** (last run October 26, 2026). The tests 
   - `npm audit`: 0 vulnerabilities.
   - `composer audit`: 0 advisories.
   - Earlier in Capstone 2, updates took Composer from 44 advisories to 0 and npm from 11 vulnerabilities to 0.
-- **Run again on October 26, 2026:** Pint passes, ESLint 0 problems, the build passes, `composer audit` 0 advisories. `npm audit` shows **3 high advisories** published after October 7 (follow-redirects through axios, vite, and zod through eslint-plugin-react-hooks). They are in development tools or in code the browser build leaves out; `npm audit fix` updates them. **[TO DO before Table 4.2: update, then run the audit again]**
+- **Run again on October 26, 2026:** Pint passes, ESLint 0 problems, the build passes, `composer audit` 0 advisories. `npm audit` showed **3 high advisories** published after October 7 (follow-redirects through axios, vite, and zod through eslint-plugin-react-hooks), all in development tools or in code the browser build leaves out. The packages were updated the same day (vite 8.3.5, follow-redirects 1.16.1, zod 4.6.7), and `npm audit` now shows **0 vulnerabilities**. ESLint, the build and both ways of starting the app were checked again after the update.
 
 ## G.4 Browser checks
 
