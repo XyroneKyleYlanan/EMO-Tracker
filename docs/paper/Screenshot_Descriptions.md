@@ -1,9 +1,9 @@
 # Screenshot Descriptions
 
-Descriptions of the 29 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
+Descriptions of the 30 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only.
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshot 30 was taken on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so it matches screenshot 06.
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
 - **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
@@ -255,6 +255,12 @@ The server generates the report, so it looks the same on every device.
 **File:** [screenshots/5-reports/26-excel-export.png](screenshots/5-reports/26-excel-export.png)
 
 The Administrator and Officers can export the Schedule as an Excel file in the same layout as the spreadsheet the EMO used before the system: a year title, then columns for date, time, event, type, department, venue, control number and remarks. Rows are colored by building, cancelled events are struck through, and reschedules are noted in the remarks. The office can therefore keep sharing the schedule in its familiar format. The file is shown in a file preview; Arial is used in place of Excel's default font, Calibri, which the preview computer does not have.
+
+### 30. Schedule Export Menu
+
+**File:** [screenshots/5-reports/30-export-menu.png](screenshots/5-reports/30-export-menu.png) (close-up: [30-export-menu-closeup.png](screenshots/5-reports/30-export-menu-closeup.png))
+
+The Schedule page (the same view as screenshot 06) with the **Export** menu open. It offers two files: **Excel (.xlsx)**, "With the building colors", and **CSV (.csv)**, "Plain text, opens in any app". The Administrator and Officers see this button; Staff don't. The close-up shows only the buttons and the menu, at 2× resolution.
 
 ---
 
