@@ -37,8 +37,8 @@ The model suited the project because the EMO's needs became clear only as its me
 
 EMO Tracker follows a three-tier client–server architecture installed on a single laptop on the Events Management Office's local network.
 
-- **Presentation tier:** users open the system in a web browser, either on the server laptop itself (`localhost:5173`) or from phones and other laptops on the same Wi-Fi network (the laptop's IP address, port 5173). The frontend server (Vite) sends the React single-page application to the browser. It also forwards every request whose path begins with `/api` to the application tier.
-- **Application tier:** a Laravel REST API that listens only on the laptop itself (`127.0.0.1:8000`), so no other device can reach it directly. It enforces authentication, role-based access and every business rule, including readiness classification, venue overlap detection and event status changes.
+- **Presentation tier:** users open the system in a web browser, either on the server laptop itself (`localhost:8000`) or from phones and other laptops on the same Wi-Fi network (the laptop's IP address, port 8000). On the EMO's laptop, one web server on port 8000 sends the built React single-page application to the browser and passes every request whose path begins with `/api` to the application tier. (During development, the Vite server on port 5173 does this instead.)
+- **Application tier:** a Laravel REST API, reached through the same port 8000. It enforces authentication, role-based access and every business rule, including readiness classification, venue overlap detection and event status changes.
 - **Data tier:** a MySQL 8.4 database, a private storage area for uploaded documents, and a backup location. Each day the system writes a backup of both the database and the documents there; the location can be a folder on the laptop or an external USB drive.
 
 The system runs entirely on the local network and uses no external services or cloud hosting.
@@ -51,12 +51,11 @@ EMO Tracker runs on the EMO office's local network in a star topology: every dev
 
 - **Server laptop:** the EMO's Windows laptop runs the whole system:
   - Laragon, which provides PHP 8.3 and the MySQL 8.4 database
-  - the Laravel API, which listens only on the laptop itself (`127.0.0.1:8000`)
+  - Laravel, which serves the React application and the API on port 8000
   - the uploaded documents, in private storage
-  - the React application, served to the other devices on port 5173
 - **USB drive (recommended):** connected to the server laptop, it receives the automatic daily backups. By default, backups are saved in a folder on the laptop; the `BACKUP_PATH` setting points them to the USB drive instead, so a broken laptop does not take the backups with it.
 - **Access point:** the university Wi-Fi or a router of the office's own. The topology is the same either way.
-- **Users' devices:** laptops, computers, tablets and phones open the system in any web browser at the server's address (for example, `http://192.168.1.5:5173`). Nothing is installed on them. The diagram labels four devices by role (an Administrator's office laptop, an Officer's computer, and a Staff member's tablet and phone), but these are examples: any role can use any device.
+- **Users' devices:** laptops, computers, tablets and phones open the system in any web browser at the server's address (for example, `http://192.168.1.5:8000`). Nothing is installed on them. The diagram labels four devices by role (an Administrator's office laptop, an Officer's computer, and a Staff member's tablet and phone), but these are examples: any role can use any device.
 
 No internet connection is needed. The system can only be reached from devices on the same network, which keeps the EMO's data inside the office.
 

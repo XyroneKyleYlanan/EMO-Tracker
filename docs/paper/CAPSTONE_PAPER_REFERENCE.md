@@ -49,7 +49,7 @@
 
 It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of tracking tasks.
 
-- **Users:** about 5 to 10 EMO members **[TO CONFIRM exact number]**, in three roles:
+- **Users:** the EMO's four main members (the Director, the Ministrong Tagasubaybay and two others; **[TO CONFIRM the other two positions]**), in three roles:
   - **Administrator:** owns the schedule, the venues and the user accounts.
   - **Officer:** prepares events, through tasks, documents, reports and analytics.
   - **Staff:** works on and updates their own tasks.
@@ -85,7 +85,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 | Double-booking | Not handled | A **warning** when two bookings overlap at the same venue and room | 13 overlapping pairs were found in the real 2026 sheet |
 | Who can edit events | Administrator and Officer | **Administrator only**; Officers prepare events (tasks, documents, reports) | One person owns the schedule |
 | People on an event | A list of assigned staff per event (`event_staff` table) | An event's People are **everyone with a task on it**; the table was removed | Simpler: the EMO is small and everyone handles events |
-| Who sees what | Staff saw only events assigned to them | **Everyone can see and open every event**; editing still depends on the role | The office has 5 to 10 people |
+| Who sees what | Staff saw only events assigned to them | **Everyone can see and open every event**; editing still depends on the role | The office has four main members |
 | Readiness rules | Critical if under 40% done, 2 days or less away, or most tasks unassigned. At Risk if under 70% done, 6 days or less away, or any task unassigned | **Time-aware rules** (Part E.8.1). Each label also states its reason, e.g. "1 task is overdue" | When tested on the real schedule, an event 14 days away was labeled Critical at 0% done |
 | Analytics | Readiness statistics, a donut chart, the 5 most urgent events | Adds **schedule statistics** for a chosen period: statuses, rescheduled events, internal vs external, busiest venues | The client asked for analytics on event statuses |
 | Home pages | Statistics cards and shortcut links | Built around **"what needs my attention"**: a one-sentence summary, a needs-attention list, the next 7 days, my open tasks, and the backup status (Administrator) | The shortcut links repeated the menu, and the cards competed with the list that matters most |
@@ -118,7 +118,7 @@ It replaces the EMO's hand-typed schedule spreadsheet and its scattered way of t
 
 **The office**
 - The EMO organizes and oversees NEU events (for example Foundation Day, orientations, sports fests, recognition nights and inter-college competitions). It also keeps the schedule of NEU events and venue bookings.
-- It has about 5 to 10 members, and all of them handle events. **[TO CONFIRM]**
+- It has four main members: the Director, the Ministrong Tagasubaybay and two others **[TO CONFIRM their positions]**. All of them handle events.
 
 **How the EMO keeps its schedule (studied in Capstone 2)**
 - **One shared spreadsheet.** The schedule is a Google Sheets file typed by hand: one tab per year, rows colored by building, and seven columns (Date, Time, Event, Department, Venue, Control #, Remarks). The 2026 tab had about 330 rows.
@@ -328,27 +328,26 @@ EMO Tracker uses a **three-tier, client-server architecture**:
 ```mermaid
 flowchart LR
     subgraph Devices["Devices on the EMO's Wi-Fi"]
-        Office["Office laptop<br/>localhost:5173"]
-        Others["Phones and other laptops<br/>LAPTOP-IP:5173"]
+        Office["Office laptop<br/>localhost:8000"]
+        Others["Phones and other laptops<br/>LAPTOP-IP:8000"]
     end
     subgraph Server["Server laptop: Windows with Laragon, or macOS"]
-        Vite["Frontend server (Vite)<br/>port 5173<br/>sends the React app and<br/>forwards /api requests"]
-        API["Laravel REST API<br/>127.0.0.1:8000<br/>login, roles, rules"]
+        API["Laravel (PHP's web server)<br/>port 8000<br/>sends the React app and<br/>answers /api requests:<br/>login, roles, rules"]
         DB[("MySQL 8.4")]
         Files[["Uploaded documents<br/>(private storage)"]]
         Backups[["Daily backups<br/>(folder or USB drive)"]]
     end
-    Office -- "HTTP" --> Vite
-    Others -- "HTTP" --> Vite
-    Vite -- "/api requests" --> API
+    Office -- "HTTP" --> API
+    Others -- "HTTP" --> API
     API --> DB
     API --> Files
     API --> Backups
 ```
 
 **How a request travels**
-- Browsers connect over plain HTTP to port 5173 on the server laptop. The frontend server forwards every `/api` request to Laravel, which only listens on the laptop itself (127.0.0.1:8000). Users never connect to Laravel directly.
-- The frontend server tells Laravel which device each request came from. The login limit uses this.
+- **At the EMO (office mode):** browsers connect over plain HTTP to port 8000 on the server laptop. One PHP web server (`office/run-server.bat`, started by the desktop icon and with Windows) sends the built React app and answers every `/api` request. Node.js isn't needed on that laptop.
+- **During development (`start.bat`, `start.command`):** browsers connect to the Vite server on port 5173, which forwards `/api` requests to Laravel on 127.0.0.1:8000 and tells Laravel which device each request came from.
+- The login limit counts attempts for each account on each device.
 
 **What happens on every API request**
 1. The response is always JSON.
@@ -878,7 +877,7 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
 - **Server laptop:**
   - **The EMO's machine (daily use):** Windows with Laragon (PHP 8.3 or newer and MySQL 8.4) and Node.js 20 or newer. **[TO CONFIRM its specs]**
   - **The defense machine:** a MacBook with Homebrew.
-- **Other devices:** any modern browser on the same WiFi, opening `http://LAPTOP-IP:5173`.
+- **Other devices:** any modern browser on the same WiFi, opening `http://LAPTOP-IP:8000` (office mode; `:5173` during development).
 - **Starting the app:** double-click `start.bat` (Windows) or `start.command` (Mac). It:
   1. finds PHP (on Windows, Laragon's PHP, even after Laragon updates)
   2. applies any database changes that came with a new version, saving a backup first
@@ -893,7 +892,7 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
 ## E.11 Testing and evaluation plan
 
 **Testing during development** (results in Part G)
-1. **Automated tests:** 110 test cases with PHPUnit, run with `php artisan test`. They run on a temporary in-memory database, so they never touch real data.
+1. **Automated tests:** 112 test cases with PHPUnit, run with `php artisan test`. They run on a temporary in-memory database, so they never touch real data.
 2. **Browser walkthroughs:** every page for each role, at desktop and phone sizes.
 3. **Load check:** response times with a few hundred events.
 4. **Pre-defense audit:** a full review of anything that could fail, confuse a user or look unfinished.
@@ -901,7 +900,7 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
 **User evaluation (planned)**
 - **When:** during the pilot at the EMO, after 1 to 2 weeks of real use. **[TO CONFIRM]**
 - **Who:**
-  - all EMO members, by total enumeration, since there are only 5 to 10 **[TO CONFIRM]**
+  - all EMO members, by total enumeration, since there are only four main members (the Director, the Ministrong Tagasubaybay and two others) **[TO CONFIRM the other two positions]**
   - IT experts as additional evaluators, if the adviser requires them **[TO CONFIRM]**
 - **How:**
   1. Respondents carry out task scenarios (Appendix F).
@@ -1422,7 +1421,7 @@ For the defense, the team uses the EMO's shared 2026 data (not confidential) on 
 Use the screenshots in Appendix G.
 
 **Everyone**
-1. Open `http://LAPTOP-IP:5173` (or `http://localhost:5173` on the office laptop) and log in.
+1. Open `http://LAPTOP-IP:8000` (or `http://localhost:8000` on the office laptop) and log in.
 2. **Home** shows what needs your attention.
 3. **Schedule:** choose a year, search, and click an event to see its details.
 4. **My tasks:** update a task's status from its dropdown (Pending → In progress → Done).

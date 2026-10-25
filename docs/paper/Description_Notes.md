@@ -81,9 +81,9 @@ Each note became about one sentence, in the writer's own words. Do the same with
 
 ### Figure 3.5 - Network Topology
 - Star topology on the office's local network: every device connects to one Wi-Fi router or access point (university Wi-Fi or an office router)
-- Server laptop (the EMO's Windows laptop): Laragon (PHP 8.3, MySQL 8.4), Laravel API (127.0.0.1:8000), React app (port 5173), private storage for documents
+- Server laptop (the EMO's Windows laptop): Laragon (PHP 8.3, MySQL 8.4), Laravel serves the app and the API (port 8000), private storage for documents
 - USB drive attached to the server: daily backups
-- Users' laptops, computers, tablets and phones open it in a browser at the server's address (e.g., http://192.168.1.5:5173); nothing is installed on them
+- Users' laptops, computers, tablets and phones open it in a browser at the server's address (e.g., http://192.168.1.5:8000); nothing is installed on them
 - The role labels on the devices are examples: any role can use any device
 - No internet or cloud needed, so the data stays inside the office
 

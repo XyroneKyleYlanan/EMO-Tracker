@@ -46,9 +46,9 @@ The medium risks are the single point of failure of running every part on one la
 
 ### Figure 3.5 - Network Topology
 
-Figure 3.5 shows the network topology of EMO Tracker: a star topology on the EMO office's local area network (LAN), in which every device connects to one central Wi-Fi access point or router. The server laptop, the EMO's Windows laptop, runs the whole system. Laragon provides PHP 8.3 and the MySQL 8.4 database, the Laravel API listens only on the laptop itself (127.0.0.1:8000), the React application is served to the other devices on port 5173, and uploaded documents are kept in private storage. A USB drive connected to the server laptop receives the automatic daily backups, so a failure of the laptop does not take the backups with it.
+Figure 3.5 shows the network topology of EMO Tracker: a star topology on the EMO office's local area network (LAN), in which every device connects to one central Wi-Fi access point or router. The server laptop, the EMO's Windows laptop, runs the whole system. Laragon provides PHP 8.3 and the MySQL 8.4 database, Laravel serves both the React application and the API to the other devices on port 8000, and uploaded documents are kept in private storage. A USB drive connected to the server laptop receives the automatic daily backups, so a failure of the laptop does not take the backups with it.
 
-The users' laptops, computers, tablets and phones connect to the access point, which may be the university Wi-Fi or a router of the office's own, and open the system in a web browser at the server laptop's address (for example, http://192.168.1.5:5173); nothing is installed on these devices. The four devices in the figure are labeled by role as examples, since any role can use any device. No internet or cloud connection is required, which keeps the EMO's data within the office.
+The users' laptops, computers, tablets and phones connect to the access point, which may be the university Wi-Fi or a router of the office's own, and open the system in a web browser at the server laptop's address (for example, http://192.168.1.5:8000); nothing is installed on these devices. The four devices in the figure are labeled by role as examples, since any role can use any device. No internet or cloud connection is required, which keeps the EMO's data within the office.
 
 ### Table 2 - Compatibility Checking Table
 
