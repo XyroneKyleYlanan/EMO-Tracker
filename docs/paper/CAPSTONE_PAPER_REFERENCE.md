@@ -586,7 +586,7 @@ The diagram uses standard UML use case notation: stick figures for the actors, o
 | Actor | Use cases (each actor also has the use cases of the actors above it) |
 |---|---|
 | Staff | Log in; Log out; Change own password; View Home, Events and Schedule; View event details; Download documents and PDF reports; View my tasks; Update own task status |
-| Officer | Manage tasks (add, edit, delete, assign); Upload documents; View Analytics; Export the Schedule to Excel |
+| Officer | Manage tasks (add, edit, delete, assign); Upload documents; View Analytics; Export the Schedule (Excel or CSV) |
 | Administrator | Add event; Edit event; Cancel, restore or delete events; Manage venues and buildings; Manage user accounts; Delete documents; See backup status |
 
 ## E.7 Context diagram (data flow, level 0)
@@ -597,8 +597,8 @@ Drawn in Yourdon–DeMarco notation: the whole system is one process (numbered 0
 
 | Entity | Data flowing in to EMO Tracker | Data flowing out of EMO Tracker |
 |---|---|---|
-| Administrator | Login details; event, venue, building and account details; tasks and documents | Schedule and readiness; analytics; PDF reports and Excel export; backup status |
-| Officer | Login details; tasks and task assignments; documents | Schedule and readiness; analytics; documents; PDF reports and Excel export |
+| Administrator | Login details; event, venue, building and account details; tasks and documents | Schedule and readiness; analytics; PDF reports, Excel or CSV export; backup status |
+| Officer | Login details; tasks and task assignments; documents | Schedule and readiness; analytics; documents; PDF reports, Excel or CSV export |
 | Staff | Login details; status updates for their own tasks | Schedule and event details; assigned tasks; documents and PDF reports |
 | EMO's schedule spreadsheet (.xlsx) | Schedule rows, imported once from the command line (`schedule:import`) when the system is installed | |
 | Backup storage | | Daily backup of the database and documents (a folder on the laptop by default, or a USB drive set with `BACKUP_PATH`) |
@@ -904,9 +904,9 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
   - IT experts as additional evaluators, if the adviser requires them **[TO CONFIRM]**
 - **How:**
   1. Respondents carry out task scenarios (Appendix F).
-  2. They answer the questionnaire **[TO CONFIRM: SUS or ISO/IEC 25010]**.
+  2. They answer the ISO/IEC 25010 questionnaire (the adviser's decision, October 28, 2026; no SUS). Ready files: `docs/paper/chapter-4/iso25010-questionnaire.html` (22 statements on 7 characteristics, plus profile and comments) and `docs/paper/chapter-4/iso25010-scoring.xlsx` (computes the means).
 
-**Option 1: System Usability Scale (SUS).** The standard 10 statements, rated 1 (strongly disagree) to 5 (strongly agree):
+**Option 1: System Usability Scale (SUS).** *(Not used: the adviser chose ISO/IEC 25010 on October 28, 2026.)* The standard 10 statements, rated 1 (strongly disagree) to 5 (strongly agree):
 1. I think that I would like to use this system frequently.
 2. I found the system unnecessarily complex.
 3. I thought the system was easy to use.
@@ -1148,6 +1148,28 @@ These used Chrome, run by Playwright, at a desktop size (1440×900) and a phone 
   - signing out other devices after a password change
 
 ## G.5 Performance (load check)
+
+**Second load check (October 26, 2026; use this one for Table 4.4).** Same server program as the EMO's laptop (PHP's built-in web server, as in `office/run-server.bat`), on a MacBook Air M1 (8 GB) with PHP 8.3 and MySQL 8.4. A temporary database held 400 events (the 38 demo events plus 362 made-up schedule entries, about the size of the EMO's 391), 18 tasks, 14 venues and 10 accounts; the real data was not used. Each request was timed 20 times after one warm-up; the time is from sending the request to receiving the whole answer.
+
+| What was timed | Typical (median) | Slowest |
+|---|---|---|
+| Logging in (5 tries) | 257 ms | 367 ms |
+| Home (Administrator) | 25 ms | 28 ms |
+| Events page | 72 ms | 75 ms |
+| Schedule, 2026 (400 events) | 63 ms | 101 ms |
+| Event panel | 18 ms | 21 ms |
+| Event tasks | 13 ms | 15 ms |
+| My tasks | 12 ms | 17 ms |
+| Analytics, This year | 38 ms | 41 ms |
+| PDF event report | 636 ms | 641 ms |
+| Excel export, 2026 | 495 ms | 525 ms |
+| CSV export, 2026 | 35 ms | 41 ms |
+| 4 people open the Schedule at the same time (5 tries) | all answered in 244 ms | 251 ms |
+| 8 people open the Schedule at the same time (5 tries) | all answered in 478 ms | 498 ms |
+
+Logging in is slower on purpose: checking a bcrypt password (cost 12) takes about a quarter of a second. Phones over Wi-Fi were not measured.
+
+**First load check (October 7, 2026, during the audit):**
 
 This ran during the audit on October 7, 2026: a MacBook (Apple silicon) running `php artisan serve` and MySQL 8.4, using a test database with **438 events**.
 - **API responses took 17 to 87 ms.**

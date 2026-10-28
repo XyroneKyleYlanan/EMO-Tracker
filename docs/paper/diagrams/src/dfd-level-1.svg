@@ -176,7 +176,7 @@
 <path d="M290.0,1798.4 L500.0,1798.4 L657.2,1875.6" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>
 <text x="302" y="1790.4" text-anchor="start" font-size="13.5">documents, deletions</text>
 <path d="M290.0,1818.4 L500.0,1818.4 L656.3,1889.4" fill="none" stroke="#555555" stroke-width="1.5" marker-start="url(#arrow)"/>
-<text x="302" y="1837.4" text-anchor="start" font-size="13.5">PDF reports, Excel export</text>
+<text x="302" y="1837.4" text-anchor="start" font-size="13.5">PDF reports, Excel or CSV export</text>
 <rect x="50" y="1885.4" width="240" height="54" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
 <text x="170" y="1912.4" text-anchor="middle" dominant-baseline="central" font-size="15">Officer *</text>
 <path d="M290.0,1902.4 L500.0,1902.4 L650.0,1905.1" fill="none" stroke="#555555" stroke-width="1.5" marker-end="url(#arrow)"/>

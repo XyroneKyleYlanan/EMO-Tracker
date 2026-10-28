@@ -54,7 +54,7 @@
 <ellipse cx="565" cy="759" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
 <text x="565" y="759.0" text-anchor="middle" dominant-baseline="central" font-size="15">View Analytics</text>
 <ellipse cx="565" cy="819" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
-<text x="565" y="819.0" text-anchor="middle" dominant-baseline="central" font-size="15">Export the Schedule to Excel</text>
+<text x="565" y="819.0" text-anchor="middle" dominant-baseline="central" font-size="15">Export the Schedule (Excel or CSV)</text>
 <ellipse cx="565" cy="913" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>
 <text x="565" y="913.0" text-anchor="middle" dominant-baseline="central" font-size="15">Add event</text>
 <ellipse cx="565" cy="973" rx="168" ry="25" fill="#ececec" stroke="#999999" stroke-width="1.2"/>

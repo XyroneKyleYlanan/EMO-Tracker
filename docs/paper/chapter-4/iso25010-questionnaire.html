@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker Evaluation Questionnaire (ISO/IEC 25010)</title>
+<style>
+  @page { size: Letter; margin: 0.6in 0.7in; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #111; background: #fff; max-width: 820px; margin: 24px auto; padding: 0 20px; font-size: 11pt; line-height: 1.35; }
+  .how { font-size: 13px; background: #fff8e1; border: 1px solid #e6d9a8; padding: 12px 16px; border-radius: 6px; line-height: 1.5; }
+  .how ol { margin: 6px 0 0; padding-left: 20px; }
+  button { font: bold 14px Arial, sans-serif; background: #0a5c3a; color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer; margin: 12px 8px 12px 0; }
+  #done { color: #0a5c3a; font-weight: bold; }
+  #form { border: 2px dashed #bbb; padding: 22px; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 2pt; }
+  .sub { text-align: center; margin: 0 0 12pt; font-size: 10.5pt; }
+  h2 { font-size: 11.5pt; margin: 14pt 0 6pt; }
+  p { margin: 4pt 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 10.5pt; }
+  td, th { border: 1px solid #000; padding: 3pt 5pt; vertical-align: top; }
+  th { background: #e8e8e8; font-weight: bold; text-align: center; }
+  td.box { text-align: center; width: 7%; vertical-align: middle; }
+  td.no { text-align: center; width: 5%; }
+  tr.group td { background: #f2f2f2; font-weight: bold; }
+  .line { border-bottom: 1px solid #000; height: 26pt; }
+  .pb { break-before: page; }
+  @media print {
+    body { margin: 0; padding: 0; max-width: none; }
+    .how, button, #done { display: none; }
+    #form { border: 0; padding: 0; }
+    tr { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="how">
+<b>How to use</b> (this box doesn't print)
+<ol>
+<li><b>For the EMO:</b> press <b>Cmd+P</b> (Windows: Ctrl+P), choose <b>Save as PDF</b> or your printer. It prints on 3 pages: the ratings on pages 1 and 2, the comments on page 3.</li>
+<li><b>For Appendix B:</b> click <b>Copy questionnaire</b>, then paste it into Google Docs with <b>Cmd+V</b>.</li>
+<li>Show it to your adviser before the EMO answers it, and change any wording she asks for.</li>
+</ol>
+</div>
+
+<button id="copy" type="button">Copy questionnaire</button><span id="done"></span>
+
+<div id="form">
+<h1>EMO Tracker Evaluation Questionnaire</h1>
+<p class="sub">Based on the product quality characteristics of ISO/IEC 25010:2023</p>
+
+<p>This questionnaire is part of a capstone project of BS Information Technology students of New Era University. It asks how well EMO Tracker works for the Events Management Office (EMO). Answering is voluntary. Please do not write your name; your answers will be used only for this study and will be reported without names.</p>
+
+<table style="margin-top:8pt">
+<tr><td style="width:50%">Respondent No. (filled in by the proponents): ______</td><td>Date: ____________________</td></tr>
+</table>
+
+<h2>Part I. Respondent Profile</h2>
+<p>Check the box that applies.</p>
+<table>
+<tr><td style="width:38%">1. Your role in EMO Tracker</td><td>&#9744; Administrator &nbsp;&nbsp; &#9744; Officer &nbsp;&nbsp; &#9744; Staff</td></tr>
+<tr><td>2. Devices you used it on (check all that apply)</td><td>&#9744; Laptop or computer &nbsp;&nbsp; &#9744; Phone &nbsp;&nbsp; &#9744; Tablet</td></tr>
+<tr><td>3. Number of days you used EMO Tracker</td><td>______ days</td></tr>
+</table>
+
+<h2>Part II. Software Quality</h2>
+<p>Read each statement and check <b>one</b> box based on your own experience with EMO Tracker.</p>
+<p><b>5</b> = Strongly Agree &nbsp; <b>4</b> = Agree &nbsp; <b>3</b> = Neutral &nbsp; <b>2</b> = Disagree &nbsp; <b>1</b> = Strongly Disagree</p>
+<table>
+<thead><tr><th>No.</th><th>Statement</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th></tr></thead>
+<tbody>
+
+<tr class="group"><td colspan="7">A. Functional Suitability</td></tr>
+<tr><td class="no">1</td><td>EMO Tracker has the features I need to keep the EMO's schedule and prepare its events.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">2</td><td>The system saves and shows event, venue, and task details correctly.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">3</td><td>The readiness label and its reason match how prepared an event really is.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">B. Performance Efficiency</td></tr>
+<tr><td class="no">4</td><td>Pages open quickly on the device I use.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">5</td><td>Saving an event, a task, or a status change takes only a moment.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">6</td><td>The system stays fast when other EMO members use it at the same time.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">C. Compatibility</td></tr>
+<tr><td class="no">7</td><td>The system works well while other applications are open on my device.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">8</td><td>The exported Excel or CSV file opens correctly in Excel or Google Sheets.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">9</td><td>The PDF event report opens and prints correctly.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">D. Interaction Capability (Usability)</td></tr>
+<tr><td class="no">10</td><td>When I first used the system, I could tell what each page is for.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">11</td><td>I learned to use the system without needing much help.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">12</td><td>The buttons, menus, and labels are clear and easy to use.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">13</td><td>The system warns me or asks me to confirm before a mistake can happen, such as a double-booking or a deletion.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">E. Reliability</td></tr>
+<tr><td class="no">14</td><td>The system worked without errors while I used it.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">15</td><td>The system was available whenever I needed it.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">16</td><td>When a problem happened, the system showed a clear message and let me try again.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">F. Security</td></tr>
+<tr><td class="no">17</td><td>Only people with an EMO Tracker account can log in and see the EMO's records.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">18</td><td>Each role can do only what it is allowed to do.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">19</td><td>The records of completed events are protected from accidental changes.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+
+<tr class="group"><td colspan="7">G. Flexibility</td></tr>
+<tr><td class="no">20</td><td>The system is easy to use on both a phone and a laptop.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">21</td><td>The system works in the web browser I normally use.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">22</td><td>I can use the system on different devices without installing anything.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+</tbody>
+</table>
+
+<h2 class="pb">Part III. Comments</h2>
+<p>1. What did you like most about EMO Tracker?</p>
+<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+<p style="margin-top:12pt">2. What problems did you encounter while using it?</p>
+<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+<p style="margin-top:12pt">3. What would you change or add?</p>
+<div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div>
+
+<p style="margin-top:18pt; text-align:center"><b>Thank you for your time and honest answers.</b></p>
+</div>
+
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var range = document.createRange();
+  range.selectNodeContents(document.getElementById('form'));
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  sel.removeAllRanges();
+  document.getElementById('done').textContent = ok
+    ? 'Copied. Paste it into Google Docs with Cmd+V.'
+    : 'Could not copy automatically: select everything inside the dashed box with the mouse, then press Cmd+C.';
+});
+</script>
+</body>
+</html>

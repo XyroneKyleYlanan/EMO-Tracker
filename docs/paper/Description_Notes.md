@@ -56,8 +56,8 @@ Each note became about one sentence, in the writer's own words. Do the same with
 ### Figure 3.3 - Context Diagram
 - Level 0 data flow diagram: the whole system as one process (Process 0); Yourdon-DeMarco notation (circle = process, rectangles = external entities, arrows = data flows)
 - 5 external entities: Administrator, Officer, Staff, the EMO's schedule spreadsheet, backup storage
-- Administrator gives: login details; event, venue, building and account details; tasks and documents. Gets: schedule with readiness, analytics, PDF reports and Excel export, backup status
-- Officer gives: login details, tasks and assignments, documents. Gets: schedule with readiness, analytics, documents, PDF reports and Excel export
+- Administrator gives: login details; event, venue, building and account details; tasks and documents. Gets: schedule with readiness, analytics, PDF reports, Excel or CSV export, backup status
+- Officer gives: login details, tasks and assignments, documents. Gets: schedule with readiness, analytics, documents, PDF reports, Excel or CSV export
 - Staff give: login details, status updates for their own tasks. Get: schedule and event details, assigned tasks, documents and PDF reports
 - Spreadsheet: schedule rows, imported once at installation. Backup storage: daily backup of the database and documents
 

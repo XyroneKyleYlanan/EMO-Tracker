@@ -18,7 +18,7 @@
 <line x1="657.8" y1="406.4" x2="268.7" y2="200.0" stroke="#555555" stroke-width="1.5" marker-end="url(#solid)"/>
 <text x="475.5" y="226.2" text-anchor="start" dominant-baseline="central" font-size="14">schedule and readiness</text>
 <text x="475.5" y="244.2" text-anchor="start" dominant-baseline="central" font-size="14">analytics</text>
-<text x="475.5" y="262.2" text-anchor="start" dominant-baseline="central" font-size="14">PDF reports and Excel export</text>
+<text x="475.5" y="262.2" text-anchor="start" dominant-baseline="central" font-size="14">PDF reports, Excel or CSV export</text>
 <text x="475.5" y="280.2" text-anchor="start" dominant-baseline="central" font-size="14">backup status</text>
 <line x1="1286.8" y1="200.0" x2="854.4" y2="429.4" stroke="#555555" stroke-width="1.5" marker-end="url(#solid)"/>
 <text x="1082.7" y="337.6" text-anchor="start" dominant-baseline="central" font-size="14">login details</text>
@@ -28,7 +28,7 @@
 <text x="1024.5" y="226.2" text-anchor="end" dominant-baseline="central" font-size="14">schedule and readiness</text>
 <text x="1024.5" y="244.2" text-anchor="end" dominant-baseline="central" font-size="14">analytics</text>
 <text x="1024.5" y="262.2" text-anchor="end" dominant-baseline="central" font-size="14">documents</text>
-<text x="1024.5" y="280.2" text-anchor="end" dominant-baseline="central" font-size="14">PDF reports and Excel export</text>
+<text x="1024.5" y="280.2" text-anchor="end" dominant-baseline="central" font-size="14">PDF reports, Excel or CSV export</text>
 <line x1="211.8" y1="750.0" x2="646.2" y2="512.0" stroke="#555555" stroke-width="1.5" marker-end="url(#solid)"/>
 <text x="416.5" y="590.2" text-anchor="end" dominant-baseline="central" font-size="14">login details</text>
 <text x="416.5" y="608.2" text-anchor="end" dominant-baseline="central" font-size="14">own task status updates</text>

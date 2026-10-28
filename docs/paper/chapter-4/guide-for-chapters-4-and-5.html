@@ -15,6 +15,7 @@
   li { margin: 2px 0; }
   table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; break-inside: auto; }
   tr { break-inside: avoid; }
+  tr:first-child { break-after: avoid; }
   th { background: #1f3864; color: #fff; text-align: left; padding: 5px 7px; font-size: 9.5pt; }
   td { border: 1px solid #b4c0d8; padding: 5px 7px; vertical-align: top; font-size: 9.5pt; }
   tr:nth-child(even) td { background: #f3f6fb; }
@@ -35,11 +36,14 @@
 <body>
 
 <h1>Guide for Making Chapters 4 and 5</h1>
-<p class="subtitle">EMO Tracker (Capstone 2). Updated October 26, 2026: checked against the paper (version 8), the repository and a new test run.</p>
+<p class="subtitle">EMO Tracker (Capstone 2). Updated October 28, 2026: the adviser chose ISO/IEC 25010 for the user evaluation. Checked against the paper and the repository.</p>
 
 <div class="new">
 <b class="t">What changed in this version</b>
 <ul>
+<li><b>October 28: the adviser chose ISO/IEC 25010</b> (not ISO 9126), so the SUS is no longer used. Section 5 has a ready questionnaire (<code>iso25010-questionnaire.html</code>) and a scoring sheet that computes the means (<code>iso25010-scoring.xlsx</code>), both in <code>docs/paper/chapter-4</code>.</li>
+<li>Objective 3's figures now follow the paper: <b>Figures 4.16 to 4.26</b>, so the questionnaire chart is <b>Figure 4.27</b>.</li>
+<li>Sections 1 and 8 still describe paper version 8; most of their items are now done.</li>
 <li>Checked against <b>paper version 8</b>. Most of the October 23 fixes are done; Section 8 lists what is still open, page by page.</li>
 <li>New test run on <b>October 26, 2026: 112 test cases, 530 checks, all passed</b>.</li>
 <li>New screenshots: <b>30</b> (the Export menu, full page and close-up) and <b>31</b> (the CSV export). <b>Figure 3.5</b> was redrawn with port 8000.</li>
@@ -123,13 +127,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 </ol>
 
 <h3>Step 3: Close each objective</h3>
-<p>End each objective with a short paragraph that starts <b>"Overall, Objective __ was met."</b> and says which figures show which part. Objectives 1 and 2 have one. <b>Objective 3 needs one</b> after its last figure. Facts for it:</p>
-<ul>
-<li>Figures 4.16 to 4.18: the PDF event report and the Schedule export as Excel and CSV.</li>
-<li>Figure 4.19: document uploads up to 10 MB, which only the Administrator can delete.</li>
-<li>Figures 4.20 to 4.22: accounts and roles, the login check, and the Staff view.</li>
-<li>Figures 4.23 to 4.25: the spreadsheet import check, the daily backups and the login limit.</li>
-</ul>
+<p>End each objective with a short paragraph that starts <b>"Overall, Objective __ was met."</b> and says which figures show which part. Objectives 1 to 3 have one in the paper. Objective 4's comes after the evaluation.</p>
 
 <h3>Step 4 (optional, after the survey): add user results to a part</h3>
 <p>Only if your questionnaire has statements about that part's features: add the mean scores for those statements and say where they fall on your interpretation scale (Section 5).</p>
@@ -154,7 +152,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>4.2</td><td>21 (4-staff)</td><td>Staff Home on a phone</td><td class="done">Done</td></tr>
 <tr><td>4.3</td><td>05 (2-administrator)</td><td>Events page, calendar view</td><td class="done">Done</td></tr>
 <tr><td>4.4</td><td>14 (2-administrator)</td><td>Events list on a phone</td><td class="done">Done</td></tr>
-<tr><td>4.5</td><td><b>30-export-menu</b> (5-reports)</td><td>Schedule page</td><td class="open">Replace the old image with this one (same page, with the Export menu open), and delete "[Add export pop up ]"</td></tr>
+<tr><td>4.5</td><td>06 (2-administrator)</td><td>Schedule page</td><td class="done">Done</td></tr>
 <tr><td>4.6</td><td>08 (2-administrator)</td><td>Edit event form with the reschedule question</td><td class="done">Done</td></tr>
 <tr><td>4.7</td><td>07 (2-administrator)</td><td>New event form with the double-booking warning</td><td class="done">Done</td></tr>
 <tr><td>4.8</td><td>10 (2-administrator)</td><td>A cancelled event</td><td class="done">Done</td></tr>
@@ -164,32 +162,25 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>4.12</td><td>19 (3-officer)</td><td>Completed event panel with locked tasks</td><td class="done">Done</td></tr>
 <tr><td>4.13</td><td>09 (2-administrator)</td><td>Event panel with the readiness label</td><td class="done">Done</td></tr>
 <tr><td>4.14</td><td>20 (3-officer)</td><td>Analytics page</td><td class="done">Done</td></tr>
-<tr><td>4.15</td><td><code>diagrams/readiness-flowchart.png</code></td><td>Readiness classification rules</td><td class="open">Caption is alone on the next page: shrink the image a little</td></tr>
+<tr><td>4.15</td><td><code>diagrams/readiness-flowchart.png</code></td><td>Readiness classification rules</td><td class="done">Done</td></tr>
 </table>
 <p>To replace an image in Google Docs: right-click it, <b>Replace image</b>, <b>Upload from computer</b>. It keeps the size and position. Use the full-page <code>30-export-menu.png</code>; the close-up is a spare.</p>
 
-<h3>Objective 3 (new numbering, with the CSV export)</h3>
+<h3>Objective 3</h3>
 <table>
-<tr><th style="width:12%">Figure</th><th style="width:18%">Screenshot</th><th style="width:34%">Caption idea</th><th>In paper version 8</th></tr>
-<tr><td>4.16</td><td>25 (5-reports)</td><td>PDF event report</td><td class="done">4.16, done</td></tr>
-<tr><td>4.17</td><td>26 (5-reports)</td><td>Schedule exported to Excel</td><td class="done">4.17, done</td></tr>
-<tr><td><b>4.18</b></td><td><b>31 (5-reports)</b></td><td><b>Schedule exported to CSV</b></td><td class="open">New: add it here</td></tr>
-<tr><td>4.19</td><td>18 (3-officer)</td><td>Uploading a document to an event</td><td class="open">Now 4.18, and it sits after 4.21 on p. 88: move it here</td></tr>
-<tr><td>4.20</td><td>12 (2-administrator)</td><td>Accounts page</td><td>Now 4.19</td></tr>
-<tr><td>4.21</td><td>02 (1-all-roles)</td><td>Login page after a wrong password</td><td>Now 4.20</td></tr>
-<tr><td>4.22</td><td>24 (4-staff)</td><td>Event panel for Staff</td><td>Now 4.21</td></tr>
-<tr><td>4.23</td><td>27 (6-data-protection)</td><td>Spreadsheet import check (dry run)</td><td>Now 4.22</td></tr>
-<tr><td>4.24</td><td>28 (6-data-protection)</td><td>Automatic daily backups</td><td>Now 4.23</td></tr>
-<tr><td>4.25</td><td>29 (6-data-protection)</td><td>Login limit message</td><td>Now 4.24</td></tr>
+<tr><th style="width:13%">Figure</th><th style="width:30%">Screenshot (folder)</th><th style="width:32%">Caption</th><th>Status</th></tr>
+<tr><td>4.16</td><td>25 (5-reports)</td><td>PDF event report</td><td class="done">Done</td></tr>
+<tr><td>4.17</td><td>30 (5-reports)</td><td>Export menu</td><td class="done">Done</td></tr>
+<tr><td>4.18</td><td>26 (5-reports)</td><td>Schedule exported to Excel</td><td class="done">Done</td></tr>
+<tr><td>4.19</td><td>31 (5-reports)</td><td>Schedule exported to CSV</td><td class="done">Done</td></tr>
+<tr><td>4.20</td><td>18 (3-officer)</td><td>Uploading a document to an event</td><td class="done">Done</td></tr>
+<tr><td>4.21</td><td>12 (2-administrator)</td><td>Accounts page</td><td class="done">Done</td></tr>
+<tr><td>4.22</td><td>02 (1-all-roles)</td><td>Login page after a wrong password</td><td class="done">Done</td></tr>
+<tr><td>4.23</td><td>24 (4-staff)</td><td>Event panel for Staff: view only</td><td class="done">Done</td></tr>
+<tr><td>4.24</td><td>27 (6-data-protection)</td><td>Spreadsheet import check (dry run)</td><td class="done">Done</td></tr>
+<tr><td>4.25</td><td>28 (6-data-protection)</td><td>Automatic daily backups</td><td class="done">Done</td></tr>
+<tr><td>4.26</td><td>29 (6-data-protection)</td><td>Login limit message</td><td class="done">Done</td></tr>
 </table>
-<div class="box">
-<b class="t">How to renumber without mixing them up</b>
-Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24 shows" line), then 4.23 to 4.24, and so on. If you'd rather not add the CSV figure, keep the old numbers, move the upload figure so it comes right after Figure 4.17, and mention the CSV in Figure 4.17's paragraph.
-</div>
-<div class="frame">
-<b class="t">Facts for the CSV figure's paragraph</b>
-<i>Same 38 demo events as the Excel export. The first line holds the column names (date, time, event, type, department, venue, control number, remarks), then one line per event, with the values separated by commas. Each date includes its year, a cancelled event ends with "(Cancelled)", and reschedules are written in the remarks. It has no colors or formatting, so Excel, Google Sheets or a text editor can open it.</i>
-</div>
 <p><b>Screenshots for a user manual instead</b> (they don't prove an objective by themselves): 01 Login page, 03 Change password, 13 Adding an account, 15 Schedule on a phone, 16 Officer Home, 23 My events. Ask your adviser if the paper has a user manual appendix.</p>
 
 <h2>5. Objective 4: Testing and the User Evaluation</h2>
@@ -198,11 +189,11 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <h3>5.1 Tables from our own testing (you can write these now)</h3>
 <table>
 <tr><th style="width:11%">Table</th><th style="width:45%">What it shows</th><th style="width:16%">Facts</th><th>Status</th></tr>
-<tr><td>4.1</td><td>Automated tests: 112 test cases in 16 files (530 checks), all passed. Last run October 26, 2026; run them again before the defense and use that date.</td><td>G.2</td><td class="open">Header, four cells and the paragraph left (below)</td></tr>
-<tr><td>4.2</td><td>Code quality and security checks</td><td>G.3 and the October 26 run (below)</td><td class="open">Caption only</td></tr>
+<tr><td>4.1</td><td>Automated tests: 112 test cases in 16 files (530 checks), all passed. Last run October 26, 2026; run them again before the defense and use that date.</td><td>G.2</td><td class="done">Done</td></tr>
+<tr><td>4.2</td><td>Code quality and security checks</td><td>G.3 and the October 26 run (below)</td><td class="done">Done</td></tr>
 <tr><td>4.3</td><td>Browser checks</td><td>G.4</td><td class="done">Done</td></tr>
-<tr><td>4.4</td><td>Load check</td><td>G.5</td><td class="open">Not started</td></tr>
-<tr><td>4.5</td><td>Pre-defense audit: what was found and what was fixed</td><td>G.6 (copy its table)</td><td class="open">Not started</td></tr>
+<tr><td>4.4</td><td>Load check</td><td>G.5 (October 26 check)</td><td class="done">Done</td></tr>
+<tr><td>4.5</td><td>Pre-defense audit: what was found and what was fixed</td><td>G.6 (copy its table)</td><td class="done">Done</td></tr>
 </table>
 
 <p><b>Table 4.1, what's left:</b></p>
@@ -229,7 +220,7 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 </table>
 <p>Earlier in Capstone 2, package updates took Composer from 44 advisories to 0 and npm from 11 vulnerabilities to 0 (G.3).</p>
 
-<p><b>Table 4.4 facts</b> (G.5, October 7, 2026): a MacBook (Apple silicon) running <code>php artisan serve</code> and MySQL 8.4, with a test database of 438 events. API responses took 17 to 87 ms, and 8 requests sent at the same time all finished within 537 ms. Phones over Wi-Fi were not measured: say so, or measure them at the office.</p>
+<p><b>Table 4.4</b> uses the second load check (G.5, October 26, 2026): a MacBook Air (M1, 8 GB) running the same server program as the EMO's laptop, with a test database of 400 events. Every page answered within about a tenth of a second, and 8 people opening the Schedule at once were all answered within half a second. The copy-ready table is <code>table-4.4-load-check.html</code>.</p>
 
 <h3>5.2 The user evaluation: what to make</h3>
 <p>No questionnaire has been given to the EMO yet. Make two forms and have <b>three EMO users</b>, one per role, complete both. Both forms go in Appendix B (Research Instruments). An interview is optional: the questionnaire's written questions already collect comments.</p>
@@ -243,35 +234,35 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><td>Any role</td><td>16: change own password</td></tr>
 </table>
 
-<p><b>Form 2: questionnaire.</b> Add a short consent note at the top: answering is voluntary, and the answers are used only for this study, without names.</p>
+<p><b>Form 2: questionnaire (ready).</b> Open <code>docs/paper/chapter-4/iso25010-questionnaire.html</code>: print it for the EMO (3 pages), or click <b>Copy questionnaire</b> and paste it into Appendix B. Show it to the adviser first.</p>
 <table>
-<tr><th style="width:27%">Part</th><th style="width:43%">What it asks</th><th style="width:12%">Items</th><th>Answer</th></tr>
-<tr><td>I. Respondent profile</td><td>Role in EMO Tracker, and how many days they used it</td><td>2</td><td>Tick box, number</td></tr>
-<tr><td>II. Software quality (ISO/IEC 25010)</td><td>2 or 3 statements for each characteristic below</td><td>12 to 18</td><td>1 to 5</td></tr>
-<tr><td>III. Usability (SUS)</td><td>The 10 standard SUS statements, word for word</td><td>10</td><td>1 to 5</td></tr>
-<tr><td>IV. Comments</td><td>What they liked, what problems they met, what they would change</td><td>3</td><td>Written</td></tr>
+<tr><th style="width:27%">Part</th><th style="width:47%">What it asks</th><th style="width:12%">Items</th><th>Answer</th></tr>
+<tr><td>I. Respondent profile</td><td>Role in EMO Tracker, devices used, days used</td><td>3</td><td>Tick box, number</td></tr>
+<tr><td>II. Software quality (ISO/IEC 25010)</td><td>Statements grouped by the 7 characteristics below</td><td>22</td><td>5 to 1</td></tr>
+<tr><td>III. Comments</td><td>What they liked, what problems they met, what they would change</td><td>3</td><td>Written</td></tr>
 </table>
 <table>
-<tr><th style="width:36%">Characteristic (2023 name)</th><th>What its statements ask</th></tr>
-<tr><td>Functional suitability</td><td>Does it do the EMO's work correctly and completely?</td></tr>
-<tr><td>Performance efficiency</td><td>Is it fast enough on their device?</td></tr>
-<tr><td>Compatibility</td><td>Does it work on phones and laptops, with several users at once?</td></tr>
-<tr><td>Interaction capability (Usability)</td><td>Is it easy to learn and use without help?</td></tr>
-<tr><td>Reliability</td><td>Did it work without errors during the pilot?</td></tr>
-<tr><td>Security</td><td>Does each role see only what it should? Are records protected?</td></tr>
+<tr><th style="width:36%">Characteristic (ISO/IEC 25010:2023)</th><th style="width:12%">Statements</th><th>What its statements ask</th></tr>
+<tr><td>Functional suitability</td><td>1 to 3</td><td>Does it have the features the EMO needs, and are the records and readiness labels correct?</td></tr>
+<tr><td>Performance efficiency</td><td>4 to 6</td><td>Do pages open and save quickly, even with several users?</td></tr>
+<tr><td>Compatibility</td><td>7 to 9</td><td>Does it work beside other apps, and do the Excel, CSV and PDF files open correctly elsewhere?</td></tr>
+<tr><td>Interaction capability (usability)</td><td>10 to 13</td><td>Is it easy to understand, learn and use, and does it guard against mistakes?</td></tr>
+<tr><td>Reliability</td><td>14 to 16</td><td>Did it work without errors, was it available, and did it recover from problems?</td></tr>
+<tr><td>Security</td><td>17 to 19</td><td>Only accounts get in, each role does only its job, completed records are protected</td></tr>
+<tr><td>Flexibility</td><td>20 to 22</td><td>Does it work on phones, laptops and their browsers without installing anything?</td></tr>
 </table>
 <ul>
-<li>Leave out Maintainability, Flexibility (Portability) and Safety: only IT experts can judge them. If the adviser wants IT experts too, give them a separate form.</li>
-<li>Write the Part II statements yourselves (the samples in the reference file, "E.11", are ideas only). Make each one positive, so 5 is always the best answer, with one idea each, about EMO Tracker.</li>
-<li>Keep Part III exactly as published. It mixes positive and negative statements on purpose. If you use it, cite its source: Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, &amp; I. L. McClelland (Eds.), <i>Usability evaluation in industry</i> (pp. 189&ndash;194). Taylor &amp; Francis.</li>
-<li>The instructor's slides teach <b>ISO 9126</b>; the paper uses <b>ISO/IEC 25010</b>, which replaced 9126 in 2011. Ask the adviser which one she wants before printing.</li>
+<li><b>Left out:</b> Maintainability (office users can't judge the code; only IT experts could) and Safety (the system can't harm anyone physically). If the adviser wants IT experts too, they need a separate form.</li>
+<li>"Interaction capability" is the 2023 name for usability, and "Flexibility" replaced portability. The questionnaire shows "Interaction Capability (Usability)" so readers know both names.</li>
+<li>Every statement is positive, so 5 is always the best answer. Change any wording the adviser asks for, in both the questionnaire and the scoring sheet.</li>
+<li>Cite the standard as the paper already does: ISO/IEC 25010:2023.</li>
 </ul>
 
 <h3>5.3 Running it and computing the results</h3>
 <ol>
 <li><b>Before the visit:</b> send the adviser the questions in Section 9 and ask her to check the forms. Print one questionnaire per respondent plus two spares, and the checklist for each role.</li>
 <li><b>At the office:</b> confirm the real pilot dates and each user's role. Each user does their role's tasks on the real system while you mark Passed or Failed and note problems (about 30 minutes each). Right after, each answers the questionnaire alone; explain the scale, but don't suggest answers. Write the date on every form.</li>
-<li><b>After:</b> encode the answers in a spreadsheet, one row per respondent and one column per item. Keep the paper forms for Appendix C, with the names covered.</li>
+<li><b>After:</b> type the answers into <code>iso25010-scoring.xlsx</code> (it opens in Excel or Google Sheets). It computes every mean, the interpretation, the role and device counts, and the chart. Keep the paper forms for Appendix C.</li>
 </ol>
 <p><b>Rating scale:</b> 5 = Strongly agree, 4 = Agree, 3 = Neutral, 2 = Disagree, 1 = Strongly disagree. Use frequency, percentage and the weighted mean (slide 16). With three respondents, don't use other statistical tests.</p>
 <p class="formula">Percentage: <i>P</i> = <i>f</i> &divide; <i>n</i> &times; 100</p>
@@ -286,8 +277,7 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><td>1.00 to 1.80</td><td>Strongly disagree</td><td>Poor</td></tr>
 </table>
 <p>Ask the adviser which labels she wants.</p>
-<p class="formula">SUS score = 2.5 &times; [ &Sigma;(odd-statement rating &minus; 1) + &Sigma;(5 &minus; even-statement rating) ]</p>
-<p>Compute it for each respondent (0 to 100), then average the three. A score of <b>68</b> is the usual average, already cited in Chapter 2 (Hyzy et al., 2022). <b>Comments:</b> read them all, make categories (for example ease of use, speed, missing features, problems), label each comment and write the patterns. Don't turn comments into numbers (slide 15).</p>
+<p><b>Comments:</b> type them into the Comments sheet word for word, make categories (for example ease of use, speed, missing features, problems), label each comment and write the patterns. Don't turn comments into numbers (slide 15).</p>
 
 <h3>5.4 What goes in Objective 4, in order</h3>
 <ol>
@@ -295,8 +285,7 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <li>Tables 4.1 to 4.5, each followed by its paragraph.</li>
 <li><b>The pilot:</b> who took part (three users and their roles, no names), where, the real dates, and what they did.</li>
 <li><b>Table 4.6:</b> test checklist results: how many of the 17 tasks passed, and why any failed.</li>
-<li><b>Table 4.7:</b> ISO/IEC 25010 results, and <b>Figure 4.26</b>, a bar chart of the six characteristic means.</li>
-<li><b>Table 4.8:</b> SUS results: each respondent's score, the average, and how it compares with 68.</li>
+<li><b>Table 4.7:</b> ISO/IEC 25010 results (the scoring sheet's "Table 4.7" tab), and <b>Figure 4.27</b>, a bar chart of the seven characteristic means (the chart on the same tab).</li>
 <li><b>Comments:</b> one paragraph on the categories and patterns.</li>
 <li><b>Problems found</b> during the pilot and what you did about each one.</li>
 <li><b>Limits:</b> three users, a few days, one office, so the results describe the EMO only (slide 17).</li>
@@ -307,15 +296,8 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><td><b>Functional suitability</b> (the characteristic's mean, in bold)</td><td><b>__</b></td><td><b>__</b></td></tr>
 <tr><td>Statement 1</td><td>__</td><td>__</td></tr>
 <tr><td>Statement 2</td><td>__</td><td>__</td></tr>
-<tr><td>(the other five characteristics the same way)</td><td></td><td></td></tr>
+<tr><td>(the other six characteristics the same way)</td><td></td><td></td></tr>
 <tr><td><b>Overall mean</b></td><td><b>__</b></td><td><b>__</b></td></tr>
-</table>
-<table>
-<tr><th style="width:70%">Table 4.8 layout: Respondent</th><th>SUS score</th></tr>
-<tr><td>Respondent 1 (Administrator)</td><td>__</td></tr>
-<tr><td>Respondent 2 (Officer)</td><td>__</td></tr>
-<tr><td>Respondent 3 (Staff)</td><td>__</td></tr>
-<tr><td><b>Average</b></td><td><b>__</b></td></tr>
 </table>
 <div class="frame">
 <b class="t">The paragraph after each table has three parts</b>
@@ -330,9 +312,9 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><td>Testing and Evaluation</td><td>2 or 3 sentences: the proponents tested the system, then EMO users evaluated it</td><td></td></tr>
 <tr><td>Testing Procedure</td><td>The kinds of testing whose results are Tables 4.1 to 4.5</td><td>112 automated tests (<code>php artisan test</code>); code quality and security checks; browser checks in Chrome at desktop and phone sizes; load check; pre-defense audit</td></tr>
 <tr><td>Respondents</td><td>Who answered, how many, how they were chosen</td><td>3 EMO users, one per role, chosen on purpose because they use the system (purposive sampling); if all four members answer, it is total enumeration</td></tr>
-<tr><td>Research Instrument</td><td>The two forms and their parts</td><td>Test checklist (17 tasks by role); questionnaire Parts I to IV; 5-point scale; ISO/IEC 25010 and SUS; both in Appendix B</td></tr>
+<tr><td>Research Instrument</td><td>The two forms and their parts</td><td>Test checklist (17 tasks by role); questionnaire with Parts I to III, 22 statements on 7 ISO/IEC 25010:2023 characteristics, 5-point agreement scale; both in Appendix B</td></tr>
 <tr><td>Data Gathering Procedure</td><td>Numbered steps in the order they happened, with dates</td><td>Adviser checked the forms; consent; short orientation; tasks; questionnaire; forms collected</td></tr>
-<tr><td>Statistical Treatment of Data</td><td>How the answers were computed and read</td><td>Percentage and weighted mean formulas; the interpretation scale; the SUS formula; comments grouped into categories</td></tr>
+<tr><td>Statistical Treatment of Data</td><td>How the answers were computed and read</td><td>Frequency and percentage (profile); weighted mean formula; characteristic mean = average of its statements; overall mean = average of the 7 characteristics; the interpretation scale table; comments grouped into categories</td></tr>
 </table>
 <p>The "Population of the Study" part already in Chapter 3 stays where it is: fix it to the EMO's four main members, and have "Respondents" refer to it. If the adviser wants the questionnaire validated, say who checked it before it was used.</p>
 
@@ -356,7 +338,7 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><td>11</td><td>Objective 4</td><td>Remove the bold; fill in the instrument and the real dates (<b>after the visit</b>)</td><td>If the forms are answered after October 24, it can't say "during the 3-day pilot"</td></tr>
 <tr><td>11</td><td>approximately 5 EMO members</td><td>the EMO's four main members</td><td>Office size</td></tr>
 <tr><td>18 to 20</td><td>(two spaces)</td><td>(one space), then <b>Replace all</b></td><td>Double spaces left in Chapter 2</td></tr>
-<tr><td>23</td><td>[TO CONFIRM: SUS] ISO/IEC 25010 / (October 22 to 24, 2026)</td><td>The instrument and the real dates (<b>after the visit</b>)</td><td>Must match Objective 4</td></tr>
+<tr><td>23</td><td>[TO CONFIRM: SUS] ISO/IEC 25010 / (October 22 to 24, 2026)</td><td>ISO/IEC 25010 (decided October 28); the real dates <b>after the survey</b></td><td>Must match Objective 4</td></tr>
 <tr><td>29</td><td>comprising approximately eight (8) to ten (10) personnel, which includes the Director, a Monitoring Minister (Ministrong Taga-subaybay), a Secretary, and the Tech Support staff.</td><td>of four (4) main members, including the Director and a Monitoring Minister (Ministrong Taga-subaybay). Add the other two positions <b>after the visit</b>.</td><td>Office size</td></tr>
 <tr><td>30</td><td>Organizational Chart paragraph and Figure G.1</td><td>Rewrite <b>after the visit</b>; Xyrone redraws Figure G.1</td><td>They show a Secretary and five Tech Support</td></tr>
 <tr><td>36</td><td>the projected user base of approximately ten (10) concurrent users</td><td>the EMO's four (4) main members using it at the same time</td><td>Office size</td></tr>
@@ -400,8 +382,8 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <tr><th style="width:50%">Ask the adviser</th><th>Confirm at the office</th></tr>
 <tr><td>
 <ul>
-<li>ISO/IEC 25010 (the paper) or ISO 9126 (the slides)?</li>
-<li>Both ISO/IEC 25010 and SUS, or only one?</li>
+<li><s>ISO/IEC 25010 or ISO 9126? Both or only one?</s> Answered October 28: ISO/IEC 25010 only.</li>
+<li>Can she check the questionnaire wording?</li>
 <li>Which interpretation labels?</li>
 <li>Evaluation method section: end of Chapter 3, or start of Chapter 4? Chapter 4's title?</li>
 <li>IT experts as extra evaluators?</li>
@@ -437,8 +419,8 @@ Work from the bottom up: change 4.24 to 4.25 first (caption and its "Figure 4.24
 <h3>After the visit and the survey</h3>
 <ul>
 <li>[ ] Fill in the office size, positions, instrument and real dates (Chapters 1 to 3); Xyrone redraws Figures G.1 and G.2</li>
-<li>[ ] Encode the answers and compute the means and SUS scores</li>
-<li>[ ] Write Tables 4.6 to 4.8, Figure 4.26 and the rest of Objective 4 (Section 5.4)</li>
+<li>[ ] Type the answers into the scoring sheet and check them against the forms</li>
+<li>[ ] Write Tables 4.6 and 4.7, Figure 4.27 and the rest of Objective 4 (Section 5.4)</li>
 <li>[ ] Write Chapter 5 and the opening paragraph of Chapter 4</li>
 <li>[ ] Rebuild the table of contents, List of Figures and List of Tables</li>
 <li>[ ] Run the tests again, check every number and date, then do the Turnitin check as your school requires</li>
