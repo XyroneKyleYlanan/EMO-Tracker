@@ -903,10 +903,12 @@ Run once by the developer or Administrator: `php artisan schedule:import <file.x
   - all EMO members, by total enumeration, since there are only four main members (the Director, the Ministrong Tagasubaybay and two others) **[TO CONFIRM the other two positions]**
   - IT experts as additional evaluators, if the adviser requires them **[TO CONFIRM]**
 - **How:**
-  1. Respondents carry out task scenarios (Appendix F).
-  2. They answer the ISO/IEC 25010 questionnaire (the adviser's decision, October 28, 2026; no SUS). Ready files: `docs/paper/chapter-4/iso25010-questionnaire.html` (22 statements on 7 characteristics, plus profile and comments) and `docs/paper/chapter-4/iso25010-scoring.xlsx` (computes the means).
+  1. Respondents do the usability test: 17 task scenarios based on Appendix F, on the MacBook with the demo data, with a 1-to-5 ease rating after each task (`docs/paper/chapter-4/usability-test.html`).
+  2. They answer the SUS (`sus-questionnaire.html`), added October 30, 2026 because the prof asked for usability testing questions.
+  3. They answer the ISO/IEC 25010 questionnaire (the adviser's choice, October 28, 2026): `iso25010-questionnaire.html`, 22 statements on 7 characteristics, plus profile and comments.
+  4. All answers go into `docs/paper/chapter-4/evaluation-scoring.xlsx`, which computes the completion rate, the means, the SUS scores and the chart.
 
-**Option 1: System Usability Scale (SUS).** *(Not used: the adviser chose ISO/IEC 25010 on October 28, 2026.)* The standard 10 statements, rated 1 (strongly disagree) to 5 (strongly agree):
+**Option 1: System Usability Scale (SUS).** *(Used, together with ISO/IEC 25010: the prof asked for usability testing questions on October 30, 2026.)* The standard 10 statements, rated 1 (strongly disagree) to 5 (strongly agree):
 1. I think that I would like to use this system frequently.
 2. I found the system unnecessarily complex.
 3. I thought the system was easy to use.

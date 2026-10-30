@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker Usability Test</title>
+<style>
+  @page { size: Letter landscape; margin: 0.5in 0.6in; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #111; background: #fff; max-width: 1000px; margin: 24px auto; padding: 0 20px; font-size: 10.5pt; line-height: 1.35; }
+  .how { font-size: 13px; background: #fff8e1; border: 1px solid #e6d9a8; padding: 12px 16px; border-radius: 6px; line-height: 1.5; }
+  .how ol { margin: 6px 0 0; padding-left: 20px; }
+  button { font: bold 14px Arial, sans-serif; background: #0a5c3a; color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer; margin: 12px 8px 12px 0; }
+  #done { color: #0a5c3a; font-weight: bold; }
+  #form { border: 2px dashed #bbb; padding: 22px; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 2pt; }
+  .sub { text-align: center; margin: 0 0 10pt; }
+  h2 { font-size: 12pt; margin: 0 0 6pt; }
+  h3 { font-size: 10.5pt; margin: 10pt 0 4pt; }
+  p { margin: 3pt 0; }
+  ol, ul { margin: 3pt 0; padding-left: 18pt; }
+  li { margin: 1pt 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 9.5pt; }
+  td, th { border: 1px solid #000; padding: 3pt 4pt; vertical-align: top; }
+  th { background: #e8e8e8; text-align: center; }
+  td.c { text-align: center; }
+  .say { border-left: 3px solid #0a5c3a; padding: 3pt 8pt; margin: 4pt 0; font-style: italic; }
+  .meta td { border: 1px solid #000; }
+  .line { border-bottom: 1px solid #000; height: 18pt; }
+  .sheet { break-before: page; }
+  @media print {
+    body { margin: 0; padding: 0; max-width: none; }
+    .how, button, #done { display: none; }
+    #form { border: 0; padding: 0; }
+    tr { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="how">
+<b>How to use</b> (this box doesn't print)
+<ol>
+<li><b>To print:</b> press <b>Cmd+P</b> (Windows: Ctrl+P). It prints in landscape on 4 pages: the facilitator guide, then one task sheet for each role. Print one task sheet per user.</li>
+<li><b>For Appendix B:</b> click <b>Copy usability test</b>, then paste it into Google Docs with <b>Cmd+V</b>.</li>
+</ol>
+</div>
+
+<button id="copy" type="button">Copy usability test</button><span id="done"></span>
+
+<div id="form">
+<h1>EMO Tracker Usability Test</h1>
+<p class="sub">Facilitator guide (for the proponents)</p>
+
+<h3>Before the session</h3>
+<ol>
+<li>Use the MacBook with the <b>demo data</b> in its separate demo database (README, "Resetting Demo Data"). Reset it right before each session, so every user starts with the same data. Never run the test on the EMO's real schedule.</li>
+<li>Put the sample file <b>Program flow.pdf</b> on the MacBook's Desktop (needed for task 9).</li>
+<li>Prepare a stopwatch (a phone is fine) and one task sheet for the user's role. Demo password for every account: <b>password123</b>.</li>
+</ol>
+
+<h3>Say this at the start</h3>
+<p class="say">"Thank you for helping us. We are testing EMO Tracker, not you, so there are no wrong answers. I will read some tasks one at a time. Please do them as you normally would and say out loud what you are thinking. I can't help you during a task unless you're stuck. After each task, I'll ask you one quick question."</p>
+
+<h3>For each task</h3>
+<ol>
+<li>Read the task aloud, then start the stopwatch.</li>
+<li>Don't help. If the user asks for help or is stuck for 3 minutes, help them, and mark <b>With help</b>.</li>
+<li>Stop the stopwatch when the expected result appears, or when the user gives up (mark <b>No</b>). Write the time in seconds (1 min 30 s = 90).</li>
+<li>Ask: <span class="say" style="display:inline;border:0;padding:0">"From 1 to 5, where 1 is strongly disagree and 5 is strongly agree: this task was easy to do."</span> Circle the number.</li>
+<li>Write anything that confused the user in Notes.</li>
+</ol>
+
+<h3>After all tasks</h3>
+<ol>
+<li>Ask the two closing questions on the task sheet and write the answers.</li>
+<li>Give the <b>SUS questionnaire</b>, then the <b>ISO/IEC 25010 questionnaire</b>. The user answers them alone.</li>
+<li>Write the same Respondent No. on all three forms. After the last session, set <code>DB_DATABASE</code> in <code>backend/.env</code> back to <code>emo_tracker</code>.</li>
+</ol>
+
+<!-- ADMINISTRATOR -->
+<div class="sheet">
+<h2>Task Sheet: Administrator</h2>
+<table class="meta" style="margin-bottom:6pt"><tr>
+<td style="width:22%">Respondent No.: ______</td><td style="width:22%">Date: ______________</td><td style="width:28%">Device: &#9744; Laptop &nbsp; &#9744; Phone</td><td>Observer: ____________________</td>
+</tr></table>
+<p>Account: <b>admin@emo.test</b> (task 1 is logging in).</p>
+<table>
+<tr><th style="width:3%">No.</th><th style="width:30%">Task (read aloud)</th><th style="width:20%">Expected result</th><th style="width:13%">Completed</th><th style="width:7%">Time (s)</th><th style="width:12%">Easy to do?<br>1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</th><th>Notes</th></tr>
+<tr><td class="c">1</td><td>Log in to EMO Tracker as the Administrator.</td><td>Home shows "Hello, EMO Administrator" and the events that need attention.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">2</td><td>The CAS will hold a Research Colloquium at University Hall next Friday, 1:00 to 5:00 PM. Add it as an internal event.</td><td>The event is saved and appears on the Schedule in its building's color.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">3</td><td>The Alumni Office wants PSB MPH on the same date and time as the Faculty Recognition Night. Add this booking as "Alumni Homecoming Rehearsal."</td><td>The double-booking warning appears, and the event can still be saved.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">4</td><td>The Research Colloquium was moved one week later. Change its date and record that it was moved.</td><td>The event shows "Rescheduled from" its old date.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">5</td><td>The CAS cancelled the Research Colloquium, then called back to say it will push through. Cancel it, then restore it.</td><td>The event is struck through, then back to normal.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">6</td><td>Add a new venue named "PSB Room 305" under the PSB building.</td><td>The venue appears in the PSB group on the Venues page.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">7</td><td>Rosa Santos (rosa.staff@emo.test) joined the EMO. Create her Staff account. Then deactivate it, as if she left.</td><td>The account is added, then shows as Deactivated.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+</table>
+<p style="margin-top:6pt">Closing questions (ask aloud): 1. Which task was the hardest, and why? &nbsp; 2. Was anything confusing?</p>
+<div class="line"></div><div class="line"></div>
+</div>
+
+<!-- OFFICER -->
+<div class="sheet">
+<h2>Task Sheet: Officer</h2>
+<table class="meta" style="margin-bottom:6pt"><tr>
+<td style="width:22%">Respondent No.: ______</td><td style="width:22%">Date: ______________</td><td style="width:28%">Device: &#9744; Laptop &nbsp; &#9744; Phone</td><td>Observer: ____________________</td>
+</tr></table>
+<p>Account: <b>maria.officer@emo.test</b>. Log in for the user before task 8.</p>
+<table>
+<tr><th style="width:3%">No.</th><th style="width:30%">Task (read aloud)</th><th style="width:20%">Expected result</th><th style="width:13%">Completed</th><th style="width:7%">Time (s)</th><th style="width:12%">Easy to do?<br>1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</th><th>Notes</th></tr>
+<tr><td class="c">8</td><td>The Inter-College Quiz Bee has no tasks yet. Add three tasks, each with an owner and a due date.</td><td>The tasks appear, and the readiness label and its reason update.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">9</td><td>Upload "Program flow.pdf" from the Desktop to the Sports Fest Opening Ceremony. Then download it.</td><td>The file is listed under Documents and downloads.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">10</td><td>Download the PDF report of the Sports Fest Opening Ceremony.</td><td>A PDF opens with the event's details, tasks and readiness.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">11</td><td>Find out how many events were completed this month.</td><td>The Analytics page is set to This month, and the user reads the Completed count.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">12</td><td>The University Foundation Day is finished. Try to change the status of one of its tasks.</td><td>The tasks are locked, with a note to contact an administrator.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">13</td><td>Export this year's Schedule as an Excel file.</td><td>An .xlsx file downloads, laid out like the EMO's sheet.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+</table>
+<p style="margin-top:6pt">Closing questions (ask aloud): 1. Which task was the hardest, and why? &nbsp; 2. Was anything confusing?</p>
+<div class="line"></div><div class="line"></div>
+</div>
+
+<!-- STAFF -->
+<div class="sheet">
+<h2>Task Sheet: Staff</h2>
+<table class="meta" style="margin-bottom:6pt"><tr>
+<td style="width:22%">Respondent No.: ______</td><td style="width:22%">Date: ______________</td><td style="width:28%">Device: &#9744; Laptop &nbsp; &#9744; Phone</td><td>Observer: ____________________</td>
+</tr></table>
+<p>Account: <b>anna.staff@emo.test</b> (task 14 is logging in). Use a phone on the same Wi-Fi as the MacBook if one can connect; otherwise use the MacBook.</p>
+<table>
+<tr><th style="width:3%">No.</th><th style="width:30%">Task (read aloud)</th><th style="width:20%">Expected result</th><th style="width:13%">Completed</th><th style="width:7%">Time (s)</th><th style="width:12%">Easy to do?<br>1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</th><th>Notes</th></tr>
+<tr><td class="c">14</td><td>Log in to EMO Tracker as Anna Reyes.</td><td>Home shows Anna's open tasks. On a phone, the menu is at the bottom.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">15</td><td>Your task "Print ID lanyards" is finished. Mark it as Done.</td><td>The status changes to Done, and the event's readiness updates.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">16</td><td>Using the Schedule's search box, find the date of the next Weekly Flag Ceremony.</td><td>The matching events are listed, and the user reads the date.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+<tr><td class="c">17</td><td>Change your password to emotracker2026.</td><td>A success message appears.</td><td>&#9744; Yes<br>&#9744; With help<br>&#9744; No</td><td></td><td class="c">1 &nbsp;2 &nbsp;3 &nbsp;4 &nbsp;5</td><td></td></tr>
+</table>
+<p style="margin-top:6pt">Closing questions (ask aloud): 1. Which task was the hardest, and why? &nbsp; 2. Was anything confusing?</p>
+<div class="line"></div><div class="line"></div>
+</div>
+</div>
+
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var range = document.createRange();
+  range.selectNodeContents(document.getElementById('form'));
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  sel.removeAllRanges();
+  document.getElementById('done').textContent = ok
+    ? 'Copied. Paste it into Google Docs with Cmd+V.'
+    : 'Could not copy automatically: select everything inside the dashed box with the mouse, then press Cmd+C.';
+});
+</script>
+</body>
+</html>

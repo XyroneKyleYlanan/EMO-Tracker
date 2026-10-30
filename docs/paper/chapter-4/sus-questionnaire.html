@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMO Tracker System Usability Scale (SUS)</title>
+<style>
+  @page { size: Letter; margin: 0.6in 0.7in; }
+  body { font-family: Arial, Helvetica, sans-serif; color: #111; background: #fff; max-width: 820px; margin: 24px auto; padding: 0 20px; font-size: 11pt; line-height: 1.35; }
+  .how { font-size: 13px; background: #fff8e1; border: 1px solid #e6d9a8; padding: 12px 16px; border-radius: 6px; line-height: 1.5; }
+  .how ol { margin: 6px 0 0; padding-left: 20px; }
+  button { font: bold 14px Arial, sans-serif; background: #0a5c3a; color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; cursor: pointer; margin: 12px 8px 12px 0; }
+  #done { color: #0a5c3a; font-weight: bold; }
+  #form { border: 2px dashed #bbb; padding: 22px; }
+  h1 { font-size: 14pt; text-align: center; margin: 0 0 2pt; }
+  .sub { text-align: center; margin: 0 0 12pt; font-size: 10.5pt; }
+  p { margin: 4pt 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 10.5pt; }
+  td, th { border: 1px solid #000; padding: 5pt 5pt; vertical-align: middle; }
+  th { background: #e8e8e8; text-align: center; font-size: 9.5pt; }
+  td.box { text-align: center; width: 8%; }
+  td.no { text-align: center; width: 5%; }
+  .cite { font-size: 8.5pt; color: #444; margin-top: 10pt; }
+  @media print {
+    body { margin: 0; padding: 0; max-width: none; }
+    .how, button, #done { display: none; }
+    #form { border: 0; padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="how">
+<b>How to use</b> (this box doesn't print)
+<ol>
+<li><b>For the EMO:</b> press <b>Cmd+P</b> (Windows: Ctrl+P) and print. It fits on 1 page. Give it right after the usability test, before the ISO/IEC 25010 questionnaire.</li>
+<li><b>For Appendix B:</b> click <b>Copy SUS</b>, then paste it into Google Docs with <b>Cmd+V</b>.</li>
+<li>Keep the 10 statements exactly as written: the score depends on the standard wording and on the mix of positive and negative statements.</li>
+</ol>
+</div>
+
+<button id="copy" type="button">Copy SUS</button><span id="done"></span>
+
+<div id="form">
+<h1>EMO Tracker System Usability Scale (SUS)</h1>
+<p class="sub">Answer this right after the usability test</p>
+
+<table style="margin-bottom:10pt">
+<tr><td style="width:50%">Respondent No. (filled in by the proponents): ______</td><td>Date: ____________________</td></tr>
+</table>
+
+<p>Read each statement and check <b>one</b> box that shows how much you agree, based on the EMO Tracker you just used. Answer every statement. If you are not sure, check the middle box (3).</p>
+
+<table style="margin-top:8pt">
+<tr><th>No.</th><th>Statement</th><th>1<br>Strongly<br>Disagree</th><th>2</th><th>3</th><th>4</th><th>5<br>Strongly<br>Agree</th></tr>
+<tr><td class="no">1</td><td>I think that I would like to use this system frequently.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">2</td><td>I found the system unnecessarily complex.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">3</td><td>I thought the system was easy to use.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">4</td><td>I think that I would need the support of a technical person to be able to use this system.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">5</td><td>I found the various functions in this system were well integrated.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">6</td><td>I thought there was too much inconsistency in this system.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">7</td><td>I would imagine that most people would learn to use this system very quickly.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">8</td><td>I found the system very cumbersome to use.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">9</td><td>I felt very confident using the system.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+<tr><td class="no">10</td><td>I needed to learn a lot of things before I could get going with this system.</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td><td class="box">&#9744;</td></tr>
+</table>
+
+<p style="margin-top:14pt; text-align:center"><b>Thank you. Please continue to the next questionnaire.</b></p>
+<p class="cite">Statements from the System Usability Scale: Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, &amp; I. L. McClelland (Eds.), <i>Usability evaluation in industry</i> (pp. 189&ndash;194). Taylor &amp; Francis.</p>
+</div>
+
+<script>
+document.getElementById('copy').addEventListener('click', function () {
+  var range = document.createRange();
+  range.selectNodeContents(document.getElementById('form'));
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  sel.removeAllRanges();
+  document.getElementById('done').textContent = ok
+    ? 'Copied. Paste it into Google Docs with Cmd+V.'
+    : 'Could not copy automatically: select everything inside the dashed box with the mouse, then press Cmd+C.';
+});
+</script>
+</body>
+</html>

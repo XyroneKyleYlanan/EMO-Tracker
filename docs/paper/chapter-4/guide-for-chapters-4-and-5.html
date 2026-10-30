@@ -36,12 +36,12 @@
 <body>
 
 <h1>Guide for Making Chapters 4 and 5</h1>
-<p class="subtitle">EMO Tracker (Capstone 2). Updated October 28, 2026: the adviser chose ISO/IEC 25010 for the user evaluation. Checked against the paper and the repository.</p>
+<p class="subtitle">EMO Tracker (Capstone 2). Updated October 30, 2026: the user evaluation now has three ready forms (usability test, SUS, ISO/IEC 25010) and one scoring sheet.</p>
 
 <div class="new">
 <b class="t">What changed in this version</b>
 <ul>
-<li><b>October 28: the adviser chose ISO/IEC 25010</b> (not ISO 9126), so the SUS is no longer used. Section 5 has a ready questionnaire (<code>iso25010-questionnaire.html</code>) and a scoring sheet that computes the means (<code>iso25010-scoring.xlsx</code>), both in <code>docs/paper/chapter-4</code>.</li>
+<li><b>October 30: three ready forms.</b> The adviser chose <b>ISO/IEC 25010</b> (October 28), and the prof asked for usability testing questions, so the evaluation is a <b>usability test</b>, the <b>SUS</b> and the <b>ISO/IEC 25010 questionnaire</b>, scored in one sheet (<code>evaluation-scoring.xlsx</code>). See Section 5. Correction: the October 28 guide dropped the SUS; the adviser had only chosen between the two ISO standards.</li>
 <li>Objective 3's figures now follow the paper: <b>Figures 4.16 to 4.26</b>, so the questionnaire chart is <b>Figure 4.27</b>.</li>
 <li>Sections 1 and 8 still describe paper version 8; most of their items are now done.</li>
 <li>Checked against <b>paper version 8</b>. Most of the October 23 fixes are done; Section 8 lists what is still open, page by page.</li>
@@ -222,25 +222,21 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 
 <p><b>Table 4.4</b> uses the second load check (G.5, October 26, 2026): a MacBook Air (M1, 8 GB) running the same server program as the EMO's laptop, with a test database of 400 events. Every page answered within about a tenth of a second, and 8 people opening the Schedule at once were all answered within half a second. The copy-ready table is <code>table-4.4-load-check.html</code>.</p>
 
-<h3>5.2 The user evaluation: what to make</h3>
-<p>No questionnaire has been given to the EMO yet. Make two forms and have <b>three EMO users</b>, one per role, complete both. Both forms go in Appendix B (Research Instruments). An interview is optional: the questionnaire's written questions already collect comments.</p>
-
-<p><b>Form 1: test checklist (user acceptance test).</b> Use the 17 tasks in the reference file (search "Appendix F"). Each user does only their role's tasks. Give the form five columns: #, Task, Expected result, Passed or Failed, Notes. The results become <b>Table 4.6</b>.</p>
+<h3>5.2 The user evaluation: three forms (all ready)</h3>
+<p>Each EMO user does all three in one session of about 40 minutes, in this order, and all three forms get the same Respondent No. The blank forms go in Appendix B (Research Instruments); the answered forms go in Appendix C, with no names. All files are in <code>docs/paper/chapter-4</code>.</p>
 <table>
-<tr><th style="width:20%">Role</th><th>Tasks</th></tr>
-<tr><td>Administrator</td><td>1 to 7: log in, add an event, overlap warning, reschedule, cancel and restore, venues, accounts</td></tr>
-<tr><td>Officer</td><td>8 to 12 and 17: add tasks, upload a file, PDF report, Analytics, locked task, Excel export</td></tr>
-<tr><td>Staff</td><td>13 to 15: phone login, update own task, search the Schedule</td></tr>
-<tr><td>Any role</td><td>16: change own password</td></tr>
+<tr><th style="width:6%">Order</th><th style="width:20%">Form</th><th style="width:27%">File</th><th style="width:30%">What it measures</th><th>In Chapter 4</th></tr>
+<tr><td class="num">1</td><td>Usability test</td><td><code>usability-test.html</code> (facilitator guide and one task sheet per role)</td><td>Can users do real tasks: completed or not, how long, and how easy each task was</td><td>Table 4.6</td></tr>
+<tr><td class="num">2</td><td>System Usability Scale (SUS)</td><td><code>sus-questionnaire.html</code> (1 page)</td><td>How easy the whole system felt, as one score from 0 to 100</td><td>Table 4.8</td></tr>
+<tr><td class="num">3</td><td>ISO/IEC 25010 questionnaire</td><td><code>iso25010-questionnaire.html</code> (3 pages)</td><td>The system's quality on 7 characteristics, plus comments</td><td>Table 4.7, Figure 4.27</td></tr>
 </table>
+<p>Each file prints with <b>Cmd+P</b> and has a <b>Copy</b> button for pasting into Appendix B. All three forms use the same scale direction: 1 = Strongly Disagree on the left, 5 = Strongly Agree on the right.</p>
 
-<p><b>Form 2: questionnaire (ready).</b> Open <code>docs/paper/chapter-4/iso25010-questionnaire.html</code>: print it for the EMO (3 pages), or click <b>Copy questionnaire</b> and paste it into Appendix B. Show it to the adviser first.</p>
-<table>
-<tr><th style="width:27%">Part</th><th style="width:47%">What it asks</th><th style="width:12%">Items</th><th>Answer</th></tr>
-<tr><td>I. Respondent profile</td><td>Role in EMO Tracker, devices used, days used</td><td>3</td><td>Tick box, number</td></tr>
-<tr><td>II. Software quality (ISO/IEC 25010)</td><td>Statements grouped by the 7 characteristics below</td><td>22</td><td>5 to 1</td></tr>
-<tr><td>III. Comments</td><td>What they liked, what problems they met, what they would change</td><td>3</td><td>Written</td></tr>
-</table>
+<p><b>1. Usability test.</b> 17 tasks written as real situations: Administrator 1 to 7, Officer 8 to 13, Staff 14 to 17 (based on the 17 tasks in Appendix F of the reference file). It runs on the MacBook with the <b>demo data</b>, because the EMO's real schedule has no prepared events or tasks yet, and the test shouldn't add practice records to it. After each task the observer asks, "This task was easy to do," from 1 to 5. The test measures usability three ways: effectiveness (tasks completed), efficiency (time) and satisfaction (the ease ratings and the SUS).</p>
+
+<p><b>2. SUS.</b> The 10 standard statements, word for word. Don't reword them: the score depends on the original wording and on the mix of positive and negative statements. Add the source to the References: Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In P. W. Jordan, B. Thomas, B. A. Weerdmeester, &amp; I. L. McClelland (Eds.), <i>Usability evaluation in industry</i> (pp. 189&ndash;194). Taylor &amp; Francis.</p>
+
+<p><b>3. ISO/IEC 25010 questionnaire</b> (the adviser's choice, October 28). Part I is the respondent profile, Part II has 22 statements, and Part III has 3 comment questions.</p>
 <table>
 <tr><th style="width:36%">Characteristic (ISO/IEC 25010:2023)</th><th style="width:12%">Statements</th><th>What its statements ask</th></tr>
 <tr><td>Functional suitability</td><td>1 to 3</td><td>Does it have the features the EMO needs, and are the records and readiness labels correct?</td></tr>
@@ -254,17 +250,17 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <ul>
 <li><b>Left out:</b> Maintainability (office users can't judge the code; only IT experts could) and Safety (the system can't harm anyone physically). If the adviser wants IT experts too, they need a separate form.</li>
 <li>"Interaction capability" is the 2023 name for usability, and "Flexibility" replaced portability. The questionnaire shows "Interaction Capability (Usability)" so readers know both names.</li>
-<li>Every statement is positive, so 5 is always the best answer. Change any wording the adviser asks for, in both the questionnaire and the scoring sheet.</li>
-<li>Cite the standard as the paper already does: ISO/IEC 25010:2023.</li>
+<li>Change any wording the adviser asks for in both the questionnaire and the scoring sheet. Cite the standard as the paper already does: ISO/IEC 25010:2023.</li>
 </ul>
 
 <h3>5.3 Running it and computing the results</h3>
 <ol>
-<li><b>Before the visit:</b> send the adviser the questions in Section 9 and ask her to check the forms. Print one questionnaire per respondent plus two spares, and the checklist for each role.</li>
-<li><b>At the office:</b> confirm the real pilot dates and each user's role. Each user does their role's tasks on the real system while you mark Passed or Failed and note problems (about 30 minutes each). Right after, each answers the questionnaire alone; explain the scale, but don't suggest answers. Write the date on every form.</li>
-<li><b>After:</b> type the answers into <code>iso25010-scoring.xlsx</code> (it opens in Excel or Google Sheets). It computes every mean, the interpretation, the role and device counts, and the chart. Keep the paper forms for Appendix C.</li>
+<li><b>Before:</b> the adviser and the prof check all three forms. Print, for each user, their role's task sheet, the SUS and the ISO/IEC 25010 questionnaire; print the facilitator guide for the observers.</li>
+<li><b>At the session:</b> follow the facilitator guide (page 1 of the usability test). One proponent reads the tasks and keeps time; another writes. Write the real date on every form.</li>
+<li><b>After:</b> type everything into <code>evaluation-scoring.xlsx</code> (Excel or Google Sheets): the Usability test, SUS, ISO ratings, Respondents and Comments tabs. It computes everything; check the numbers against the paper forms.</li>
 </ol>
-<p><b>Rating scale:</b> 5 = Strongly agree, 4 = Agree, 3 = Neutral, 2 = Disagree, 1 = Strongly disagree. Use frequency, percentage and the weighted mean (slide 16). With three respondents, don't use other statistical tests.</p>
+<p><b>Usability test:</b> completion rate = tasks completed without help &divide; tasks recorded &times; 100 (the sheet also shows the rate with help). Report the average time and the average ease rating, read on the scale below.</p>
+<p><b>Rating scale (ease ratings and ISO/IEC 25010):</b> use frequency, percentage and the weighted mean (slide 16). With three respondents, don't use other statistical tests.</p>
 <p class="formula">Percentage: <i>P</i> = <i>f</i> &divide; <i>n</i> &times; 100</p>
 <p class="formula">Weighted mean: <i>x&#772;</i> = &Sigma;<i>fx</i> &divide; <i>n</i></p>
 <p>Here <i>f</i> is how many gave a rating, <i>x</i> is the rating and <i>n</i> is the number of respondents. Example: ratings of 5, 4 and 5 give 14 &divide; 3 = 4.67, Strongly agree. A characteristic's mean is the average of its statements' means; the overall mean is the average of the characteristic means.</p>
@@ -277,19 +273,21 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>1.00 to 1.80</td><td>Strongly disagree</td><td>Poor</td></tr>
 </table>
 <p>Ask the adviser which labels she wants.</p>
-<p><b>Comments:</b> type them into the Comments sheet word for word, make categories (for example ease of use, speed, missing features, problems), label each comment and write the patterns. Don't turn comments into numbers (slide 15).</p>
+<p class="formula">SUS score = 2.5 &times; [ &Sigma;(odd-statement rating &minus; 1) + &Sigma;(5 &minus; even-statement rating) ]</p>
+<p>The score is computed for each respondent (0 to 100; it is not a percentage), then averaged. A score of <b>68</b> is the usual average, already cited in Chapter 2 (Hyzy et al., 2022). <b>Comments:</b> type them into the Comments tab word for word, make categories (for example ease of use, speed, missing features, problems), label each comment and write the patterns. Don't turn comments into numbers (slide 15).</p>
 
 <h3>5.4 What goes in Objective 4, in order</h3>
 <ol>
 <li>The bold objective sentence (Section 3).</li>
 <li>Tables 4.1 to 4.5, each followed by its paragraph.</li>
 <li><b>The pilot:</b> who took part (three users and their roles, no names), where, the real dates, and what they did.</li>
-<li><b>Table 4.6:</b> test checklist results: how many of the 17 tasks passed, and why any failed.</li>
-<li><b>Table 4.7:</b> ISO/IEC 25010 results (the scoring sheet's "Table 4.7" tab), and <b>Figure 4.27</b>, a bar chart of the seven characteristic means (the chart on the same tab).</li>
+<li><b>Table 4.6:</b> usability test results: each task with Completed, Time and Ease (the scoring sheet's Usability test tab), then the completion rate and the average ease.</li>
+<li><b>Table 4.7:</b> ISO/IEC 25010 results (the "Table 4.7" tab), and <b>Figure 4.27</b>, a bar chart of the seven characteristic means (the chart on the same tab).</li>
+<li><b>Table 4.8:</b> SUS results: each respondent's score, the average, and how it compares with 68 (the SUS tab).</li>
 <li><b>Comments:</b> one paragraph on the categories and patterns.</li>
-<li><b>Problems found</b> during the pilot and what you did about each one.</li>
-<li><b>Limits:</b> three users, a few days, one office, so the results describe the EMO only (slide 17).</li>
-<li><b>"Overall, Objective 4 was met."</b> Only if the results support it; if a characteristic scored low, say so.</li>
+<li><b>Problems found</b> during the tests and what you did about each one.</li>
+<li><b>Limits:</b> three users, demo data on the MacBook, one office, so the results describe the EMO only (slide 17).</li>
+<li><b>"Overall, Objective 4 was met."</b> Only if the results support it; if a task failed or a characteristic scored low, say so.</li>
 </ol>
 <table>
 <tr><th style="width:50%">Table 4.7 layout</th><th style="width:20%">Mean</th><th>Interpretation</th></tr>
@@ -299,9 +297,16 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>(the other six characteristics the same way)</td><td></td><td></td></tr>
 <tr><td><b>Overall mean</b></td><td><b>__</b></td><td><b>__</b></td></tr>
 </table>
+<table>
+<tr><th style="width:50%">Table 4.8 layout: Respondent</th><th style="width:25%">Role</th><th>SUS score</th></tr>
+<tr><td>Respondent 1</td><td>Administrator</td><td>__</td></tr>
+<tr><td>Respondent 2</td><td>Officer</td><td>__</td></tr>
+<tr><td>Respondent 3</td><td>Staff</td><td>__</td></tr>
+<tr><td><b>Average</b> (compared with 68)</td><td></td><td><b>__</b></td></tr>
+</table>
 <div class="frame">
 <b class="t">The paragraph after each table has three parts</b>
-<i>1. Presentation: what the table shows ("Table 4.7 shows..."). 2. Analysis: the numbers that matter, such as the highest, the lowest and the overall result; comparing says more than one number alone (slide 14). 3. Interpretation: what it means for the EMO and, where it fits, how it relates to a Chapter 2 study (Sancho and Melendres, 2021, also used ISO/IEC 25010).</i>
+<i>1. Presentation: what the table shows ("Table 4.7 shows..."). 2. Analysis: the numbers that matter, such as the highest, the lowest and the overall result; comparing says more than one number alone (slide 14). 3. Interpretation: what it means for the EMO and, where it fits, how it relates to a Chapter 2 study (Sancho and Melendres, 2021, also used ISO/IEC 25010; Hyzy et al., 2022, give the SUS average of 68).</i>
 </div>
 
 <h2>6. The Evaluation Method Section (Missing From the Paper)</h2>
@@ -312,9 +317,9 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>Testing and Evaluation</td><td>2 or 3 sentences: the proponents tested the system, then EMO users evaluated it</td><td></td></tr>
 <tr><td>Testing Procedure</td><td>The kinds of testing whose results are Tables 4.1 to 4.5</td><td>112 automated tests (<code>php artisan test</code>); code quality and security checks; browser checks in Chrome at desktop and phone sizes; load check; pre-defense audit</td></tr>
 <tr><td>Respondents</td><td>Who answered, how many, how they were chosen</td><td>3 EMO users, one per role, chosen on purpose because they use the system (purposive sampling); if all four members answer, it is total enumeration</td></tr>
-<tr><td>Research Instrument</td><td>The two forms and their parts</td><td>Test checklist (17 tasks by role); questionnaire with Parts I to III, 22 statements on 7 ISO/IEC 25010:2023 characteristics, 5-point agreement scale; both in Appendix B</td></tr>
-<tr><td>Data Gathering Procedure</td><td>Numbered steps in the order they happened, with dates</td><td>Adviser checked the forms; consent; short orientation; tasks; questionnaire; forms collected</td></tr>
-<tr><td>Statistical Treatment of Data</td><td>How the answers were computed and read</td><td>Frequency and percentage (profile); weighted mean formula; characteristic mean = average of its statements; overall mean = average of the 7 characteristics; the interpretation scale table; comments grouped into categories</td></tr>
+<tr><td>Research Instrument</td><td>The three forms and their parts</td><td>Usability test: 17 task scenarios by role, with completion, time and a 1-to-5 ease rating after each task; SUS: the 10 standard statements (Brooke, 1996); ISO/IEC 25010 questionnaire: Parts I to III, 22 statements on 7 ISO/IEC 25010:2023 characteristics. All use a 5-point agreement scale; all in Appendix B</td></tr>
+<tr><td>Data Gathering Procedure</td><td>Numbered steps in the order they happened, with dates</td><td>Adviser and prof checked the forms; consent; the usability test on the MacBook with demo data (facilitator guide); then the SUS; then the ISO/IEC 25010 questionnaire; forms collected</td></tr>
+<tr><td>Statistical Treatment of Data</td><td>How the answers were computed and read</td><td>Completion rate (percentage); average time; frequency and percentage (profile); weighted mean formula; characteristic and overall means; the interpretation scale table; the SUS formula and the benchmark of 68; comments grouped into categories</td></tr>
 </table>
 <p>The "Population of the Study" part already in Chapter 3 stays where it is: fix it to the EMO's four main members, and have "Respondents" refer to it. If the adviser wants the questionnaire validated, say who checked it before it was used.</p>
 
@@ -338,7 +343,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><td>11</td><td>Objective 4</td><td>Remove the bold; fill in the instrument and the real dates (<b>after the visit</b>)</td><td>If the forms are answered after October 24, it can't say "during the 3-day pilot"</td></tr>
 <tr><td>11</td><td>approximately 5 EMO members</td><td>the EMO's four main members</td><td>Office size</td></tr>
 <tr><td>18 to 20</td><td>(two spaces)</td><td>(one space), then <b>Replace all</b></td><td>Double spaces left in Chapter 2</td></tr>
-<tr><td>23</td><td>[TO CONFIRM: SUS] ISO/IEC 25010 / (October 22 to 24, 2026)</td><td>ISO/IEC 25010 (decided October 28); the real dates <b>after the survey</b></td><td>Must match Objective 4</td></tr>
+<tr><td>23</td><td>[TO CONFIRM: SUS] ISO/IEC 25010 / (October 22 to 24, 2026)</td><td>A usability test, the SUS and ISO/IEC 25010; the real dates <b>after the survey</b></td><td>Must match Objective 4</td></tr>
 <tr><td>29</td><td>comprising approximately eight (8) to ten (10) personnel, which includes the Director, a Monitoring Minister (Ministrong Taga-subaybay), a Secretary, and the Tech Support staff.</td><td>of four (4) main members, including the Director and a Monitoring Minister (Ministrong Taga-subaybay). Add the other two positions <b>after the visit</b>.</td><td>Office size</td></tr>
 <tr><td>30</td><td>Organizational Chart paragraph and Figure G.1</td><td>Rewrite <b>after the visit</b>; Xyrone redraws Figure G.1</td><td>They show a Secretary and five Tech Support</td></tr>
 <tr><td>36</td><td>the projected user base of approximately ten (10) concurrent users</td><td>the EMO's four (4) main members using it at the same time</td><td>Office size</td></tr>
@@ -382,7 +387,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <tr><th style="width:50%">Ask the adviser</th><th>Confirm at the office</th></tr>
 <tr><td>
 <ul>
-<li><s>ISO/IEC 25010 or ISO 9126? Both or only one?</s> Answered October 28: ISO/IEC 25010 only.</li>
+<li><s>ISO/IEC 25010 or ISO 9126?</s> Answered October 28: ISO/IEC 25010. The prof also asked for usability testing questions (usability test and SUS added October 30).</li>
 <li>Can she check the questionnaire wording?</li>
 <li>Which interpretation labels?</li>
 <li>Evaluation method section: end of Chapter 3, or start of Chapter 4? Chapter 4's title?</li>
@@ -412,15 +417,15 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <li>[ ] Add the Objective 3 sentence, the CSV figure, the new order and numbers, the two fact fixes and the closing paragraph</li>
 <li>[ ] Finish Table 4.1, and write Tables 4.2, 4.4 and 4.5 with their paragraphs</li>
 <li>[ ] Send the adviser the questions in Section 9</li>
-<li>[ ] Make and print the test checklist and the questionnaire</li>
+<li>[ ] Show the three forms to the adviser and the prof, then print them</li>
 <li>[ ] Draft the evaluation method section (everything except the dates)</li>
 <li>[ ] Fix the five references</li>
 </ul>
 <h3>After the visit and the survey</h3>
 <ul>
 <li>[ ] Fill in the office size, positions, instrument and real dates (Chapters 1 to 3); Xyrone redraws Figures G.1 and G.2</li>
-<li>[ ] Type the answers into the scoring sheet and check them against the forms</li>
-<li>[ ] Write Tables 4.6 and 4.7, Figure 4.27 and the rest of Objective 4 (Section 5.4)</li>
+<li>[ ] Type the answers into evaluation-scoring.xlsx and check them against the forms</li>
+<li>[ ] Write Tables 4.6 to 4.8, Figure 4.27 and the rest of Objective 4 (Section 5.4)</li>
 <li>[ ] Write Chapter 5 and the opening paragraph of Chapter 4</li>
 <li>[ ] Rebuild the table of contents, List of Figures and List of Tables</li>
 <li>[ ] Run the tests again, check every number and date, then do the Turnitin check as your school requires</li>
