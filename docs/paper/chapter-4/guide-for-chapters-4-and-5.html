@@ -36,11 +36,12 @@
 <body>
 
 <h1>Guide for Making Chapters 4 and 5</h1>
-<p class="subtitle">EMO Tracker (Capstone 2). Updated October 30, 2026: the user evaluation now has three ready forms (usability test, SUS, ISO/IEC 25010) and one scoring sheet.</p>
+<p class="subtitle">EMO Tracker (Capstone 2). Updated November 14, 2026: Schedule month and venue filters, "Most active venues", new test numbers.</p>
 
 <div class="new">
 <b class="t">What changed in this version</b>
 <ul>
+<li><b>November 14: the EMO asked for filters.</b> The Schedule now has a Month and a Venue filter, and Analytics says <b>"Most active venues"</b> instead of "Busiest venues". Screenshots 06, 15, 20 and 30 were retaken. New test run: <b>113 test cases, 556 checks, all passed</b> (Objective 3 now has 41).</li>
 <li><b>October 30: three ready forms.</b> The adviser chose <b>ISO/IEC 25010</b> (October 28), and the prof asked for usability testing questions, so the evaluation is a <b>usability test</b>, the <b>SUS</b> and the <b>ISO/IEC 25010 questionnaire</b>, scored in one sheet (<code>evaluation-scoring.xlsx</code>). See Section 5. Correction: the October 28 guide dropped the SUS; the adviser had only chosen between the two ISO standards.</li>
 <li>Objective 3's figures now follow the paper: <b>Figures 4.16 to 4.26</b>, so the questionnaire chart is <b>Figure 4.27</b>.</li>
 <li>Sections 1 and 8 still describe paper version 8; most of their items are now done.</li>
@@ -136,7 +137,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <b class="t">Optional: real data from the EMO's schedule (G.7), totals only</b>
 <ul>
 <li><b>Objective 1</b> (already on pp. 77 to 78): first check, 13 overlapping pairs (9 still upcoming on October 6) and about 80 spellings for about 25 venues; latest sheet, 14 overlapping pairs in 2026 (6 still upcoming on October 23) and 29 venues.</li>
-<li><b>Objective 2:</b> Analytics, This year 2026: 372 events (89 upcoming, 281 completed, 2 cancelled), 10 rescheduled, busiest venue University Hall (108). No real event is marked "EMO prepares this event" yet.</li>
+<li><b>Objective 2:</b> Analytics, This year 2026: 372 events (89 upcoming, 281 completed, 2 cancelled), 10 rescheduled, most active venue University Hall (108). No real event is marked "EMO prepares this event" yet.</li>
 <li><b>Objective 3:</b> first import (October 2): 329 events, 221 values made consistent. Final import (October 20): 391 events from 401 rows, 10 reschedule pairs merged, 64 rows listed for a person to review.</li>
 <li>Never include names or other details of the EMO's real events.</li>
 </ul>
@@ -189,7 +190,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <h3>5.1 Tables from our own testing (you can write these now)</h3>
 <table>
 <tr><th style="width:11%">Table</th><th style="width:45%">What it shows</th><th style="width:16%">Facts</th><th>Status</th></tr>
-<tr><td>4.1</td><td>Automated tests: 112 test cases in 16 files (530 checks), all passed. Last run October 26, 2026; run them again before the defense and use that date.</td><td>G.2</td><td class="done">Done</td></tr>
+<tr><td>4.1</td><td>Automated tests: 113 test cases in 16 files (556 checks), all passed. Last run November 14, 2026; run them again before the defense and use that date.</td><td>G.2</td><td class="done">Done</td></tr>
 <tr><td>4.2</td><td>Code quality and security checks</td><td>G.3 and the October 26 run (below)</td><td class="done">Done</td></tr>
 <tr><td>4.3</td><td>Browser checks</td><td>G.4</td><td class="done">Done</td></tr>
 <tr><td>4.4</td><td>Load check</td><td>G.5 (October 26 check)</td><td class="done">Done</td></tr>
@@ -206,7 +207,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
   <li><b>AnalyticsTest:</b> the status counts add up to the total; the time periods work; Staff can't open Analytics.</li>
   <li><b>DashboardTest:</b> Home shows the events that need attention and the next 7 days; Staff see only their own open tasks.</li>
   </ul></li>
-<li>Replace "[ADD SENTENCE AFTER EXPLAINING ABOUT THE TABLE]" with your own paragraph. Facts: 45 tests for Objective 1, 25 for Objective 2, 40 for Objective 3 and 2 general; the rules behind the schedule, readiness, records, roles and backups work as designed; these tests check the server, so the screens were checked separately in Table 4.3.</li>
+<li>Replace "[ADD SENTENCE AFTER EXPLAINING ABOUT THE TABLE]" with your own paragraph. Facts: 45 tests for Objective 1, 25 for Objective 2, 41 for Objective 3 and 2 general; the rules behind the schedule, readiness, records, roles and backups work as designed; these tests check the server, so the screens were checked separately in Table 4.3.</li>
 </ul>
 
 <p><b>Table 4.2 facts</b> (checks run again on October 26, 2026):</p>
@@ -316,7 +317,7 @@ If your adviser prefers to keep "To", keep it in all five. In <b>Chapter 1</b>, 
 <table>
 <tr><th style="width:22%">Heading</th><th style="width:33%">What to write</th><th>Facts to use</th></tr>
 <tr><td>Testing and Evaluation</td><td>2 or 3 sentences: the proponents tested the system, then EMO users evaluated it</td><td></td></tr>
-<tr><td>Testing Procedure</td><td>The kinds of testing whose results are Tables 4.1 to 4.5</td><td>112 automated tests (<code>php artisan test</code>); code quality and security checks; browser checks in Chrome at desktop and phone sizes; load check; pre-defense audit</td></tr>
+<tr><td>Testing Procedure</td><td>The kinds of testing whose results are Tables 4.1 to 4.5</td><td>113 automated tests (<code>php artisan test</code>); code quality and security checks; browser checks in Chrome at desktop and phone sizes; load check; pre-defense audit</td></tr>
 <tr><td>Respondents</td><td>Who answered, how many, how they were chosen</td><td>3 EMO users, one per role, chosen on purpose because they use the system (purposive sampling); if all four members answer, it is total enumeration</td></tr>
 <tr><td>Research Instrument</td><td>The three forms and their parts</td><td>Usability test: 17 task scenarios by role, with completion, time and a 1-to-5 ease rating after each task; SUS: the 10 standard statements (Brooke, 1996); ISO/IEC 25010 questionnaire: Parts I to III, 22 statements on 7 ISO/IEC 25010:2023 characteristics. All use a 5-point agreement scale; all in Appendix B</td></tr>
 <tr><td>Data Gathering Procedure</td><td>Numbered steps in the order they happened, with dates</td><td>Adviser and prof checked the forms; consent; the usability test on the MacBook with demo data (facilitator guide); then the SUS; then the ISO/IEC 25010 questionnaire; forms collected</td></tr>

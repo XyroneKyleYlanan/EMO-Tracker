@@ -744,7 +744,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
 
 ## Module 8 — Schedule and Venue Management
 
-**ScheduleController.php** (`backend/app/Http/Controllers/Api/ScheduleController.php`, lines 19–56, lines 58–90)
+**ScheduleController.php** (`backend/app/Http/Controllers/Api/ScheduleController.php`, lines 21–59, lines 61–106)
 
 ```php
 public function index(Request $request): JsonResponse
@@ -773,6 +773,7 @@ public function index(Request $request): JsonResponse
         'original_date' => $e->original_date?->toDateString(),
         'original_time' => $e->original_time,
         'location' => $e->location,
+        'venue_id' => $e->venue_id,
         'building' => $e->venue?->building?->only(['id', 'name', 'color']),
         'control_number' => $e->control_number,
         'remarks' => $e->remarks,
@@ -788,7 +789,7 @@ public function index(Request $request): JsonResponse
 
 /**
  * The year as an Excel (.xlsx, the default) or CSV file, with only the rows
- * the page shows when its type filter or search is in use.
+ * the page shows when its type, month or venue filter or search is in use.
  */
 public function export(Request $request): Response
 {
@@ -796,18 +797,31 @@ public function export(Request $request): Response
         'format' => ['nullable', Rule::in(['xlsx', 'csv'])],
         'type' => ['nullable', Rule::in(['internal', 'external'])],
         'search' => ['nullable', 'string', 'max:255'],
+        'month' => ['nullable', 'integer', 'between:1,12'],
+        'venue' => ['nullable', 'regex:/^(typed|[1-9][0-9]*)$/'],
     ]);
     $year = (int) $request->input('year', today()->year);
     $format = $request->input('format', 'xlsx');
     $type = $request->input('type');
     $search = trim((string) $request->input('search'));
+    $month = $request->filled('month') ? (int) $request->input('month') : null;
+    $venue = $request->input('venue');
+    $monthName = $month ? Carbon::create($year, $month)->format('F') : null;
 
-    $events = ScheduleExport::events($year, $type, $search);
+    $events = ScheduleExport::events($year, $type, $search, $month, $venue);
     $note = implode(' · ', array_filter([
+        $monthName,
+        match (true) {
+            ! $venue => null,
+            $venue === 'typed' => 'Other / not listed',
+            default => Venue::find($venue)?->name,
+        },
         $type ? ucfirst($type).' events' : null,
         $search !== '' ? "Search: \"{$search}\"" : null,
     ]));
-    $name = implode('-', array_filter(['emo-schedule', $year, $type, $search !== '' ? 'filtered' : null]));
+    $name = implode('-', array_filter([
+        'emo-schedule', $year, $monthName ? strtolower($monthName) : null, $type, ($venue || $search !== '') ? 'filtered' : null,
+    ]));
 
     return $format === 'csv'
         ? response(ScheduleExport::csv($events), 200, [
@@ -818,12 +832,10 @@ public function export(Request $request): Response
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition' => "attachment; filename=\"{$name}.xlsx\"",
         ]);
-}.xlsx\"",
-    ]);
 }
 ```
 
-**Explanation:** index() returns one year of the Schedule, laid out like the EMO's own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue's building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as a file built by the ScheduleExport service: an Excel file (the default) in the spreadsheet's familiar format, or a plain CSV file that opens in any app. When the page's type filter or search is in use, the file has only the rows shown, and its name and title say so.
+**Explanation:** index() returns one year of the Schedule, laid out like the EMO's own spreadsheet: every event and venue booking with its date, time, type, department, location, control number and remarks, the color of its venue's building, its status, its readiness and any overlapping bookings. It also lists the years that have events, for the year tabs. export() returns the same year as a file built by the ScheduleExport service: an Excel file (the default) in the spreadsheet's familiar format, or a plain CSV file that opens in any app. When the page's type, month or venue filter or search is in use, the file has only the rows shown, and its name and title say so.
 
 **VenueController.php** (`backend/app/Http/Controllers/Api/VenueController.php`, lines 74–94)
 

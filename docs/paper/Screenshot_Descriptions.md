@@ -3,7 +3,7 @@
 Descriptions of the 31 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26.
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26. Screenshots 06, 15, 20 and 30 were retaken the same way on November 14, 2026, after the month and venue filters and the "Most active venues" title were added.
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
 - **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
@@ -67,7 +67,8 @@ The Schedule page reproduces the layout of the spreadsheet the EMO used before t
 
 - **Layout:** one tab per year; columns for date, time, event, type, department, venue, control number and remarks; rows grouped by month and colored by the venue's building.
 - **Labels on the rows:** an event's status (Ongoing), its readiness when the EMO prepares it, venue overlaps and external organizers. A rescheduled event notes its original date, for example "Rescheduled from Sat, Sep 26".
-- **Actions:** a search box finds any event. The Administrator can export the Schedule to Excel, manage venues and add events from this page.
+- **Filters:** All, Internal or External; a month ("All months" by default, so the whole year shows, like the sheet); and a venue ("All venues", the venues grouped by building, or "Other / not listed"). A chosen filter turns green. A search box finds any event.
+- **Actions:** the Administrator can export the Schedule to Excel or CSV, manage venues and add events from this page.
 
 ### 07. New Event Form With a Double-Booking Warning
 
@@ -143,7 +144,7 @@ The system is responsive, so it can also be used on a phone connected to the off
 
 **File:** [screenshots/2-administrator/15-schedule-phone.png](screenshots/2-administrator/15-schedule-phone.png)
 
-On a phone, the Schedule shows each event as a card instead of a table row. The cards keep the building colors and are grouped by month. Each card gives the event's name, date, time, venue, department and type. The view shown is the Administrator's, with the buttons to export, manage venues and add events.
+On a phone, the Schedule shows each event as a card instead of a table row. The cards keep the building colors and are grouped by month. Each card gives the event's name, date, time, venue, department and type. The month and venue filters share one row above the search box. The view shown is the Administrator's, with the buttons to export, manage venues and add events.
 
 ---
 
@@ -191,7 +192,7 @@ Once an event ends, the system marks it Completed and locks its tasks, which bec
 
 The Analytics page summarizes the schedule and the EMO's preparation for the period chosen at the top right (this week, this month, this year or all time).
 
-- **Events:** counts the events by status (these add up to all events) and the rescheduled events. It also compares internal and external events and ranks the busiest venues.
+- **Events:** counts the events by status (these add up to all events) and the rescheduled events. It also compares internal and external events and ranks the most active venues.
 - **EMO preparation:** counts the prepared events, their tasks and how many are done, and the people with tasks. It shows the readiness distribution as a chart and lists the most urgent events.
 - **Different counts:** this page counts the whole year, including completed events, so it reports five prepared events, while the Home page counts only the four that are not yet over. For the same reason, "Top 5 most urgent events" lists four.
 
@@ -260,7 +261,7 @@ The Administrator and Officers can export the Schedule as an Excel file in the s
 
 **File:** [screenshots/5-reports/30-export-menu.png](screenshots/5-reports/30-export-menu.png) (close-up: [30-export-menu-closeup.png](screenshots/5-reports/30-export-menu-closeup.png))
 
-The Schedule page (the same view as screenshot 06) with the **Export** menu open. It offers two files: **Excel (.xlsx)**, "With the building colors", and **CSV (.csv)**, "Plain text, opens in any app". The Administrator and Officers see this button; Staff don't. The close-up shows only the buttons and the menu, at 2× resolution.
+The Schedule page (the same view as screenshot 06) with the **Export** menu open. It offers two files: **Excel (.xlsx)**, "With the building colors", and **CSV (.csv)**, "Plain text, opens in any app". The Administrator and Officers see this button; Staff don't. The file has only the rows on screen, so a chosen month, venue, type or search narrows it too. The close-up shows only the buttons and the menu, at 2× resolution.
 
 ### 31. Schedule Exported to CSV
 
