@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
 
           <section className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             <EventTypeSplit type={data.schedule.type} />
-            <BusiestVenues venues={data.schedule.venues} />
+            <MostActiveVenues venues={data.schedule.venues} />
           </section>
 
           <SectionHeading title="EMO preparation" subtitle="Events the EMO prepares, and how ready they are." className="mt-10" />
@@ -251,11 +251,11 @@ function TypeCount({ label, hint, value, total }) {
 }
 
 // The venues booked most in this period (cancelled bookings don't count).
-function BusiestVenues({ venues }) {
+function MostActiveVenues({ venues }) {
   const most = venues[0]?.events || 0
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5">
-      <h3 className="text-sm font-semibold text-gray-900">Busiest venues</h3>
+      <h3 className="text-sm font-semibold text-gray-900">Most active venues</h3>
       <p className="text-xs text-gray-500 mt-0.5 mb-4">Events per venue, not counting cancelled ones.</p>
       {venues.length === 0 ? (
         <div className="text-sm text-gray-500 py-4 text-center">No venue bookings in this period.</div>

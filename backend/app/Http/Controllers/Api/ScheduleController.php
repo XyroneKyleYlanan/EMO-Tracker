@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Venue;
 use App\Services\ScheduleExport;
 use App\Services\VenueClashes;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,6 +44,7 @@ class ScheduleController extends Controller
             'original_date' => $e->original_date?->toDateString(),
             'original_time' => $e->original_time,
             'location' => $e->location,
+            'venue_id' => $e->venue_id,
             'building' => $e->venue?->building?->only(['id', 'name', 'color']),
             'control_number' => $e->control_number,
             'remarks' => $e->remarks,
@@ -57,7 +60,7 @@ class ScheduleController extends Controller
 
     /**
      * The year as an Excel (.xlsx, the default) or CSV file, with only the rows
-     * the page shows when its type filter or search is in use.
+     * the page shows when its type, month or venue filter or search is in use.
      */
     public function export(Request $request): Response
     {
@@ -65,18 +68,31 @@ class ScheduleController extends Controller
             'format' => ['nullable', Rule::in(['xlsx', 'csv'])],
             'type' => ['nullable', Rule::in(['internal', 'external'])],
             'search' => ['nullable', 'string', 'max:255'],
+            'month' => ['nullable', 'integer', 'between:1,12'],
+            'venue' => ['nullable', 'regex:/^(typed|[1-9][0-9]*)$/'],
         ]);
         $year = (int) $request->input('year', today()->year);
         $format = $request->input('format', 'xlsx');
         $type = $request->input('type');
         $search = trim((string) $request->input('search'));
+        $month = $request->filled('month') ? (int) $request->input('month') : null;
+        $venue = $request->input('venue');
+        $monthName = $month ? Carbon::create($year, $month)->format('F') : null;
 
-        $events = ScheduleExport::events($year, $type, $search);
+        $events = ScheduleExport::events($year, $type, $search, $month, $venue);
         $note = implode(' · ', array_filter([
+            $monthName,
+            match (true) {
+                ! $venue => null,
+                $venue === 'typed' => 'Other / not listed',
+                default => Venue::find($venue)?->name,
+            },
             $type ? ucfirst($type).' events' : null,
             $search !== '' ? "Search: \"{$search}\"" : null,
         ]));
-        $name = implode('-', array_filter(['emo-schedule', $year, $type, $search !== '' ? 'filtered' : null]));
+        $name = implode('-', array_filter([
+            'emo-schedule', $year, $monthName ? strtolower($monthName) : null, $type, ($venue || $search !== '') ? 'filtered' : null,
+        ]));
 
         return $format === 'csv'
             ? response(ScheduleExport::csv($events), 200, [

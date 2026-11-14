@@ -23,11 +23,16 @@ class ScheduleExport
 
     /**
      * The year's events in Schedule order, narrowed the way the Schedule page
-     * narrows them, so the file has exactly the rows on screen: by type, and by
-     * the search box (the same fields the page searches, "overlap" included).
+     * narrows them, so the file has exactly the rows on screen: by type, month
+     * (any day of the event in that month), venue ("typed" for "Other / not
+     * listed": places typed in instead of picked from the list), and the search box (the same fields the
+     * page searches, "overlap" included).
      */
-    public static function events(int $year, ?string $type = null, ?string $search = null): Collection
+    public static function events(int $year, ?string $type = null, ?string $search = null, ?int $month = null, ?string $venue = null): Collection
     {
+        $monthStart = $month ? sprintf('%d-%02d-01', $year, $month) : null;
+        $monthEnd = $month ? sprintf('%d-%02d-31', $year, $month) : null;
+
         $events = Event::with('venue.building')
             ->whereYear('event_date', $year)
             ->orderBy('event_date')
@@ -40,6 +45,9 @@ class ScheduleExport
 
         return $events
             ->filter(fn (Event $e) => ! $type || $e->event_type === $type)
+            ->filter(fn (Event $e) => ! $month || ($e->event_date->toDateString() <= $monthEnd
+                && ($e->end_date ?? $e->event_date)->toDateString() >= $monthStart))
+            ->filter(fn (Event $e) => ! $venue || ($venue === 'typed' ? $e->venue_id === null : $e->venue_id === (int) $venue))
             ->filter(fn (Event $e) => $search === '' || collect([
                 $e->name, $e->event_type, $e->department, $e->location, $e->control_number, $e->remarks,
                 $e->status === 'upcoming' && ! empty($clashes[$e->id]) ? 'overlap' : null,

@@ -14,6 +14,9 @@ import { formatDateRange, formatDayMonth, formatMonthYear, formatTimeRange } fro
 
 const OTHER_COLOR = '#E5E7EB'
 const TYPE_FILTERS = [['all', 'All'], ['internal', 'Internal'], ['external', 'External']]
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+// The venue filter's value for places typed in instead of picked from the list.
+const NOT_LISTED = 'typed'
 
 // The EMO's schedule sheet: every NEU event, one tab per year, colored by
 // building. Everyone can view it; only the admin adds and edits events.
@@ -29,6 +32,9 @@ export default function SchedulePage() {
   const [loadError, setLoadError] = useState(null)
   const [search, setSearch] = useState('')
   const [type, setType] = useState('all')
+  const [month, setMonth] = useState('all')
+  const [venue, setVenue] = useState('all')
+  const [venueList, setVenueList] = useState({ venues: [], buildings: [] })
   const [selectedId, setSelectedId] = useState(null)
   const [formOpen, setFormOpen] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
@@ -60,12 +66,24 @@ export default function SchedulePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year])
 
-  // The file has the rows on screen: the whole year, or only what the type filter and search show.
+  // The venue filter lists every managed venue, grouped by building like the event form.
+  useEffect(() => {
+    api.get('/venues')
+      .then((res) => setVenueList({ venues: res.data.venues || [], buildings: res.data.buildings || [] }))
+      .catch(() => {})
+  }, [])
+
+  // The file has the rows on screen: the whole year, or only what the filters and search show.
   async function handleExport(format) {
     const params = new URLSearchParams({ year, format })
     if (type !== 'all') params.set('type', type)
+    if (month !== 'all') params.set('month', month)
+    if (venue !== 'all') params.set('venue', venue)
     if (query) params.set('search', search.trim())
-    const name = ['emo-schedule', year, type !== 'all' && type, query && 'filtered'].filter(Boolean).join('-')
+    const name = [
+      'emo-schedule', year, month !== 'all' && MONTHS[month - 1].toLowerCase(), type !== 'all' && type,
+      (venue !== 'all' || query) && 'filtered',
+    ].filter(Boolean).join('-')
     try {
       await downloadFile(`/schedule/export?${params}`, `${name}.${format}`)
     } catch {
@@ -107,15 +125,21 @@ export default function SchedulePage() {
   const olderYears = allYears.filter((y) => y < currentYear).reverse()
 
   const query = search.trim().toLowerCase()
+  const shownYear = data?.year ?? year
+  // An event is in every month it runs in (October 30 to November 2 is in both).
+  const monthStart = month !== 'all' && `${shownYear}-${String(month).padStart(2, '0')}-01`
+  const monthEnd = month !== 'all' && `${shownYear}-${String(month).padStart(2, '0')}-31`
   const rows = (data?.events || []).filter((e) =>
     (type === 'all' || e.event_type === type) &&
+    (month === 'all' || (e.event_date <= monthEnd && (e.end_date || e.event_date) >= monthStart)) &&
+    (venue === 'all' || (venue === NOT_LISTED ? !e.venue_id : String(e.venue_id) === venue)) &&
     (!query || [e.name, e.event_type, e.department, e.location, e.control_number, e.remarks, e.clashes?.length ? 'overlap' : null]
       .some((v) => v && v.toLowerCase().includes(query)))
   )
-  const filtered = type !== 'all' || !!query
+  const filtered = type !== 'all' || month !== 'all' || venue !== 'all' || !!query
   const months = []
   for (const row of rows) {
-    const label = formatMonthYear(row.event_date)
+    const label = month !== 'all' ? formatMonthYear(monthStart) : formatMonthYear(row.event_date)
     if (months.at(-1)?.label !== label) months.push({ label, rows: [] })
     months.at(-1).rows.push(row)
   }
@@ -152,7 +176,7 @@ export default function SchedulePage() {
         )}
       </div>
 
-      {/* Years in time order (past, this year, upcoming) on the left; search on the right. */}
+      {/* Years in time order (past, this year, upcoming), the type, month and venue filters on the left; search on the right. */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
           {olderYears.length > 0 && (
@@ -204,6 +228,19 @@ export default function SchedulePage() {
           ))}
         </div>
 
+        {/* Month and venue: green while they narrow the schedule, like the chosen year and type. */}
+        <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 w-full sm:w-auto">
+          <FilterSelect label="Month" value={month} onChange={setMonth} active={month !== 'all'}>
+            <option value="all">All months</option>
+            {MONTHS.map((name, i) => <option key={name} value={String(i + 1)}>{name}</option>)}
+          </FilterSelect>
+          <FilterSelect label="Venue" value={venue} onChange={setVenue} active={venue !== 'all'} className="sm:w-40">
+            <option value="all">All venues</option>
+            <VenueOptions {...venueList} />
+            <option value={NOT_LISTED}>Other / not listed</option>
+          </FilterSelect>
+        </div>
+
         <div className="relative w-full sm:w-72 sm:ml-auto">
           <SearchIcon width={16} height={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
@@ -226,7 +263,7 @@ export default function SchedulePage() {
         </div>
       ) : rows.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 border-dashed p-10 text-center text-sm text-gray-500">
-          {query ? 'No events match your search.' : type !== 'all' ? `No ${type} events in ${year}.` : `No events scheduled for ${year}.`}
+          {emptyMessage({ query, type, month, venue, year: shownYear, venues: venueList.venues })}
         </div>
       ) : (
         <div className={loading ? 'opacity-60' : ''}>
@@ -295,6 +332,64 @@ export default function SchedulePage() {
         />
       )}
     </div>
+  )
+}
+
+// What the empty schedule says, in the filters' own words: "No internal events at University Hall in November 2026."
+function emptyMessage({ query, type, month, venue, year, venues }) {
+  if (query) return 'No events match your search.'
+  if (type === 'all' && month === 'all' && venue === 'all') return `No events scheduled for ${year}.`
+  const venueName = venue === NOT_LISTED ? null : venues.find((v) => String(v.id) === venue)?.name
+  return [
+    'No', type !== 'all' && type, 'events',
+    venue === NOT_LISTED ? 'at places not on the venue list' : venueName && `at ${venueName}`,
+    `in ${month !== 'all' ? `${MONTHS[month - 1]} ` : ''}${year}.`,
+  ].filter(Boolean).join(' ')
+}
+
+// A dropdown in the filter bar, styled like "Past years": green while it narrows the schedule.
+// A fixed width (className) keeps a box from growing to fit its longest option.
+function FilterSelect({ label, value, onChange, active, className = '', children }) {
+  return (
+    <div className={`relative flex-1 min-w-0 sm:flex-none ${className}`}>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={label}
+        className={`w-full truncate appearance-none pl-3 pr-8 py-1.5 rounded-md text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-neu-green ${
+          active ? 'bg-neu-green text-white' : 'bg-transparent text-gray-600 hover:bg-gray-100'
+        }`}
+      >
+        {children}
+      </select>
+      <ChevronDownIcon
+        width={14}
+        height={14}
+        className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${active ? 'text-white' : 'text-gray-500'}`}
+      />
+    </div>
+  )
+}
+
+// Venues grouped under their building, the same grouping as the event form's Venue list.
+function VenueOptions({ venues, buildings }) {
+  const unassigned = venues.filter((v) => !v.building_id)
+  return (
+    <>
+      {buildings.map((b) => {
+        const inBuilding = venues.filter((v) => v.building_id === b.id)
+        return inBuilding.length > 0 && (
+          <optgroup key={b.id} label={b.name}>
+            {inBuilding.map((v) => <option key={v.id} value={String(v.id)}>{v.name}</option>)}
+          </optgroup>
+        )
+      })}
+      {unassigned.length > 0 && (
+        <optgroup label="Other venues">
+          {unassigned.map((v) => <option key={v.id} value={String(v.id)}>{v.name}</option>)}
+        </optgroup>
+      )}
+    </>
   )
 }
 

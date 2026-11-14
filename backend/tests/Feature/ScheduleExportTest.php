@@ -129,6 +129,48 @@ class ScheduleExportTest extends TestCase
         $this->getJson('/api/schedule/export?type=other')->assertStatus(422)->assertJsonValidationErrors('type');
     }
 
+    public function test_export_follows_the_month_and_venue_filters(): void
+    {
+        $hall = Venue::create(['name' => 'University Hall']);
+        $field = Venue::create(['name' => 'NEU Open Field']);
+        Event::factory()->scheduleOnly()->create(['name' => 'CAS OJT Seminar', 'event_date' => '2026-10-05', 'venue_id' => $hall->id, 'venue_details' => null]);
+        Event::factory()->scheduleOnly()->create(['name' => 'Nurses Week', 'event_date' => '2026-10-30', 'end_date' => '2026-11-02', 'venue_id' => $hall->id, 'venue_details' => null]);
+        Event::factory()->scheduleOnly()->create(['name' => 'Sports Fest', 'event_date' => '2026-11-14', 'venue_id' => $field->id, 'venue_details' => null]);
+        Event::factory()->scheduleOnly()->create(['name' => 'Alumni Lunch', 'event_date' => '2026-11-20', 'venue_id' => null, 'venue_details' => 'Rooftop garden']);
+
+        Sanctum::actingAs(User::factory()->officer()->create());
+
+        // The page gets each event's venue, so it can filter by venue too.
+        $rows = collect($this->getJson('/api/schedule?year=2026')->assertOk()->json('events'))->keyBy('name');
+        $this->assertSame($hall->id, $rows['CAS OJT Seminar']['venue_id']);
+        $this->assertNull($rows['Alumni Lunch']['venue_id']);
+
+        $names = function (string $query, string $file): array {
+            $response = $this->get("/api/schedule/export?year=2026&format=csv&{$query}")->assertOk()->assertDownload($file);
+            $rows = array_map('str_getcsv', explode("\r\n", trim(substr($response->getContent(), 3))));
+
+            return array_column(array_slice($rows, 1), 2);
+        };
+
+        // An event is in every month it runs in, like Nurses Week (October 30 to November 2).
+        $this->assertSame(['CAS OJT Seminar', 'Nurses Week'], $names('month=10', 'emo-schedule-2026-october.csv'));
+        $this->assertSame(['Nurses Week', 'Sports Fest', 'Alumni Lunch'], $names('month=11', 'emo-schedule-2026-november.csv'));
+        $this->assertSame(['CAS OJT Seminar', 'Nurses Week'], $names("venue={$hall->id}", 'emo-schedule-2026-filtered.csv'));
+        $this->assertSame(['Alumni Lunch'], $names('venue=typed', 'emo-schedule-2026-filtered.csv'), 'places typed in instead of picked');
+        $this->assertSame(['Nurses Week'], $names("month=11&venue={$hall->id}", 'emo-schedule-2026-november-filtered.csv'));
+
+        // The Excel title says the month and the venue.
+        $response = $this->get("/api/schedule/export?year=2026&month=11&venue={$hall->id}")->assertOk();
+        $path = tempnam(sys_get_temp_dir(), 'xlsx');
+        file_put_contents($path, $response->getContent());
+        $sheet = IOFactory::load($path)->getActiveSheet();
+        unlink($path);
+        $this->assertSame('2026 · November · University Hall', $sheet->getCell('A1')->getValue());
+
+        $this->getJson('/api/schedule/export?month=13')->assertStatus(422)->assertJsonValidationErrors('month');
+        $this->getJson('/api/schedule/export?venue=elsewhere')->assertStatus(422)->assertJsonValidationErrors('venue');
+    }
+
     public function test_staff_cannot_export(): void
     {
         Sanctum::actingAs(User::factory()->staff()->create());
