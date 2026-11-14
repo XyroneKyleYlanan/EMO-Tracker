@@ -386,7 +386,7 @@ private static function assess(Event $event): array
             -&gt;get()),
     ]);
 }</pre></td></tr></table>
-<p class="expl"><strong>Explanation:</strong> index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, busiest venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.</p>
+<p class="expl"><strong>Explanation:</strong> index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, most active venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.</p>
 <table class="bar"><tr><td>Module 5 — Reports and Document Management | DocumentController.php</td></tr></table>
 <table class="code"><tr><td><div class="where">backend/app/Http/Controllers/Api/DocumentController.php, lines 26–60, lines 62–67</div><pre>public function store(Request $request, Event $event): JsonResponse
 {

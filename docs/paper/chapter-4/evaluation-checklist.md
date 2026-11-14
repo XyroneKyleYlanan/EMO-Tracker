@@ -1,6 +1,8 @@
 # Evaluation Checklist: Usability Test, SUS and ISO/IEC 25010
 
-**Status (October 30, 2026):** the three forms are ready and waiting for the adviser's approval. The EMO answers them in one visit, this week or next.
+**Status (November 14, 2026):** the three forms are ready and waiting for the adviser's approval. Usability task 16 was changed on November 14 to use the new Month and Venue filters (the scoring sheet has the same change). The EMO answers the forms in one visit, in about two weeks or next month.
+
+These files are the latest versions. If anyone changes a form's wording, change it here (the HTML file), make the same change in `evaluation-scoring.xlsx`, and save a new PDF (open the HTML file, Cmd+P, Save as PDF).
 
 Files, all in this folder:
 
@@ -18,6 +20,7 @@ Files, all in this folder:
 
 - [ ] The adviser (and the prof) approve the three forms. Make any wording change in both the form and `evaluation-scoring.xlsx`.
 - [ ] Ask the adviser whether the evaluation date leaves enough time to write the results before the defense.
+- [ ] Install the November 14 update on the EMO's laptop (office/INSTALL.md, "Updating EMO Tracker later"), so the EMO has used the version with the filters before answering the questionnaires.
 - [ ] Set a time with the EMO: 3 users (one Administrator, one Officer, one Staff), about 40 minutes each.
 - [ ] Print for each user: their role's task sheet, the SUS and the ISO questionnaire, plus 2 spares of each. Print the observers' guide (page 1 of the usability test).
 - [ ] Bring the MacBook and its charger, a phone (Staff task 14), a stopwatch (any phone) and pens.

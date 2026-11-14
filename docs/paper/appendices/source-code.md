@@ -422,7 +422,7 @@ public function index(Request $request): JsonResponse
 }
 ```
 
-**Explanation:** index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, busiest venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.
+**Explanation:** index() returns the statistics for the Analytics page for a chosen period: this week (Sunday to Saturday), this month, this year or all time, counting events by their start date. It returns schedule statistics for all events (statuses, reschedules, internal and external events, most active venues) and preparation statistics for the events the EMO prepares, which include the readiness distribution and the most urgent events.
 
 ---
 

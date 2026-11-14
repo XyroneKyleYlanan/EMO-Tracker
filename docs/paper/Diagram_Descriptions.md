@@ -332,7 +332,7 @@ After the login page, the Administrator's menu has seven entries:
   - the PDF report
   - the edit event dialog, which also cancels or restores an event and asks whether a date change is a reschedule
   - deleting the event
-- **Schedule:** the year tabs, search and rows colored by building, the add event dialog, the Excel export, the event panel, and the Venues page, with its buildings and venues, their add, edit and delete dialogs, and venue merging.
+- **Schedule:** the year tabs, the type, month and venue filters, search and rows colored by building, the add event dialog, the Excel export, the event panel, and the Venues page, with its buildings and venues, their add, edit and delete dialogs, and venue merging.
 - **Analytics:** the period filter, the event statistics and the EMO preparation statistics.
 - **Accounts:** filters and the accounts list, the add and edit account dialog, and deactivating or reactivating accounts.
 - **User Menu:** change password and log out.

@@ -3,7 +3,7 @@
 Descriptions of the 31 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26. Screenshots 06, 15, 20 and 30 were retaken the same way on November 14, 2026, after the month and venue filters and the "Most active venues" title were added.
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26. Screenshots 06, 15, 17, 19, 20 and 30 were retaken the same way on November 14, 2026, after the month and venue filters and the "Most active venues" title were added (17 and 19 still showed an older Schedule without the filters).
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
 - **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
@@ -184,7 +184,7 @@ This screen shows the Documents section of an event's panel just after the Offic
 
 **File:** [screenshots/3-officer/19-completed-event.png](screenshots/3-officer/19-completed-event.png)
 
-Once an event ends, the system marks it Completed and locks its tasks, which become a record of the event. The panel explains that the task records are locked and that an administrator can make corrections. Each task shows its final status with a "Locked" mark. The Schedule behind the panel is marked "View only", because only the Administrator changes event details.
+Once an event ends, the system marks it Completed and locks its tasks, which become a record of the event. The panel explains that the task records are locked and that an administrator can make corrections. Each task shows its final status with a "Locked" mark. The Schedule behind the panel is marked "View only", because only the Administrator changes event details, and it has the same type, month and venue filters as every role's Schedule.
 
 ### 20. Analytics Page
 
