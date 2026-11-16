@@ -93,11 +93,16 @@ export default function StaffManagementPage() {
     fetchUsers()
   }
 
+  // The role counts are for active accounts, to match the Active list the page opens on.
+  // Deactivated accounts are counted on their own, so the numbers never look missing.
+  const activeUsers = users.filter((u) => u.is_active)
   const counts = {
     total: users.length,
-    admin: users.filter((u) => u.role === 'admin').length,
-    officer: users.filter((u) => u.role === 'officer').length,
-    staff: users.filter((u) => u.role === 'staff').length,
+    active: activeUsers.length,
+    deactivated: users.length - activeUsers.length,
+    admin: activeUsers.filter((u) => u.role === 'admin').length,
+    officer: activeUsers.filter((u) => u.role === 'officer').length,
+    staff: activeUsers.filter((u) => u.role === 'staff').length,
   }
 
   return (
@@ -110,7 +115,7 @@ export default function StaffManagementPage() {
               ? 'Accounts for everyone who uses EMO Tracker.'
               : loading && users.length === 0
                 ? ' ' // keeps the line's height until the counts are known
-                : `${counts.total} total · ${counts.admin} admin${counts.admin === 1 ? '' : 's'} · ${counts.officer} officer${counts.officer === 1 ? '' : 's'} · ${counts.staff} staff`}
+                : `${counts.deactivated ? `${counts.active} active` : `${counts.total} total`} · ${counts.admin} admin${counts.admin === 1 ? '' : 's'} · ${counts.officer} officer${counts.officer === 1 ? '' : 's'} · ${counts.staff} staff${counts.deactivated ? ` · ${counts.deactivated} deactivated` : ''}`}
           </p>
         </div>
         <button
