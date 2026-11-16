@@ -20,7 +20,8 @@ Files, all in this folder:
 
 - [ ] The adviser (and the prof) approve the three forms. Make any wording change in both the form and `evaluation-scoring.xlsx`.
 - [ ] Ask the adviser whether the evaluation date leaves enough time to write the results before the defense.
-- [ ] Install the November 14 update on the EMO's laptop (office/INSTALL.md, "Updating EMO Tracker later"), so the EMO has used the version with the filters before answering the questionnaires.
+- [x] Put the November 14 update (the Schedule filters) on the online version, emo-tracker-one.vercel.app, so the EMO can try it before answering the questionnaires. Done November 14.
+- [ ] A day before the visit, open the online version. If every page says "Server Error", the database is off: power it on in Aiven.
 - [ ] Set a time with the EMO: 3 users (one Administrator, one Officer, one Staff), about 40 minutes each.
 - [ ] Print for each user: their role's task sheet, the SUS and the ISO questionnaire, plus 2 spares of each. Print the observers' guide (page 1 of the usability test).
 - [ ] Bring the MacBook and its charger, a phone (Staff task 14), a stopwatch (any phone) and pens.
