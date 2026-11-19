@@ -1,18 +1,18 @@
 # Evaluation Checklist: Usability Test, SUS and ISO/IEC 25010
 
-**Status (November 14, 2026):** the three forms are ready and waiting for the adviser's approval. Usability task 16 was changed on November 14 to use the new Month and Venue filters (the scoring sheet has the same change). The EMO answers the forms in one visit, in about two weeks or next month.
+**Status (November 19, 2026):** the group revised the forms (November 16 to 19): the SUS is now the all-positive version, usability tasks 2, 4 and 5 use the "CAS Seminar", and four ISO statements are in plainer words. The printable versions are the `_FINAL` PDFs, and the scoring sheet matches them (including the new SUS formula). All 17 tasks were run again on fresh demo data and work. **The EMO answers the forms on November 20, 2026.** The Administrator and Officer use the MacBook (localhost, demo data); Staff uses a phone with the online version, which has a practice event and practice account for tasks 14 to 17 (tested on a phone-sized screen on November 19).
 
-These files are the latest versions. If anyone changes a form's wording, change it here (the HTML file), make the same change in `evaluation-scoring.xlsx`, and save a new PDF (open the HTML file, Cmd+P, Save as PDF).
+These files are the latest versions. If anyone changes a form's wording, change both the HTML file and the `_FINAL` PDF, and make the same change in `evaluation-scoring.xlsx` (task names, ISO statements, and the SUS formula if the SUS changes).
 
 Files, all in this folder:
 
 | File | What it is |
 |---|---|
-| `EMO Tracker Usability Test.pdf` | Page 1: guide for the observers. Then one task sheet per role |
-| `EMO Tracker SUS Questionnaire.pdf` | 10 standard questions, 1 page |
-| `EMO Tracker ISO 25010 Questionnaire.pdf` | 22 statements and 3 comment questions, 3 pages |
+| `EMO Tracker Usability Test_FINAL.pdf` | Page 1: guide for the observers. Then, for each role, its task sheet and its closing questions page (7 pages) |
+| `EMO Tracker System Usability Scale (SUS)_FINAL.pdf` | 10 positive statements (all-positive SUS), 1 page |
+| `EMO Tracker ISO 25010 Questionnaire_FINAL.pdf` | 22 statements and 3 remarks questions, 3 pages |
 | `evaluation-scoring.xlsx` | Type the answers here; it computes everything |
-| `Program flow.pdf` | Sample file for usability task 9 (already on the MacBook's Desktop) |
+| `Program flow.pdf` | Sample file for usability task 9 (copied to the MacBook's Desktop on November 19) |
 
 ---
 
@@ -21,14 +21,15 @@ Files, all in this folder:
 - [ ] The adviser (and the prof) approve the three forms. Make any wording change in both the form and `evaluation-scoring.xlsx`.
 - [ ] Ask the adviser whether the evaluation date leaves enough time to write the results before the defense.
 - [x] Put the November 14 update (the Schedule filters) on the online version, emo-tracker-one.vercel.app, so the EMO can try it before answering the questionnaires. Done November 14.
-- [ ] A day before the visit, open the online version. If every page says "Server Error", the database is off: power it on in Aiven.
+- [x] Prepare the online version for the Staff session: the practice account `anna.staff@emo.test` / `password123` is active again, and the practice event "Freshmen Orientation 2026" (December 3, typed location "Practice event (usability test)") has her 5 tasks, including "Print ID lanyards". Done November 19.
+- [ ] The morning of the visit, open emo-tracker-one.vercel.app on the Staff phone. If every page says "Server Error", the database is off: power it on in Aiven, then log in as Anna to check her Home shows 2 open tasks. Log out again.
 - [ ] Set a time with the EMO: 3 users (one Administrator, one Officer, one Staff), about 40 minutes each.
-- [ ] Print for each user: their role's task sheet, the SUS and the ISO questionnaire, plus 2 spares of each. Print the observers' guide (page 1 of the usability test).
-- [ ] Bring the MacBook and its charger, a phone (Staff task 14), a stopwatch (any phone) and pens.
+- [ ] Print for each user: their role's task sheet and closing questions page, the SUS and the ISO questionnaire, plus 2 spares of each. Print the observers' guide (page 1 of the usability test).
+- [ ] Bring the MacBook and its charger, a phone with mobile data or Wi-Fi for the Staff user (online version), a stopwatch (any phone) and pens.
 
 ## 2. On the day: set up the MacBook (10 minutes, before the EMO arrives)
 
-The usability test uses the **demo data**, never the EMO's real schedule. The empty demo database (`emo_tracker_demo`) already exists.
+The Administrator and Officer sessions use the **demo data**, never the EMO's real schedule. The empty demo database (`emo_tracker_demo`) already exists. (The Staff session is on the phone with the online version; nothing to set up on the MacBook for it.)
 
 1. Open `backend/.env` and change `DB_DATABASE=emo_tracker` to `DB_DATABASE=emo_tracker_demo`. Save.
 2. In Terminal:
@@ -41,20 +42,21 @@ The usability test uses the **demo data**, never the EMO's real schedule. The em
    ```
    php artisan migrate:fresh --seed
    ```
-4. Double-click `start.command`. Log in as `admin@emo.test` / `password123` to check. The Terminal window shows the address for the phone.
-5. **Before each user:** run step 3 again, so every user starts with the same data.
+4. Double-click `start.command`. Log in as `admin@emo.test` / `password123` to check.
+5. **Before the Administrator and before the Officer:** run step 3 again, so each starts with the same data.
 6. **After the last user:** close the Terminal windows, change `.env` back to `DB_DATABASE=emo_tracker`, and run the step 2 command again. It must say `emo_tracker`.
 
 ## 3. Each session, in this order
 
 1. Explain the consent note, and write the same Respondent No. and the date on all three forms.
-2. **Usability test:** one proponent reads each task and keeps time; another writes. Don't help unless the user is stuck for 3 minutes (mark "With help"). After each task, ask "This task was easy to do," from 1 to 5.
+2. **Usability test:** one proponent reads each task and keeps time; another writes. Don't help unless the user is stuck for 3 minutes (check "With help"). After each task, ask how easy it was, from 5 (very easy) to 1 (very difficult), and circle the number.
 3. **SUS:** the user answers alone.
 4. **ISO/IEC 25010 questionnaire:** the user answers alone.
 5. Collect all three forms.
 
 ## 4. After the visit
 
+- [ ] **Online cleanup:** tell Xyrone, so the practice event "Freshmen Orientation 2026" is deleted from the online version and `anna.staff@emo.test` is deactivated again.
 - [ ] Type the answers into `evaluation-scoring.xlsx`: the Usability test, SUS, ISO ratings, Respondents and Comments tabs. Check every number against the paper forms.
 - [ ] **Chapter 3:** write the evaluation method section (the "[ADD THE EVALUATION METHOD SECTION]" placeholder). Headings and facts: guide Section 6. Use the real date.
 - [ ] **Chapter 4, Objective 4:** Table 4.6 (usability test), Table 4.7 and Figure 4.27 (ISO/IEC 25010), Table 4.8 (SUS), the comments, the problems found, the limits, and "Overall, Objective 4 was met" only if the results support it. Order and layouts: guide Section 5.4.
