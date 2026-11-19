@@ -455,11 +455,23 @@ function Remarks({ text }) {
   return text ? <span title={text} className="line-clamp-2 break-words">{text}</span> : null
 }
 
+// The Export menu's width in pixels (w-60).
+const MENU_WIDTH = 240
+
 // "Export" with a choice of file: Excel keeps the building colors, CSV is plain
 // text that opens in any app. `shown` is the row count when a filter is in use.
 function ExportMenu({ onExport, shown }) {
   const [open, setOpen] = useState(false)
+  const [alignRight, setAlignRight] = useState(false)
   const menuRef = useRef(null)
+
+  // The menu opens to the right of the button, unless that would run off the screen
+  // (for Officers, Export is the last button on the right).
+  function toggle(e) {
+    const { left } = e.currentTarget.getBoundingClientRect()
+    setAlignRight(left + MENU_WIDTH > window.innerWidth - 8)
+    setOpen((o) => !o)
+  }
 
   useEffect(() => {
     if (!open) return
@@ -481,7 +493,7 @@ function ExportMenu({ onExport, shown }) {
   return (
     <div ref={menuRef} className="relative">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggle}
         aria-haspopup="menu"
         aria-expanded={open}
         className="inline-flex items-center gap-1.5 border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg transition"
@@ -490,7 +502,7 @@ function ExportMenu({ onExport, shown }) {
         <ChevronDownIcon width={14} height={14} className="text-gray-500" />
       </button>
       {open && (
-        <div role="menu" className="absolute left-0 mt-1 w-60 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20">
+        <div role="menu" className={`absolute ${alignRight ? 'right-0' : 'left-0'} mt-1 w-60 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20`}>
           <ExportOption label="Excel (.xlsx)" hint="With the building colors" onClick={() => choose('xlsx')} />
           <ExportOption label="CSV (.csv)" hint="Plain text, opens in any app" onClick={() => choose('csv')} />
           {shown !== null && (
