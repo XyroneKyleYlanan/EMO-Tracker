@@ -86,7 +86,7 @@ classDiagram
     }
     class ScheduleExport {
         <<service>>
-        +events(year, type, search)$ Collection
+        +events(year, type, search, month, venue)$ Collection
         +xlsx(year, events, note)$ string
         +csv(events)$ string
     }
