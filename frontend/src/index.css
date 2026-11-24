@@ -106,3 +106,8 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Password boxes have their own show/hide eye, so Edge's built-in one is hidden. */
+input::-ms-reveal {
+  display: none;
+}

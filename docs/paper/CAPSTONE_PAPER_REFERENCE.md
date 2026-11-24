@@ -959,7 +959,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
 **[TO CONFIRM with the adviser how to number and present the features in the paper.]**
 
 ### Accounts and login
-- **Login:** email and password, with clear messages for wrong credentials, deactivated accounts, too many attempts, and a server that can't be reached.
+- **Login:** email and password, with clear messages for wrong credentials, deactivated accounts, too many attempts, and a server that can't be reached. Every password box (login, change password, add/edit account) has an eye that shows or hides what was typed (added November 24, 2026).
 - **Menus by role:**
   - Administrator: Home, My tasks, Events, Schedule, Analytics and Accounts, plus Venues from the Schedule.
   - Officer: Home, My tasks, Events, Schedule and Analytics.
@@ -993,7 +993,7 @@ Sample statements for EMO Tracker (rate 1 to 5):
   - name and type (Internal or External)
   - department or organizer, with suggestions from names already used
   - date, with "Runs for several days" to add an end date
-  - start and end times (optional)
+  - start and end times (optional), typed as people write them ("1:00 PM", "1pm", "13:00"); a 1-to-12 time without AM or PM is refused with a message. This replaced the browser's time field on November 24, 2026, after Safari showed "Invalid value" in the usability test.
   - venue (grouped by building, with "Add a new venue"), and the room or place
   - "The EMO prepares this event", description, control number and remarks
   - "This event is cancelled" (when editing)

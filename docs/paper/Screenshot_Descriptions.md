@@ -3,7 +3,7 @@
 Descriptions of the 31 EMO Tracker screenshots for the **appendices** (and for Chapter 4, where screens are used as evidence) of the Capstone 2 paper. The images are in the [`screenshots/`](screenshots/) folder.
 
 - **Order:** one folder per role. Inside each folder, the screens follow the order a user of that role goes through them; the numbers run across all folders.
-- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26. Screenshots 06, 15, 17, 19, 20 and 30 were retaken the same way on November 14, 2026, after the month and venue filters and the "Most active venues" title were added (17 and 19 still showed an older Schedule without the filters).
+- **Data:** screenshots 01 to 26 were taken on October 9, 2026, with the system's **demo data**. The names are fictional demo accounts, never the EMO's real data. Screenshots 27 to 29 were taken on October 25, 2026 (see section 6): they show totals, file names and a demo account only. Screenshots 30 and 31 were made on October 26, 2026 from a separate copy of the demo data, with the clock set to October 9 so they match screenshots 06 and 26. Screenshots 06, 15, 17, 19, 20 and 30 were retaken the same way on November 14, 2026, after the month and venue filters and the "Most active venues" title were added (17 and 19 still showed an older Schedule without the filters). Screenshots 01, 02, 03, 07, 08, 13 and 29 were retaken the same way on November 24, 2026, after the password boxes got a show/hide eye and the time boxes were changed to accept typed times such as "1:00 PM".
 - **Dates:** the dates in the screenshots are relative to that day. "Today" is Friday, October 9, 2026.
 - **Size:** desktop screenshots are 1440 × 900 pixels; phone screenshots are 390 × 844 at 2× resolution; the two terminal screenshots (27 and 28) are 2080 pixels wide at 2× resolution.
 - **Numbering:** renumber the figures to match the appendix, for example "Figure G.1". Each entry gives a suggested caption, the file, and a description.
@@ -18,7 +18,7 @@ Screens shared by every user: signing in and managing one's own password.
 
 **File:** [screenshots/1-all-roles/01-login.png](screenshots/1-all-roles/01-login.png)
 
-The login page is the entry point for all users. It shows the New Era University seal, the system name and the office it serves, followed by email and password fields and a Sign in button. The system has no public registration: every account is created by the Administrator. After signing in, each user is taken to the Home page for their role.
+The login page is the entry point for all users. It shows the New Era University seal, the system name and the office it serves, followed by email and password fields and a Sign in button. The eye at the right of the password field shows or hides what was typed, which helps on a phone keyboard. The system has no public registration: every account is created by the Administrator. After signing in, each user is taken to the Home page for their role.
 
 ### 02. Login Page After a Wrong Password
 
@@ -34,6 +34,8 @@ Every user can change their own password from the account menu at the top right 
 - the current password
 - a new password of at least eight characters
 - a confirmation of the new password
+
+Each box has an eye that shows or hides what was typed.
 
 As the dialog explains, changing the password signs the user out on their other devices, so a lost or shared session cannot continue.
 
@@ -77,7 +79,7 @@ The Schedule page reproduces the layout of the spreadsheet the EMO used before t
 The Administrator adds an event with this form, which collects:
 - the event name and type (internal or external) and the department
 - the date, with an option for events that run several days
-- the start and end times (optional)
+- the start and end times (optional), typed the way people write them, such as "6:00 PM", "6pm" or "18:00"; a time like "6:00" without AM or PM is not accepted, so it cannot be saved as morning by mistake
 - a venue from the managed list, and the room
 
 In the example, the chosen venue and time clash with "Faculty Recognition Night" at PSB MPH. The form checks for overlaps as the details are entered, and shows a warning that names the clashing booking. A short note next to the Add event button repeats it. As the warning says, the event can still be saved, because some overlaps are intentional.
@@ -129,7 +131,7 @@ The Accounts page lists every user with their email, role and status, and a coun
 
 **File:** [screenshots/2-administrator/13-add-account.png](screenshots/2-administrator/13-add-account.png)
 
-The Administrator creates accounts with this form: full name, email, a password of at least eight characters, and a role (Administrator, Officer or Staff). The role decides what the person can see and do. Because only the Administrator can create accounts, access to the system stays limited to the EMO's members.
+The Administrator creates accounts with this form: full name, email, a password of at least eight characters (the eye shows it, to check it before giving it to the person), and a role (Administrator, Officer or Staff). The role decides what the person can see and do. Because only the Administrator can create accounts, access to the system stays limited to the EMO's members.
 
 ### 14. Events List on a Phone
 

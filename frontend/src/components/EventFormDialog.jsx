@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../lib/api'
 import ClashWarning from './ClashWarning'
+import TimeInput from './TimeInput'
 import { AlertIcon } from './icons'
 import { formatDayMonth, formatTime } from '../lib/format'
 import { useEscapeKey } from '../lib/useEscapeKey'
@@ -271,7 +272,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
               optional
               action={form.event_time && <ClearButton onClick={() => update('event_time', '')} />}
             >
-              <input id="event-start" type="time" value={form.event_time} onChange={(e) => update('event_time', e.target.value)} className={dateTime(form.event_time)} />
+              <TimeInput id="event-start" value={form.event_time} onChange={(v) => update('event_time', v)} className={input} />
             </Field>
             <Field
               label="End time"
@@ -280,7 +281,7 @@ export default function EventFormDialog({ event, onClose, onSaved }) {
               optional
               action={form.end_time && <ClearButton onClick={() => update('end_time', '')} />}
             >
-              <input id="event-end" type="time" value={form.end_time} onChange={(e) => update('end_time', e.target.value)} className={dateTime(form.end_time)} />
+              <TimeInput id="event-end" value={form.end_time} onChange={(v) => update('end_time', v)} className={input} />
             </Field>
           </div>
 

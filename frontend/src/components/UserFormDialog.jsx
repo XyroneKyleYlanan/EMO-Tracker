@@ -3,6 +3,7 @@ import api from '../lib/api'
 import { useEscapeKey } from '../lib/useEscapeKey'
 import { useAuth } from '../contexts/auth'
 import { useToast } from '../contexts/toast'
+import PasswordInput from './PasswordInput'
 
 const EMPTY = {
   name: '',
@@ -108,9 +109,8 @@ export default function UserFormDialog({ open, user, onClose, onSaved }) {
                 ? 'Leave blank to keep your current password. A new one signs you out on your other devices.'
                 : 'Leave blank to keep the current password. A new one signs them out on all their devices.'}
           >
-            <input
+            <PasswordInput
               id="user-password"
-              type="password"
               required={!user}
               minLength={8}
               value={form.password}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import api from '../lib/api'
 import { useEscapeKey } from '../lib/useEscapeKey'
 import { useToast } from '../contexts/toast'
+import PasswordInput from './PasswordInput'
 
 // Mount this only while it's open, so every opening starts with empty fields.
 export default function ChangePasswordDialog({ open, onClose }) {
@@ -53,9 +54,8 @@ export default function ChangePasswordDialog({ open, onClose }) {
 
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <Field label="Current password" htmlFor="current-password" error={errors.current_password?.[0]}>
-            <input
+            <PasswordInput
               id="current-password"
-              type="password"
               required
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
@@ -70,9 +70,8 @@ export default function ChangePasswordDialog({ open, onClose }) {
             error={errors.new_password?.[0]}
             hint="Minimum 8 characters. Your other devices will be signed out."
           >
-            <input
+            <PasswordInput
               id="new-password"
-              type="password"
               required
               minLength={8}
               value={newPassword}
@@ -82,9 +81,8 @@ export default function ChangePasswordDialog({ open, onClose }) {
           </Field>
 
           <Field label="Confirm new password" htmlFor="confirm-password" error={errors.new_password_confirmation?.[0]}>
-            <input
+            <PasswordInput
               id="confirm-password"
-              type="password"
               required
               minLength={8}
               value={confirm}

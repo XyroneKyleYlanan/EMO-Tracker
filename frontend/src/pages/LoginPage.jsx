@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/auth'
 import { isServerUnreachable } from '../lib/errors'
+import PasswordInput from '../components/PasswordInput'
 
 export default function LoginPage() {
   const { user, login } = useAuth()
@@ -71,9 +72,8 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
